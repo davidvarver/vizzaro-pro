@@ -1,0 +1,529 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  Image,
+  FlatList,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import {
+  ArrowLeft,
+  Search,
+  Plus,
+  Edit3,
+  Trash2,
+  Package,
+  Eye,
+  EyeOff,
+} from 'lucide-react-native';
+import { Wallpaper } from '@/constants/wallpapers';
+import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useAdmin } from '@/contexts/AdminContext';
+import Colors from '@/constants/colors';
+import WhatsAppButton from '@/components/WhatsAppButton';
+
+export default function AdminCatalogScreen() {
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const { wallpapers: catalogItems, updateWallpaper, deleteWallpaper, isLoading } = useWallpapers();
+  const { adminToken } = useAdmin();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+
+  const categories = [
+    { key: 'all', label: 'Todos' },
+    { key: 'Floral', label: 'Floral' },
+    { key: 'Geométrico', label: 'Geométrico' },
+    { key: 'Textura', label: 'Textura' },
+    { key: 'Rayas', label: 'Rayas' },
+    { key: 'Tropical', label: 'Tropical' },
+  ];
+
+  const filteredItems = catalogItems.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         item.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const toggleStock = async (itemId: string) => {
+    const item = catalogItems.find(item => item.id === itemId);
+    if (item && adminToken) {
+      console.log('[Catalog] Toggling stock for item:', itemId, 'with token:', adminToken);
+      setErrorMessage('');
+      try {
+        const success = await updateWallpaper({ ...item, inStock: !item.inStock }, adminToken);
+        if (success) {
+          console.log('[Catalog] Stock toggled successfully');
+        } else {
+          setErrorMessage('Error al actualizar el stock');
+        }
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : 'Error al actualizar el stock');
+      }
+    }
+  };
+
+  const deleteItem = async (itemId: string) => {
+    if (adminToken) {
+      console.log('[Catalog] Deleting item:', itemId, 'with token:', adminToken);
+      setErrorMessage('');
+      try {
+        const success = await deleteWallpaper(itemId, adminToken);
+        if (success) {
+          console.log('[Catalog] Item deleted successfully');
+        } else {
+          setErrorMessage('Error al eliminar el producto');
+        }
+      } catch (error) {
+        setErrorMessage(error instanceof Error ? error.message : 'Error al eliminar el producto');
+      }
+    } else {
+      setErrorMessage('No hay token de administrador disponible');
+    }
+  };
+
+  const ProductCard = ({ item }: { item: Wallpaper }) => (
+    <View style={styles.productCard}>
+      <View style={styles.productImageContainer}>
+        <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
+        {item.inStock && (
+          <View style={styles.stockBadge}>
+            <Text style={styles.stockText}>En Stock</Text>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.productInfo}>
+        <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
+        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+        
+        <Text style={styles.productDescription} numberOfLines={1}>
+          {item.description}
+        </Text>
+        
+        <View style={styles.colorDots}>
+          <View style={[styles.colorDot, { backgroundColor: '#8B4513' }]} />
+          <View style={[styles.colorDot, { backgroundColor: '#4169E1' }]} />
+          <View style={[styles.colorDot, { backgroundColor: '#FFD700' }]} />
+          <Text style={styles.productStyle}>{item.style}</Text>
+        </View>
+
+        <Text style={styles.specText}>
+          {item.dimensions.width}m x {item.dimensions.height}m
+        </Text>
+        <Text style={styles.specText}>
+          {item.dimensions.coverage}m² por rollo
+        </Text>
+
+        <View style={styles.actionButtons}>
+          <TouchableOpacity
+            style={styles.stockToggleButton}
+            onPress={() => toggleStock(item.id)}
+          >
+            {item.inStock ? (
+              <Eye size={14} color="#10B981" />
+            ) : (
+              <EyeOff size={14} color="#EF4444" />
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => router.push(`/admin/edit-product/${item.id}`)}
+          >
+            <Edit3 size={14} color="#3B82F6" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => deleteItem(item.id)}
+          >
+            <Trash2 size={14} color="#EF4444" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+
+  return (
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <ArrowLeft size={24} color={Colors.light.text} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Gestión de Catálogo</Text>
+        <TouchableOpacity 
+          style={styles.addButton}
+          onPress={() => router.push('/admin/add-product')}
+        >
+          <Plus size={24} color={Colors.light.tint} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInputContainer}>
+          <Search size={20} color={Colors.light.tabIconDefault} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Buscar productos..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        </View>
+      </View>
+
+      <ScrollView 
+        horizontal 
+        showsHorizontalScrollIndicator={false}
+        style={styles.filterContainer}
+        contentContainerStyle={styles.filterContent}
+      >
+        {categories.map((category) => (
+          <TouchableOpacity
+            key={category.key}
+            style={[
+              styles.filterChip,
+              selectedCategory === category.key && styles.filterChipActive
+            ]}
+            onPress={() => setSelectedCategory(category.key)}
+          >
+            <Text style={[
+              styles.filterChipText,
+              selectedCategory === category.key && styles.filterChipTextActive
+            ]}>
+              {category.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      <View style={styles.statsBar}>
+        <Text style={styles.statsText}>
+          {filteredItems.length} productos encontrados
+        </Text>
+        <Text style={styles.statsText}>
+          {filteredItems.filter(item => item.inStock).length} en stock
+        </Text>
+      </View>
+
+      {errorMessage ? (
+        <View style={styles.errorBanner}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+          <TouchableOpacity onPress={() => setErrorMessage('')}>
+            <Text style={styles.errorClose}>×</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+
+      {isLoading ? (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyStateText}>Cargando catálogo...</Text>
+        </View>
+      ) : filteredItems.length === 0 ? (
+        <View style={styles.emptyState}>
+          <Package size={48} color={Colors.light.tabIconDefault} />
+          <Text style={styles.emptyStateText}>
+            {searchQuery || selectedCategory !== 'all' 
+              ? 'No se encontraron productos con los filtros aplicados'
+              : 'No hay productos en el catálogo'
+            }
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={filteredItems}
+          renderItem={({ item }) => <ProductCard item={item} />}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          contentContainerStyle={styles.gridContent}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            <View style={styles.whatsappSection}>
+              <Text style={styles.whatsappTitle}>¿Necesitas ayuda con el catálogo?</Text>
+              <WhatsAppButton
+                message="Hola, necesito ayuda con la gestión del catálogo de papel tapiz"
+                style="secondary"
+                size="medium"
+              />
+            </View>
+          }
+        />
+      )}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
+  backButton: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: Colors.light.text,
+  },
+  addButton: {
+    padding: 4,
+  },
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
+  searchInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.light.background,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    gap: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: Colors.light.text,
+  },
+  filterContainer: {
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
+  filterContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    gap: 4,
+  },
+  filterChip: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+  },
+  filterChipActive: {
+    backgroundColor: Colors.light.tint,
+    borderColor: Colors.light.tint,
+  },
+  filterChipText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: Colors.light.text,
+  },
+  filterChipTextActive: {
+    color: '#FFFFFF',
+  },
+  statsBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 3,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
+  statsText: {
+    fontSize: 12,
+    color: Colors.light.tabIconDefault,
+  },
+  content: {
+    flex: 1,
+  },
+  gridContent: {
+    padding: 8,
+  },
+  row: {
+    justifyContent: 'space-between',
+    paddingHorizontal: 4,
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 60,
+    gap: 16,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: Colors.light.tabIconDefault,
+    textAlign: 'center',
+    maxWidth: 280,
+  },
+  productCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    marginBottom: 8,
+    width: '48%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+    overflow: 'hidden',
+  },
+  productImageContainer: {
+    position: 'relative',
+  },
+  productImage: {
+    width: '100%',
+    height: 120,
+    resizeMode: 'cover',
+  },
+  stockBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: '#10B981',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  stockText: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  productInfo: {
+    padding: 10,
+  },
+  productName: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.light.text,
+    marginBottom: 2,
+  },
+  productPrice: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#10B981',
+    marginBottom: 4,
+  },
+  productDescription: {
+    fontSize: 10,
+    color: Colors.light.tabIconDefault,
+    marginBottom: 6,
+  },
+  colorDots: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginBottom: 4,
+  },
+  colorDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  productStyle: {
+    fontSize: 9,
+    color: Colors.light.tabIconDefault,
+  },
+  specText: {
+    fontSize: 9,
+    color: Colors.light.tabIconDefault,
+    marginBottom: 2,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: 8,
+  },
+  stockToggleButton: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  editButton: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#3B82F6',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteButton: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#EF4444',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  whatsappSection: {
+    alignItems: 'center',
+    paddingVertical: 32,
+    gap: 16,
+    width: '100%',
+  },
+  whatsappTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.light.text,
+    textAlign: 'center',
+  },
+  errorBanner: {
+    backgroundColor: '#FEE2E2',
+    borderLeftWidth: 4,
+    borderLeftColor: '#EF4444',
+    padding: 12,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  errorText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#991B1B',
+    lineHeight: 18,
+  },
+  errorClose: {
+    fontSize: 24,
+    color: '#991B1B',
+    fontWeight: 'bold',
+    marginLeft: 8,
+    marginTop: -4,
+  },
+});

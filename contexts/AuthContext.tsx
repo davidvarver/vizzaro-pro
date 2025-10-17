@@ -1,0 +1,284 @@
+import createContextHook from '@nkzw/create-context-hook';
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  createdAt: string;
+}
+
+interface AuthState {
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+}
+
+interface PendingVerification {
+  email: string;
+  password: string;
+  name: string;
+  code: string;
+  expiresAt: number;
+}
+
+const AUTH_STORAGE_KEY = '@auth_user';
+const USERS_STORAGE_KEY = '@auth_users';
+
+const generateVerificationCode = (): string => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+const sendVerificationEmail = async (email: string, code: string): Promise<void> => {
+  try {
+    const apiUrl = typeof window !== 'undefined' 
+      ? `${window.location.origin}/api/verification-send`
+      : 'https://www.vizzarowallpaper.com/api/verification-send';
+
+    console.log('📤 Enviando request a:', apiUrl);
+    console.log('📧 Para:', email);
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        code,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('❌ Response error:', response.status, errorData);
+      throw new Error(errorData.error || `Error ${response.status}`);
+    }
+    
+    const responseData = await response.json();
+    console.log('✅ Response exitosa:', responseData);
+    console.log('✅ Email de verificación enviado a:', email);
+  } catch (error) {
+    console.error('❌ Error enviando email:', error);
+    console.log('📧 Código de verificación (fallback):', code);
+    throw error;
+  }
+};
+
+export const [AuthProvider, useAuth] = createContextHook(() => {
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    isLoading: true,
+    isAuthenticated: false,
+  });
+
+  const [pendingVerification, setPendingVerification] = useState<PendingVerification | null>(null);
+
+  useEffect(() => {
+    loadUser();
+  }, []);
+
+  const loadUser = async () => {
+    try {
+      const userJson = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
+      if (userJson) {
+        const user = JSON.parse(userJson);
+        setAuthState({
+          user,
+          isLoading: false,
+          isAuthenticated: true,
+        });
+      } else {
+        setAuthState({
+          user: null,
+          isLoading: false,
+          isAuthenticated: false,
+        });
+      }
+    } catch (error) {
+      console.error('Error loading user:', error);
+      setAuthState({
+        user: null,
+        isLoading: false,
+        isAuthenticated: false,
+      });
+    }
+  };
+
+  const register = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      console.log('🔄 Iniciando registro para:', email);
+      
+      const usersJson = await AsyncStorage.getItem(USERS_STORAGE_KEY);
+      const users = usersJson ? JSON.parse(usersJson) : [];
+      console.log('📋 Usuarios existentes:', users.length);
+      
+      const existingUser = users.find((u: User & { password: string }) => u.email === email);
+      if (existingUser) {
+        console.log('❌ Usuario ya existe');
+        return { success: false, error: 'Este correo ya está registrado' };
+      }
+
+      const code = generateVerificationCode();
+      const expiresAt = Date.now() + 10 * 60 * 1000;
+      console.log('🔑 Código generado:', code);
+
+      setPendingVerification({
+        email,
+        password,
+        name,
+        code,
+        expiresAt,
+      });
+
+      console.log('📧 Intentando enviar email...');
+      
+      try {
+        await sendVerificationEmail(email, code);
+        console.log('✅ Email enviado exitosamente');
+      } catch (emailError) {
+        console.error('❌ Error al enviar email:', emailError);
+        const errorMsg = emailError instanceof Error ? emailError.message : 'Error desconocido';
+        return { 
+          success: false, 
+          error: `Error al enviar el correo: ${errorMsg}. Revisa la consola para más detalles.` 
+        };
+      }
+
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Error durante el registro:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      return { 
+        success: false, 
+        error: `Error al registrar usuario: ${errorMessage}` 
+      };
+    }
+  };
+
+  const verifyCode = async (code: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      if (!pendingVerification) {
+        return { success: false, error: 'No hay verificación pendiente' };
+      }
+
+      if (Date.now() > pendingVerification.expiresAt) {
+        setPendingVerification(null);
+        return { success: false, error: 'El código ha expirado' };
+      }
+
+      if (code !== pendingVerification.code) {
+        return { success: false, error: 'Código incorrecto' };
+      }
+
+      const newUser: User = {
+        id: Date.now().toString(),
+        email: pendingVerification.email,
+        name: pendingVerification.name,
+        createdAt: new Date().toISOString(),
+      };
+
+      const usersJson = await AsyncStorage.getItem(USERS_STORAGE_KEY);
+      const users = usersJson ? JSON.parse(usersJson) : [];
+      users.push({
+        ...newUser,
+        password: pendingVerification.password,
+      });
+
+      await AsyncStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
+
+      setAuthState({
+        user: newUser,
+        isLoading: false,
+        isAuthenticated: true,
+      });
+
+      setPendingVerification(null);
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error verifying code:', error);
+      return { success: false, error: 'Error al verificar código' };
+    }
+  };
+
+  const resendCode = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      if (!pendingVerification) {
+        return { success: false, error: 'No hay verificación pendiente' };
+      }
+
+      const code = generateVerificationCode();
+      const expiresAt = Date.now() + 10 * 60 * 1000;
+
+      setPendingVerification({
+        ...pendingVerification,
+        code,
+        expiresAt,
+      });
+
+      await sendVerificationEmail(pendingVerification.email, code);
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error resending code:', error);
+      return { success: false, error: 'Error al reenviar código' };
+    }
+  };
+
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const usersJson = await AsyncStorage.getItem(USERS_STORAGE_KEY);
+      const users = usersJson ? JSON.parse(usersJson) : [];
+      
+      const user = users.find((u: User & { password: string }) => 
+        u.email === email && u.password === password
+      );
+
+      if (!user) {
+        return { success: false, error: 'Correo o contraseña incorrectos' };
+      }
+
+      const { password: _, ...userWithoutPassword } = user;
+
+      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userWithoutPassword));
+
+      setAuthState({
+        user: userWithoutPassword,
+        isLoading: false,
+        isAuthenticated: true,
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error during login:', error);
+      return { success: false, error: 'Error al iniciar sesión' };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+      setAuthState({
+        user: null,
+        isLoading: false,
+        isAuthenticated: false,
+      });
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
+  return {
+    ...authState,
+    register,
+    verifyCode,
+    resendCode,
+    login,
+    logout,
+    hasPendingVerification: !!pendingVerification,
+    pendingEmail: pendingVerification?.email,
+  };
+});
