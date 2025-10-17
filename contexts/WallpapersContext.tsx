@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContextHook from '@nkzw/create-context-hook';
 import { Wallpaper, wallpapers as defaultWallpapers } from '@/constants/wallpapers';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://www.vizzarowallpaper.com';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 const STORAGE_KEY = 'wallpapers_catalog';
 
 export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
@@ -16,40 +16,44 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
       console.log('[WallpapersContext] Loading catalog... (forceRefresh:', forceRefresh, ')');
       setError(null);
       
-      try {
-        console.log('[WallpapersContext] Attempting to load from API:', `${API_BASE_URL}/api/catalog/get`);
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
-        
-        const response = await fetch(`${API_BASE_URL}/api/catalog/get?t=${Date.now()}`, {
-          method: 'GET',
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-          },
-          signal: controller.signal,
-        });
-        
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('[WallpapersContext] Loaded from API:', data.catalog?.length || 0, 'items');
-          console.log('[WallpapersContext] API timestamp:', data.timestamp);
+      if (API_BASE_URL) {
+        try {
+          console.log('[WallpapersContext] Attempting to load from API:', `${API_BASE_URL}/api/catalog/get`);
           
-          if (data.success && data.catalog) {
-            setWallpapers(data.catalog);
-            await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data.catalog));
-            await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
-            return;
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 8000);
+          
+          const response = await fetch(`${API_BASE_URL}/api/catalog/get?t=${Date.now()}`, {
+            method: 'GET',
+            headers: {
+              'Cache-Control': 'no-store, no-cache, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0',
+            },
+            signal: controller.signal,
+          });
+          
+          clearTimeout(timeoutId);
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[WallpapersContext] Loaded from API:', data.catalog?.length || 0, 'items');
+            console.log('[WallpapersContext] API timestamp:', data.timestamp);
+            
+            if (data.success && data.catalog) {
+              setWallpapers(data.catalog);
+              await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data.catalog));
+              await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
+              return;
+            }
+          } else {
+            console.warn('[WallpapersContext] API returned error:', response.status);
           }
-        } else {
-          console.warn('[WallpapersContext] API returned error:', response.status);
+        } catch (apiError) {
+          console.warn('[WallpapersContext] API fetch failed, trying fallback:', apiError);
         }
-      } catch (apiError) {
-        console.warn('[WallpapersContext] API fetch failed, trying fallback:', apiError);
+      } else {
+        console.log('[WallpapersContext] No API URL configured, using local storage mode');
       }
       
       if (!forceRefresh) {
@@ -85,83 +89,93 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
       console.log('[WallpapersContext] Token provided as param:', !!adminToken);
       console.log('[WallpapersContext] Token from env:', process.env.EXPO_PUBLIC_ADMIN_TOKEN);
       
-      const apiUrl = `${API_BASE_URL}/api/catalog/update`;
-      console.log('[WallpapersContext] Syncing to API:', apiUrl);
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      
-      let response;
-      try {
-        response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify({ 
-            catalog: wallpapersData,
-            adminToken: tokenToUse
-          }),
-          signal: controller.signal,
-        });
-      } catch (fetchError) {
-        clearTimeout(timeoutId);
-        console.error('[WallpapersContext] Fetch error:', fetchError);
+      if (API_BASE_URL) {
+        const apiUrl = `${API_BASE_URL}/api/catalog/update`;
+        console.log('[WallpapersContext] Syncing to API:', apiUrl);
         
-        if (fetchError instanceof Error) {
-          if (fetchError.name === 'AbortError') {
-            throw new Error('⏱️ Tiempo de espera agotado.\n\nEl servidor no respondió a tiempo. Verifica tu conexión a internet.');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        
+        let response;
+        try {
+          response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({ 
+              catalog: wallpapersData,
+              adminToken: tokenToUse
+            }),
+            signal: controller.signal,
+          });
+        } catch (fetchError) {
+          clearTimeout(timeoutId);
+          console.error('[WallpapersContext] Fetch error:', fetchError);
+          
+          if (fetchError instanceof Error) {
+            if (fetchError.name === 'AbortError') {
+              throw new Error('⏱️ Tiempo de espera agotado.\n\nEl servidor no respondió a tiempo. Verifica tu conexión a internet.');
+            }
+            
+            if (fetchError.message.includes('Failed to fetch') || fetchError.message.includes('Network request failed')) {
+              throw new Error('🌐 Error de conexión\n\nNo se pudo conectar al servidor. Posibles causas:\n\n1. Sin conexión a internet\n2. El servidor está caído\n3. URL incorrecta: ' + apiUrl + '\n\nIntenta nuevamente en unos momentos.');
+            }
           }
           
-          if (fetchError.message.includes('Failed to fetch') || fetchError.message.includes('Network request failed')) {
-            throw new Error('🌐 Error de conexión\n\nNo se pudo conectar al servidor. Posibles causas:\n\n1. Sin conexión a internet\n2. El servidor está caído\n3. URL incorrecta: ' + apiUrl + '\n\nIntenta nuevamente en unos momentos.');
-          }
+          throw new Error('Error de red: ' + (fetchError instanceof Error ? fetchError.message : 'Desconocido'));
         }
         
-        throw new Error('Error de red: ' + (fetchError instanceof Error ? fetchError.message : 'Desconocido'));
-      }
-      
-      clearTimeout(timeoutId);
+        clearTimeout(timeoutId);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('[WallpapersContext] API error response:', response.status, errorText);
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { error: errorText };
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('[WallpapersContext] API error response:', response.status, errorText);
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch {
+            errorData = { error: errorText };
+          }
+          
+          if (errorData.needsConfig) {
+            throw new Error('⚠️ Base de datos no configurada\n\nPor favor configura Vercel KV:\n1. Ve a tu proyecto en Vercel\n2. Settings → Environment Variables\n3. Configura KV_REST_API_URL y KV_REST_API_TOKEN');
+          }
+          
+          if (response.status === 401) {
+            throw new Error('🔒 No autorizado\n\nToken de administrador inválido.');
+          }
+          
+          if (response.status === 503) {
+            throw new Error('⚠️ Servicio no disponible\n\n' + (errorData.error || 'El servidor no está disponible.'));
+          }
+          
+          throw new Error(errorData.error || `Error del servidor (${response.status})`);
         }
         
-        if (errorData.needsConfig) {
-          throw new Error('⚠️ Base de datos no configurada\n\nPor favor configura Vercel KV:\n1. Ve a tu proyecto en Vercel\n2. Settings → Environment Variables\n3. Configura KV_REST_API_URL y KV_REST_API_TOKEN');
-        }
+        const data = await response.json();
+        console.log('[WallpapersContext] Synced to API successfully:', data);
         
-        if (response.status === 401) {
-          throw new Error('🔒 No autorizado\n\nToken de administrador inválido.');
-        }
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(wallpapersData));
+        await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
+        console.log('[WallpapersContext] Saved to AsyncStorage');
         
-        if (response.status === 503) {
-          throw new Error('⚠️ Servicio no disponible\n\n' + (errorData.error || 'El servidor no está disponible.'));
-        }
+        setWallpapers(wallpapersData);
         
-        throw new Error(errorData.error || `Error del servidor (${response.status})`);
+        console.log('[WallpapersContext] Forcing refresh from API...');
+        setTimeout(() => {
+          loadWallpapers(true);
+        }, 500);
+      } else {
+        console.log('[WallpapersContext] No API URL configured, saving only to local storage');
+        
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(wallpapersData));
+        await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', Date.now().toString());
+        console.log('[WallpapersContext] Saved to AsyncStorage');
+        
+        setWallpapers(wallpapersData);
       }
-      
-      const data = await response.json();
-      console.log('[WallpapersContext] Synced to API successfully:', data);
-      
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(wallpapersData));
-      await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
-      console.log('[WallpapersContext] Saved to AsyncStorage');
-      
-      setWallpapers(wallpapersData);
-      
-      console.log('[WallpapersContext] Forcing refresh from API...');
-      setTimeout(() => {
-        loadWallpapers(true);
-      }, 500);
       
       return true;
     } catch (error) {
