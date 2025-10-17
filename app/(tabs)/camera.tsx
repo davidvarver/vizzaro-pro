@@ -400,6 +400,14 @@ export default function CameraScreen() {
         
         img.onload = () => {
           try {
+            console.log('Image loaded successfully, dimensions:', img.width, 'x', img.height);
+            
+            if (!img.width || !img.height || img.width === 0 || img.height === 0) {
+              console.error('Invalid image dimensions');
+              resolve(base64);
+              return;
+            }
+            
             const canvas = document.createElement('canvas');
             let { width, height } = img;
             
@@ -413,35 +421,66 @@ export default function CameraScreen() {
               }
             }
             
-            canvas.width = width;
-            canvas.height = height;
+            canvas.width = Math.round(width);
+            canvas.height = Math.round(height);
             
-            const ctx = canvas.getContext('2d');
+            const ctx = canvas.getContext('2d', { willReadFrequently: false });
             if (!ctx) {
-              throw new Error('Failed to get canvas context');
+              console.error('Failed to get canvas context');
+              resolve(base64);
+              return;
             }
             
-            ctx.drawImage(img, 0, 0, width, height);
+            ctx.drawImage(img, 0, 0, Math.round(width), Math.round(height));
             
-            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
-            const compressedBase64 = compressedDataUrl.split(',')[1];
-            
-            console.log('Web compression - original:', base64.length, 'compressed:', compressedBase64.length);
-            resolve(compressedBase64);
+            try {
+              const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+              if (!compressedDataUrl || !compressedDataUrl.includes(',')) {
+                console.error('Invalid dataURL generated');
+                resolve(base64);
+                return;
+              }
+              
+              const compressedBase64 = compressedDataUrl.split(',')[1];
+              if (!compressedBase64) {
+                console.error('Failed to extract base64 from dataURL');
+                resolve(base64);
+                return;
+              }
+              
+              console.log('Web compression - original:', base64.length, 'compressed:', compressedBase64.length);
+              resolve(compressedBase64);
+            } catch (toDataURLError) {
+              console.error('toDataURL error:', toDataURLError instanceof Error ? toDataURLError.message : 'Unknown error');
+              resolve(base64);
+            }
           } catch (canvasError) {
-            console.error('Canvas error:', canvasError instanceof Error ? canvasError.message : 'Unknown error');
+            console.error('Canvas processing error:', canvasError instanceof Error ? canvasError.message : String(canvasError));
             resolve(base64);
           }
         };
         
         img.onerror = (error) => {
-          console.error('Image load error:', error);
+          console.error('Image load error:', error instanceof Event ? 'Load failed' : String(error));
           resolve(base64);
         };
         
-        img.src = `data:image/jpeg;base64,${base64}`;
+        // Set crossOrigin before src to avoid CORS issues
+        img.crossOrigin = 'anonymous';
+        
+        // Validate base64 before setting src
+        if (!base64 || base64.length === 0) {
+          console.error('Empty base64 string provided');
+          resolve(base64);
+          return;
+        }
+        
+        // Remove any existing data URI prefix from base64
+        const cleanBase64 = base64.replace(/^data:image\/[a-z]+;base64,/, '');
+        
+        img.src = `data:image/jpeg;base64,${cleanBase64}`;
       } catch (error) {
-        console.error('Web compression setup error:', error instanceof Error ? error.message : 'Unknown error');
+        console.error('Web compression setup error:', error instanceof Error ? error.message : String(error));
         resolve(base64);
       }
     });
