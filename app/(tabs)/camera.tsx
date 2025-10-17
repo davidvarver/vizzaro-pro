@@ -368,6 +368,11 @@ export default function CameraScreen() {
   
   async function compressBase64Image(base64: string, maxSize: number = 1024): Promise<string> {
     try {
+      if (Platform.OS === 'web') {
+        console.log('Web platform - using canvas compression');
+        return await compressBase64ImageWeb(base64, maxSize);
+      }
+      
       const imageUri = `data:image/jpeg;base64,${base64}`;
       const manipulated = await ImageManipulator.manipulateAsync(
         imageUri,
@@ -376,15 +381,70 @@ export default function CameraScreen() {
       );
       
       if (!manipulated.base64) {
+        console.log('No base64 in manipulated result, returning original');
         return base64;
       }
       
       console.log('Image compressed - original:', base64.length, 'compressed:', manipulated.base64.length);
       return manipulated.base64;
     } catch (error) {
-      console.error('Error compressing image:', error);
+      console.error('Error compressing image:', error instanceof Error ? error.message : 'Unknown error');
       return base64;
     }
+  }
+  
+  async function compressBase64ImageWeb(base64: string, maxSize: number = 1024): Promise<string> {
+    return new Promise((resolve, reject) => {
+      try {
+        const img = new window.Image();
+        
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            let { width, height } = img;
+            
+            if (width > maxSize || height > maxSize) {
+              if (width > height) {
+                height = (height / width) * maxSize;
+                width = maxSize;
+              } else {
+                width = (width / height) * maxSize;
+                height = maxSize;
+              }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+              throw new Error('Failed to get canvas context');
+            }
+            
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            const compressedBase64 = compressedDataUrl.split(',')[1];
+            
+            console.log('Web compression - original:', base64.length, 'compressed:', compressedBase64.length);
+            resolve(compressedBase64);
+          } catch (canvasError) {
+            console.error('Canvas error:', canvasError instanceof Error ? canvasError.message : 'Unknown error');
+            resolve(base64);
+          }
+        };
+        
+        img.onerror = (error) => {
+          console.error('Image load error:', error);
+          resolve(base64);
+        };
+        
+        img.src = `data:image/jpeg;base64,${base64}`;
+      } catch (error) {
+        console.error('Web compression setup error:', error instanceof Error ? error.message : 'Unknown error');
+        resolve(base64);
+      }
+    });
   }
 
   async function processImageWithAI(imageBase64: string, selectedWallpaper: typeof wallpaper) {
