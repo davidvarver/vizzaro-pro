@@ -7,6 +7,7 @@ import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFavorites } from '@/contexts/FavoritesContext';
+import { useAdmin } from '@/contexts/AdminContext';
 
 interface Project {
   id: string;
@@ -21,6 +22,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
   const { favoriteProjects } = useFavorites();
+  const { isAuthenticated: isAdminAuth, logout: adminLogout } = useAdmin();
 
   const recentProjects = useMemo(() => {
     return favoriteProjects
@@ -83,9 +85,36 @@ export default function ProfileScreen() {
     );
   };
 
+  const handleAdminLogout = () => {
+    Alert.alert(
+      'Cerrar Sesión de Admin',
+      '¿Estás seguro que deseas cerrar la sesión de administrador?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Cerrar Sesión',
+          style: 'destructive',
+          onPress: async () => {
+            await adminLogout();
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {isAdminAuth && (
+          <View style={styles.adminBanner}>
+            <Shield size={16} color={Colors.light.background} />
+            <Text style={styles.adminBannerText}>Modo Administrador Activo</Text>
+            <TouchableOpacity onPress={handleAdminLogout} style={styles.adminLogoutButton}>
+              <Text style={styles.adminLogoutText}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <View style={styles.header}>
           {isAuthenticated ? (
             <View style={styles.profileSection}>
@@ -186,16 +215,29 @@ export default function ProfileScreen() {
             <ChevronRight size={16} color={Colors.light.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.menuItem}
-            onPress={() => router.push('/admin/login' as any)}
-          >
-            <View style={styles.menuItemLeft}>
-              <Shield size={20} color={Colors.light.textSecondary} />
-              <Text style={styles.menuItemText}>Panel de Administración</Text>
-            </View>
-            <ChevronRight size={16} color={Colors.light.textSecondary} />
-          </TouchableOpacity>
+          {isAdminAuth ? (
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => router.push('/admin/dashboard' as any)}
+            >
+              <View style={styles.menuItemLeft}>
+                <Shield size={20} color={Colors.light.primary} />
+                <Text style={[styles.menuItemText, { color: Colors.light.primary }]}>Panel de Administración</Text>
+              </View>
+              <ChevronRight size={16} color={Colors.light.primary} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => router.push('/admin/login' as any)}
+            >
+              <View style={styles.menuItemLeft}>
+                <Shield size={20} color={Colors.light.textSecondary} />
+                <Text style={styles.menuItemText}>Panel de Administración</Text>
+              </View>
+              <ChevronRight size={16} color={Colors.light.textSecondary} />
+            </TouchableOpacity>
+          )}
 
           {isAuthenticated ? (
             <TouchableOpacity 
@@ -416,5 +458,31 @@ const styles = StyleSheet.create({
   },
   whatsappContainer: {
     alignItems: 'flex-start',
+  },
+  adminBanner: {
+    backgroundColor: Colors.light.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  adminBannerText: {
+    color: Colors.light.background,
+    fontSize: 14,
+    fontWeight: '600',
+    flex: 1,
+  },
+  adminLogoutButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 6,
+  },
+  adminLogoutText: {
+    color: Colors.light.background,
+    fontSize: 12,
+    fontWeight: '600',
   },
 });
