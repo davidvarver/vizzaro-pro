@@ -80,7 +80,7 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
     }
   }, []);
 
-  const saveWallpapers = useCallback(async (wallpapersData: Wallpaper[], adminToken?: string) => {
+  const saveWallpapers = useCallback(async (wallpapersData: Wallpaper[], adminToken?: string): Promise<boolean> => {
     try {
       console.log('[WallpapersContext] Saving catalog with', wallpapersData.length, 'items...');
       
@@ -162,11 +162,6 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
         console.log('[WallpapersContext] Saved to AsyncStorage');
         
         setWallpapers(wallpapersData);
-        
-        console.log('[WallpapersContext] Forcing refresh from API...');
-        setTimeout(() => {
-          loadWallpapers(true);
-        }, 500);
       } else {
         console.log('[WallpapersContext] No API URL configured, saving only to local storage');
         
@@ -182,17 +177,10 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
       console.error('[WallpapersContext] Error saving wallpapers:', error);
       throw error;
     }
-  }, [loadWallpapers]);
+  }, []);
 
   useEffect(() => {
     loadWallpapers();
-    
-    const intervalId = setInterval(() => {
-      console.log('[WallpapersContext] Auto-refreshing catalog...');
-      loadWallpapers(true);
-    }, 30000);
-    
-    return () => clearInterval(intervalId);
   }, [loadWallpapers]);
 
   const updateWallpaper = useCallback(async (updatedWallpaper: Wallpaper, adminToken?: string) => {
