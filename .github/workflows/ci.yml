@@ -14,9 +14,11 @@ jobs:
 
       - name: Setup Node & Python
         uses: actions/setup-node@v4
-        with: { node-version: '20' }
+        with:
+          node-version: 20
       - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
+        with:
+          python-version: 3.11
 
       - name: Install deps
         run: |
@@ -24,16 +26,20 @@ jobs:
           npm ci || true
           npx playwright install --with-deps || true || echo "Playwright opcional"
 
-      - name: Start app (background, opcional)
+      - name: Build app (Next.js)
         run: |
-          if [ -f package.json ]; then nohup npm run start &>/dev/null & sleep 8; fi
+          if [ -f package.json ]; then npm run build --if-present; fi
+
+      - name: Start app (background)
+        run: |
+          if [ -f package.json ]; then nohup npm run start &>/dev/null & sleep 10; fi
 
       - name: Run tests (pytest)
         run: |
           if [ -d tests ]; then \
             pytest -q --maxfail=1 --disable-warnings --json-report --json-report-file=pytest-report.json || true; \
           else \
-            echo "No tests/ dir, creando reporte vacío" && echo "{}" > pytest-report.json; \
+            echo "{}" > pytest-report.json; \
           fi
 
       - name: Run tests (Playwright opcional)
@@ -53,10 +59,9 @@ jobs:
       - name: Decide if healing is needed
         id: need_heal
         run: |
-          # Si los reportes están vacíos, asumimos fallas=0
-          py_len=$(jq 'if type=="array" then length else 0 end' <<< $(jq -r '.pytest' failures.json) 2>/dev/null || echo 0)
-          pw_len=$(jq 'if type=="array" then length else 0 end' <<< $(jq -r '.playwright' failures.json) 2>/dev/null || echo 0)
-          if [ "$py_len" = "0" ] && [ "$pw_len" = "0" ]; then
+          py_fail=$(jq '.pytest | length' failures.json 2>/dev/null || echo 0)
+          pw_fail=$(jq '.playwright | length' failures.json 2>/dev/null || echo 0)
+          if [ "$py_fail" = "0" ] && [ "$pw_fail" = "0" ]; then
             echo "heal=no" >> $GITHUB_OUTPUT
           else
             echo "heal=yes" >> $GITHUB_OUTPUT
