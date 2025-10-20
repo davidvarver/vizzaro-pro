@@ -1,0 +1,80 @@
+name: CI-Healing
+
+on:
+  push:
+    branches: [ main, fix/**, feature/** ]
+  pull_request:
+
+jobs:
+  test-and-heal:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node & Python
+        uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+
+      - name: Install deps
+        run: |
+          pip install pytest requests pytest-json-report || true
+          npm ci || true
+          npx playwright install --with-deps || true || echo "Playwright opcional"
+
+      - name: Start app (background, opcional)
+        run: |
+          if [ -f package.json ]; then nohup npm run start &>/dev/null & sleep 8; fi
+
+      - name: Run tests (pytest)
+        run: |
+          if [ -d tests ]; then \
+            pytest -q --maxfail=1 --disable-warnings --json-report --json-report-file=pytest-report.json || true; \
+          else \
+            echo "No tests/ dir, creando reporte vacío" && echo "{}" > pytest-report.json; \
+          fi
+
+      - name: Run tests (Playwright opcional)
+        run: |
+          if [ -f playwright.config.ts ] || [ -f playwright.config.js ]; then \
+            npx playwright test --reporter=json > playwright-report.json || true; \
+          else \
+            echo "{}" > playwright-report.json; \
+          fi
+
+      - name: Collect failures
+        id: collect
+        run: |
+          python tools/collect_failures.py > failures.json
+          echo "failures=$(cat failures.json)" >> $GITHUB_OUTPUT
+
+      - name: Decide if healing is needed
+        id: need_heal
+        run: |
+          # Si los reportes están vacíos, asumimos fallas=0
+          py_len=$(jq 'if type=="array" then length else 0 end' <<< $(jq -r '.pytest' failures.json) 2>/dev/null || echo 0)
+          pw_len=$(jq 'if type=="array" then length else 0 end' <<< $(jq -r '.playwright' failures.json) 2>/dev/null || echo 0)
+          if [ "$py_len" = "0" ] && [ "$pw_len" = "0" ]; then
+            echo "heal=no" >> $GITHUB_OUTPUT
+          else
+            echo "heal=yes" >> $GITHUB_OUTPUT
+          fi
+
+      - name: AI Analysis & Patch
+        if: steps.need_heal.outputs.heal == 'yes'
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: ${{ vars.LLM_MODEL }}
+        run: |
+          python tools/ai_tester.py < failures.json > ai_patch.json
+
+      - name: Apply Patch with Rork
+        if: steps.need_heal.outputs.heal == 'yes'
+        env:
+          RORK_CMD: rork
+          GIT_AUTHOR_NAME: CI Bot
+          GIT_AUTHOR_EMAIL: ci@example.com
+        run: |
+          python tools/rork_bridge.py < ai_patch.json
