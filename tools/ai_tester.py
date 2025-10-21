@@ -1,14 +1,21 @@
-import os, json, sys
+import os
+import json
+import sys
 from textwrap import dedent
 
 MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 API_KEY = os.getenv("LLM_API_KEY")
 
+
 def call_llm(prompt: str) -> str:
-    # IMPORTANTE: no imprimir NADA a stdout aquí
+    """
+    Modo demo: devuelve SIEMPRE un JSON válido con un unified diff que crea
+    app/health/route.ts en Next.js (App Router).
+    """
+    # Importante: logs solo a stderr para no romper el JSON del stdout
     print("[AI Tester] Simulando respuesta de IA válida...", file=sys.stderr)
 
-fake_patch = """diff --git a/app/health/route.ts b/app/health/route.ts
+    fake_patch = """diff --git a/app/health/route.ts b/app/health/route.ts
 new file mode 100644
 index 0000000..e69de29
 --- /dev/null
@@ -31,7 +38,9 @@ index 0000000..e69de29
         "risk_notes": "Cambio seguro y aislado.",
         "retry_hint": "Re-ejecutar pytest; debería pasar el healthcheck."
     }
+
     return json.dumps(fake_response, ensure_ascii=False, indent=2)
+
 
 def main():
     failures_json = sys.stdin.read().strip() or "{}"
@@ -40,7 +49,7 @@ def main():
     except Exception:
         failures = {"raw": failures_json}
 
-    prompt = dedent(f"""
+    _prompt = dedent(f"""
     Contexto:
     - Proyecto Next.js (App Router)
     - Prueba GET /health espera status 200 y {{status:'ok'}}
@@ -49,7 +58,7 @@ def main():
     {json.dumps(failures, ensure_ascii=False, indent=2)}
     """)
 
-    result_text = call_llm(prompt)
+    result_text = call_llm(_prompt)
 
     # Validación mínima y salida limpia SOLO JSON
     try:
@@ -67,8 +76,12 @@ def main():
             "retry_hint": "Reintentar ejecución."
         }
         result_text = json.dumps(data, indent=2)
+    else:
+        result_text = json.dumps(data, ensure_ascii=False, indent=2)
 
-    print(result_text)  # <-- ÚNICA impresión a stdout (el JSON)
+    # ¡ÚNICA impresión a stdout!
+    print(result_text)
+
 
 if __name__ == "__main__":
     main()
