@@ -8,9 +8,9 @@ def call_llm(prompt: str) -> str:
     # IMPORTANTE: no imprimir NADA a stdout aquí
     print("[AI Tester] Simulando respuesta de IA válida...", file=sys.stderr)
 
-    fake_patch = """diff --git a/app/health/route.ts b/app/health/route.ts
+fake_patch = """diff --git a/app/health/route.ts b/app/health/route.ts
 new file mode 100644
-index 0000000..1111111
+index 0000000..e69de29
 --- /dev/null
 +++ b/app/health/route.ts
 @@ -0,0 +1,7 @@
@@ -19,7 +19,9 @@ index 0000000..1111111
 +export async function GET() {
 +  return NextResponse.json({ status: 'ok' }, { status: 200 });
 +}
++
 """
+
     fake_response = {
         "summary": "No existe el endpoint /health.",
         "impact": "Las pruebas fallan al no responder /health.",
