@@ -17,7 +17,7 @@ def call_llm(prompt: str) -> str:
 
     fake_patch = """diff --git a/app/health/route.ts b/app/health/route.ts
 new file mode 100644
-index 0000000..e69de29
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 --- /dev/null
 +++ b/app/health/route.ts
 @@ -0,0 +1,6 @@
@@ -27,6 +27,7 @@ index 0000000..e69de29
 +  return NextResponse.json({ status: 'ok' }, { status: 200 });
 +}
 """
+
 
 
     fake_response = {
