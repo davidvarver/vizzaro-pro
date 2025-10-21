@@ -20,14 +20,14 @@ new file mode 100644
 index 0000000..e69de29
 --- /dev/null
 +++ b/app/health/route.ts
-@@ -0,0 +1,7 @@
+@@ -0,0 +1,6 @@
 +import { NextResponse } from 'next/server';
 +
 +export async function GET() {
 +  return NextResponse.json({ status: 'ok' }, { status: 200 });
 +}
-+
 """
+
 
     fake_response = {
         "summary": "No existe el endpoint /health.",
