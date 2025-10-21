@@ -5,11 +5,8 @@ MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 API_KEY = os.getenv("LLM_API_KEY")
 
 def call_llm(prompt: str) -> str:
-    """
-    Modo demo: devuelve un parche válido en formato JSON para git apply.
-    Crea app/health/route.ts en Next.js (App Router).
-    """
-    print("[AI Tester] Simulando respuesta de IA válida...")
+    # IMPORTANTE: no imprimir NADA a stdout aquí
+    print("[AI Tester] Simulando respuesta de IA válida...", file=sys.stderr)
 
     fake_patch = """diff --git a/app/health/route.ts b/app/health/route.ts
 new file mode 100644
@@ -23,7 +20,6 @@ index 0000000..1111111
 +  return NextResponse.json({ status: 'ok' }, { status: 200 });
 +}
 """
-
     fake_response = {
         "summary": "No existe el endpoint /health.",
         "impact": "Las pruebas fallan al no responder /health.",
@@ -33,14 +29,11 @@ index 0000000..1111111
         "risk_notes": "Cambio seguro y aislado.",
         "retry_hint": "Re-ejecutar pytest; debería pasar el healthcheck."
     }
-
     return json.dumps(fake_response, ensure_ascii=False, indent=2)
 
 def main():
+    failures_json = sys.stdin.read().strip() or "{}"
     try:
-        failures_json = sys.stdin.read().strip()
-        if not failures_json:
-            failures_json = "{}"
         failures = json.loads(failures_json)
     except Exception:
         failures = {"raw": failures_json}
@@ -56,13 +49,13 @@ def main():
 
     result_text = call_llm(prompt)
 
-    # Verificamos que sea JSON válido
+    # Validación mínima y salida limpia SOLO JSON
     try:
         data = json.loads(result_text)
         assert isinstance(data, dict)
     except Exception as e:
-        print(f"[AI Tester] ❌ Error generando JSON: {e}")
-        fallback = {
+        print(f"[AI Tester] Error generando JSON: {e}", file=sys.stderr)
+        data = {
             "summary": "Error generando JSON",
             "impact": "No se pudo procesar la salida de la IA.",
             "proposed_fix": "Sin cambios.",
@@ -71,10 +64,9 @@ def main():
             "risk_notes": "Sin riesgo.",
             "retry_hint": "Reintentar ejecución."
         }
-        result_text = json.dumps(fallback, indent=2)
+        result_text = json.dumps(data, indent=2)
 
-    # Siempre imprimir JSON válido al stdout
-    print(result_text)
+    print(result_text)  # <-- ÚNICA impresión a stdout (el JSON)
 
 if __name__ == "__main__":
     main()
