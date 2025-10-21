@@ -4,6 +4,8 @@ on:
   push:
     branches: [ main, fix/**, feature/** ]
   pull_request:
+
+# Permisos para poder crear/actualizar ramas desde el job
 permissions:
   contents: write
   pull-requests: write
@@ -13,7 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0         # necesario para crear/pushear ramas nuevas
 
       - name: Setup Node & Python
         uses: actions/setup-node@v4
@@ -22,6 +27,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.11
+
+      - name: Install jq (JSON util)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
 
       - name: Install deps
         run: |
@@ -77,6 +87,12 @@ jobs:
           LLM_MODEL: ${{ vars.LLM_MODEL }}
         run: |
           python tools/ai_tester.py < failures.json > ai_patch.json
+
+      - name: Configure git user
+        if: steps.need_heal.outputs.heal == 'yes'
+        run: |
+          git config user.name "CI Bot"
+          git config user.email "ci@example.com"
 
       - name: Apply Patch with Rork
         if: steps.need_heal.outputs.heal == 'yes'
