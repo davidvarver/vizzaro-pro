@@ -87,6 +87,14 @@ jobs:
         run: |
           python tools/ai_tester.py < failures.json > ai_patch.json
 
+      - name: Show ai_patch.json (debug)
+        if: steps.need_heal.outputs.heal == 'yes'
+        run: |
+          echo "---- ai_patch.json ----"
+          cat ai_patch.json
+          echo "-----------------------"
+
+
       - name: Configure git user
         if: steps.need_heal.outputs.heal == 'yes'
         run: |
