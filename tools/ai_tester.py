@@ -9,13 +9,16 @@ API_KEY = os.getenv("LLM_API_KEY")
 
 def call_llm(prompt: str) -> str:
     """
-    Modo demo: devuelve SIEMPRE un JSON válido con un unified diff que crea
-    app/health/route.ts en Next.js (App Router).
+    Modo demo: devuelve SIEMPRE un JSON válido.
+    Incluye:
+      - unified_diff (puede fallar su aplicación)
+      - files[] como fallback para escribir archivos directamente
     """
-    # Importante: logs solo a stderr para no romper el JSON del stdout
+    # Logs SOLO a stderr para no romper stdout
     print("[AI Tester] Simulando respuesta de IA válida...", file=sys.stderr)
 
-    fake_patch = """diff --git a/app/health/route.ts b/app/health/route.ts
+    # Intento de unified diff (no importa si luego falla; tenemos fallback)
+    unified_diff = """diff --git a/app/health/route.ts b/app/health/route.ts
 new file mode 100644
 index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 --- /dev/null
@@ -28,19 +31,31 @@ index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2
 +}
 """
 
+    # Contenido real por si el diff falla (fallback)
+    file_content = """import { NextResponse } from 'next/server';
 
+export async function GET() {
+  return NextResponse.json({ status: 'ok' }, { status: 200 });
+}
+"""
 
-    fake_response = {
+    resp = {
         "summary": "No existe el endpoint /health.",
         "impact": "Las pruebas fallan al no responder /health.",
         "proposed_fix": "Crear app/health/route.ts devolviendo {status:'ok'}.",
-        "unified_diff": fake_patch,
+        "unified_diff": unified_diff,
         "test_updates": "N/A",
         "risk_notes": "Cambio seguro y aislado.",
-        "retry_hint": "Re-ejecutar pytest; debería pasar el healthcheck."
+        "retry_hint": "Re-ejecutar pytest; debería pasar el healthcheck.",
+        # 👇 Fallback explícito
+        "files": [
+            {
+                "path": "app/health/route.ts",
+                "content": file_content
+            }
+        ]
     }
-
-    return json.dumps(fake_response, ensure_ascii=False, indent=2)
+    return json.dumps(resp, ensure_ascii=False, indent=2)
 
 
 def main():
@@ -74,14 +89,12 @@ def main():
             "unified_diff": "",
             "test_updates": "N/A",
             "risk_notes": "Sin riesgo.",
-            "retry_hint": "Reintentar ejecución."
+            "retry_hint": "Reintentar ejecución.",
+            "files": []
         }
-        result_text = json.dumps(data, indent=2)
-    else:
-        result_text = json.dumps(data, ensure_ascii=False, indent=2)
 
     # ¡ÚNICA impresión a stdout!
-    print(result_text)
+    print(json.dumps(data, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
