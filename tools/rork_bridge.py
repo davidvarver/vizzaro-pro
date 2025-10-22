@@ -1,13 +1,21 @@
-import os, sys, json, subprocess, tempfile, pathlib
+import os
+import sys
+import json
+import subprocess
+import tempfile
+import pathlib
 
-# Si luego usas CLI/SDK de Rork, cambia aquí:
-RORK_CMD = os.getenv("RORK_CMD", "rork")  # no usado aún; placeholder
+RORK_CMD = os.getenv("RORK_CMD", "rork")  # placeholder
+
 
 def run(cmd, check=False):
     res = subprocess.run(cmd, capture_output=True, text=True)
     if check and res.returncode != 0:
-        raise RuntimeError(f"Command failed: {' '.join(cmd)}\nSTDOUT:\n{res.stdout}\nSTDERR:\n{res.stderr}")
+        raise RuntimeError(
+            f"Command failed: {' '.join(cmd)}\nSTDOUT:\n{res.stdout}\nSTDERR:\n{res.stderr}"
+        )
     return res
+
 
 def apply_unified_diff(diff_text: str) -> bool:
     diff_text = (diff_text or "").strip()
@@ -15,7 +23,6 @@ def apply_unified_diff(diff_text: str) -> bool:
         print("[RorkBridge] No hay diff para aplicar (OK).")
         return True
 
-    # Guarda el parche temporalmente
     with tempfile.NamedTemporaryFile("w+", delete=False, suffix=".patch", encoding="utf-8") as f:
         f.write(diff_text)
         patch_path = f.name
@@ -25,7 +32,6 @@ def apply_unified_diff(diff_text: str) -> bool:
     if res.returncode != 0:
         print("[RorkBridge] ❌ git apply falló. Intentando con --reject para ver hunks:")
         res2 = run(["git", "apply", "--reject", "--whitespace=fix", patch_path])
-        # Muestra .rej si existen
         rejs = list(pathlib.Path(".").rglob("*.rej"))
         if rejs:
             print("[RorkBridge] Archivos .rej generados (necesitan reemisión de diff por IA):")
@@ -44,13 +50,40 @@ def apply_unified_diff(diff_text: str) -> bool:
     print("[RorkBridge] ✅ Parche aplicado.")
     return True
 
+
+def write_files_fallback(files):
+    """
+    Crea/actualiza archivos directamente si el parche no aplicó.
+    files: lista de { "path": "...", "content": "..." }
+    """
+    if not files:
+        return False
+
+    print("[RorkBridge] ⚠️ Usando fallback: escritura directa de archivos.")
+    changed = False
+    for f in files:
+        path = f.get("path")
+        content = f.get("content", "")
+        if not path:
+            continue
+        p = pathlib.Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        before = p.read_text(encoding="utf-8") if p.exists() else None
+        p.write_text(content, encoding="utf-8")
+        after = p.read_text(encoding="utf-8")
+        if before != after:
+            print(f"[RorkBridge] Escribí {path} ({len(after)} bytes).")
+            changed = True
+
+    return changed
+
+
 def ensure_repo_branch():
-    # Crea/actualiza rama fix/ci para los commits del auto-fix
     run(["git", "checkout", "-B", "fix/ci"], check=False)
+
 
 def commit_and_push():
     run(["git", "add", "-A"], check=False)
-    # Si no hay cambios, no falles
     res = run(["git", "diff", "--cached", "--quiet"])
     if res.returncode == 0:
         print("[RorkBridge] No hay cambios para commitear (quizá el parche no modificaba nada).")
@@ -58,6 +91,7 @@ def commit_and_push():
     run(["git", "commit", "-m", "fix: auto-patch from AI analysis"], check=False)
     run(["git", "push", "-f", "origin", "fix/ci"], check=False)
     print("[RorkBridge] 🚀 Cambios enviados a rama 'fix/ci'.")
+
 
 def main():
     raw = sys.stdin.read().strip()
@@ -73,11 +107,20 @@ def main():
 
     unified = data.get("unified_diff", "")
     tests   = data.get("test_updates", "")
+    files   = data.get("files", [])
 
     ensure_repo_branch()
 
     ok_main  = apply_unified_diff(unified)
     ok_tests = apply_unified_diff(tests)
+
+    # Fallback si el diff (código o tests) falló
+    if not (ok_main and ok_tests) and files:
+        print("[RorkBridge] Parche falló; intento fallback con 'files'.")
+        wrote = write_files_fallback(files)
+        if wrote:
+            ok_main = True
+            ok_tests = True
 
     if not (ok_main and ok_tests):
         print("[RorkBridge] ❌ El parche no se aplicó limpio. Pide reemisión a la IA (ver .rej arriba).")
@@ -85,6 +128,7 @@ def main():
 
     commit_and_push()
     print("[RorkBridge] ✅ Listo.")
+
 
 if __name__ == "__main__":
     main()
