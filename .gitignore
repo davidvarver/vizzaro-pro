@@ -34,4 +34,12 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Vercel
 .vercel
+
+# ======= CI artifacts (añadidos) =======
+failures.json
+pytest-report.json
+playwright-report.json
+tests/__pycache__/
