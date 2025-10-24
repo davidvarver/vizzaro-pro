@@ -5,11 +5,21 @@ import json
 import subprocess
 import tempfile
 import pathlib
+import shutil
 from typing import List
 
 BRANCH_NAME = os.getenv("FIX_BRANCH", "fix/ci")
 
-# Archivos/carpeta que puede generar el CI y NO deben contar como “cambios reales”
+# Archivos/carpeta que genera el CI y que NO deben bloquear checkout/commit
+CI_TEMP_PATHS: List[str] = [
+    "ai_patch.json",
+    "failures.json",
+    "pytest-report.json",
+    "playwright-report.json",
+    "tests/__pycache__",
+]
+
+# Artefactos que NO deben contar como cambios reales
 IGNORE_PATHS: List[str] = [
     "failures.json",
     "pytest-report.json",
@@ -20,10 +30,6 @@ IGNORE_PATHS: List[str] = [
 # -------------------- helpers --------------------
 
 def run(cmd, check=False, capture=False):
-    """
-    Ejecuta un comando. Si capture=True, devuelve CompletedProcess con stdout/err.
-    Acepta lista o string (recomendado: lista).
-    """
     res = subprocess.run(
         cmd,
         text=True,
@@ -37,28 +43,36 @@ def run(cmd, check=False, capture=False):
         )
     return res
 
+def clean_ci_artifacts():
+    """
+    Elimina archivos temporales del CI que bloquean 'git checkout'.
+    Es seguro: no los necesitamos para aplicar el parche (leemos el JSON por stdin).
+    """
+    for p in CI_TEMP_PATHS:
+        path = pathlib.Path(p)
+        try:
+            if path.is_dir():
+                shutil.rmtree(path, ignore_errors=True)
+            elif path.exists():
+                path.unlink(missing_ok=True)
+        except Exception as e:
+            print(f"[RorkBridge] (warn) No pude eliminar {p}: {e}")
+
 def git_status_has_real_changes() -> bool:
     """
-    Inspecciona 'git status --porcelain' y devuelve True solo si hay cambios
-    que NO están dentro de IGNORE_PATHS.
+    Devuelve True solo si hay cambios que NO están bajo IGNORE_PATHS.
     """
     res = run(["git", "status", "--porcelain"], capture=True)
     if res.returncode != 0:
-        # si falla, mejor no bloquear el flujo
         return False
 
     for line in (res.stdout or "").splitlines():
-        # formato: 'XY path' o 'XY path -> path2'
-        # path arranca en columna 3 (index 3, 0-based)
         if not line.strip():
             continue
-        # suelen venir dos letras de estado + espacio + path
         path_part = line[3:].strip()
-        # si es un rename, toma el destino después de '->'
         if "->" in path_part:
             path_part = path_part.split("->", 1)[1].strip()
 
-        # si el path está bajo algún IGNORE_PATHS, se ignora
         if any(
             path_part == ig
             or path_part.startswith(ig.rstrip("/") + "/")
@@ -66,28 +80,26 @@ def git_status_has_real_changes() -> bool:
         ):
             continue
 
-        # algo real cambió
         return True
-
     return False
 
 def ensure_repo_branch():
     """
-    Asegura que estamos en BRANCH_NAME:
-    - si existe local, checkout
-    - si existe remoto, crea local trackeando remoto
-    - si no existe, crea nueva desde HEAD actual
+    Asegura que estamos en BRANCH_NAME. Limpia artefactos que bloquean checkout.
     """
-    # traer refs remotas
+    # Trae refs remotas
     run(["git", "fetch", "origin", "+refs/heads/*:refs/remotes/origin/*"])
 
-    # ¿local?
+    # Limpia archivos sin trackear que podrían bloquear el checkout
+    clean_ci_artifacts()
+
+    # Si existe local, checkout directo
     res = run(["git", "rev-parse", "--verify", BRANCH_NAME], capture=True)
     if res.returncode == 0:
         run(["git", "checkout", BRANCH_NAME], check=True)
         return
 
-    # ¿remoto?
+    # Si existe en remoto, crea local trackeando
     res = run(["git", "ls-remote", "--exit-code", "--heads", "origin", BRANCH_NAME])
     if res.returncode == 0:
         run(["git", "checkout", "-b", BRANCH_NAME, "--track", f"origin/{BRANCH_NAME}"], check=True)
@@ -95,9 +107,6 @@ def ensure_repo_branch():
         run(["git", "checkout", "-b", BRANCH_NAME], check=True)
 
 def apply_unified_diff(diff_text: str) -> bool:
-    """
-    Intenta aplicar un diff unificado. Si está vacío/N/A, no es error.
-    """
     diff_text = (diff_text or "").strip()
     if not diff_text or diff_text.upper() == "N/A":
         print("[RorkBridge] No hay diff para aplicar (OK).")
@@ -108,8 +117,6 @@ def apply_unified_diff(diff_text: str) -> bool:
         patch_path = f.name
 
     print(f"[RorkBridge] Aplicando parche: {patch_path}")
-
-    # 3-way ayuda cuando la base no coincide exactamente
     res = run(["git", "apply", "--3way", "--whitespace=fix", patch_path])
     if res.returncode != 0:
         print("[RorkBridge] ❌ git apply falló. Intentando con --reject para ver hunks:")
@@ -123,10 +130,8 @@ def apply_unified_diff(diff_text: str) -> bool:
                     print(r.read_text(encoding="utf-8"))
                 except Exception:
                     print("(no se pudo leer)")
-
             return False
         else:
-            # no hay .rej pero falló => reporta salida para diagnóstico
             print(res2.stdout or "")
             print(res2.stderr or "")
             return False
@@ -135,16 +140,11 @@ def apply_unified_diff(diff_text: str) -> bool:
     return True
 
 def safe_write_file(path: str, content: str) -> bool:
-    """
-    Escribe el archivo solo si cambia. Devuelve True si hubo cambio real.
-    Además hace 'git add' del archivo creado/actualizado.
-    """
     p = pathlib.Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
 
     before = p.read_text(encoding="utf-8") if p.exists() else None
     if before == content:
-        # nada que modificar
         return False
 
     p.write_text(content, encoding="utf-8")
@@ -153,9 +153,6 @@ def safe_write_file(path: str, content: str) -> bool:
     return True
 
 def write_files_fallback(files) -> bool:
-    """
-    Escribe archivos desde files[] del JSON. Devuelve True si hubo cambios reales.
-    """
     if not files:
         print("[RorkBridge] ⚠️ Fallback solicitado pero files[] está vacío.")
         return False
@@ -174,10 +171,6 @@ def write_files_fallback(files) -> bool:
     return changed
 
 def commit_and_push():
-    """
-    Hace commit/push SOLO si hay cambios reales (ignorando artefactos).
-    """
-    # Staging por si el diff dejó archivos listos
     run(["git", "add", "-A"])
 
     if not git_status_has_real_changes():
@@ -211,14 +204,12 @@ def main():
     ok_main  = apply_unified_diff(unified)
     ok_tests = apply_unified_diff(tests)
 
-    # Si los diffs fallan, intenta fallback
     if not (ok_main and ok_tests):
         print("[RorkBridge] ⚠️ Fallback: escribiendo archivos directamente.")
         if write_files_fallback(files):
             ok_main = True
             ok_tests = True
 
-    # Si aún no logramos cambios, verifica si ya estaba aplicado
     if not (ok_main and ok_tests):
         if not git_status_has_real_changes():
             print("[RorkBridge] ✅ Nada por cambiar: ya estaba aplicado.")
@@ -227,7 +218,6 @@ def main():
         print("[RorkBridge] ❌ No se pudo aplicar ni el diff ni generar cambios con fallback.")
         sys.exit(3)
 
-    # Commit/push si hay cambios reales
     commit_and_push()
     print("[RorkBridge] ✅ Listo.")
 
