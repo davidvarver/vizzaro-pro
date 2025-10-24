@@ -38,7 +38,8 @@ jobs:
           npm ci || true
           npx playwright install --with-deps || true || echo "Playwright opcional"
 
-      - name: Build app (Next.js) - capturar salida sin cortar el job
+      # ---------- Build capturado sin cortar el job ----------
+      - name: Build app (Next.js) – capturar salida sin cortar el job
         run: |
           if [ -f package.json ]; then
             set +e
@@ -49,26 +50,6 @@ jobs:
             echo "0" > build_exit.txt
             echo "" > build.log
           fi
-
-      - name: Build status → build_report.json
-        run: |
-          python - << 'PY'
-import json, os
-exit_code = 0
-if os.path.exists("build_exit.txt"):
-    try:
-        exit_code = int(open("build_exit.txt","r").read().strip() or "0")
-    except Exception:
-        exit_code = 1
-log_tail = ""
-if os.path.exists("build.log"):
-    with open("build.log","r",encoding="utf-8", errors="ignore") as f:
-        t = f.read()
-        log_tail = t[-12000:]
-report = {"exit_code": exit_code, "log_tail": log_tail}
-open("build_report.json","w",encoding="utf-8").write(json.dumps(report, ensure_ascii=False, indent=2))
-print(f"build_report.json listo (exit_code={exit_code}, {len(log_tail)} bytes de log)")
-PY
 
       - name: Start app (background)
         run: |
@@ -90,25 +71,37 @@ PY
             echo "{}" > playwright-report.json; \
           fi
 
+      - name: Build status → build_report.json
+        run: |
+          python - << 'PY'
+import json, os
+exit_code = int(open("build_exit.txt").read().strip()) if os.path.exists("build_exit.txt") else 0
+log = open("build.log","r",encoding="utf-8").read() if os.path.exists("build.log") else ""
+open("build_report.json","w",encoding="utf-8").write(json.dumps({"exit_code": exit_code, "log_tail": log[-12000:]}, ensure_ascii=False, indent=2))
+print(f"build_report.json listo (exit_code={exit_code}, {len(log)} bytes de log)")
+PY
+
+      # ---------- A partir de aquí: HEALING ----------
       - name: Collect failures
         id: collect
         run: |
           python tools/collect_failures.py > failures.json
-          echo "failures=$(cat failures.json)" >> $GITHUB_OUTPUT
-
-      - name: Show failures.json (debug)
-        run: |
+          # Si quieres ver qué juntó:
           echo "---- failures.json ----"
-          cat failures.json || true
-          echo "-----------------------"
+          sed -n '1,200p' failures.json || true
+          echo "----------------------"
+          # NUNCA metas JSON multilinea en GITHUB_OUTPUT (rompe):
+          echo "ok=true" >> "$GITHUB_OUTPUT"
 
       - name: Decide if healing is needed
         id: need_heal
         run: |
           py_fail=$(jq '.pytest | length' failures.json 2>/dev/null || echo 0)
           pw_fail=$(jq '.playwright | length' failures.json 2>/dev/null || echo 0)
-          build_fail=$(jq '.build.exit_code' failures.json 2>/dev/null || echo 0)
-
+          build_fail=$(jq -r '.build.exit_code // 0' build_report.json 2>/dev/null || echo 0)
+          echo "pytest_failures=$py_fail"
+          echo "playwright_failures=$pw_fail"
+          echo "build_exit=$build_fail"
           if [ "$py_fail" = "0" ] && [ "$pw_fail" = "0" ] && [ "$build_fail" = "0" ]; then
             echo "heal=no" >> $GITHUB_OUTPUT
           else
@@ -127,8 +120,8 @@ PY
         if: steps.need_heal.outputs.heal == 'yes'
         run: |
           echo "---- ai_patch.json ----"
-          cat ai_patch.json
-          echo "-----------------------"
+          sed -n '1,200p' ai_patch.json || true
+          echo "----------------------"
 
       - name: Configure git user
         if: steps.need_heal.outputs.heal == 'yes'
@@ -139,7 +132,6 @@ PY
       - name: Apply Patch with Rork
         if: steps.need_heal.outputs.heal == 'yes'
         env:
-          RORK_CMD: rork
           GIT_AUTHOR_NAME: CI Bot
           GIT_AUTHOR_EMAIL: ci@example.com
         run: |
