@@ -544,7 +544,20 @@ export default function CameraScreen() {
         return; // Exit early, don't throw error
       }
       
-      const prompt = `Look at the first image (the room/wall photo) and the second image (which contains the wallpaper pattern/texture/design). Apply ONLY the wallpaper pattern, texture, or design from the second image to the visible walls in the first image. Ignore any people, tools, or other objects in the second image - focus only on extracting and applying the wallpaper pattern itself. Match the lighting, perspective, and shadows of the room naturally. If the second image shows wallpaper in use, extract just the wallpaper pattern and apply it to the walls in the first image.`;
+      const prompt = `You are tasked with applying a wallpaper pattern to walls in a room photo.
+
+First image: A room/wall photo where wallpaper should be applied.
+Second image: Contains the wallpaper pattern, texture, or design to be used.
+
+IMPORTANT INSTRUCTIONS:
+1. If the second image shows a wallpaper pattern/texture/design (even if it's being held, installed, or shown in any context), extract ONLY that pattern and apply it to the walls in the first image.
+2. If the second image shows wallpaper on a wall or in a room setting, extract the wallpaper pattern and tile it appropriately on the walls in the first image.
+3. Ignore any people, tools, hands, or other objects in the second image - focus exclusively on identifying and extracting the wallpaper pattern itself.
+4. The wallpaper pattern might be shown: on a roll, being held, partially installed, in a product photo, or already on a wall.
+5. Apply the extracted pattern to all visible walls in the first image, matching the lighting, perspective, and shadows naturally.
+6. If you absolutely cannot identify any wallpaper pattern in the second image (it's completely unrelated), then state that clearly.
+
+Apply the wallpaper pattern from the second image to the walls in the first image.`;
       
       const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
       const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
