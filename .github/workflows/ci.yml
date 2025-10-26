@@ -50,6 +50,14 @@ jobs:
             echo "" > build.log
           fi
 
+      - name: Build status to build_report.json
+        run: |
+          python -c "import json,os; \
+          exit_code=int(open('build_exit.txt').read().strip()) if os.path.exists('build_exit.txt') else 0; \
+          log=open('build.log','r',encoding='utf-8').read() if os.path.exists('build.log') else ''; \
+          open('build_report.json','w',encoding='utf-8').write(json.dumps({'exit_code': exit_code,'log_tail': log[-12000:]},ensure_ascii=False,indent=2)); \
+          print(f'build_report.json ready (exit_code={exit_code})')"
+
       - name: Start app (background)
         run: |
           if [ -f package.json ]; then nohup npm run start &>/dev/null & sleep 10; fi
@@ -70,18 +78,6 @@ jobs:
             echo "{}" > playwright-report.json
           fi
 
-      - name: Build status to build_report.json
-        run: |
-          python - << 'PY'
-import json, os
-exit_code = int(open("build_exit.txt").read().strip()) if os.path.exists("build_exit.txt") else 0
-log = open("build.log","r",encoding="utf-8").read() if os.path.exists("build.log") else ""
-open("build_report.json","w",encoding="utf-8").write(
-  json.dumps({"exit_code": exit_code, "log_tail": log[-12000:]}, ensure_ascii=False, indent=2)
-)
-print(f"build_report.json ready (exit_code={exit_code})")
-PY
-
       # ---------- Healing ----------
       - name: Collect failures
         id: collect
@@ -90,7 +86,6 @@ PY
           echo "---- failures.json ----"
           sed -n '1,200p' failures.json || true
           echo "----------------------"
-          echo "ok=true" >> "$GITHUB_OUTPUT"
 
       - name: Decide if healing is needed
         id: need_heal
@@ -98,13 +93,10 @@ PY
           py_fail=$(jq '.pytest | length' failures.json 2>/dev/null || echo 0)
           pw_fail=$(jq '.playwright | length' failures.json 2>/dev/null || echo 0)
           build_fail=$(jq -r '.exit_code // 0' build_report.json 2>/dev/null || echo 0)
-          echo "pytest_failures=$py_fail"
-          echo "playwright_failures=$pw_fail"
-          echo "build_exit=$build_fail"
           if [ "$py_fail" = "0" ] && [ "$pw_fail" = "0" ] && [ "$build_fail" = "0" ]; then
-            echo "heal=no" >> $GITHUB_OUTPU
+            echo "heal=no" >> "$GITHUB_OUTPUT"
           else
-            echo "heal=yes" >> $GITHUB_OUTPUT
+            echo "heal=yes" >> "$GITHUB_OUTPUT"
           fi
 
       - name: AI Analysis & Patch
