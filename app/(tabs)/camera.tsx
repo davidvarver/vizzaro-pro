@@ -546,18 +546,26 @@ export default function CameraScreen() {
       
       const prompt = `You are tasked with applying a wallpaper pattern to walls in a room photo.
 
-First image: A room/wall photo where wallpaper should be applied.
-Second image: Contains the wallpaper pattern, texture, or design to be used.
+FIRST IMAGE: The target room/wall where wallpaper should be applied.
+SECOND IMAGE: The source wallpaper - this is a PRODUCT IMAGE showing the wallpaper design.
 
-IMPORTANT INSTRUCTIONS:
-1. If the second image shows a wallpaper pattern/texture/design (even if it's being held, installed, or shown in any context), extract ONLY that pattern and apply it to the walls in the first image.
-2. If the second image shows wallpaper on a wall or in a room setting, extract the wallpaper pattern and tile it appropriately on the walls in the first image.
-3. Ignore any people, tools, hands, or other objects in the second image - focus exclusively on identifying and extracting the wallpaper pattern itself.
-4. The wallpaper pattern might be shown: on a roll, being held, partially installed, in a product photo, or already on a wall.
-5. Apply the extracted pattern to all visible walls in the first image, matching the lighting, perspective, and shadows naturally.
-6. If you absolutely cannot identify any wallpaper pattern in the second image (it's completely unrelated), then state that clearly.
+CRITICAL INSTRUCTIONS:
+1. The second image is a WALLPAPER PRODUCT - it may show the wallpaper pattern in ANY of these contexts:
+   - Close-up of the pattern/texture
+   - Installed on walls in a room or showroom
+   - Being held or displayed
+   - On a roll or sample
+   - In a styled room setting with furniture and decor
 
-Apply the wallpaper pattern from the second image to the walls in the first image.`;
+2. YOUR TASK: Identify the wallpaper pattern/design from the second image (ignoring furniture, people, tools, room context) and apply THAT PATTERN to the walls in the first image.
+
+3. Even if the second image shows a full room with furniture and decorations, FOCUS ON THE WALLPAPER ON THE WALLS in that image - that's the pattern you need to extract and apply.
+
+4. Apply the extracted wallpaper design to all visible walls in the first image, matching natural lighting, perspective, and shadows.
+
+5. The second image is ALWAYS a wallpaper product reference - never treat it as an unrelated image.
+
+Extract the wallpaper pattern from the second image and apply it realistically to the walls in the first image.`;
       
       const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
       const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
