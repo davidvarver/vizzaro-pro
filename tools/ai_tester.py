@@ -1,89 +1,114 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import os
-import json
 import sys
-from textwrap import dedent
+import json
+import difflib
+from pathlib import Path
 
-MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
-API_KEY = os.getenv("LLM_API_KEY")
+TARGET_PATH = Path("app/health/route.ts")
 
-def call_llm(prompt: str) -> str:
-    """
-    Demo: siempre devuelve JSON válido con:
-      - unified_diff (formato mínimo que git apply entiende)
-      - files (fallback) para escribir directamente si el diff falla
-    """
-    print("[AI Tester] Generando respuesta demo...", file=sys.stderr)
+BASE_CONTENT_NEWFILE = """import { NextResponse } from 'next/server';
 
-    # Diff mínimo para archivo nuevo (sin línea 'index')
-    unified_diff = """diff --git a/app/health/route.ts b/app/health/route.ts
-new file mode 100644
---- /dev/null
-+++ b/app/health/route.ts
-@@ -0,0 +1,6 @@
-+import { NextResponse } from 'next/server';
-+
-+export async function GET() {
-+  return NextResponse.json({ status: 'ok' }, { status: 200 });
-+}
-"""
-
-    file_content = """import { NextResponse } from 'next/server';
-
+/**
+ * Auto-created by CI-Healing demo.
+ * Returns { status: 'ok' } with HTTP 200.
+ */
 export async function GET() {
   return NextResponse.json({ status: 'ok' }, { status: 200 });
 }
 """
 
-    return json.dumps(
-        {
-            "summary": "Falta /health",
-            "impact": "El test GET /health falla.",
-            "proposed_fix": "Crear route handler en app/health/route.ts.",
-            "unified_diff": unified_diff,
-            "test_updates": "N/A",
-            "risk_notes": "Cambio pequeño y seguro.",
-            "retry_hint": "Volver a correr pytest.",
-            # Fallback explícito
-            "files": [
-                {"path": "app/health/route.ts", "content": file_content}
-            ],
-        },
-        ensure_ascii=False,
-        indent=2,
-    )
+HEADER_COMMENT = "/** patched-by: CI-Healing demo */\n"
+
+def read_text(path: Path) -> str:
+    if not path.exists():
+        return ""
+    try:
+        return path.read_text(encoding="utf-8")
+    except Exception:
+        return path.read_text(errors="ignore")
+
+def git_unified_diff(old_text: str, new_text: str, rel_path: str) -> str:
+    """
+    Genera un unified diff “git-like” aceptado por `git apply`.
+    - Encabezados a/... y b/...
+    - Sin timestamps ruidosos
+    """
+    a_path = f"a/{rel_path}"
+    b_path = f"b/{rel_path}"
+    old_lines = old_text.splitlines(keepends=True)
+    new_lines = new_text.splitlines(keepends=True)
+
+    # Usamos difflib.unified_diff y luego ajustamos headers a/ b/
+    diff = list(difflib.unified_diff(
+        old_lines,
+        new_lines,
+        fromfile=a_path,
+        tofile=b_path,
+        lineterm=""
+    ))
+
+    # Asegurar “--- a/...” y “+++ b/...” (difflib ya lo pone así con fromfile/tofile)
+    # Unir con "\n" y agregar newline final (git apply es quisquilloso)
+    return "\n".join(diff) + "\n"
+
+def build_patch() -> dict:
+    """
+    Construye un parche que SIEMPRE haga un cambio real:
+      - Si app/health/route.ts existe, antepone un comentario.
+      - Si no existe, lo crea con un handler /health.
+    Devuelve dict con:
+      - summary, impact, proposed_fix
+      - unified_diff (git-like)
+      - files (fallback) -> para escribir si git apply fallara
+    """
+    rel = str(TARGET_PATH).replace("\\", "/")
+    old = read_text(TARGET_PATH)
+
+    if old.strip() == "":
+        # No existe o vacío -> crear archivo
+        new = BASE_CONTENT_NEWFILE
+        summary = f"Crear {rel} para endpoint /health."
+        impact = "Falta endpoint de salud; tests de salud podrían fallar."
+        proposed = f"Crear {rel} que responda 200 y {{status:'ok'}}."
+    else:
+        # Existe -> anteponer un comentario para forzar cambio real
+        if old.startswith(HEADER_COMMENT):
+            # Ya lo tenía → agregamos una segunda línea para asegurar cambio
+            new = HEADER_COMMENT + old
+        else:
+            new = HEADER_COMMENT + old
+        summary = f"Añadir encabezado de comentario a {rel}."
+        impact = "Cambio inofensivo para verificar flujo de autocuración."
+        proposed = "Anteponer comentario para demostrar que el parche aplica."
+
+    patch = git_unified_diff(old, new, rel)
+
+    return {
+        "summary": summary,
+        "impact": impact,
+        "proposed_fix": proposed,
+        "unified_diff": patch,
+        "test_updates": "N/A",
+        "risk_notes": "Cambio seguro (comentario o archivo nuevo).",
+        "retry_hint": "Re-ejecutar el workflow si fuera necesario.",
+        # Fallback: escribir archivo final directamente
+        "files": [
+            {"path": rel, "content": new}
+        ],
+    }
 
 def main():
-    failures_json = sys.stdin.read().strip() or "{}"
-    try:
-        _ = json.loads(failures_json)
-    except Exception:
-        pass  # no importa; es demo
+    # Leemos stdin (failures.json). No lo usamos estrictamente en el demo,
+    # pero lo aceptamos para mantener el contrato del workflow.
+    _ = sys.stdin.read()
 
-    prompt = dedent("""
-    Contexto: Next.js (App Router). Crea /health que devuelva 200 y {status:'ok'}.
-    """).strip()
+    result = build_patch()
 
-    result = call_llm(prompt)
-
-    # Asegura que salimos con JSON limpio SOLO por stdout
-    try:
-        json.loads(result)
-    except Exception as e:
-        print(f"[AI Tester] JSON inválido: {e}", file=sys.stderr)
-        result = json.dumps(
-            {
-                "summary": "Error generando JSON",
-                "impact": "—",
-                "proposed_fix": "—",
-                "unified_diff": "",
-                "test_updates": "N/A",
-                "risk_notes": "—",
-                "retry_hint": "Reintentar",
-                "files": [],
-            },
-            indent=2,
-        )
-    print(result)
+    # Emitimos SIEMPRE JSON válido por stdout
+    print(json.dumps(result, ensure_ascii=False, indent=2))
 
 if __name__ == "__main__":
     main()
