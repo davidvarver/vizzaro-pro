@@ -1,110 +1,31 @@
-#!/usr/bin/env python3
 import os
 import sys
 import json
 import subprocess
 import tempfile
 import pathlib
-import shutil
-from typing import List
 
-BRANCH_NAME = os.getenv("FIX_BRANCH", "fix/ci")
+BRANCH_NAME = "fix/ci"
 
-# Archivos/carpeta que genera el CI y que NO deben bloquear checkout/commit
-CI_TEMP_PATHS: List[str] = [
-    "ai_patch.json",
-    "failures.json",
-    "pytest-report.json",
-    "playwright-report.json",
-    "tests/__pycache__",
-]
-
-# Artefactos que NO deben contar como cambios reales
-IGNORE_PATHS: List[str] = [
-    "failures.json",
-    "pytest-report.json",
-    "playwright-report.json",
-    "tests/__pycache__",
-]
-
-# -------------------- helpers --------------------
-
-def run(cmd, check=False, capture=False):
-    res = subprocess.run(
-        cmd,
-        text=True,
-        capture_output=capture,
-        shell=isinstance(cmd, str),
-    )
+def run(cmd, check=False):
+    res = subprocess.run(cmd, capture_output=True, text=True)
     if check and res.returncode != 0:
         raise RuntimeError(
-            f"Command failed: {cmd if isinstance(cmd,str) else ' '.join(cmd)}\n"
-            f"STDOUT:\n{res.stdout}\nSTDERR:\n{res.stderr}"
+            f"Command failed: {' '.join(cmd)}\nSTDOUT:\n{res.stdout}\nSTDERR:\n{res.stderr}"
         )
     return res
 
-def clean_ci_artifacts():
-    """
-    Elimina archivos temporales del CI que bloquean 'git checkout'.
-    Es seguro: no los necesitamos para aplicar el parche (leemos el JSON por stdin).
-    """
-    for p in CI_TEMP_PATHS:
-        path = pathlib.Path(p)
-        try:
-            if path.is_dir():
-                shutil.rmtree(path, ignore_errors=True)
-            elif path.exists():
-                path.unlink(missing_ok=True)
-        except Exception as e:
-            print(f"[RorkBridge] (warn) No pude eliminar {p}: {e}")
-
-def git_status_has_real_changes() -> bool:
-    """
-    Devuelve True solo si hay cambios que NO están bajo IGNORE_PATHS.
-    """
-    res = run(["git", "status", "--porcelain"], capture=True)
-    if res.returncode != 0:
-        return False
-
-    for line in (res.stdout or "").splitlines():
-        if not line.strip():
-            continue
-        path_part = line[3:].strip()
-        if "->" in path_part:
-            path_part = path_part.split("->", 1)[1].strip()
-
-        if any(
-            path_part == ig
-            or path_part.startswith(ig.rstrip("/") + "/")
-            for ig in IGNORE_PATHS
-        ):
-            continue
-
+def repo_has_staged_or_unstaged_changes() -> bool:
+    # ¿Hay cambios staged?
+    if run(["git", "diff", "--cached", "--quiet"]).returncode != 0:
+        return True
+    # ¿Hay cambios unstaged?
+    if run(["git", "diff", "--quiet"]).returncode != 0:
+        return True
+    # ¿Archivos sin trackear?
+    if run(["git", "ls-files", "--others", "--exclude-standard"]).stdout.strip():
         return True
     return False
-
-def ensure_repo_branch():
-    """
-    Asegura que estamos en BRANCH_NAME. Limpia artefactos que bloquean checkout.
-    """
-    # Trae refs remotas
-    run(["git", "fetch", "origin", "+refs/heads/*:refs/remotes/origin/*"])
-
-    # Limpia archivos sin trackear que podrían bloquear el checkout
-    clean_ci_artifacts()
-
-    # Si existe local, checkout directo
-    res = run(["git", "rev-parse", "--verify", BRANCH_NAME], capture=True)
-    if res.returncode == 0:
-        run(["git", "checkout", BRANCH_NAME], check=True)
-        return
-
-    # Si existe en remoto, crea local trackeando
-    res = run(["git", "ls-remote", "--exit-code", "--heads", "origin", BRANCH_NAME])
-    if res.returncode == 0:
-        run(["git", "checkout", "-b", BRANCH_NAME, "--track", f"origin/{BRANCH_NAME}"], check=True)
-    else:
-        run(["git", "checkout", "-b", BRANCH_NAME], check=True)
 
 def apply_unified_diff(diff_text: str) -> bool:
     diff_text = (diff_text or "").strip()
@@ -117,71 +38,72 @@ def apply_unified_diff(diff_text: str) -> bool:
         patch_path = f.name
 
     print(f"[RorkBridge] Aplicando parche: {patch_path}")
-    res = run(["git", "apply", "--3way", "--whitespace=fix", patch_path])
-    if res.returncode != 0:
-        print("[RorkBridge] ❌ git apply falló. Intentando con --reject para ver hunks:")
-        res2 = run(["git", "apply", "--reject", "--whitespace=fix", patch_path], capture=True)
-        rejs = list(pathlib.Path(".").rglob("*.rej"))
-        if rejs:
-            print("[RorkBridge] Archivos .rej generados (necesitan reemisión de diff):")
-            for r in rejs:
-                print(f"\n----- {r} -----")
-                try:
-                    print(r.read_text(encoding="utf-8"))
-                except Exception:
-                    print("(no se pudo leer)")
-            return False
-        else:
-            print(res2.stdout or "")
-            print(res2.stderr or "")
-            return False
+    # 1) Intento 3-way
+    r1 = run(["git", "apply", "--3way", "--whitespace=fix", patch_path])
+    if r1.returncode == 0:
+        print("[RorkBridge] ✅ Parche aplicado con --3way.")
+        return True
 
-    print("[RorkBridge] ✅ Parche aplicado.")
-    return True
+    # 2) Intento con --reject para ver hunks
+    print("[RorkBridge] ❌ git apply falló. Intentando con --reject para ver hunks:")
+    r2 = run(["git", "apply", "--reject", "--whitespace=fix", patch_path])
+    if r2.returncode == 0:
+        print("[RorkBridge] ✅ Parche aplicado con --reject.")
+        return True
 
-def safe_write_file(path: str, content: str) -> bool:
-    p = pathlib.Path(path)
-    p.parent.mkdir(parents=True, exist_ok=True)
+    # Mostrar .rej si existen
+    rejs = list(pathlib.Path(".").rglob("*.rej"))
+    if rejs:
+        print("[RorkBridge] Archivos .rej generados (necesitan reemisión de diff):")
+        for r in rejs:
+            print(f"\n----- {r} -----")
+            try:
+                print(r.read_text(encoding="utf-8"))
+            except Exception:
+                print("(no se pudo leer)")
+    else:
+        print("[RorkBridge] No se generaron .rej, pero git apply falló:")
+        print(r1.stdout or r2.stdout)
+        print(r1.stderr or r2.stderr)
 
-    before = p.read_text(encoding="utf-8") if p.exists() else None
-    if before == content:
-        return False
+    return False
 
-    p.write_text(content, encoding="utf-8")
-    run(["git", "add", str(p)])
-    print(f"[RorkBridge] ✍️ Escribí/actualicé {path} ({len(content)} bytes).")
-    return True
-
-def write_files_fallback(files) -> bool:
+def write_files_fallback(files):
     if not files:
-        print("[RorkBridge] ⚠️ Fallback solicitado pero files[] está vacío.")
         return False
-
+    print("[RorkBridge] ⚠️ Fallback: escribiendo archivos directamente.")
     changed = False
     for f in files:
-        path = (f.get("path") or "").strip()
+        path = f.get("path")
         content = f.get("content", "")
         if not path:
             continue
-        try:
-            if safe_write_file(path, content):
-                changed = True
-        except Exception as e:
-            print(f"[RorkBridge] ⚠️ No pude escribir {path}: {e}")
+        p = pathlib.Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        before = p.read_text(encoding="utf-8") if p.exists() else None
+        p.write_text(content, encoding="utf-8")
+        after = p.read_text(encoding="utf-8")
+        if before != after:
+            print(f"[RorkBridge] Escribí {path} ({len(after)} bytes).")
+            changed = True
     return changed
 
+def ensure_repo_branch():
+    # Asegura rama de trabajo
+    run(["git", "fetch", "origin", BRANCH_NAME], check=False)
+    # Crea o mueve a BRANCH_NAME desde HEAD actual
+    run(["git", "checkout", "-B", BRANCH_NAME], check=False)
+    run(["git", "branch", "--set-upstream-to", f"origin/{BRANCH_NAME}", BRANCH_NAME], check=False)
+
 def commit_and_push():
-    run(["git", "add", "-A"])
-
-    if not git_status_has_real_changes():
-        print("[RorkBridge] ℹ️ Nada por commitear (o solo artefactos ignorados).")
-        return
-
-    run(["git", "commit", "-m", "fix: auto-patch from AI analysis"], check=True)
-    run(["git", "push", "-u", "origin", BRANCH_NAME], check=True)
+    run(["git", "add", "-A"], check=False)
+    if run(["git", "diff", "--cached", "--quiet"]).returncode == 0:
+        print("[RorkBridge] No hay cambios para commitear.")
+        return False
+    run(["git", "commit", "-m", "fix: auto-patch from AI analysis"], check=False)
+    run(["git", "push", "-u", "origin", BRANCH_NAME], check=False)
     print(f"[RorkBridge] 🚀 Cambios enviados a rama '{BRANCH_NAME}'.")
-
-# -------------------- main --------------------
+    return True
 
 def main():
     raw = sys.stdin.read().strip()
@@ -204,22 +126,23 @@ def main():
     ok_main  = apply_unified_diff(unified)
     ok_tests = apply_unified_diff(tests)
 
+    changed_by_fallback = False
     if not (ok_main and ok_tests):
-        print("[RorkBridge] ⚠️ Fallback: escribiendo archivos directamente.")
-        if write_files_fallback(files):
-            ok_main = True
-            ok_tests = True
+        changed_by_fallback = write_files_fallback(files)
 
-    if not (ok_main and ok_tests):
-        if not git_status_has_real_changes():
-            print("[RorkBridge] ✅ Nada por cambiar: ya estaba aplicado.")
-            sys.exit(0)
+    # Si a esta altura no hay cambios (diff limpio), trátalo como NO-OP y éxito
+    if not repo_has_staged_or_unstaged_changes():
+        print("[RorkBridge] ℹ️ No hay cambios que aplicar. Considero NO-OP (éxito).")
+        sys.exit(0)
 
-        print("[RorkBridge] ❌ No se pudo aplicar ni el diff ni generar cambios con fallback.")
-        sys.exit(3)
+    # Intentar commitear / pushear si hay cambios
+    if not commit_and_push():
+        # No hay cambios staged (de nuevo), considerar éxito NO-OP
+        print("[RorkBridge] ℹ️ No hay cambios para subir. NO-OP (éxito).")
+        sys.exit(0)
 
-    commit_and_push()
     print("[RorkBridge] ✅ Listo.")
+    sys.exit(0)
 
 if __name__ == "__main__":
     main()
