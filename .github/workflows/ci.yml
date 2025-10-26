@@ -12,12 +12,11 @@ permissions:
 jobs:
   test-and-heal:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # necesario para crear/pushear ramas nuevas
+          fetch-depth: 0
 
       - name: Setup Node & Python
         uses: actions/setup-node@v4
@@ -25,9 +24,9 @@ jobs:
           node-version: 20
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: '3.11'
 
-      - name: Install jq (JSON util)
+      - name: Install jq
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
@@ -36,10 +35,10 @@ jobs:
         run: |
           pip install pytest requests pytest-json-report || true
           npm ci || true
-          npx playwright install --with-deps || true || echo "Playwright opcional"
+          npx playwright install --with-deps || true
 
-      # ---------- Build capturado sin cortar el job ----------
-      - name: Build app (Next.js) – capturar salida sin cortar el job
+      # ---------- Build capturado sin romper el job ----------
+      - name: Build app (Next.js)
         run: |
           if [ -f package.json ]; then
             set +e
@@ -57,40 +56,40 @@ jobs:
 
       - name: Run tests (pytest)
         run: |
-          if [ -d tests ]; then \
-            pytest -q --maxfail=1 --disable-warnings --json-report --json-report-file=pytest-report.json || true; \
-          else \
-            echo "{}" > pytest-report.json; \
+          if [ -d tests ]; then
+            pytest -q --maxfail=1 --disable-warnings --json-report --json-report-file=pytest-report.json || true
+          else
+            echo "{}" > pytest-report.json
           fi
 
-      - name: Run tests (Playwright opcional)
+      - name: Run tests (Playwright optional)
         run: |
-          if [ -f playwright.config.ts ] || [ -f playwright.config.js ]; then \
-            npx playwright test --reporter=json > playwright-report.json || true; \
-          else \
-            echo "{}" > playwright-report.json; \
+          if [ -f playwright.config.ts ] || [ -f playwright.config.js ]; then
+            npx playwright test --reporter=json > playwright-report.json || true
+          else
+            echo "{}" > playwright-report.json
           fi
 
-      - name: Build status → build_report.json
+      - name: Build status to build_report.json
         run: |
           python - << 'PY'
 import json, os
 exit_code = int(open("build_exit.txt").read().strip()) if os.path.exists("build_exit.txt") else 0
 log = open("build.log","r",encoding="utf-8").read() if os.path.exists("build.log") else ""
-open("build_report.json","w",encoding="utf-8").write(json.dumps({"exit_code": exit_code, "log_tail": log[-12000:]}, ensure_ascii=False, indent=2))
-print(f"build_report.json listo (exit_code={exit_code}, {len(log)} bytes de log)")
+open("build_report.json","w",encoding="utf-8").write(
+  json.dumps({"exit_code": exit_code, "log_tail": log[-12000:]}, ensure_ascii=False, indent=2)
+)
+print(f"build_report.json ready (exit_code={exit_code})")
 PY
 
-      # ---------- A partir de aquí: HEALING ----------
+      # ---------- Healing ----------
       - name: Collect failures
         id: collect
         run: |
           python tools/collect_failures.py > failures.json
-          # Si quieres ver qué juntó:
           echo "---- failures.json ----"
           sed -n '1,200p' failures.json || true
           echo "----------------------"
-          # NUNCA metas JSON multilinea en GITHUB_OUTPUT (rompe):
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
       - name: Decide if healing is needed
@@ -98,12 +97,12 @@ PY
         run: |
           py_fail=$(jq '.pytest | length' failures.json 2>/dev/null || echo 0)
           pw_fail=$(jq '.playwright | length' failures.json 2>/dev/null || echo 0)
-          build_fail=$(jq -r '.build.exit_code // 0' build_report.json 2>/dev/null || echo 0)
+          build_fail=$(jq -r '.exit_code // 0' build_report.json 2>/dev/null || echo 0)
           echo "pytest_failures=$py_fail"
           echo "playwright_failures=$pw_fail"
           echo "build_exit=$build_fail"
           if [ "$py_fail" = "0" ] && [ "$pw_fail" = "0" ] && [ "$build_fail" = "0" ]; then
-            echo "heal=no" >> $GITHUB_OUTPUT
+            echo "heal=no" >> $GITHUB_OUTPU
           else
             echo "heal=yes" >> $GITHUB_OUTPUT
           fi
