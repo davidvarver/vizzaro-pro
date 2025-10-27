@@ -166,7 +166,7 @@ export default function WallpaperResultScreen() {
         if (viewShotRef.current && viewShotRef.current.capture) {
           const uri = await viewShotRef.current.capture();
           const base64 = await FileSystem.readAsStringAsync(uri, {
-            encoding: FileSystem.EncodingType.Base64,
+            encoding: 'base64',
           });
           return base64;
         }
@@ -198,9 +198,10 @@ export default function WallpaperResultScreen() {
         }
 
         const watermarkedBase64 = await addWatermarkToImage(imageToSave);
-        const fileUri = FileSystem.cacheDirectory + `vizzaro-wallpaper-${Date.now()}.jpg`;
+        const cacheDir = (FileSystem as any).cacheDirectory || '';
+        const fileUri = `${cacheDir}vizzaro-wallpaper-${Date.now()}.jpg`;
         await FileSystem.writeAsStringAsync(fileUri, watermarkedBase64, {
-          encoding: FileSystem.EncodingType.Base64,
+          encoding: 'base64',
         });
         
         const asset = await MediaLibrary.createAssetAsync(fileUri);
@@ -243,9 +244,10 @@ export default function WallpaperResultScreen() {
           Alert.alert('Descargado', 'La imagen se ha descargado. Puedes compartirla desde tu carpeta de descargas.');
         }
       } else {
-        const fileUri = FileSystem.cacheDirectory + `vizzaro-wallpaper-${Date.now()}.jpg`;
+        const cacheDir = (FileSystem as any).cacheDirectory || '';
+        const fileUri = `${cacheDir}vizzaro-wallpaper-${Date.now()}.jpg`;
         await FileSystem.writeAsStringAsync(fileUri, watermarkedBase64, {
-          encoding: FileSystem.EncodingType.Base64,
+          encoding: 'base64',
         });
         
         const canShare = await Sharing.isAvailableAsync();

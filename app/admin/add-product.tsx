@@ -392,11 +392,12 @@ export default function AddProductScreen() {
         console.log('[Excel] Generating file for mobile...');
         const wbout = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
         
-        const fileUri = FileSystem.documentDirectory + 'plantilla_productos.xlsx';
+        const docDir = (FileSystem as any).documentDirectory || '';
+        const fileUri = `${docDir}plantilla_productos.xlsx`;
         console.log('[Excel] Writing to:', fileUri);
         
         await FileSystem.writeAsStringAsync(fileUri, wbout, {
-          encoding: FileSystem.EncodingType.Base64,
+          encoding: 'base64',
         });
         
         console.log('[Excel] Sharing file...');
@@ -443,7 +444,7 @@ export default function AddProductScreen() {
         await processExcelData(jsonData);
       } else {
         fileContent = await FileSystem.readAsStringAsync(fileUri, {
-          encoding: FileSystem.EncodingType.Base64,
+          encoding: 'base64',
         });
         const workbook = XLSX.read(fileContent, { type: 'base64' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];

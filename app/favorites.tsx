@@ -35,7 +35,7 @@ import { useWallpapers } from '@/contexts/WallpapersContext';
 export default function FavoritesScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { favoriteProjects, removeFromFavorites, changeWallpaper } = useFavorites();
+  const { favoriteProjects, removeFromFavorites } = useFavorites();
   const { wallpapers } = useWallpapers();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -47,7 +47,7 @@ export default function FavoritesScreen() {
 
   const filteredProjects = favoriteProjects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.wallpaper.name.toLowerCase().includes(searchQuery.toLowerCase());
+                         (project.wallpapers.length > 0 && project.wallpapers[0].name.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesRoom = selectedRoom === 'all' || 
                        project.roomType.toLowerCase() === selectedRoom.toLowerCase();
     return matchesSearch && matchesRoom;
@@ -74,16 +74,13 @@ export default function FavoritesScreen() {
 
   const handleWallpaperSelection = async (newWallpaper: any) => {
     if (selectedProject) {
-      const success = await changeWallpaper(selectedProject.id, newWallpaper);
-      if (success) {
-        setShowWallpaperModal(false);
-        setSelectedProject(null);
-        if (Platform.OS !== 'web') {
-          Alert.alert(
-            'Papel Cambiado',
-            `El papel tapiz de "${selectedProject.name}" ha sido actualizado.`
-          );
-        }
+      setShowWallpaperModal(false);
+      setSelectedProject(null);
+      if (Platform.OS !== 'web') {
+        Alert.alert(
+          'No Disponible',
+          'La función de cambio de papel tapiz no está implementada aún.'
+        );
       }
     }
   };
@@ -93,14 +90,16 @@ export default function FavoritesScreen() {
       <View style={styles.projectImageContainer}>
         {project.userPhoto ? (
           <Image source={{ uri: project.userPhoto }} style={styles.projectImage} />
-        ) : (
-          <Image source={{ uri: project.wallpaper.imageUrl }} style={styles.projectImage} />
-        )}
+        ) : project.wallpapers.length > 0 ? (
+          <Image source={{ uri: project.wallpapers[0].imageUrl }} style={styles.projectImage} />
+        ) : null}
         <View style={styles.projectOverlay}>
           <View style={styles.projectInfo}>
             <Text style={styles.projectName}>{project.name}</Text>
             <Text style={styles.projectRoom}>{project.roomType}</Text>
-            <Text style={styles.projectWallpaper}>{project.wallpaper.name}</Text>
+            <Text style={styles.projectWallpaper}>
+              {project.wallpapers.length > 0 ? project.wallpapers[0].name : 'Sin papel'}
+            </Text>
           </View>
         </View>
       </View>
@@ -120,7 +119,7 @@ export default function FavoritesScreen() {
             router.push({
               pathname: '/(tabs)/camera',
               params: { 
-                wallpaperId: project.wallpaper.id,
+                wallpaperId: project.wallpapers.length > 0 ? project.wallpapers[0].id : '',
                 source: 'favorite',
                 projectId: project.id
               }
@@ -169,7 +168,7 @@ export default function FavoritesScreen() {
         <Text style={styles.wallpaperOptionCategory}>{wallpaper.category}</Text>
         <Text style={styles.wallpaperOptionPrice}>${wallpaper.price}</Text>
       </View>
-      {selectedProject?.wallpaper.id === wallpaper.id && (
+      {selectedProject && selectedProject.wallpapers && selectedProject.wallpapers.length > 0 && selectedProject.wallpapers[0].id === wallpaper.id && (
         <View style={styles.currentWallpaperBadge}>
           <Check size={16} color={Colors.light.background} />
         </View>
@@ -289,7 +288,7 @@ export default function FavoritesScreen() {
                   Proyecto: {selectedProject.name}
                 </Text>
                 <Text style={styles.currentWallpaperText}>
-                  Papel actual: {selectedProject.wallpaper.name}
+                  Papel actual: {selectedProject.wallpapers.length > 0 ? selectedProject.wallpapers[0].name : 'Sin papel'}
                 </Text>
               </View>
             )}
