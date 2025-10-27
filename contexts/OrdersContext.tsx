@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContextHook from '@nkzw/create-context-hook';
 import { CartItem } from './CartContext';
+import { useAdmin } from './AdminContext';
 
 export interface Order {
   id: string;
@@ -24,8 +25,10 @@ export interface Order {
 }
 
 const ORDERS_STORAGE_KEY = 'wallpaper_orders';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 
 export const [OrdersProvider, useOrders] = createContextHook(() => {
+  const { adminToken } = useAdmin();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -33,18 +36,50 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
     try {
       await AsyncStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
     } catch (error) {
-      console.error('Error saving orders:', error);
+      console.error('[OrdersContext] Error saving orders to local storage:', error);
     }
   }, [orders]);
 
   const loadOrders = useCallback(async () => {
     try {
+      console.log('[OrdersContext] Loading orders...');
+      
+      if (API_BASE_URL) {
+        try {
+          console.log('[OrdersContext] Fetching from API:', `${API_BASE_URL}/api/orders/get`);
+          const response = await fetch(`${API_BASE_URL}/api/orders/get?t=${Date.now()}`, {
+            method: 'GET',
+            headers: {
+              'Cache-Control': 'no-store, no-cache, must-revalidate',
+              'Pragma': 'no-cache',
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[OrdersContext] Loaded from API:', data.orders?.length || 0, 'orders');
+            if (data.success && data.orders) {
+              setOrders(data.orders);
+              await AsyncStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(data.orders));
+              return;
+            }
+          } else {
+            console.warn('[OrdersContext] API returned error:', response.status);
+          }
+        } catch (apiError) {
+          console.warn('[OrdersContext] API fetch failed, trying local storage:', apiError);
+        }
+      }
+      
+      console.log('[OrdersContext] Loading from local storage...');
       const stored = await AsyncStorage.getItem(ORDERS_STORAGE_KEY);
       if (stored) {
-        setOrders(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        console.log('[OrdersContext] Loaded from storage:', parsed.length, 'orders');
+        setOrders(parsed);
       }
     } catch (error) {
-      console.error('Error loading orders:', error);
+      console.error('[OrdersContext] Error loading orders:', error);
     } finally {
       setIsLoading(false);
     }
@@ -224,43 +259,168 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
   };
 
   const createOrder = useCallback(async (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newOrder: Order = {
-      ...orderData,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    try {
+      console.log('[OrdersContext] Creating order...');
+      
+      if (API_BASE_URL) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/orders/create`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ order: orderData }),
+          });
 
-    setOrders(prevOrders => [newOrder, ...prevOrders]);
-    
-    await sendOrderConfirmationEmail(newOrder);
-    
-    return newOrder.id;
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[OrdersContext] Order created via API:', data.orderId);
+            
+            if (data.success && data.order) {
+              setOrders(prevOrders => [data.order, ...prevOrders]);
+              await sendOrderConfirmationEmail(data.order);
+              return data.orderId;
+            }
+          } else {
+            console.warn('[OrdersContext] API create failed:', response.status);
+          }
+        } catch (apiError) {
+          console.warn('[OrdersContext] API create error, falling back to local:', apiError);
+        }
+      }
+      
+      const newOrder: Order = {
+        ...orderData,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      setOrders(prevOrders => [newOrder, ...prevOrders]);
+      await sendOrderConfirmationEmail(newOrder);
+      
+      return newOrder.id;
+    } catch (error) {
+      console.error('[OrdersContext] Error creating order:', error);
+      throw error;
+    }
   }, []);
 
-  const updateOrderStatus = useCallback((orderId: string, status: Order['status']) => {
-    setOrders(prevOrders =>
-      prevOrders.map(order =>
-        order.id === orderId
-          ? { ...order, status, updatedAt: new Date().toISOString() }
-          : order
-      )
-    );
-  }, []);
+  const updateOrderStatus = useCallback(async (orderId: string, status: Order['status']) => {
+    try {
+      console.log('[OrdersContext] Updating order status:', orderId, status);
+      
+      if (API_BASE_URL && adminToken) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/orders/update`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              orderId, 
+              updates: { status },
+              adminToken 
+            }),
+          });
 
-  const updateOrder = useCallback((orderId: string, updates: Partial<Order>) => {
-    setOrders(prevOrders =>
-      prevOrders.map(order =>
-        order.id === orderId
-          ? { ...order, ...updates, updatedAt: new Date().toISOString() }
-          : order
-      )
-    );
-  }, []);
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[OrdersContext] Order updated via API');
+            if (data.success && data.order) {
+              setOrders(prevOrders =>
+                prevOrders.map(order => order.id === orderId ? data.order : order)
+              );
+              return;
+            }
+          }
+        } catch (apiError) {
+          console.warn('[OrdersContext] API update failed:', apiError);
+        }
+      }
+      
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order.id === orderId
+            ? { ...order, status, updatedAt: new Date().toISOString() }
+            : order
+        )
+      );
+    } catch (error) {
+      console.error('[OrdersContext] Error updating order status:', error);
+    }
+  }, [adminToken]);
 
-  const deleteOrder = useCallback((orderId: string) => {
-    setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
-  }, []);
+  const updateOrder = useCallback(async (orderId: string, updates: Partial<Order>) => {
+    try {
+      console.log('[OrdersContext] Updating order:', orderId);
+      
+      if (API_BASE_URL && adminToken) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/orders/update`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ orderId, updates, adminToken }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[OrdersContext] Order updated via API');
+            if (data.success && data.order) {
+              setOrders(prevOrders =>
+                prevOrders.map(order => order.id === orderId ? data.order : order)
+              );
+              return;
+            }
+          }
+        } catch (apiError) {
+          console.warn('[OrdersContext] API update failed:', apiError);
+        }
+      }
+      
+      setOrders(prevOrders =>
+        prevOrders.map(order =>
+          order.id === orderId
+            ? { ...order, ...updates, updatedAt: new Date().toISOString() }
+            : order
+        )
+      );
+    } catch (error) {
+      console.error('[OrdersContext] Error updating order:', error);
+    }
+  }, [adminToken]);
+
+  const deleteOrder = useCallback(async (orderId: string) => {
+    try {
+      console.log('[OrdersContext] Deleting order:', orderId);
+      
+      if (API_BASE_URL && adminToken) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/orders/delete`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ orderId, adminToken }),
+          });
+
+          if (response.ok) {
+            console.log('[OrdersContext] Order deleted via API');
+            setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
+            return;
+          }
+        } catch (apiError) {
+          console.warn('[OrdersContext] API delete failed:', apiError);
+        }
+      }
+      
+      setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
+    } catch (error) {
+      console.error('[OrdersContext] Error deleting order:', error);
+    }
+  }, [adminToken]);
 
   const getOrdersByStatus = useCallback((status: Order['status']) => {
     return orders.filter(order => order.status === status);

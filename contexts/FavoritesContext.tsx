@@ -2,8 +2,10 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContextHook from '@nkzw/create-context-hook';
 import { Wallpaper } from '@/constants/wallpapers';
+import { useAuth } from './AuthContext';
 
 const FAVORITES_STORAGE_KEY = 'favorites_projects';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 
 export interface FavoriteProject {
   id: string;
@@ -17,32 +19,90 @@ export interface FavoriteProject {
 }
 
 export const [FavoritesProvider, useFavorites] = createContextHook(() => {
+  const { user } = useAuth();
   const [favoriteProjects, setFavoriteProjects] = useState<FavoriteProject[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const saveFavorites = useCallback(async (projects: FavoriteProject[]) => {
     try {
       await AsyncStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(projects));
-      console.log('Favorites saved successfully');
+      
+      if (API_BASE_URL) {
+        try {
+          console.log('[FavoritesContext] Syncing to API...');
+          const response = await fetch(`${API_BASE_URL}/api/favorites/update`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              favorites: projects,
+              userId: user?.id 
+            }),
+          });
+
+          if (response.ok) {
+            console.log('[FavoritesContext] Synced to API successfully');
+          } else {
+            console.warn('[FavoritesContext] API sync failed:', response.status);
+          }
+        } catch (apiError) {
+          console.warn('[FavoritesContext] API sync error:', apiError);
+        }
+      }
+      
+      console.log('[FavoritesContext] Favorites saved successfully');
     } catch (error) {
-      console.error('Error saving favorites:', error);
+      console.error('[FavoritesContext] Error saving favorites:', error);
     }
-  }, []);
+  }, [user]);
 
   const loadFavorites = useCallback(async () => {
     try {
+      console.log('[FavoritesContext] Loading favorites...');
+      
+      if (API_BASE_URL) {
+        try {
+          const queryParams = user?.id ? `?userId=${user.id}` : '';
+          console.log('[FavoritesContext] Fetching from API:', `${API_BASE_URL}/api/favorites/get${queryParams}`);
+          
+          const response = await fetch(`${API_BASE_URL}/api/favorites/get${queryParams}&t=${Date.now()}`, {
+            method: 'GET',
+            headers: {
+              'Cache-Control': 'no-store, no-cache, must-revalidate',
+              'Pragma': 'no-cache',
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[FavoritesContext] Loaded from API:', data.favorites?.length || 0, 'projects');
+            if (data.success && data.favorites) {
+              setFavoriteProjects(data.favorites);
+              await AsyncStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(data.favorites));
+              return;
+            }
+          } else {
+            console.warn('[FavoritesContext] API returned error:', response.status);
+          }
+        } catch (apiError) {
+          console.warn('[FavoritesContext] API fetch failed, trying local storage:', apiError);
+        }
+      }
+      
+      console.log('[FavoritesContext] Loading from local storage...');
       const stored = await AsyncStorage.getItem(FAVORITES_STORAGE_KEY);
       if (stored) {
         const parsedFavorites = JSON.parse(stored);
         setFavoriteProjects(parsedFavorites);
-        console.log('Favorites loaded:', parsedFavorites.length, 'projects');
+        console.log('[FavoritesContext] Loaded from storage:', parsedFavorites.length, 'projects');
       }
     } catch (error) {
-      console.error('Error loading favorites:', error);
+      console.error('[FavoritesContext] Error loading favorites:', error);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     loadFavorites();

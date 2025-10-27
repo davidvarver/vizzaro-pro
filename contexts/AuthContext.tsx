@@ -25,6 +25,7 @@ interface PendingVerification {
 
 const AUTH_STORAGE_KEY = '@auth_user';
 const USERS_STORAGE_KEY = '@auth_users';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 
 const generateVerificationCode = (): string => {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -110,16 +111,6 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     try {
       console.log('🔄 Iniciando registro para:', email);
       
-      const usersJson = await AsyncStorage.getItem(USERS_STORAGE_KEY);
-      const users = usersJson ? JSON.parse(usersJson) : [];
-      console.log('📋 Usuarios existentes:', users.length);
-      
-      const existingUser = users.find((u: User & { password: string }) => u.email === email);
-      if (existingUser) {
-        console.log('❌ Usuario ya existe');
-        return { success: false, error: 'Este correo ya está registrado' };
-      }
-
       const code = generateVerificationCode();
       const expiresAt = Date.now() + 10 * 60 * 1000;
       console.log('🔑 Código generado:', code);
@@ -170,6 +161,45 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
       if (code !== pendingVerification.code) {
         return { success: false, error: 'Código incorrecto' };
+      }
+
+      if (API_BASE_URL) {
+        try {
+          console.log('[AuthContext] Registering user via API...');
+          const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: pendingVerification.email,
+              password: pendingVerification.password,
+              name: pendingVerification.name,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[AuthContext] User registered via API');
+            
+            if (data.success && data.user) {
+              await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data.user));
+              setAuthState({
+                user: data.user,
+                isLoading: false,
+                isAuthenticated: true,
+              });
+              setPendingVerification(null);
+              return { success: true };
+            }
+          } else {
+            const errorData = await response.json();
+            console.warn('[AuthContext] API register failed:', errorData);
+            return { success: false, error: errorData.error || 'Error al registrar usuario' };
+          }
+        } catch (apiError) {
+          console.warn('[AuthContext] API register error, falling back to local:', apiError);
+        }
       }
 
       const newUser: User = {
@@ -230,6 +260,43 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
+      console.log('[AuthContext] Logging in...', email);
+      
+      if (API_BASE_URL) {
+        try {
+          console.log('[AuthContext] Attempting login via API...');
+          const response = await fetch(`${API_BASE_URL}/api/users/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('[AuthContext] User logged in via API');
+            
+            if (data.success && data.user) {
+              await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data.user));
+              setAuthState({
+                user: data.user,
+                isLoading: false,
+                isAuthenticated: true,
+              });
+              return { success: true };
+            }
+          } else {
+            const errorData = await response.json();
+            console.warn('[AuthContext] API login failed:', errorData);
+            return { success: false, error: errorData.error || 'Correo o contraseña incorrectos' };
+          }
+        } catch (apiError) {
+          console.warn('[AuthContext] API login error, falling back to local:', apiError);
+        }
+      }
+      
+      console.log('[AuthContext] Trying local login...');
       const usersJson = await AsyncStorage.getItem(USERS_STORAGE_KEY);
       const users = usersJson ? JSON.parse(usersJson) : [];
       
