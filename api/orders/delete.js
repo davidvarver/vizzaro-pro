@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   try {
@@ -21,12 +21,20 @@ export default async function handler(req, res) {
 
     const expectedToken = process.env.ADMIN_SECRET_TOKEN || process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
 
-    if (!adminToken || adminToken !== expectedToken) {
-      return res.status(401).json({ error: 'No autorizado' });
+    if (!adminToken) {
+      return res.status(401).json({ success: false, error: 'No autorizado - Token no proporcionado' });
+    }
+
+    if (adminToken !== expectedToken) {
+      return res.status(401).json({ success: false, error: 'No autorizado - Token inválido' });
     }
 
     if (!orderId) {
-      return res.status(400).json({ error: 'Order ID required' });
+      return res.status(400).json({ success: false, error: 'Order ID requerido' });
+    }
+
+    if (typeof orderId !== 'string') {
+      return res.status(400).json({ success: false, error: 'Order ID debe ser un string' });
     }
     
     const kvUrl = process.env.KV_REST_API_URL;
@@ -107,8 +115,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('[Orders DELETE] Error deleting order:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al eliminar el pedido',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

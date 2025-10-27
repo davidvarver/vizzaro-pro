@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   if (rateLimit(req, res, { maxRequests: 20 })) {
@@ -25,16 +25,28 @@ export default async function handler(req, res) {
 
     const expectedToken = process.env.ADMIN_SECRET_TOKEN || process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
 
-    if (!adminToken || adminToken !== expectedToken) {
-      return res.status(401).json({ error: 'No autorizado' });
+    if (!adminToken) {
+      return res.status(401).json({ success: false, error: 'No autorizado - Token no proporcionado' });
     }
 
-    if (!orderId || !updates) {
-      return res.status(400).json({ error: 'Order ID and updates required' });
+    if (adminToken !== expectedToken) {
+      return res.status(401).json({ success: false, error: 'No autorizado - Token inválido' });
     }
 
-    if (typeof orderId !== 'string' || typeof updates !== 'object') {
-      return res.status(400).json({ error: 'Invalid input format' });
+    if (!orderId) {
+      return res.status(400).json({ success: false, error: 'Order ID requerido' });
+    }
+
+    if (!updates) {
+      return res.status(400).json({ success: false, error: 'Actualizaciones requeridas' });
+    }
+
+    if (typeof orderId !== 'string') {
+      return res.status(400).json({ success: false, error: 'Order ID debe ser un string' });
+    }
+
+    if (typeof updates !== 'object' || Array.isArray(updates)) {
+      return res.status(400).json({ success: false, error: 'Updates debe ser un objeto' });
     }
     
     const kvUrl = process.env.KV_REST_API_URL;
@@ -76,11 +88,11 @@ export default async function handler(req, res) {
       }
     } catch (parseError) {
       console.error('[Orders UPDATE] Error parsing order data:', parseError);
-      return res.status(500).json({ error: 'Error al procesar datos del pedido' });
+      return res.status(500).json({ success: false, error: 'Error al procesar datos del pedido' });
     }
 
     if (!existingOrder) {
-      return res.status(404).json({ error: 'Pedido no encontrado' });
+      return res.status(404).json({ success: false, error: 'Pedido no encontrado' });
     }
     
     const updatedOrder = {
@@ -117,8 +129,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('[Orders UPDATE] Error updating order:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al actualizar el pedido',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

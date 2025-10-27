@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   if (rateLimit(req, res, { maxRequests: 5 })) {
@@ -26,12 +26,20 @@ export default async function handler(req, res) {
 
     console.log('[Users LOGIN] Received request for:', email);
 
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' });
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Email requerido' });
     }
 
-    if (typeof email !== 'string' || typeof password !== 'string') {
-      return res.status(400).json({ error: 'Invalid input format' });
+    if (!password) {
+      return res.status(400).json({ success: false, error: 'Contraseña requerida' });
+    }
+
+    if (typeof email !== 'string') {
+      return res.status(400).json({ success: false, error: 'Email debe ser un string' });
+    }
+
+    if (typeof password !== 'string') {
+      return res.status(400).json({ success: false, error: 'Contraseña debe ser un string' });
     }
     
     const kvUrl = process.env.KV_REST_API_URL;
@@ -59,7 +67,7 @@ export default async function handler(req, res) {
 
     if (!getResponse.ok) {
       console.log('[Users LOGIN] User not found:', email);
-      return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
+      return res.status(401).json({ success: false, error: 'Correo o contraseña incorrectos' });
     }
 
     const userData = await getResponse.json();
@@ -74,12 +82,12 @@ export default async function handler(req, res) {
       }
     } catch (parseError) {
       console.error('[Users LOGIN] Error parsing user data:', parseError);
-      return res.status(500).json({ error: 'Error al procesar datos del usuario' });
+      return res.status(500).json({ success: false, error: 'Error al procesar datos del usuario' });
     }
 
     if (!user || !user.passwordHash) {
       console.log('[Users LOGIN] Invalid user data for:', email);
-      return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
+      return res.status(401).json({ success: false, error: 'Correo o contraseña incorrectos' });
     }
     
     console.log('[Users LOGIN] Comparing passwords...');
@@ -87,7 +95,7 @@ export default async function handler(req, res) {
     
     if (!passwordMatch) {
       console.log('[Users LOGIN] Invalid password for:', email);
-      return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
+      return res.status(401).json({ success: false, error: 'Correo o contraseña incorrectos' });
     }
     
     console.log('[Users LOGIN] Generating JWT token...');
@@ -115,8 +123,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('[Users LOGIN] Error logging in:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al iniciar sesión',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

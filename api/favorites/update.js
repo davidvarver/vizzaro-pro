@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   try {
@@ -19,8 +19,19 @@ export default async function handler(req, res) {
     console.log('[Favorites UPDATE] User ID:', userId);
     console.log('[Favorites UPDATE] Favorites count:', favorites?.length);
 
-    if (!favorites || !Array.isArray(favorites)) {
-      return res.status(400).json({ error: 'Favorites array required' });
+    if (!favorites) {
+      return res.status(400).json({ success: false, error: 'Favorites requerido' });
+    }
+
+    if (!Array.isArray(favorites)) {
+      return res.status(400).json({ success: false, error: 'Favorites debe ser un array' });
+    }
+
+    for (let i = 0; i < favorites.length; i++) {
+      const item = favorites[i];
+      if (!item || typeof item !== 'string') {
+        return res.status(400).json({ success: false, error: `Favorito ${i} debe ser un string (ID del wallpaper)` });
+      }
     }
     
     const kvUrl = process.env.KV_REST_API_URL;
@@ -69,16 +80,18 @@ export default async function handler(req, res) {
     } catch (kvError) {
       console.error('[Favorites UPDATE] KV error:', kvError);
       return res.status(500).json({ 
+        success: false,
         error: 'Error al guardar en la base de datos',
-        details: kvError instanceof Error ? kvError.message : 'Unknown error',
+        details: process.env.NODE_ENV === 'development' ? (kvError instanceof Error ? kvError.message : 'Unknown error') : undefined,
         needsConfig: false
       });
     }
   } catch (error) {
     console.error('[Favorites UPDATE] Error updating favorites:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al actualizar los favoritos',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

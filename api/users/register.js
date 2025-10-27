@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   if (rateLimit(req, res, { maxRequests: 5 })) {
@@ -26,21 +26,53 @@ export default async function handler(req, res) {
 
     console.log('[Users REGISTER] Received request for:', email);
 
-    if (!email || !password || !name) {
-      return res.status(400).json({ error: 'Email, password and name required' });
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Email requerido' });
     }
 
-    if (typeof email !== 'string' || typeof password !== 'string' || typeof name !== 'string') {
-      return res.status(400).json({ error: 'Invalid input format' });
+    if (!password) {
+      return res.status(400).json({ success: false, error: 'Contraseña requerida' });
+    }
+
+    if (!name) {
+      return res.status(400).json({ success: false, error: 'Nombre requerido' });
+    }
+
+    if (typeof email !== 'string') {
+      return res.status(400).json({ success: false, error: 'Email debe ser un string' });
+    }
+
+    if (typeof password !== 'string') {
+      return res.status(400).json({ success: false, error: 'Contraseña debe ser un string' });
+    }
+
+    if (typeof name !== 'string') {
+      return res.status(400).json({ success: false, error: 'Nombre debe ser un string' });
+    }
+
+    if (name.trim().length < 2) {
+      return res.status(400).json({ success: false, error: 'El nombre debe tener al menos 2 caracteres' });
+    }
+
+    if (name.trim().length > 100) {
+      return res.status(400).json({ success: false, error: 'El nombre no puede exceder 100 caracteres' });
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres' });
+      return res.status(400).json({ success: false, error: 'La contraseña debe tener al menos 6 caracteres' });
+    }
+
+    if (password.length > 128) {
+      return res.status(400).json({ success: false, error: 'La contraseña no puede exceder 128 caracteres' });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Email inválido' });
+      return res.status(400).json({ success: false, error: 'Email inválido' });
+    }
+
+    if (email.length > 254) {
+      return res.status(400).json({ success: false, error: 'Email demasiado largo' });
     }
     
     const kvUrl = process.env.KV_REST_API_URL;
@@ -70,7 +102,7 @@ export default async function handler(req, res) {
       const existingData = await existingUserResponse.json();
       if (existingData.result) {
         console.log('[Users REGISTER] User already exists:', email);
-        return res.status(400).json({ error: 'Este correo ya está registrado' });
+        return res.status(400).json({ success: false, error: 'Este correo ya está registrado' });
       }
     }
 
@@ -166,8 +198,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('[Users REGISTER] Error registering user:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al registrar usuario',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

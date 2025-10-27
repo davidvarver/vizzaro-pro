@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   if (rateLimit(req, res, { maxRequests: 3 })) {
@@ -20,17 +20,33 @@ export default async function handler(req, res) {
   try {
     const { email, code } = req.body;
 
-    if (!email || !code) {
-      return res.status(400).json({ error: 'Email y código son requeridos' });
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Email requerido' });
     }
 
-    if (typeof email !== 'string' || typeof code !== 'string') {
-      return res.status(400).json({ error: 'Invalid input format' });
+    if (!code) {
+      return res.status(400).json({ success: false, error: 'Código requerido' });
+    }
+
+    if (typeof email !== 'string') {
+      return res.status(400).json({ success: false, error: 'Email debe ser un string' });
+    }
+
+    if (typeof code !== 'string') {
+      return res.status(400).json({ success: false, error: 'Código debe ser un string' });
+    }
+
+    if (code.length !== 6) {
+      return res.status(400).json({ success: false, error: 'El código debe tener 6 caracteres' });
+    }
+
+    if (!/^\d+$/.test(code)) {
+      return res.status(400).json({ success: false, error: 'El código debe contener solo números' });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Email inválido' });
+      return res.status(400).json({ success: false, error: 'Email inválido' });
     }
 
     const apiKey = process.env.RESEND_API_KEY;
@@ -63,15 +79,16 @@ export default async function handler(req, res) {
 
     if (error) {
       console.error('[Send Verification] Resend error:', error);
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({ success: false, error: error.message || 'Error al enviar el correo' });
     }
 
     return res.status(200).json({ success: true, data });
   } catch (error) {
     console.error('[Send Verification] Error:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al enviar el correo',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

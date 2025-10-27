@@ -61,10 +61,8 @@ export default function HomeScreen() {
   };
 
   const handleRoomPress = (room: typeof rooms[0]) => {
-    router.push({
-      pathname: '/catalog',
-      params: { category: room.category }
-    });
+    console.log('[Home] Navigating to catalog with room:', room);
+    router.push('/catalog');
   };
 
   const handleCollectionPress = (collection: typeof collections[0]) => {

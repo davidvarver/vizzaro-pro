@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   if (rateLimit(req, res, { maxRequests: 20 })) {
@@ -36,8 +36,28 @@ export default async function handler(req, res) {
 
     console.log('[Catalog UPDATE] Token validated successfully');
 
-    if (!catalog || !Array.isArray(catalog)) {
-      return res.status(400).json({ error: 'Catálogo inválido' });
+    if (!catalog) {
+      return res.status(400).json({ success: false, error: 'Catálogo requerido' });
+    }
+
+    if (!Array.isArray(catalog)) {
+      return res.status(400).json({ success: false, error: 'El catálogo debe ser un array' });
+    }
+
+    for (let i = 0; i < catalog.length; i++) {
+      const item = catalog[i];
+      if (!item || typeof item !== 'object') {
+        return res.status(400).json({ success: false, error: `Elemento ${i} del catálogo no es válido` });
+      }
+      if (!item.id || typeof item.id !== 'string') {
+        return res.status(400).json({ success: false, error: `Elemento ${i} del catálogo no tiene un ID válido` });
+      }
+      if (!item.name || typeof item.name !== 'string') {
+        return res.status(400).json({ success: false, error: `Elemento ${i} del catálogo no tiene un nombre válido` });
+      }
+      if (item.price !== undefined && (typeof item.price !== 'number' || item.price < 0)) {
+        return res.status(400).json({ success: false, error: `Elemento ${i} del catálogo tiene un precio inválido` });
+      }
     }
 
     console.log('[Catalog UPDATE] Updating catalog with', catalog.length, 'items');
@@ -96,8 +116,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('[Catalog UPDATE] Error updating catalog:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al actualizar el catálogo',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

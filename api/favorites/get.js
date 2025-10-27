@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['GET', 'OPTIONS'] });
   }
 
   try {
@@ -54,10 +54,20 @@ export default async function handler(req, res) {
         const rawResult = kvData.result;
         
         let favorites = null;
-        if (rawResult && typeof rawResult === 'string') {
-          favorites = JSON.parse(rawResult);
-        } else if (rawResult && typeof rawResult === 'object') {
-          favorites = rawResult;
+        try {
+          if (rawResult && typeof rawResult === 'string') {
+            favorites = JSON.parse(rawResult);
+          } else if (rawResult && typeof rawResult === 'object') {
+            favorites = rawResult;
+          }
+        } catch (parseError) {
+          console.error('[Favorites GET] Error parsing favorites:', parseError);
+          favorites = [];
+        }
+
+        if (favorites && !Array.isArray(favorites)) {
+          console.warn('[Favorites GET] Favorites is not an array, resetting');
+          favorites = [];
         }
         
         console.log('[Favorites GET] KV fetch successful, favorites exist:', !!favorites);
@@ -83,15 +93,17 @@ export default async function handler(req, res) {
     } catch (kvError) {
       console.error('[Favorites GET] KV error:', kvError);
       return res.status(500).json({ 
+        success: false,
         error: 'Error al obtener los favoritos',
-        details: kvError instanceof Error ? kvError.message : 'Unknown error'
+        details: process.env.NODE_ENV === 'development' ? (kvError instanceof Error ? kvError.message : 'Unknown error') : undefined
       });
     }
   } catch (error) {
     console.error('[Favorites GET] Error fetching favorites:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al obtener los favoritos',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

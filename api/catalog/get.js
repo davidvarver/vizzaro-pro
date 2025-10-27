@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['GET', 'OPTIONS'] });
   }
 
   try {
@@ -68,11 +68,21 @@ export default async function handler(req, res) {
           console.log('[Catalog GET] KV response:', kvData);
           const rawResult = kvData.result;
           
-          if (rawResult && typeof rawResult === 'string') {
-            catalog = JSON.parse(rawResult);
-          } else if (rawResult && typeof rawResult === 'object') {
-            catalog = rawResult;
-          } else {
+          try {
+            if (rawResult && typeof rawResult === 'string') {
+              catalog = JSON.parse(rawResult);
+            } else if (rawResult && typeof rawResult === 'object') {
+              catalog = rawResult;
+            } else {
+              catalog = null;
+            }
+          } catch (parseError) {
+            console.error('[Catalog GET] Error parsing KV data:', parseError);
+            catalog = null;
+          }
+          
+          if (catalog && !Array.isArray(catalog)) {
+            console.warn('[Catalog GET] Catalog is not an array, resetting');
             catalog = null;
           }
           
@@ -125,8 +135,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('[Catalog GET] Error fetching catalog:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al obtener el catálogo',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }

@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   if (rateLimit(req, res, { maxRequests: 10 })) {
@@ -21,8 +21,24 @@ export default async function handler(req, res) {
 
     console.log('[Orders CREATE] Received request');
 
-    if (!order || typeof order !== 'object') {
-      return res.status(400).json({ error: 'Order data required' });
+    if (!order) {
+      return res.status(400).json({ success: false, error: 'Order data required' });
+    }
+
+    if (typeof order !== 'object' || Array.isArray(order)) {
+      return res.status(400).json({ success: false, error: 'Order must be an object' });
+    }
+
+    if (!order.items || !Array.isArray(order.items) || order.items.length === 0) {
+      return res.status(400).json({ success: false, error: 'Order must have at least one item' });
+    }
+
+    if (!order.userId || typeof order.userId !== 'string') {
+      return res.status(400).json({ success: false, error: 'Order must have a valid userId' });
+    }
+
+    if (order.total !== undefined && (typeof order.total !== 'number' || order.total < 0)) {
+      return res.status(400).json({ success: false, error: 'Order total must be a positive number' });
     }
     
     const kvUrl = process.env.KV_REST_API_URL;
@@ -123,8 +139,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('[Orders CREATE] Error creating order:', error);
     return res.status(500).json({ 
+      success: false,
       error: 'Error al crear el pedido',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     });
   }
 }
