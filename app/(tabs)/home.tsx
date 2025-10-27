@@ -54,7 +54,7 @@ export default function HomeScreen() {
   const handleSearch = () => {
     if (searchQuery.trim()) {
       router.push({
-        pathname: '/(tabs)/home',
+        pathname: '/catalog',
         params: { search: searchQuery }
       });
     }
@@ -62,14 +62,14 @@ export default function HomeScreen() {
 
   const handleRoomPress = (room: typeof rooms[0]) => {
     router.push({
-      pathname: '/(tabs)/home',
+      pathname: '/catalog',
       params: { category: room.category }
     });
   };
 
   const handleCollectionPress = (collection: typeof collections[0]) => {
     router.push({
-      pathname: '/(tabs)/home',
+      pathname: '/catalog',
       params: { colors: collection.colors.join(',') }
     });
   };
@@ -120,7 +120,7 @@ export default function HomeScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Explora por habitación</Text>
-          <TouchableOpacity onPress={() => router.push('/(tabs)/home')}>
+          <TouchableOpacity onPress={() => router.push('/catalog')}>
             <Text style={styles.seeAll}>Ver todo</Text>
           </TouchableOpacity>
         </View>
@@ -179,7 +179,7 @@ export default function HomeScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Te puede gustar</Text>
-          <TouchableOpacity onPress={() => router.push('/(tabs)/home')}>
+          <TouchableOpacity onPress={() => router.push('/catalog')}>
             <Text style={styles.seeAll}>Ver todo</Text>
           </TouchableOpacity>
         </View>

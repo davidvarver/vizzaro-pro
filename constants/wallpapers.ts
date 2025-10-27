@@ -278,6 +278,36 @@ export const wallpapers: Wallpaper[] = [
   },
 ];
 
+export function getCategoriesFromWallpapers(wallpaperList: Wallpaper[]): string[] {
+  const categorySet = new Set<string>();
+  wallpaperList.forEach(w => {
+    if (w.category) {
+      categorySet.add(w.category);
+    }
+  });
+  return ['Todos', ...Array.from(categorySet).sort()];
+}
+
+export function getStylesFromWallpapers(wallpaperList: Wallpaper[]): string[] {
+  const styleSet = new Set<string>();
+  wallpaperList.forEach(w => {
+    if (w.style) {
+      styleSet.add(w.style);
+    }
+  });
+  return ['Todos', ...Array.from(styleSet).sort()];
+}
+
+export function getColorsFromWallpapers(wallpaperList: Wallpaper[]): string[] {
+  const colorSet = new Set<string>();
+  wallpaperList.forEach(w => {
+    if (w.colors && Array.isArray(w.colors)) {
+      w.colors.forEach(color => colorSet.add(color));
+    }
+  });
+  return ['Todos', ...Array.from(colorSet).sort()];
+}
+
 export const categories = [
   'Todos',
   'Floral',
