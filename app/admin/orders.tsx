@@ -16,6 +16,9 @@ import {
   Mail,
   MapPin,
   Package,
+  DollarSign,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react-native';
 import { useOrders } from '@/contexts/OrdersContext';
 import Colors from '@/constants/colors';
@@ -23,7 +26,7 @@ import Colors from '@/constants/colors';
 export default function AdminOrdersScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
-  const { orders, updateOrderStatus } = useOrders();
+  const { orders, updateOrderStatus, updateOrder } = useOrders();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -57,6 +60,14 @@ export default function AdminOrdersScreen() {
       return;
     }
     await updateOrderStatus(orderId, trimmedStatus as any);
+  };
+
+  const handleConfirmZellePayment = async (orderId: string) => {
+    await updateOrder(orderId, {
+      zelleConfirmed: true,
+      zelleConfirmedAt: new Date().toISOString(),
+      status: 'confirmed',
+    });
   };
 
   const getStatusColor = (status: string): string => {
@@ -235,6 +246,45 @@ export default function AdminOrdersScreen() {
                   {order.deliveryMethod === 'pickup' ? 'Recoger en tienda' : 'Envío a domicilio'}
                 </Text>
               </View>
+
+              {order.paymentMethod === 'zelle' && order.zelleReference && (
+                <View style={[styles.zelleContainer, order.zelleConfirmed ? styles.zelleConfirmed : styles.zellePending]}>
+                  <View style={styles.zelleHeader}>
+                    <DollarSign size={20} color={order.zelleConfirmed ? '#10B981' : '#F59E0B'} />
+                    <Text style={[styles.zelleTitle, { color: order.zelleConfirmed ? '#10B981' : '#F59E0B' }]}>
+                      Pago con Zelle
+                    </Text>
+                  </View>
+                  <View style={styles.zelleRow}>
+                    <Text style={styles.zelleLabel}>Código de Referencia:</Text>
+                    <Text style={styles.zelleValue}>{order.zelleReference}</Text>
+                  </View>
+                  <View style={styles.zelleStatus}>
+                    {order.zelleConfirmed ? (
+                      <View style={styles.zelleStatusRow}>
+                        <CheckCircle2 size={16} color="#10B981" />
+                        <Text style={styles.zelleConfirmedText}>
+                          Pago confirmado {order.zelleConfirmedAt && `el ${new Date(order.zelleConfirmedAt).toLocaleDateString('es-ES')}`}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View style={styles.zelleStatusRow}>
+                        <AlertCircle size={16} color="#F59E0B" />
+                        <Text style={styles.zellePendingText}>Esperando confirmación de pago</Text>
+                      </View>
+                    )}
+                  </View>
+                  {!order.zelleConfirmed && (
+                    <TouchableOpacity
+                      style={styles.confirmPaymentButton}
+                      onPress={() => handleConfirmZellePayment(order.id)}
+                    >
+                      <CheckCircle2 size={18} color="#FFFFFF" />
+                      <Text style={styles.confirmPaymentButtonText}>Confirmar Pago Recibido</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
 
               {order.notes && (
                 <View style={styles.notesContainer}>
@@ -516,5 +566,79 @@ const styles = StyleSheet.create({
   },
   statusButtonTextActive: {
     color: '#FFFFFF',
+  },
+  zelleContainer: {
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 2,
+  },
+  zellePending: {
+    backgroundColor: '#FEF3C7',
+    borderColor: '#F59E0B',
+  },
+  zelleConfirmed: {
+    backgroundColor: '#D1FAE5',
+    borderColor: '#10B981',
+  },
+  zelleHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  zelleTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  zelleRow: {
+    marginBottom: 8,
+  },
+  zelleLabel: {
+    fontSize: 13,
+    color: Colors.light.tabIconDefault,
+    marginBottom: 4,
+  },
+  zelleValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.light.text,
+  },
+  zelleStatus: {
+    marginTop: 8,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  zelleStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  zelleConfirmedText: {
+    fontSize: 14,
+    color: '#059669',
+    fontWeight: '500',
+  },
+  zellePendingText: {
+    fontSize: 14,
+    color: '#D97706',
+    fontWeight: '500',
+  },
+  confirmPaymentButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#10B981',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginTop: 12,
+    gap: 8,
+  },
+  confirmPaymentButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

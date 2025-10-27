@@ -16,6 +16,11 @@ export interface Order {
   notes?: string;
   createdAt: string;
   updatedAt: string;
+  paymentMethod?: 'zelle' | 'credit_card';
+  zelleReference?: string;
+  zelleConfirmed?: boolean;
+  zelleConfirmedAt?: string;
+  zelleConfirmedBy?: string;
 }
 
 const ORDERS_STORAGE_KEY = 'wallpaper_orders';
@@ -155,6 +160,28 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
                               <div style="color: rgba(255, 255, 255, 0.9); font-size: 14px; margin-bottom: 8px;">Total</div>
                               <div style="color: #ffffff; font-size: 32px; font-weight: 700;">${order.total.toFixed(2)}</div>
                             </div>
+
+                            ${order.paymentMethod === 'zelle' && order.zelleReference ? `
+                            <div style="margin-top: 30px; padding: 20px; background-color: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
+                              <div style="color: #92400e; font-size: 16px; font-weight: 600; margin-bottom: 12px;">💳 Instrucciones para Pago con Zelle</div>
+                              <div style="background-color: #ffffff; border-radius: 6px; padding: 16px; margin-bottom: 12px;">
+                                <div style="color: #78350f; font-size: 14px; margin-bottom: 8px;"><strong>Envía tu pago a:</strong></div>
+                                <div style="color: #1a1a1a; font-size: 18px; font-weight: 700; margin-bottom: 16px;">7326646800</div>
+                                <div style="color: #78350f; font-size: 14px; margin-bottom: 8px;"><strong>Monto total:</strong></div>
+                                <div style="color: #1a1a1a; font-size: 18px; font-weight: 700; margin-bottom: 16px;">${order.total.toFixed(2)}</div>
+                                <div style="background-color: #FEF3C7; border-radius: 6px; padding: 12px; border: 2px dashed #F59E0B;">
+                                  <div style="color: #92400e; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Código de Referencia:</div>
+                                  <div style="color: #1a1a1a; font-size: 20px; font-weight: 700; letter-spacing: 1px;">${order.zelleReference}</div>
+                                </div>
+                              </div>
+                              <div style="background-color: #FEE2E2; border-radius: 6px; padding: 12px; border-left: 4px solid #EF4444;">
+                                <div style="color: #991B1B; font-size: 14px; font-weight: 600; margin-bottom: 4px;">⚠️ MUY IMPORTANTE</div>
+                                <div style="color: #7F1D1D; font-size: 13px; line-height: 1.6;">
+                                  Debes incluir el código de referencia <strong>${order.zelleReference}</strong> en la nota o descripción de tu pago Zelle. Esto nos permite identificar y procesar tu pedido automáticamente.
+                                </div>
+                              </div>
+                            </div>
+                            ` : ''}
 
                             ${order.notes ? `
                             <div style="margin-top: 30px; padding: 20px; background-color: #fef3c7; border-radius: 8px;">

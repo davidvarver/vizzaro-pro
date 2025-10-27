@@ -51,6 +51,12 @@ export default function CheckoutScreen() {
   const deliveryFee = 15.00;
   const total = subtotal + deliveryFee;
 
+  const generateZelleReference = () => {
+    const timestamp = Date.now().toString();
+    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    return `VZWP-${timestamp.slice(-6)}-${random}`;
+  };
+
   const handlePlaceOrder = async () => {
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       if (Platform.OS !== 'web') {
@@ -68,6 +74,8 @@ export default function CheckoutScreen() {
       }
     }
 
+    const zelleReference = paymentMethod === 'zelle' ? generateZelleReference() : undefined;
+
     try {
       await createOrder({
         customerName: customerInfo.name,
@@ -79,13 +87,16 @@ export default function CheckoutScreen() {
         status: 'pending',
         deliveryMethod: customerInfo.address ? 'delivery' : 'pickup',
         notes: paymentMethod === 'zelle' ? 'Pago por Zelle' : 'Pago con tarjeta',
+        paymentMethod,
+        zelleReference,
+        zelleConfirmed: false,
       });
 
       if (Platform.OS !== 'web') {
         Alert.alert(
           'Pedido Confirmado',
           paymentMethod === 'zelle' 
-            ? `Tu pedido ha sido recibido. Te enviaremos los datos de Zelle a tu email para completar el pago de ${total.toFixed(2)}.`
+            ? `Tu pedido ha sido recibido.\n\nCódigo de Referencia: ${zelleReference}\n\nEnvía el pago a: 7326646800\nMonto: ${total.toFixed(2)}\n\nIMPORTANTE: Incluye el código de referencia en la nota del pago.`
             : 'Tu pedido ha sido procesado exitosamente. Recibirás un email de confirmación.',
           [
             {
@@ -238,11 +249,17 @@ export default function CheckoutScreen() {
             <View style={styles.zelleInfo}>
               <Text style={styles.zelleInfoTitle}>Información de Pago Zelle:</Text>
               <Text style={styles.zelleInfoText}>
-                Número: <Text style={styles.zelleNumber}>7326646800</Text>
+                Envía el pago a: <Text style={styles.zelleNumber}>7326646800</Text>
               </Text>
               <Text style={styles.zelleInfoSubtext}>
-                Después de confirmar tu pedido, recibirás un email con los detalles completos para completar el pago.
+                Al confirmar tu pedido, recibirás un código de referencia único.
               </Text>
+              <View style={styles.zelleWarning}>
+                <Text style={styles.zelleWarningTitle}>⚠️ Importante</Text>
+                <Text style={styles.zelleWarningText}>
+                  Incluye el código de referencia en la nota del pago Zelle para que podamos identificar tu compra automáticamente.
+                </Text>
+              </View>
             </View>
           )}
 
@@ -457,6 +474,25 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     marginTop: 8,
     fontStyle: 'italic',
+  },
+  zelleWarning: {
+    backgroundColor: '#FEF3C7',
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#F59E0B',
+  },
+  zelleWarningTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#92400E',
+    marginBottom: 4,
+  },
+  zelleWarningText: {
+    fontSize: 13,
+    color: '#78350F',
+    lineHeight: 18,
   },
   creditCardForm: {
     marginTop: 16,
