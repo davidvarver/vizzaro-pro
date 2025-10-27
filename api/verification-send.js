@@ -1,16 +1,20 @@
 import { Resend } from 'resend';
+import { setCorsHeaders, handleCorsOptions } from './_cors.js';
+import { rateLimit } from './_rateLimit.js';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  if (rateLimit(req, res, { maxRequests: 3 })) {
+    return;
   }
 
   try {
@@ -18,6 +22,15 @@ export default async function handler(req, res) {
 
     if (!email || !code) {
       return res.status(400).json({ error: 'Email y código son requeridos' });
+    }
+
+    if (typeof email !== 'string' || typeof code !== 'string') {
+      return res.status(400).json({ error: 'Invalid input format' });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Email inválido' });
     }
 
     const apiKey = process.env.RESEND_API_KEY;

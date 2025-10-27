@@ -1,17 +1,24 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'vizzaro_jwt_secret_change_in_production_2025';
+const JWT_EXPIRATION = '7d';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  if (rateLimit(req, res, { maxRequests: 5 })) {
+    return;
   }
 
   try {
@@ -21,6 +28,10 @@ export default async function handler(req, res) {
 
     if (!email || !password || !name) {
       return res.status(400).json({ error: 'Email, password and name required' });
+    }
+
+    if (typeof email !== 'string' || typeof password !== 'string' || typeof name !== 'string') {
+      return res.status(400).json({ error: 'Invalid input format' });
     }
 
     if (password.length < 6) {
@@ -130,12 +141,24 @@ export default async function handler(req, res) {
       });
     }
 
+    console.log('[Users REGISTER] Generating JWT token...');
+    const token = jwt.sign(
+      { 
+        userId: newUser.id, 
+        email: newUser.email,
+        name: newUser.name
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRATION }
+    );
+
     console.log('[Users REGISTER] User registered successfully:', newUser.id);
     
     const { passwordHash: _, ...userWithoutPassword } = newUser;
     
     return res.status(200).json({ 
       success: true,
+      token,
       user: userWithoutPassword,
       timestamp: Date.now(),
       usingKV: true

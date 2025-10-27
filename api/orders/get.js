@@ -36,39 +36,34 @@ export default async function handler(req, res) {
     }
 
     try {
-      console.log('[Orders GET] Fetching from KV REST API...');
-      const kvResponse = await fetch(`${kvUrl}/get/orders`, {
+      console.log('[Orders GET] Fetching index from KV...');
+      const indexKey = 'orders:index';
+      const indexResponse = await fetch(`${kvUrl}/get/${indexKey}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${kvToken}`,
         },
       });
 
-      if (kvResponse.ok) {
-        const kvData = await kvResponse.json();
-        console.log('[Orders GET] KV response:', kvData);
-        const rawResult = kvData.result;
+      let orderIds = [];
+      if (indexResponse.ok) {
+        const indexData = await indexResponse.json();
+        const rawResult = indexData.result;
         
-        let orders = null;
-        if (rawResult && typeof rawResult === 'string') {
-          orders = JSON.parse(rawResult);
-        } else if (rawResult && typeof rawResult === 'object') {
-          orders = rawResult;
+        try {
+          if (rawResult && typeof rawResult === 'string') {
+            orderIds = JSON.parse(rawResult);
+          } else if (rawResult && typeof rawResult === 'object') {
+            orderIds = rawResult;
+          }
+        } catch (parseError) {
+          console.warn('[Orders GET] Error parsing index:', parseError);
+          orderIds = [];
         }
-        
-        console.log('[Orders GET] KV fetch successful, orders exist:', !!orders);
-        console.log('[Orders GET] Orders count:', Array.isArray(orders) ? orders.length : 0);
-        
-        return res.status(200).json({ 
-          success: true, 
-          orders: orders || [],
-          timestamp: Date.now(),
-          usingKV: true
-        });
-      } else {
-        const errorText = await kvResponse.text();
-        console.warn('[Orders GET] KV returned error:', kvResponse.status, errorText);
-        
+      }
+
+      if (!Array.isArray(orderIds) || orderIds.length === 0) {
+        console.log('[Orders GET] No orders found in index');
         return res.status(200).json({ 
           success: true, 
           orders: [],
@@ -76,6 +71,50 @@ export default async function handler(req, res) {
           usingKV: true
         });
       }
+
+      console.log('[Orders GET] Found', orderIds.length, 'order IDs, fetching details...');
+      
+      const orderPromises = orderIds.map(async (orderId) => {
+        try {
+          const orderKey = `order:${orderId}`;
+          const orderResponse = await fetch(`${kvUrl}/get/${orderKey}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${kvToken}`,
+            },
+          });
+
+          if (!orderResponse.ok) {
+            console.warn('[Orders GET] Failed to fetch order:', orderId);
+            return null;
+          }
+
+          const orderData = await orderResponse.json();
+          const rawResult = orderData.result;
+          
+          if (rawResult && typeof rawResult === 'string') {
+            return JSON.parse(rawResult);
+          } else if (rawResult && typeof rawResult === 'object') {
+            return rawResult;
+          }
+          
+          return null;
+        } catch (error) {
+          console.error('[Orders GET] Error fetching order:', orderId, error);
+          return null;
+        }
+      });
+
+      const orders = (await Promise.all(orderPromises)).filter(order => order !== null);
+      
+      console.log('[Orders GET] Successfully fetched', orders.length, 'orders');
+      
+      return res.status(200).json({ 
+        success: true, 
+        orders,
+        timestamp: Date.now(),
+        usingKV: true
+      });
     } catch (kvError) {
       console.error('[Orders GET] KV error:', kvError);
       return res.status(500).json({ 

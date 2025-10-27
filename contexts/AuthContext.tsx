@@ -11,6 +11,7 @@ export interface User {
 
 interface AuthState {
   user: User | null;
+  token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
 }
@@ -23,7 +24,8 @@ interface PendingVerification {
   expiresAt: number;
 }
 
-const AUTH_STORAGE_KEY = '@auth_user';
+const AUTH_TOKEN_KEY = '@auth_token';
+const AUTH_USER_KEY = '@auth_user';
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 
 const generateVerificationCode = (): string => {
@@ -69,6 +71,7 @@ const sendVerificationEmail = async (email: string, code: string): Promise<void>
 export const [AuthProvider, useAuth] = createContextHook(() => {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
+    token: null,
     isLoading: true,
     isAuthenticated: false,
   });
@@ -76,37 +79,45 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
   const [pendingVerification, setPendingVerification] = useState<PendingVerification | null>(null);
 
   useEffect(() => {
-    loadUser();
+    loadAuthData();
   }, []);
 
-  const loadUser = async () => {
+  const loadAuthData = async () => {
     try {
-      const userJson = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
-      if (userJson) {
+      const [tokenJson, userJson] = await Promise.all([
+        AsyncStorage.getItem(AUTH_TOKEN_KEY),
+        AsyncStorage.getItem(AUTH_USER_KEY),
+      ]);
+
+      if (tokenJson && userJson) {
+        const token = tokenJson;
         const user = JSON.parse(userJson);
         setAuthState({
           user,
+          token,
           isLoading: false,
           isAuthenticated: true,
         });
       } else {
         setAuthState({
           user: null,
+          token: null,
           isLoading: false,
           isAuthenticated: false,
         });
       }
     } catch (error) {
-      console.error('Error loading user:', error);
+      console.error('Error loading auth data:', error);
       setAuthState({
         user: null,
+        token: null,
         isLoading: false,
         isAuthenticated: false,
       });
     }
   };
 
-  const register = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
+  const register = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string; needsVerification?: boolean }> => {
     try {
       console.log('🔄 Iniciando registro para:', email);
       
@@ -127,6 +138,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       try {
         await sendVerificationEmail(email, code);
         console.log('✅ Email enviado exitosamente');
+        return { success: true, needsVerification: true };
       } catch (emailError) {
         console.error('❌ Error al enviar email:', emailError);
         const errorMsg = emailError instanceof Error ? emailError.message : 'Error desconocido';
@@ -135,8 +147,6 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
           error: `Error al enviar el correo: ${errorMsg}. Revisa la consola para más detalles.` 
         };
       }
-
-      return { success: true };
     } catch (error) {
       console.error('❌ Error durante el registro:', error);
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
@@ -181,10 +191,13 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
             const data = await response.json();
             console.log('[AuthContext] User registered via API');
             
-            if (data.success && data.user) {
-              await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data.user));
+            if (data.success && data.user && data.token) {
+              await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
+              await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
+              
               setAuthState({
                 user: data.user,
+                token: data.token,
                 isLoading: false,
                 isAuthenticated: true,
               });
@@ -197,28 +210,12 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
             return { success: false, error: errorData.error || 'Error al registrar usuario' };
           }
         } catch (apiError) {
-          console.warn('[AuthContext] API register error, falling back to local:', apiError);
+          console.warn('[AuthContext] API register error:', apiError);
+          return { success: false, error: 'Error al conectar con el servidor' };
         }
       }
 
-      const newUser: User = {
-        id: Date.now().toString(),
-        email: pendingVerification.email,
-        name: pendingVerification.name,
-        createdAt: new Date().toISOString(),
-      };
-
-      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
-
-      setAuthState({
-        user: newUser,
-        isLoading: false,
-        isAuthenticated: true,
-      });
-
-      setPendingVerification(null);
-
-      return { success: true };
+      return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
     } catch (error) {
       console.error('Error verifying code:', error);
       return { success: false, error: 'Error al verificar código' };
@@ -268,10 +265,13 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
             const data = await response.json();
             console.log('[AuthContext] User logged in via API');
             
-            if (data.success && data.user) {
-              await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data.user));
+            if (data.success && data.user && data.token) {
+              await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
+              await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
+              
               setAuthState({
                 user: data.user,
+                token: data.token,
                 isLoading: false,
                 isAuthenticated: true,
               });
@@ -283,7 +283,8 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
             return { success: false, error: errorData.error || 'Correo o contraseña incorrectos' };
           }
         } catch (apiError) {
-          console.warn('[AuthContext] API login error, falling back to local:', apiError);
+          console.warn('[AuthContext] API login error:', apiError);
+          return { success: false, error: 'Error al conectar con el servidor' };
         }
       }
       
@@ -297,9 +298,10 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const logout = async () => {
     try {
-      await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+      await AsyncStorage.multiRemove([AUTH_TOKEN_KEY, AUTH_USER_KEY]);
       setAuthState({
         user: null,
+        token: null,
         isLoading: false,
         isAuthenticated: false,
       });

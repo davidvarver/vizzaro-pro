@@ -1,15 +1,19 @@
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  if (rateLimit(req, res, { maxRequests: 20 })) {
+    return;
   }
 
   try {
@@ -28,6 +32,10 @@ export default async function handler(req, res) {
     if (!orderId || !updates) {
       return res.status(400).json({ error: 'Order ID and updates required' });
     }
+
+    if (typeof orderId !== 'string' || typeof updates !== 'object') {
+      return res.status(400).json({ error: 'Invalid input format' });
+    }
     
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
@@ -42,46 +50,54 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('[Orders UPDATE] Fetching existing orders...');
-    const getResponse = await fetch(`${kvUrl}/get/orders`, {
+    console.log('[Orders UPDATE] Fetching existing order...');
+    const orderKey = `order:${orderId}`;
+    const getResponse = await fetch(`${kvUrl}/get/${orderKey}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${kvToken}`,
       },
     });
 
-    let orders = [];
-    if (getResponse.ok) {
-      const getData = await getResponse.json();
-      const rawResult = getData.result;
-      if (rawResult && typeof rawResult === 'string') {
-        orders = JSON.parse(rawResult);
-      } else if (rawResult && typeof rawResult === 'object') {
-        orders = rawResult;
-      }
+    if (!getResponse.ok) {
+      console.log('[Orders UPDATE] Order not found:', orderId);
+      return res.status(404).json({ error: 'Pedido no encontrado' });
     }
+
+    const orderData = await getResponse.json();
+    let existingOrder = null;
     
-    console.log('[Orders UPDATE] Current orders count:', Array.isArray(orders) ? orders.length : 0);
-    
-    const orderIndex = orders.findIndex(o => o.id === orderId);
-    if (orderIndex === -1) {
+    try {
+      const rawResult = orderData.result;
+      if (rawResult && typeof rawResult === 'string') {
+        existingOrder = JSON.parse(rawResult);
+      } else if (rawResult && typeof rawResult === 'object') {
+        existingOrder = rawResult;
+      }
+    } catch (parseError) {
+      console.error('[Orders UPDATE] Error parsing order data:', parseError);
+      return res.status(500).json({ error: 'Error al procesar datos del pedido' });
+    }
+
+    if (!existingOrder) {
       return res.status(404).json({ error: 'Pedido no encontrado' });
     }
     
-    orders[orderIndex] = {
-      ...orders[orderIndex],
+    const updatedOrder = {
+      ...existingOrder,
       ...updates,
+      id: orderId,
       updatedAt: new Date().toISOString(),
     };
     
-    console.log('[Orders UPDATE] Saving to KV...');
-    const kvResponse = await fetch(`${kvUrl}/set/orders`, {
+    console.log('[Orders UPDATE] Saving updated order to KV...');
+    const kvResponse = await fetch(`${kvUrl}/set/${orderKey}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${kvToken}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(orders),
+      body: JSON.stringify(updatedOrder),
     });
 
     if (!kvResponse.ok) {
@@ -94,7 +110,7 @@ export default async function handler(req, res) {
     
     return res.status(200).json({ 
       success: true,
-      order: orders[orderIndex],
+      order: updatedOrder,
       timestamp: Date.now(),
       usingKV: true
     });

@@ -42,43 +42,59 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('[Orders DELETE] Fetching existing orders...');
-    const getResponse = await fetch(`${kvUrl}/get/orders`, {
+    console.log('[Orders DELETE] Deleting order...');
+    const orderKey = `order:${orderId}`;
+    const deleteResponse = await fetch(`${kvUrl}/del/${orderKey}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kvToken}`,
+      },
+    });
+
+    if (!deleteResponse.ok) {
+      console.warn('[Orders DELETE] Order not found or error deleting:', orderId);
+    }
+
+    console.log('[Orders DELETE] Removing from index...');
+    const indexKey = 'orders:index';
+    const indexResponse = await fetch(`${kvUrl}/get/${indexKey}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${kvToken}`,
       },
     });
 
-    let orders = [];
-    if (getResponse.ok) {
-      const getData = await getResponse.json();
-      const rawResult = getData.result;
-      if (rawResult && typeof rawResult === 'string') {
-        orders = JSON.parse(rawResult);
-      } else if (rawResult && typeof rawResult === 'object') {
-        orders = rawResult;
+    let orderIds = [];
+    if (indexResponse.ok) {
+      const indexData = await indexResponse.json();
+      const rawResult = indexData.result;
+      try {
+        if (rawResult && typeof rawResult === 'string') {
+          orderIds = JSON.parse(rawResult);
+        } else if (rawResult && typeof rawResult === 'object') {
+          orderIds = rawResult;
+        }
+      } catch (parseError) {
+        console.warn('[Orders DELETE] Error parsing index:', parseError);
+        orderIds = [];
       }
     }
-    
-    console.log('[Orders DELETE] Current orders count:', Array.isArray(orders) ? orders.length : 0);
-    
-    orders = orders.filter(o => o.id !== orderId);
-    
-    console.log('[Orders DELETE] Saving to KV with', orders.length, 'orders...');
-    const kvResponse = await fetch(`${kvUrl}/set/orders`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${kvToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orders),
-    });
 
-    if (!kvResponse.ok) {
-      const errorText = await kvResponse.text();
-      console.error('[Orders DELETE] KV API error:', kvResponse.status, errorText);
-      throw new Error(`KV API error: ${kvResponse.status} - ${errorText}`);
+    if (Array.isArray(orderIds)) {
+      orderIds = orderIds.filter(id => id !== orderId);
+      
+      const updateIndexResponse = await fetch(`${kvUrl}/set/${indexKey}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${kvToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderIds),
+      });
+
+      if (!updateIndexResponse.ok) {
+        console.error('[Orders DELETE] Failed to update index');
+      }
     }
 
     console.log('[Orders DELETE] Order deleted successfully:', orderId);

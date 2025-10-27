@@ -1,24 +1,27 @@
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  if (rateLimit(req, res, { maxRequests: 10 })) {
+    return;
+  }
+
   try {
     const { order } = req.body;
 
     console.log('[Orders CREATE] Received request');
-    console.log('[Orders CREATE] Order data:', order);
 
-    if (!order) {
+    if (!order || typeof order !== 'object') {
       return res.status(400).json({ error: 'Order data required' });
     }
     
@@ -38,44 +41,24 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('[Orders CREATE] Fetching existing orders...');
-    const getResponse = await fetch(`${kvUrl}/get/orders`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${kvToken}`,
-      },
-    });
-
-    let orders = [];
-    if (getResponse.ok) {
-      const getData = await getResponse.json();
-      const rawResult = getData.result;
-      if (rawResult && typeof rawResult === 'string') {
-        orders = JSON.parse(rawResult);
-      } else if (rawResult && typeof rawResult === 'object') {
-        orders = rawResult;
-      }
-    }
-    
-    console.log('[Orders CREATE] Current orders count:', Array.isArray(orders) ? orders.length : 0);
-    
+    const orderId = Date.now().toString();
     const newOrder = {
       ...order,
-      id: Date.now().toString(),
+      id: orderId,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
     
-    orders = [newOrder, ...(Array.isArray(orders) ? orders : [])];
+    console.log('[Orders CREATE] Saving order with ID:', orderId);
     
-    console.log('[Orders CREATE] Saving to KV with', orders.length, 'orders...');
-    const kvResponse = await fetch(`${kvUrl}/set/orders`, {
+    const orderKey = `order:${orderId}`;
+    const kvResponse = await fetch(`${kvUrl}/set/${orderKey}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${kvToken}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(orders),
+      body: JSON.stringify(newOrder),
     });
 
     if (!kvResponse.ok) {
@@ -84,11 +67,55 @@ export default async function handler(req, res) {
       throw new Error(`KV API error: ${kvResponse.status} - ${errorText}`);
     }
 
-    console.log('[Orders CREATE] Order created successfully:', newOrder.id);
+    console.log('[Orders CREATE] Adding order to index...');
+    const indexKey = 'orders:index';
+    const indexResponse = await fetch(`${kvUrl}/get/${indexKey}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${kvToken}`,
+      },
+    });
+
+    let orderIds = [];
+    if (indexResponse.ok) {
+      const indexData = await indexResponse.json();
+      const rawResult = indexData.result;
+      try {
+        if (rawResult && typeof rawResult === 'string') {
+          orderIds = JSON.parse(rawResult);
+        } else if (rawResult && typeof rawResult === 'object') {
+          orderIds = rawResult;
+        }
+      } catch (parseError) {
+        console.warn('[Orders CREATE] Error parsing index, starting fresh:', parseError);
+        orderIds = [];
+      }
+    }
+
+    if (!Array.isArray(orderIds)) {
+      orderIds = [];
+    }
+
+    orderIds = [orderId, ...orderIds];
+
+    const updateIndexResponse = await fetch(`${kvUrl}/set/${indexKey}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kvToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderIds),
+    });
+
+    if (!updateIndexResponse.ok) {
+      console.error('[Orders CREATE] Failed to update index, but order was saved');
+    }
+
+    console.log('[Orders CREATE] Order created successfully:', orderId);
     
     return res.status(200).json({ 
       success: true,
-      orderId: newOrder.id,
+      orderId: orderId,
       order: newOrder,
       timestamp: Date.now(),
       usingKV: true

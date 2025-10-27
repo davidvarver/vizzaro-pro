@@ -1,15 +1,19 @@
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  if (rateLimit(req, res, { maxRequests: 20 })) {
+    return;
   }
 
   try {
@@ -17,13 +21,8 @@ export default async function handler(req, res) {
 
     console.log('[Catalog UPDATE] Received request');
     console.log('[Catalog UPDATE] Admin token provided:', !!adminToken);
-    console.log('[Catalog UPDATE] Admin token value:', adminToken);
-    console.log('[Catalog UPDATE] Expected token from ADMIN_SECRET_TOKEN:', process.env.ADMIN_SECRET_TOKEN);
-    console.log('[Catalog UPDATE] Expected token from EXPO_PUBLIC_ADMIN_TOKEN:', process.env.EXPO_PUBLIC_ADMIN_TOKEN);
-    console.log('[Catalog UPDATE] Env vars available:', Object.keys(process.env).filter(k => k.includes('ADMIN') || k.includes('TOKEN')));
 
     const expectedToken = process.env.ADMIN_SECRET_TOKEN || process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
-    console.log('[Catalog UPDATE] Using expected token:', expectedToken);
 
     if (!adminToken) {
       console.log('[Catalog UPDATE] No token provided');
@@ -32,8 +31,6 @@ export default async function handler(req, res) {
 
     if (adminToken !== expectedToken) {
       console.log('[Catalog UPDATE] Token mismatch');
-      console.log('[Catalog UPDATE] Received:', adminToken);
-      console.log('[Catalog UPDATE] Expected:', expectedToken);
       return res.status(401).json({ error: 'No autorizado - Token inválido' });
     }
 
@@ -62,7 +59,6 @@ export default async function handler(req, res) {
     }
 
     console.log('[Catalog UPDATE] Saving to KV using REST API...');
-    console.log('[Catalog UPDATE] KV URL:', kvUrl);
     
     try {
       const kvResponse = await fetch(`${kvUrl}/set/wallpapers_catalog`, {
