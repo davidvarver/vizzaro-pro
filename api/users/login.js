@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -34,37 +36,52 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('[Users LOGIN] Fetching users...');
-    const getResponse = await fetch(`${kvUrl}/get/users`, {
+    const userKey = `user:${email}`;
+    console.log('[Users LOGIN] Fetching user:', userKey);
+    
+    const getResponse = await fetch(`${kvUrl}/get/${userKey}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${kvToken}`,
       },
     });
 
-    let users = [];
-    if (getResponse.ok) {
-      const getData = await getResponse.json();
-      const rawResult = getData.result;
+    if (!getResponse.ok) {
+      console.log('[Users LOGIN] User not found:', email);
+      return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
+    }
+
+    const userData = await getResponse.json();
+    let user = null;
+
+    try {
+      const rawResult = userData.result;
       if (rawResult && typeof rawResult === 'string') {
-        users = JSON.parse(rawResult);
+        user = JSON.parse(rawResult);
       } else if (rawResult && typeof rawResult === 'object') {
-        users = rawResult;
+        user = rawResult;
       }
+    } catch (parseError) {
+      console.error('[Users LOGIN] Error parsing user data:', parseError);
+      return res.status(500).json({ error: 'Error al procesar datos del usuario' });
+    }
+
+    if (!user || !user.passwordHash) {
+      console.log('[Users LOGIN] Invalid user data for:', email);
+      return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
     }
     
-    console.log('[Users LOGIN] Users count:', Array.isArray(users) ? users.length : 0);
+    console.log('[Users LOGIN] Comparing passwords...');
+    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
     
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (!user) {
-      console.log('[Users LOGIN] Invalid credentials for:', email);
+    if (!passwordMatch) {
+      console.log('[Users LOGIN] Invalid password for:', email);
       return res.status(401).json({ error: 'Correo o contraseña incorrectos' });
     }
     
     console.log('[Users LOGIN] User logged in successfully:', user.id);
     
-    const { password: _, ...userWithoutPassword } = user;
+    const { passwordHash: _, ...userWithoutPassword } = user;
     
     return res.status(200).json({ 
       success: true,

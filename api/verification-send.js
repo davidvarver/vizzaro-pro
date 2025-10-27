@@ -1,7 +1,5 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -21,6 +19,17 @@ export default async function handler(req, res) {
     if (!email || !code) {
       return res.status(400).json({ error: 'Email y código son requeridos' });
     }
+
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey || apiKey === 'your_resend_api_key') {
+      console.error('[Send Verification] RESEND_API_KEY not configured');
+      return res.status(503).json({ 
+        error: '⚠️ Servicio de email no configurado',
+        needsConfig: true 
+      });
+    }
+
+    const resend = new Resend(apiKey);
 
     const { data, error } = await resend.emails.send({
       from: process.env.FROM_EMAIL || 'onboarding@resend.dev',

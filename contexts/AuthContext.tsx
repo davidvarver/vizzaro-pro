@@ -24,7 +24,6 @@ interface PendingVerification {
 }
 
 const AUTH_STORAGE_KEY = '@auth_user';
-const USERS_STORAGE_KEY = '@auth_users';
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 
 const generateVerificationCode = (): string => {
@@ -209,14 +208,6 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         createdAt: new Date().toISOString(),
       };
 
-      const usersJson = await AsyncStorage.getItem(USERS_STORAGE_KEY);
-      const users = usersJson ? JSON.parse(usersJson) : [];
-      users.push({
-        ...newUser,
-        password: pendingVerification.password,
-      });
-
-      await AsyncStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(newUser));
 
       setAuthState({
@@ -296,29 +287,8 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         }
       }
       
-      console.log('[AuthContext] Trying local login...');
-      const usersJson = await AsyncStorage.getItem(USERS_STORAGE_KEY);
-      const users = usersJson ? JSON.parse(usersJson) : [];
-      
-      const user = users.find((u: User & { password: string }) => 
-        u.email === email && u.password === password
-      );
-
-      if (!user) {
-        return { success: false, error: 'Correo o contraseña incorrectos' };
-      }
-
-      const { password: _, ...userWithoutPassword } = user;
-
-      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(userWithoutPassword));
-
-      setAuthState({
-        user: userWithoutPassword,
-        isLoading: false,
-        isAuthenticated: true,
-      });
-
-      return { success: true };
+      console.log('[AuthContext] API not available - login requires backend');
+      return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
     } catch (error) {
       console.error('Error during login:', error);
       return { success: false, error: 'Error al iniciar sesión' };
