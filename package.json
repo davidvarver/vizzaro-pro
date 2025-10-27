@@ -58,8 +58,7 @@
     "xlsx": "^0.18.5",
     "zod": "^4.1.12",
     "zustand": "^5.0.2"
-  },
-  ...
+    },
 "devDependencies": {
   "@babel/core": "^7.25.2",
   "@expo/ngrok": "^4.1.0",
