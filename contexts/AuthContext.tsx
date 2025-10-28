@@ -174,50 +174,59 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         return { success: false, error: 'Código incorrecto' };
       }
 
-      if (API_BASE_URL) {
-        try {
-          console.log('[AuthContext] Registering user via API...');
-          const response = await fetch(`${API_BASE_URL}/api/users/register`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: pendingVerification.email,
-              password: pendingVerification.password,
-              name: pendingVerification.name,
-            }),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log('[AuthContext] User registered via API');
-            
-            if (data.success && data.user && data.token) {
-              await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
-              await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
-              
-              setAuthState({
-                user: data.user,
-                token: data.token,
-                isLoading: false,
-                isAuthenticated: true,
-              });
-              setPendingVerification(null);
-              return { success: true };
-            }
-          } else {
-            const errorData = await response.json();
-            console.warn('[AuthContext] API register failed:', errorData);
-            return { success: false, error: errorData.error || 'Error al registrar usuario' };
-          }
-        } catch (apiError) {
-          console.warn('[AuthContext] API register error:', apiError);
-          return { success: false, error: 'Error al conectar con el servidor' };
-        }
+      const apiUrl = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+      
+      if (!apiUrl) {
+        console.error('[AuthContext] No API URL available for registration');
+        return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
       }
+      
+      try {
+        console.log('[AuthContext] Registering user via API:', `${apiUrl}/api/users/register`);
+        const response = await fetch(`${apiUrl}/api/users/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: pendingVerification.email,
+            password: pendingVerification.password,
+            name: pendingVerification.name,
+          }),
+        });
 
-      return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
+        console.log('[AuthContext] Registration response status:', response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('[AuthContext] User registered via API:', data.success);
+          
+          if (data.success && data.user && data.token) {
+            await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
+            await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
+            
+            setAuthState({
+              user: data.user,
+              token: data.token,
+              isLoading: false,
+              isAuthenticated: true,
+            });
+            setPendingVerification(null);
+            return { success: true };
+          } else {
+            console.error('[AuthContext] Invalid registration response data:', data);
+            return { success: false, error: data.error || 'Respuesta inválida del servidor' };
+          }
+        } else {
+          const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+          console.error('[AuthContext] API register failed:', response.status, errorData);
+          return { success: false, error: errorData.error || 'Error al registrar usuario' };
+        }
+      } catch (apiError) {
+        console.error('[AuthContext] API register error:', apiError);
+        const errorMessage = apiError instanceof Error ? apiError.message : 'Error desconocido';
+        return { success: false, error: `Error al conectar con el servidor: ${errorMessage}` };
+      }
     } catch (error) {
       console.error('Error verifying code:', error);
       return { success: false, error: 'Error al verificar código' };
@@ -252,49 +261,58 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     try {
       console.log('[AuthContext] Logging in...', email);
       
-      if (API_BASE_URL) {
-        try {
-          console.log('[AuthContext] Attempting login via API...');
-          const response = await fetch(`${API_BASE_URL}/api/users/login`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log('[AuthContext] User logged in via API');
-            
-            if (data.success && data.user && data.token) {
-              await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
-              await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
-              
-              setAuthState({
-                user: data.user,
-                token: data.token,
-                isLoading: false,
-                isAuthenticated: true,
-              });
-              return { success: true };
-            }
-          } else {
-            const errorData = await response.json();
-            console.warn('[AuthContext] API login failed:', errorData);
-            return { success: false, error: errorData.error || 'Correo o contraseña incorrectos' };
-          }
-        } catch (apiError) {
-          console.warn('[AuthContext] API login error:', apiError);
-          return { success: false, error: 'Error al conectar con el servidor' };
-        }
+      const apiUrl = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+      
+      if (!apiUrl) {
+        console.error('[AuthContext] No API URL available');
+        return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
       }
       
-      console.log('[AuthContext] API not available - login requires backend');
-      return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
+      try {
+        console.log('[AuthContext] Attempting login via API:', `${apiUrl}/api/users/login`);
+        const response = await fetch(`${apiUrl}/api/users/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        console.log('[AuthContext] Response status:', response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('[AuthContext] User logged in via API:', data.success);
+          
+          if (data.success && data.user && data.token) {
+            await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
+            await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
+            
+            setAuthState({
+              user: data.user,
+              token: data.token,
+              isLoading: false,
+              isAuthenticated: true,
+            });
+            return { success: true };
+          } else {
+            console.error('[AuthContext] Invalid response data:', data);
+            return { success: false, error: data.error || 'Respuesta inválida del servidor' };
+          }
+        } else {
+          const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+          console.error('[AuthContext] API login failed:', response.status, errorData);
+          return { success: false, error: errorData.error || 'Correo o contraseña incorrectos' };
+        }
+      } catch (apiError) {
+        console.error('[AuthContext] API login error:', apiError);
+        const errorMessage = apiError instanceof Error ? apiError.message : 'Error desconocido';
+        return { success: false, error: `Error al conectar con el servidor: ${errorMessage}` };
+      }
     } catch (error) {
       console.error('Error during login:', error);
-      return { success: false, error: 'Error al iniciar sesión' };
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      return { success: false, error: `Error al iniciar sesión: ${errorMessage}` };
     }
   };
 
