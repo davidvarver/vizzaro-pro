@@ -31,8 +31,9 @@ import * as XLSX from 'xlsx';
 import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Wallpaper } from '@/constants/wallpapers';
+import AdminGuard from '@/components/AdminGuard';
 
 interface ProductForm {
   name: string;
@@ -50,7 +51,7 @@ interface ProductForm {
 
 export default function AddProductScreen() {
   const { addWallpaper, addMultipleWallpapers, replaceAllWallpapers } = useWallpapers();
-  const { adminToken } = useAdmin();
+  const { token } = useAuth();
   const [form, setForm] = useState<ProductForm>({
     name: '',
     description: '',
@@ -315,11 +316,11 @@ export default function AddProductScreen() {
 
       console.log('Guardando nuevo producto:', newProduct);
       
-      if (!adminToken) {
+      if (!token) {
         throw new Error('No hay token de administrador');
       }
       
-      const success = await addWallpaper(newProduct, adminToken);
+      const success = await addWallpaper(newProduct, token);
       
       if (success) {
         console.log('Producto guardado exitosamente');
@@ -522,13 +523,13 @@ export default function AddProductScreen() {
       console.log('Productos válidos a agregar:', productsToAdd.length);
 
       if (productsToAdd.length > 0) {
-        if (!adminToken) {
+        if (!token) {
           throw new Error('No hay token de administrador');
         }
         
         const success = excelReplaceMode 
-          ? await replaceAllWallpapers(productsToAdd, adminToken)
-          : await addMultipleWallpapers(productsToAdd, adminToken);
+          ? await replaceAllWallpapers(productsToAdd, token)
+          : await addMultipleWallpapers(productsToAdd, token);
         
         if (!success) {
           throw new Error('Error al agregar productos');
@@ -559,7 +560,8 @@ export default function AddProductScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <AdminGuard>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
@@ -1057,6 +1059,7 @@ export default function AddProductScreen() {
         </View>
       )}
     </View>
+    </AdminGuard>
   );
 }
 

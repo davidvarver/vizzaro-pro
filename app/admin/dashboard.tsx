@@ -21,7 +21,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from 'lucide-react-native';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useOrders } from '@/contexts/OrdersContext';
 import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
@@ -29,7 +29,7 @@ import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminDashboard() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { currentAdmin, logout } = useAdmin();
+  const { user, logout } = useAuth();
   const { orders, getOrderStats } = useOrders();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -46,7 +46,7 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     await logout();
-    router.replace('/admin/login' as any);
+    router.replace('/auth/login' as any);
   };
 
   const navigateToOrders = () => {
@@ -119,7 +119,7 @@ export default function AdminDashboard() {
       <View style={styles.header}>
         <View>
           <Text style={styles.welcomeText}>Bienvenido,</Text>
-          <Text style={styles.adminName}>{currentAdmin?.name}</Text>
+          <Text style={styles.adminName}>{user?.name}</Text>
         </View>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <LogOut size={20} color={Colors.light.tabIconDefault} />

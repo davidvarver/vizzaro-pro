@@ -46,7 +46,11 @@ export default function LoginScreen() {
     setIsLoading(false);
 
     if (result.success) {
-      router.replace('/(tabs)/profile' as any);
+      if (result.isAdmin) {
+        router.replace('/admin/dashboard' as any);
+      } else {
+        router.replace('/(tabs)/profile' as any);
+      }
     } else {
       setError(result.error || 'Error al iniciar sesión');
     }

@@ -271,7 +271,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     }
   };
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; isAdmin?: boolean }> => {
     try {
       console.log('[AuthContext] Logging in...', email);
       
@@ -309,7 +309,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
               isAuthenticated: true,
               isAdmin: data.user.isAdmin || false,
             });
-            return { success: true };
+            return { success: true, isAdmin: data.user.isAdmin || false };
           } else {
             console.error('[AuthContext] Invalid response data:', data);
             return { success: false, error: data.error || 'Respuesta inválida del servidor' };

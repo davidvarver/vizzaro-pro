@@ -24,14 +24,15 @@ import {
 } from 'lucide-react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAuth } from '@/contexts/AuthContext';
 import Colors from '@/constants/colors';
+import AdminGuard from '@/components/AdminGuard';
 
 export default function EditProductScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const { getWallpaperById, updateWallpaper, isLoading: wallpapersLoading } = useWallpapers();
-  const { adminToken } = useAdmin();
+  const { token } = useAuth();
   
   const originalProduct = getWallpaperById(id || '');
   
@@ -118,9 +119,9 @@ export default function EditProductScreen() {
 
     try {
       console.log('Llamando updateWallpaper con:', formData);
-      console.log('Admin token:', adminToken);
+      console.log('Admin token:', token);
       
-      if (!adminToken) {
+      if (!token) {
         console.error('No admin token available');
         if (Platform.OS !== 'web') {
           Alert.alert('Error', 'No hay sesión de administrador activa');
@@ -128,7 +129,7 @@ export default function EditProductScreen() {
         return;
       }
       
-      const success = await updateWallpaper(formData, adminToken);
+      const success = await updateWallpaper(formData, token);
       console.log('Resultado de updateWallpaper:', success);
       
       if (success) {
@@ -211,7 +212,8 @@ export default function EditProductScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <AdminGuard>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen options={{ headerShown: false }} />
       
       <View style={styles.header}>
@@ -541,6 +543,7 @@ export default function EditProductScreen() {
         <View style={styles.bottomPadding} />
       </ScrollView>
     </View>
+    </AdminGuard>
   );
 }
 

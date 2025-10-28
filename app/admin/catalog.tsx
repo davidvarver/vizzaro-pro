@@ -23,16 +23,17 @@ import {
 } from 'lucide-react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAuth } from '@/contexts/AuthContext';
 import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminCatalogScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { wallpapers: catalogItems, updateWallpaper, deleteWallpaper, isLoading } = useWallpapers();
-  const { adminToken } = useAdmin();
+  const { token } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -55,11 +56,11 @@ export default function AdminCatalogScreen() {
 
   const toggleStock = async (itemId: string) => {
     const item = catalogItems.find(item => item.id === itemId);
-    if (item && adminToken) {
-      console.log('[Catalog] Toggling stock for item:', itemId, 'with token:', adminToken);
+    if (item && token) {
+      console.log('[Catalog] Toggling stock for item:', itemId, 'with token:', token);
       setErrorMessage('');
       try {
-        const success = await updateWallpaper({ ...item, inStock: !item.inStock }, adminToken);
+        const success = await updateWallpaper({ ...item, inStock: !item.inStock }, token);
         if (success) {
           console.log('[Catalog] Stock toggled successfully');
         } else {
@@ -72,11 +73,11 @@ export default function AdminCatalogScreen() {
   };
 
   const deleteItem = async (itemId: string) => {
-    if (adminToken) {
-      console.log('[Catalog] Deleting item:', itemId, 'with token:', adminToken);
+    if (token) {
+      console.log('[Catalog] Deleting item:', itemId, 'with token:', token);
       setErrorMessage('');
       try {
-        const success = await deleteWallpaper(itemId, adminToken);
+        const success = await deleteWallpaper(itemId, token);
         if (success) {
           console.log('[Catalog] Item deleted successfully');
         } else {
@@ -154,7 +155,8 @@ export default function AdminCatalogScreen() {
   );
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <AdminGuard>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
@@ -262,6 +264,7 @@ export default function AdminCatalogScreen() {
         />
       )}
     </View>
+    </AdminGuard>
   );
 }
 

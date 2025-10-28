@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
 import { CartProvider } from "@/contexts/CartContext";
 import { OrdersProvider } from "@/contexts/OrdersContext";
-import { AdminProvider } from "@/contexts/AdminContext";
+
 import { WallpapersProvider } from "@/contexts/WallpapersContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -24,7 +24,7 @@ function RootLayoutNav() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="wallpaper/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="admin/login" options={{ headerShown: false }} />
+
       <Stack.Screen name="admin/dashboard" options={{ headerShown: false }} />
       <Stack.Screen name="admin/orders" options={{ headerShown: false }} />
       <Stack.Screen name="admin/catalog" options={{ headerShown: false }} />
@@ -50,16 +50,14 @@ export default function RootLayout() {
         <WallpapersProvider>
           <CollectionsProvider>
             <FavoritesProvider>
-              <AdminProvider>
-                <OrdersProvider>
-                  <CartProvider>
-                  <GestureHandlerRootView style={styles.container}>
-                    <StatusBar style="dark" />
-                    <RootLayoutNav />
-                  </GestureHandlerRootView>
-                  </CartProvider>
-                </OrdersProvider>
-              </AdminProvider>
+              <OrdersProvider>
+                <CartProvider>
+                <GestureHandlerRootView style={styles.container}>
+                  <StatusBar style="dark" />
+                  <RootLayoutNav />
+                </GestureHandlerRootView>
+                </CartProvider>
+              </OrdersProvider>
             </FavoritesProvider>
           </CollectionsProvider>
         </WallpapersProvider>

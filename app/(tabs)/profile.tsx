@@ -7,7 +7,7 @@ import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFavorites } from '@/contexts/FavoritesContext';
-import { useAdmin } from '@/contexts/AdminContext';
+
 
 interface Project {
   id: string;
@@ -20,9 +20,8 @@ interface Project {
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { favoriteProjects } = useFavorites();
-  const { isAuthenticated: isAdminAuth, logout: adminLogout } = useAdmin();
 
   const recentProjects = useMemo(() => {
     return favoriteProjects
@@ -85,33 +84,15 @@ export default function ProfileScreen() {
     );
   };
 
-  const handleAdminLogout = () => {
-    Alert.alert(
-      'Cerrar Sesión de Admin',
-      '¿Estás seguro que deseas cerrar la sesión de administrador?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Cerrar Sesión',
-          style: 'destructive',
-          onPress: async () => {
-            await adminLogout();
-          },
-        },
-      ]
-    );
-  };
+
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {isAdminAuth && (
+        {isAdmin && (
           <View style={styles.adminBanner}>
             <Shield size={16} color={Colors.light.background} />
-            <Text style={styles.adminBannerText}>Modo Administrador Activo</Text>
-            <TouchableOpacity onPress={handleAdminLogout} style={styles.adminLogoutButton}>
-              <Text style={styles.adminLogoutText}>Cerrar</Text>
-            </TouchableOpacity>
+            <Text style={styles.adminBannerText}>Cuenta de Administrador</Text>
           </View>
         )}
 
@@ -215,7 +196,7 @@ export default function ProfileScreen() {
             <ChevronRight size={16} color={Colors.light.textSecondary} />
           </TouchableOpacity>
 
-          {isAdminAuth ? (
+          {isAdmin && (
             <TouchableOpacity 
               style={styles.menuItem}
               onPress={() => router.push('/admin/dashboard' as any)}
@@ -225,17 +206,6 @@ export default function ProfileScreen() {
                 <Text style={[styles.menuItemText, { color: Colors.light.primary }]}>Panel de Administración</Text>
               </View>
               <ChevronRight size={16} color={Colors.light.primary} />
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity 
-              style={styles.menuItem}
-              onPress={() => router.push('/admin/login' as any)}
-            >
-              <View style={styles.menuItemLeft}>
-                <Shield size={20} color={Colors.light.textSecondary} />
-                <Text style={styles.menuItemText}>Panel de Administración</Text>
-              </View>
-              <ChevronRight size={16} color={Colors.light.textSecondary} />
             </TouchableOpacity>
           )}
 

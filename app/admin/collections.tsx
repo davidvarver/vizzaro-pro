@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 import { ArrowLeft, Plus, Edit2, Trash2, Save, X } from 'lucide-react-native';
 import { useCollections, Collection } from '@/contexts/CollectionsContext';
 import Colors from '@/constants/colors';
+import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminCollections() {
   const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
