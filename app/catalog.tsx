@@ -269,7 +269,7 @@ export default function CatalogScreen() {
                       {wallpaper.name}
                     </Text>
                     <Text style={styleSheet.wallpaperCategory} numberOfLines={1}>
-                      {wallpaper.category} • {wallpaper.style}
+                      {wallpaper.category} {"•"} {wallpaper.style}
                     </Text>
                     <Text style={styleSheet.wallpaperPrice}>desde ${wallpaper.price}</Text>
                   </View>
