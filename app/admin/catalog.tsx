@@ -32,7 +32,7 @@ export default function AdminCatalogScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const { wallpapers: catalogItems, updateWallpaper, deleteWallpaper, isLoading } = useWallpapers();
+  const { wallpapers: catalogItems, updateWallpaper, deleteWallpaper, isLoading, error: contextError, refetchWallpapers } = useWallpapers();
   const { token } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -46,7 +46,11 @@ export default function AdminCatalogScreen() {
     { key: 'Tropical', label: 'Tropical' },
   ];
 
-  const filteredItems = catalogItems.filter(item => {
+  const validCatalogItems = catalogItems.filter(item => {
+    return item && typeof item === 'object' && item.id && item.name;
+  });
+
+  const filteredItems = validCatalogItems.filter(item => {
     const matchesSearch = String(item.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                          String(item.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                          String(item.category || '').toLowerCase().includes(searchQuery.toLowerCase());
@@ -91,20 +95,25 @@ export default function AdminCatalogScreen() {
     }
   };
 
-  const ProductCard = ({ item }: { item: Wallpaper }) => (
-    <View style={styles.productCard}>
-      <View style={styles.productImageContainer}>
-        <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
-        {item.inStock && (
-          <View style={styles.stockBadge}>
-            <Text style={styles.stockText}>En Stock</Text>
-          </View>
-        )}
-      </View>
+  const ProductCard = ({ item }: { item: Wallpaper }) => {
+    const price = typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0;
+    const dimensions = item.dimensions || { width: 0, height: 0, coverage: 0 };
+    const style = item.style || 'Sin estilo';
+    
+    return (
+      <View style={styles.productCard}>
+        <View style={styles.productImageContainer}>
+          <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
+          {item.inStock && (
+            <View style={styles.stockBadge}>
+              <Text style={styles.stockText}>En Stock</Text>
+            </View>
+          )}
+        </View>
 
-      <View style={styles.productInfo}>
-        <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
-        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+        <View style={styles.productInfo}>
+          <Text style={styles.productName} numberOfLines={1}>{item.name || 'Sin nombre'}</Text>
+          <Text style={styles.productPrice}>${price.toFixed(2)}</Text>
         
         <Text style={styles.productDescription} numberOfLines={1}>
           {item.description}
@@ -114,14 +123,14 @@ export default function AdminCatalogScreen() {
           <View style={[styles.colorDot, { backgroundColor: '#8B4513' }]} />
           <View style={[styles.colorDot, { backgroundColor: '#4169E1' }]} />
           <View style={[styles.colorDot, { backgroundColor: '#FFD700' }]} />
-          <Text style={styles.productStyle}>{item.style}</Text>
+          <Text style={styles.productStyle}>{style}</Text>
         </View>
 
         <Text style={styles.specText}>
-          {item.dimensions.width}m x {item.dimensions.height}m
+          {dimensions.width}m x {dimensions.height}m
         </Text>
         <Text style={styles.specText}>
-          {item.dimensions.coverage}m² por rollo
+          {dimensions.coverage}m² por rollo
         </Text>
 
         <View style={styles.actionButtons}>
@@ -152,7 +161,8 @@ export default function AdminCatalogScreen() {
         </View>
       </View>
     </View>
-  );
+    );
+  };
 
   return (
     <AdminGuard>
@@ -228,7 +238,19 @@ export default function AdminCatalogScreen() {
         </View>
       ) : null}
 
-      {isLoading ? (
+      {contextError && !isLoading ? (
+        <View style={styles.errorState}>
+          <Package size={48} color="#EF4444" />
+          <Text style={styles.errorStateTitle}>Error al cargar catálogo</Text>
+          <Text style={styles.errorStateText}>{contextError}</Text>
+          <TouchableOpacity 
+            style={styles.retryButton}
+            onPress={() => refetchWallpapers()}
+          >
+            <Text style={styles.retryButtonText}>Reintentar</Text>
+          </TouchableOpacity>
+        </View>
+      ) : isLoading ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyStateText}>Cargando catálogo...</Text>
         </View>
@@ -528,5 +550,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
     marginTop: -4,
+  },
+  errorState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 24,
+    gap: 16,
+  },
+  errorStateTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#EF4444',
+    textAlign: 'center',
+  },
+  errorStateText: {
+    fontSize: 14,
+    color: Colors.light.tabIconDefault,
+    textAlign: 'center',
+    maxWidth: 320,
+  },
+  retryButton: {
+    backgroundColor: Colors.light.tint,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  retryButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });

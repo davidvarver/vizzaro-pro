@@ -13,8 +13,6 @@ import {
   BarChart3,
   Package,
   ShoppingCart,
-  Users,
-  Settings,
   LogOut,
   TrendingUp,
   Clock,
@@ -159,7 +157,7 @@ export default function AdminDashboard() {
             />
             <StatCard
               title="Ingresos"
-              value={`$${stats.totalRevenue.toFixed(2)}`}
+              value={`${(typeof stats.totalRevenue === 'number' && !isNaN(stats.totalRevenue) ? stats.totalRevenue : 0).toFixed(2)}`}
               icon={TrendingUp}
               color="#8B5CF6"
             />
@@ -212,7 +210,9 @@ export default function AdminDashboard() {
                   </Text>
                 </View>
               </View>
-              <Text style={styles.orderTotal}>${order.total.toFixed(2)}</Text>
+              <Text style={styles.orderTotal}>
+                ${(typeof order.total === 'number' && !isNaN(order.total) ? order.total : 0).toFixed(2)}
+              </Text>
               <Text style={styles.orderDate}>
                 {new Date(order.createdAt).toLocaleDateString()}
               </Text>

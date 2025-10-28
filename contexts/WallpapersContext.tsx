@@ -15,6 +15,7 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
     try {
       console.log('[WallpapersContext] Loading catalog... (forceRefresh:', forceRefresh, ')');
       setError(null);
+      setIsLoading(true);
       
       if (API_BASE_URL) {
         try {
@@ -40,14 +41,26 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
             console.log('[WallpapersContext] Loaded from API:', data.catalog?.length || 0, 'items');
             console.log('[WallpapersContext] API timestamp:', data.timestamp);
             
-            if (data.success && data.catalog) {
-              setWallpapers(data.catalog);
-              await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data.catalog));
-              await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
-              return;
+            if (data.success && data.catalog && Array.isArray(data.catalog)) {
+              const validCatalog = data.catalog.filter((item: any) => 
+                item && typeof item === 'object' && item.id && item.name && typeof item.price === 'number'
+              );
+              console.log('[WallpapersContext] Valid items after filtering:', validCatalog.length);
+              
+              if (validCatalog.length > 0) {
+                setWallpapers(validCatalog);
+                await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(validCatalog));
+                await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
+                setIsLoading(false);
+                return;
+              } else {
+                console.warn('[WallpapersContext] No valid items in catalog, using defaults');
+              }
             }
           } else {
             console.warn('[WallpapersContext] API returned error:', response.status);
+            const errorText = await response.text();
+            console.warn('[WallpapersContext] Error details:', errorText);
           }
         } catch (apiError) {
           console.warn('[WallpapersContext] API fetch failed, trying fallback:', apiError);
