@@ -33,6 +33,7 @@ export default function CheckoutScreen() {
   const { createOrder } = useOrders();
   
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('zelle');
+  const [zelleReference, setZelleReference] = useState<string>('');
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -57,6 +58,13 @@ export default function CheckoutScreen() {
     return `VZWP-${timestamp.slice(-6)}-${random}`;
   };
 
+  React.useEffect(() => {
+    if (paymentMethod === 'zelle' && !zelleReference) {
+      const newReference = generateZelleReference();
+      setZelleReference(newReference);
+    }
+  }, [paymentMethod, zelleReference]);
+
   const handlePlaceOrder = async () => {
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       if (Platform.OS !== 'web') {
@@ -74,7 +82,7 @@ export default function CheckoutScreen() {
       }
     }
 
-    const zelleReference = paymentMethod === 'zelle' ? generateZelleReference() : undefined;
+    const finalZelleReference = paymentMethod === 'zelle' ? zelleReference : undefined;
 
     try {
       await createOrder({
@@ -88,16 +96,18 @@ export default function CheckoutScreen() {
         deliveryMethod: customerInfo.address ? 'delivery' : 'pickup',
         notes: paymentMethod === 'zelle' ? 'Pago por Zelle' : 'Pago con tarjeta',
         paymentMethod,
-        zelleReference,
+        zelleReference: finalZelleReference,
         zelleConfirmed: false,
       });
+
+      const confirmMessage = paymentMethod === 'zelle' 
+        ? `Tu pedido ha sido recibido.\n\nCódigo de Referencia: ${finalZelleReference}\n\nEnvía el pago a: 7326646800\nMonto: ${total.toFixed(2)}\n\nIMPORTANTE: Incluye el código de referencia en la nota del pago.`
+        : 'Tu pedido ha sido procesado exitosamente. Recibirás un email de confirmación.';
 
       if (Platform.OS !== 'web') {
         Alert.alert(
           'Pedido Confirmado',
-          paymentMethod === 'zelle' 
-            ? `Tu pedido ha sido recibido.\n\nCódigo de Referencia: ${zelleReference}\n\nEnvía el pago a: 7326646800\nMonto: ${total.toFixed(2)}\n\nIMPORTANTE: Incluye el código de referencia en la nota del pago.`
-            : 'Tu pedido ha sido procesado exitosamente. Recibirás un email de confirmación.',
+          confirmMessage,
           [
             {
               text: 'OK',
@@ -109,6 +119,7 @@ export default function CheckoutScreen() {
           ]
         );
       } else {
+        alert(`Pedido Confirmado\n\n${confirmMessage}`);
         clearCart();
         router.replace('/(tabs)/home');
       }
@@ -251,13 +262,26 @@ export default function CheckoutScreen() {
               <Text style={styles.zelleInfoText}>
                 Envía el pago a: <Text style={styles.zelleNumber}>7326646800</Text>
               </Text>
-              <Text style={styles.zelleInfoSubtext}>
-                Al confirmar tu pedido, recibirás un código de referencia único.
+              <Text style={styles.zelleInfoText}>
+                Monto: <Text style={styles.zelleNumber}>${total.toFixed(2)}</Text>
               </Text>
+              
+              {zelleReference && (
+                <View style={styles.referenceBox}>
+                  <Text style={styles.referenceLabel}>Tu Código de Referencia:</Text>
+                  <View style={styles.referenceCodeContainer}>
+                    <Text style={styles.referenceCode}>{zelleReference}</Text>
+                  </View>
+                  <Text style={styles.referenceSubtext}>
+                    Copia este código para incluirlo en la nota del pago Zelle.
+                  </Text>
+                </View>
+              )}
+
               <View style={styles.zelleWarning}>
                 <Text style={styles.zelleWarningTitle}>⚠️ Importante</Text>
                 <Text style={styles.zelleWarningText}>
-                  Incluye el código de referencia en la nota del pago Zelle para que podamos identificar tu compra automáticamente.
+                  Debes incluir el código de referencia <Text style={styles.zelleWarningBold}>{zelleReference}</Text> en la nota o descripción de tu pago Zelle. Esto nos permite identificar y procesar tu pedido automáticamente.
                 </Text>
               </View>
             </View>
@@ -493,6 +517,53 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#78350F',
     lineHeight: 18,
+  },
+  zelleWarningBold: {
+    fontWeight: '700',
+    color: '#92400E',
+  },
+  referenceBox: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 16,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: Colors.light.primary,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  referenceLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: Colors.light.text,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  referenceCodeContainer: {
+    backgroundColor: Colors.light.backgroundSecondary,
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: Colors.light.primary,
+  },
+  referenceCode: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.light.primary,
+    textAlign: 'center',
+    letterSpacing: 2,
+  },
+  referenceSubtext: {
+    fontSize: 12,
+    color: Colors.light.textSecondary,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
   creditCardForm: {
     marginTop: 16,
