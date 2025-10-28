@@ -67,6 +67,7 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = () => {
+    console.log('🔴 handleLogout called');
     Alert.alert(
       'Cerrar Sesión',
       '¿Estás seguro que deseas cerrar sesión?',
@@ -76,8 +77,15 @@ export default function ProfileScreen() {
           text: 'Cerrar Sesión',
           style: 'destructive',
           onPress: async () => {
-            await logout();
-            router.replace('/auth/login' as any);
+            try {
+              console.log('🔴 Logging out...');
+              await logout();
+              console.log('✅ Logout successful, redirecting...');
+              router.replace('/auth/login' as any);
+            } catch (error) {
+              console.error('❌ Error during logout:', error);
+              Alert.alert('Error', 'No se pudo cerrar la sesión. Intenta nuevamente.');
+            }
           },
         },
       ]

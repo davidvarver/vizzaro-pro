@@ -344,7 +344,12 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const logout = async () => {
     try {
+      console.log('[AuthContext] Logging out...');
+      console.log('[AuthContext] Removing keys:', [AUTH_TOKEN_KEY, AUTH_USER_KEY]);
+      
       await AsyncStorage.multiRemove([AUTH_TOKEN_KEY, AUTH_USER_KEY]);
+      
+      console.log('[AuthContext] Keys removed, updating state...');
       setAuthState({
         user: null,
         token: null,
@@ -352,8 +357,10 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         isAuthenticated: false,
         isAdmin: false,
       });
+      console.log('[AuthContext] ✅ Logout successful');
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error('[AuthContext] ❌ Error during logout:', error);
+      throw error;
     }
   };
 
