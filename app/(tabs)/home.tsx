@@ -13,6 +13,7 @@ import { Search } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useCollections } from '@/contexts/CollectionsContext';
 import { router } from 'expo-router';
 import { Wallpaper } from '@/constants/wallpapers';
 
@@ -25,30 +26,10 @@ const rooms = [
   { id: 'banno', name: 'Baño', category: 'Todos' },
 ];
 
-const collections = [
-  {
-    id: 'blanco-negro',
-    name: 'Blanco & Negro Moderno',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&h=600&fit=crop&auto=format&q=80',
-    colors: ['Blanco', 'Negro', 'Gris'],
-  },
-  {
-    id: 'textura-beige',
-    name: 'Textura Beige Soft',
-    image: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=800&h=600&fit=crop&auto=format&q=80',
-    colors: ['Beige', 'Crema'],
-  },
-  {
-    id: 'geometria-gold',
-    name: 'Geometría Gold Line',
-    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80',
-    colors: ['Dorado', 'Negro'],
-  },
-];
-
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { wallpapers } = useWallpapers();
+  const { collections } = useCollections();
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handleSearch = () => {
@@ -65,7 +46,7 @@ export default function HomeScreen() {
     router.push('/catalog');
   };
 
-  const handleCollectionPress = (collection: typeof collections[0]) => {
+  const handleCollectionPress = (collection: { id: string; name: string; image: string; colors: string[]; featured: boolean }) => {
     router.push({
       pathname: '/catalog',
       params: { colors: collection.colors.join(',') }

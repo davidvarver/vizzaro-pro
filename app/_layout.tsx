@@ -11,6 +11,7 @@ import { AdminProvider } from "@/contexts/AdminContext";
 import { WallpapersProvider } from "@/contexts/WallpapersContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CollectionsProvider } from "@/contexts/CollectionsContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,6 +27,7 @@ function RootLayoutNav() {
       <Stack.Screen name="admin/dashboard" options={{ headerShown: false }} />
       <Stack.Screen name="admin/orders" options={{ headerShown: false }} />
       <Stack.Screen name="admin/catalog" options={{ headerShown: false }} />
+      <Stack.Screen name="admin/collections" options={{ headerShown: false }} />
       <Stack.Screen name="favorites" options={{ headerShown: false }} />
       <Stack.Screen name="project-comparison/[projectId]" options={{ headerShown: false }} />
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
@@ -44,18 +46,20 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <WallpapersProvider>
-          <FavoritesProvider>
-            <AdminProvider>
-              <OrdersProvider>
-                <CartProvider>
-                <GestureHandlerRootView style={styles.container}>
-                  <StatusBar style="dark" />
-                  <RootLayoutNav />
-                </GestureHandlerRootView>
-                </CartProvider>
-              </OrdersProvider>
-            </AdminProvider>
-          </FavoritesProvider>
+          <CollectionsProvider>
+            <FavoritesProvider>
+              <AdminProvider>
+                <OrdersProvider>
+                  <CartProvider>
+                  <GestureHandlerRootView style={styles.container}>
+                    <StatusBar style="dark" />
+                    <RootLayoutNav />
+                  </GestureHandlerRootView>
+                  </CartProvider>
+                </OrdersProvider>
+              </AdminProvider>
+            </FavoritesProvider>
+          </CollectionsProvider>
         </WallpapersProvider>
       </AuthProvider>
     </QueryClientProvider>

@@ -56,6 +56,10 @@ export default function AdminDashboard() {
     router.push('/admin/catalog' as any);
   };
 
+  const navigateToCollections = () => {
+    router.push('/admin/collections' as any);
+  };
+
   const StatCard = ({ 
     title, 
     value, 
@@ -176,6 +180,13 @@ export default function AdminDashboard() {
               icon={Package}
               color="#10B981"
               onPress={navigateToCatalog}
+            />
+            <QuickActionCard
+              title="Colecciones"
+              description="Gestionar colecciones destacadas"
+              icon={BarChart3}
+              color="#8B5CF6"
+              onPress={navigateToCollections}
             />
           </View>
         </View>
