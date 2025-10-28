@@ -80,14 +80,15 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
     }
   }, []);
 
-  const saveWallpapers = useCallback(async (wallpapersData: Wallpaper[], adminToken?: string): Promise<boolean> => {
+  const saveWallpapers = useCallback(async (wallpapersData: Wallpaper[], authToken?: string): Promise<boolean> => {
     try {
       console.log('[WallpapersContext] Saving catalog with', wallpapersData.length, 'items...');
       
-      const tokenToUse = adminToken || process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
-      console.log('[WallpapersContext] Using admin token:', tokenToUse);
-      console.log('[WallpapersContext] Token provided as param:', !!adminToken);
-      console.log('[WallpapersContext] Token from env:', process.env.EXPO_PUBLIC_ADMIN_TOKEN);
+      if (!authToken) {
+        throw new Error('No hay token de autenticación. Por favor inicia sesión.');
+      }
+      
+      console.log('[WallpapersContext] Using auth token:', !!authToken);
       
       if (API_BASE_URL) {
         const apiUrl = `${API_BASE_URL}/api/catalog/update`;
@@ -103,10 +104,10 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
+              'Authorization': `Bearer ${authToken}`,
             },
             body: JSON.stringify({ 
-              catalog: wallpapersData,
-              adminToken: tokenToUse
+              catalog: wallpapersData
             }),
             signal: controller.signal,
           });

@@ -25,6 +25,7 @@ import { useAdmin } from '@/contexts/AdminContext';
 import { useOrders } from '@/contexts/OrdersContext';
 import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminDashboard() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -113,7 +114,8 @@ export default function AdminDashboard() {
   );
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <AdminGuard>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <View>
           <Text style={styles.welcomeText}>Bienvenido,</Text>
@@ -233,7 +235,8 @@ export default function AdminDashboard() {
           />
         </View>
       </ScrollView>
-    </View>
+      </View>
+    </AdminGuard>
   );
 }
 

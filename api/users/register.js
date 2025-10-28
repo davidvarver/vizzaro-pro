@@ -76,6 +76,7 @@ export default async function handler(req, res) {
       email,
       passwordHash: hashedPassword,
       name,
+      isAdmin: false,
       createdAt: new Date().toISOString(),
     };
     
@@ -140,7 +141,8 @@ export default async function handler(req, res) {
       { 
         userId: newUser.id, 
         email: newUser.email,
-        name: newUser.name
+        name: newUser.name,
+        isAdmin: newUser.isAdmin
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRATION }

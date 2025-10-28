@@ -1,4 +1,7 @@
-const ADMIN_SECRET_TOKEN = process.env.ADMIN_SECRET_TOKEN || 'vizzaro_admin_secret_2025';
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+import { requireAdmin } from '../_authMiddleware.js';
+
 const KV_REST_API_URL = process.env.KV_REST_API_URL;
 const KV_REST_API_TOKEN = process.env.KV_REST_API_TOKEN;
 
@@ -10,29 +13,31 @@ const isKVConfigured = KV_REST_API_URL &&
 export default async function handler(req, res) {
   console.log('[collections/update] Request received');
   
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  if (rateLimit(req, res, { maxRequests: 20 })) {
+    return;
+  }
+
   try {
-    const { collections, adminToken } = req.body;
+    const adminUser = requireAdmin(req, res);
+    if (!adminUser) {
+      return;
+    }
+
+    const { collections } = req.body;
 
     if (!collections || !Array.isArray(collections)) {
       console.error('[collections/update] Invalid collections data');
       return res.status(400).json({ error: 'Collections data is required' });
-    }
-
-    if (!adminToken || adminToken !== ADMIN_SECRET_TOKEN) {
-      console.error('[collections/update] Unauthorized');
-      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     if (!isKVConfigured) {

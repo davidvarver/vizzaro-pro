@@ -65,6 +65,30 @@ export function requireAuth(req, res) {
   return authResult.user;
 }
 
+export function requireAdmin(req, res) {
+  const authResult = verifyToken(req, res);
+  
+  if (!authResult.success) {
+    res.status(authResult.statusCode || 401).json({ 
+      success: false, 
+      error: authResult.error 
+    });
+    return null;
+  }
+  
+  const user = authResult.user;
+  
+  if (!user.isAdmin) {
+    res.status(403).json({ 
+      success: false, 
+      error: 'Acceso denegado - Se requieren permisos de administrador' 
+    });
+    return null;
+  }
+  
+  return user;
+}
+
 export function verifyAdmin(req, res) {
   const { adminToken } = req.body;
   

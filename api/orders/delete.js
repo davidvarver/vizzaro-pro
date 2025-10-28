@@ -1,33 +1,33 @@
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+import { requireAdmin } from '../_authMiddleware.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
+  if (rateLimit(req, res, { maxRequests: 20 })) {
+    return;
+  }
+
   try {
-    const { orderId, adminToken } = req.body;
+    const adminUser = requireAdmin(req, res);
+    if (!adminUser) {
+      return;
+    }
+
+    const { orderId } = req.body;
 
     console.log('[Orders DELETE] Received request');
     console.log('[Orders DELETE] Order ID:', orderId);
-    console.log('[Orders DELETE] Admin token provided:', !!adminToken);
-
-    const expectedToken = process.env.ADMIN_SECRET_TOKEN || process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
-
-    if (!adminToken) {
-      return res.status(401).json({ success: false, error: 'No autorizado - Token no proporcionado' });
-    }
-
-    if (adminToken !== expectedToken) {
-      return res.status(401).json({ success: false, error: 'No autorizado - Token inválido' });
-    }
+    console.log('[Orders DELETE] Admin user:', adminUser.email);
 
     if (!orderId) {
       return res.status(400).json({ success: false, error: 'Order ID requerido' });

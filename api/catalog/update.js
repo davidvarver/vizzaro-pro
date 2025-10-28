@@ -1,7 +1,7 @@
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
 import { validateRequest, catalogUpdateSchema } from '../_schemas.js';
-import { verifyAdmin } from '../_authMiddleware.js';
+import { requireAdmin } from '../_authMiddleware.js';
 
 export default async function handler(req, res) {
   setCorsHeaders(req, res);
@@ -21,13 +21,9 @@ export default async function handler(req, res) {
   try {
     console.log('[Catalog UPDATE] Received request');
 
-    const adminResult = verifyAdmin(req, res);
-    if (!adminResult.success) {
-      console.log('[Catalog UPDATE] Admin auth failed:', adminResult.error);
-      return res.status(adminResult.statusCode || 401).json({ 
-        success: false, 
-        error: adminResult.error 
-      });
+    const adminUser = requireAdmin(req, res);
+    if (!adminUser) {
+      return;
     }
 
     const validation = validateRequest(catalogUpdateSchema, req.body);

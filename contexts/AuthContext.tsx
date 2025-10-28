@@ -6,6 +6,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  isAdmin?: boolean;
   createdAt: string;
 }
 
@@ -14,6 +15,7 @@ interface AuthState {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isAdmin: boolean;
 }
 
 interface PendingVerification {
@@ -83,6 +85,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     token: null,
     isLoading: true,
     isAuthenticated: false,
+    isAdmin: false,
   });
 
   const [pendingVerification, setPendingVerification] = useState<PendingVerification | null>(null);
@@ -106,6 +109,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
           token,
           isLoading: false,
           isAuthenticated: true,
+          isAdmin: user.isAdmin || false,
         });
       } else {
         setAuthState({
@@ -113,6 +117,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
           token: null,
           isLoading: false,
           isAuthenticated: false,
+          isAdmin: false,
         });
       }
     } catch (error) {
@@ -122,6 +127,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         token: null,
         isLoading: false,
         isAuthenticated: false,
+        isAdmin: false,
       });
     }
   };
@@ -217,6 +223,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
               token: data.token,
               isLoading: false,
               isAuthenticated: true,
+              isAdmin: data.user.isAdmin || false,
             });
             setPendingVerification(null);
             return { success: true };
@@ -300,6 +307,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
               token: data.token,
               isLoading: false,
               isAuthenticated: true,
+              isAdmin: data.user.isAdmin || false,
             });
             return { success: true };
           } else {
@@ -331,6 +339,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         token: null,
         isLoading: false,
         isAuthenticated: false,
+        isAdmin: false,
       });
     } catch (error) {
       console.error('Error during logout:', error);

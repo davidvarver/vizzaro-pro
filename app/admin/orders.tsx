@@ -22,6 +22,7 @@ import {
 } from 'lucide-react-native';
 import { useOrders } from '@/contexts/OrdersContext';
 import Colors from '@/constants/colors';
+import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminOrdersScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -116,7 +117,8 @@ export default function AdminOrdersScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <AdminGuard>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
@@ -314,7 +316,8 @@ export default function AdminOrdersScreen() {
           ))
         )}
       </ScrollView>
-    </View>
+      </View>
+    </AdminGuard>
   );
 }
 

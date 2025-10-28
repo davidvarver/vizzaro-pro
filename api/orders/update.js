@@ -1,5 +1,6 @@
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
+import { requireAdmin } from '../_authMiddleware.js';
 
 export default async function handler(req, res) {
   setCorsHeaders(req, res);
@@ -17,21 +18,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { orderId, updates, adminToken } = req.body;
+    const adminUser = requireAdmin(req, res);
+    if (!adminUser) {
+      return;
+    }
+
+    const { orderId, updates } = req.body;
 
     console.log('[Orders UPDATE] Received request');
     console.log('[Orders UPDATE] Order ID:', orderId);
-    console.log('[Orders UPDATE] Admin token provided:', !!adminToken);
-
-    const expectedToken = process.env.ADMIN_SECRET_TOKEN || process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
-
-    if (!adminToken) {
-      return res.status(401).json({ success: false, error: 'No autorizado - Token no proporcionado' });
-    }
-
-    if (adminToken !== expectedToken) {
-      return res.status(401).json({ success: false, error: 'No autorizado - Token inválido' });
-    }
+    console.log('[Orders UPDATE] Admin user:', adminUser.email);
 
     if (!orderId) {
       return res.status(400).json({ success: false, error: 'Order ID requerido' });

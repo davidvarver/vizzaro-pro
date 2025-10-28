@@ -98,7 +98,8 @@ export default async function handler(req, res) {
       { 
         userId: user.id, 
         email: user.email,
-        name: user.name
+        name: user.name,
+        isAdmin: user.isAdmin || false
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRATION }
