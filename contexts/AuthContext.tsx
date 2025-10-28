@@ -293,6 +293,17 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         });
 
         console.log('[AuthContext] Response status:', response.status);
+        console.log('[AuthContext] Response headers:', response.headers.get('content-type'));
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const textResponse = await response.text();
+          console.error('[AuthContext] API returned non-JSON response:', textResponse.substring(0, 500));
+          return { 
+            success: false, 
+            error: 'Error de configuración del servidor. Por favor, contacta al administrador.' 
+          };
+        }
         
         if (response.ok) {
           const data = await response.json();
