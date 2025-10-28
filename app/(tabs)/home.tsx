@@ -73,6 +73,11 @@ export default function HomeScreen() {
       >
         <View style={styles.heroOverlay} />
         <View style={styles.heroContent}>
+          <Image
+            source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/sre9ivu48wqqxw9hgy49l' }}
+            style={styles.logo}
+            resizeMode="contain"
+          />
           <Text style={styles.heroTitle}>Tu espacio, tu estilo</Text>
           <Text style={styles.heroSubtitle}>
             Papel tapiz premium listo para instalar. Compra por habitación o explora nuestras colecciones
@@ -213,7 +218,12 @@ const styles = StyleSheet.create({
   },
   heroOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(26, 58, 29, 0.6)',
+  },
+  logo: {
+    width: 280,
+    height: 120,
+    marginBottom: 20,
   },
   heroContent: {
     flex: 1,
