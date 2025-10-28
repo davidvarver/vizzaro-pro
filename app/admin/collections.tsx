@@ -233,9 +233,9 @@ export default function AdminCollections() {
                   placeholder="https://..."
                   autoCapitalize="none"
                 />
-                {formData.image ? (
+                {formData.image && (
                   <Image source={{ uri: formData.image }} style={styles.previewImage} />
-                ) : null}
+                )}
               </View>
 
               <View style={styles.formGroup}>
