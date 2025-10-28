@@ -34,9 +34,11 @@ const generateVerificationCode = (): string => {
 
 const sendVerificationEmail = async (email: string, code: string): Promise<void> => {
   try {
-    const apiUrl = typeof window !== 'undefined' 
-      ? `${window.location.origin}/api/verification-send`
-      : 'https://www.vizzarowallpaper.com/api/verification-send';
+    const apiUrl = API_BASE_URL 
+      ? `${API_BASE_URL}/api/verification-send`
+      : (typeof window !== 'undefined' 
+        ? `${window.location.origin}/api/verification-send`
+        : 'https://www.vizzarowallpaper.com/api/verification-send');
 
     console.log('📤 Enviando request a:', apiUrl);
     console.log('📧 Para:', email);
