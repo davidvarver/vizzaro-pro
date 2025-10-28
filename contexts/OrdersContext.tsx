@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContextHook from '@nkzw/create-context-hook';
 import { CartItem } from './CartContext';
-import { useAdmin } from './AdminContext';
+import { useAuth } from './AuthContext';
 
 export interface Order {
   id: string;
@@ -28,7 +28,7 @@ const ORDERS_STORAGE_KEY = 'wallpaper_orders';
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 
 export const [OrdersProvider, useOrders] = createContextHook(() => {
-  const { adminToken } = useAdmin();
+  const { token: adminToken } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
