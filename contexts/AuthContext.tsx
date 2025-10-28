@@ -28,6 +28,13 @@ const AUTH_TOKEN_KEY = '@auth_token';
 const AUTH_USER_KEY = '@auth_user';
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 
+function getAuthHeaders(token: string | null) {
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+  };
+}
+
 const generateVerificationCode = (): string => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };

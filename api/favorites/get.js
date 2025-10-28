@@ -1,21 +1,33 @@
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+import { verifyToken } from '../_authMiddleware.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['GET', 'OPTIONS'] });
   }
 
+  if (rateLimit(req, res, { maxRequests: 30 })) {
+    return;
+  }
+
   try {
-    const { userId } = req.query;
+    const authResult = verifyToken(req, res);
+    if (!authResult.success) {
+      console.log('[Favorites GET] Auth failed:', authResult.error);
+      return res.status(authResult.statusCode || 401).json({ 
+        success: false, 
+        error: authResult.error 
+      });
+    }
+
+    const userId = authResult.user.userId;
     
     console.log('[Favorites GET] Fetching favorites from KV for user:', userId);
     

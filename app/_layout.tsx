@@ -12,6 +12,7 @@ import { WallpapersProvider } from "@/contexts/WallpapersContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CollectionsProvider } from "@/contexts/CollectionsContext";
+import { initSentry } from "../sentry.config";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -39,6 +40,7 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   useEffect(() => {
+    initSentry();
     SplashScreen.hideAsync();
   }, []);
 

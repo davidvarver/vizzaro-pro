@@ -1,5 +1,7 @@
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
+import { validateRequest, orderCreateSchema } from '../_schemas.js';
+import { verifyToken } from '../_authMiddleware.js';
 
 export default async function handler(req, res) {
   setCorsHeaders(req, res);
@@ -17,28 +19,35 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { order } = req.body;
-
     console.log('[Orders CREATE] Received request');
 
-    if (!order) {
-      return res.status(400).json({ success: false, error: 'Order data required' });
+    const authResult = verifyToken(req, res);
+    if (!authResult.success) {
+      console.log('[Orders CREATE] Auth failed:', authResult.error);
+      return res.status(authResult.statusCode || 401).json({ 
+        success: false, 
+        error: authResult.error 
+      });
     }
 
-    if (typeof order !== 'object' || Array.isArray(order)) {
-      return res.status(400).json({ success: false, error: 'Order must be an object' });
+    const validation = validateRequest(orderCreateSchema, req.body);
+    if (!validation.success) {
+      console.log('[Orders CREATE] Validation failed:', validation.errors);
+      return res.status(422).json({ 
+        success: false, 
+        error: 'Datos inválidos', 
+        validationErrors: validation.errors 
+      });
     }
 
-    if (!order.items || !Array.isArray(order.items) || order.items.length === 0) {
-      return res.status(400).json({ success: false, error: 'Order must have at least one item' });
-    }
+    const { order } = validation.data;
 
-    if (!order.userId || typeof order.userId !== 'string') {
-      return res.status(400).json({ success: false, error: 'Order must have a valid userId' });
-    }
-
-    if (order.total !== undefined && (typeof order.total !== 'number' || order.total < 0)) {
-      return res.status(400).json({ success: false, error: 'Order total must be a positive number' });
+    if (order.userId !== authResult.user.userId) {
+      console.log('[Orders CREATE] User mismatch');
+      return res.status(403).json({ 
+        success: false, 
+        error: 'No puedes crear pedidos para otro usuario' 
+      });
     }
     
     const kvUrl = process.env.KV_REST_API_URL;
@@ -83,48 +92,34 @@ export default async function handler(req, res) {
       throw new Error(`KV API error: ${kvResponse.status} - ${errorText}`);
     }
 
-    console.log('[Orders CREATE] Adding order to index...');
-    const indexKey = 'orders:index';
-    const indexResponse = await fetch(`${kvUrl}/get/${indexKey}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${kvToken}`,
-      },
-    });
-
-    let orderIds = [];
-    if (indexResponse.ok) {
-      const indexData = await indexResponse.json();
-      const rawResult = indexData.result;
-      try {
-        if (rawResult && typeof rawResult === 'string') {
-          orderIds = JSON.parse(rawResult);
-        } else if (rawResult && typeof rawResult === 'object') {
-          orderIds = rawResult;
-        }
-      } catch (parseError) {
-        console.warn('[Orders CREATE] Error parsing index, starting fresh:', parseError);
-        orderIds = [];
-      }
-    }
-
-    if (!Array.isArray(orderIds)) {
-      orderIds = [];
-    }
-
-    orderIds = [orderId, ...orderIds];
-
-    const updateIndexResponse = await fetch(`${kvUrl}/set/${indexKey}`, {
+    console.log('[Orders CREATE] Adding order to user index...');
+    const userIndexKey = `orders:user:${order.userId}`;
+    
+    const userIndexResponse = await fetch(`${kvUrl}/lpush/${userIndexKey}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${kvToken}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(orderIds),
+      body: JSON.stringify([orderId]),
     });
 
-    if (!updateIndexResponse.ok) {
-      console.error('[Orders CREATE] Failed to update index, but order was saved');
+    if (!userIndexResponse.ok) {
+      console.error('[Orders CREATE] Failed to update user index, but order was saved');
+    }
+
+    const allOrdersKey = 'orders:all';
+    const allOrdersResponse = await fetch(`${kvUrl}/lpush/${allOrdersKey}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${kvToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([orderId]),
+    });
+
+    if (!allOrdersResponse.ok) {
+      console.error('[Orders CREATE] Failed to update global index, but order was saved');
     }
 
     console.log('[Orders CREATE] Order created successfully:', orderId);

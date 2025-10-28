@@ -1,19 +1,34 @@
+import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { rateLimit } from '../_rateLimit.js';
+import { verifyToken } from '../_authMiddleware.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  setCorsHeaders(req, res);
   
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (handleCorsOptions(req, res)) {
+    return;
   }
   
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
+  if (rateLimit(req, res, { maxRequests: 20 })) {
+    return;
+  }
+
   try {
-    const { favorites, userId } = req.body;
+    const authResult = verifyToken(req, res);
+    if (!authResult.success) {
+      console.log('[Favorites UPDATE] Auth failed:', authResult.error);
+      return res.status(authResult.statusCode || 401).json({ 
+        success: false, 
+        error: authResult.error 
+      });
+    }
+
+    const userId = authResult.user.userId;
+    const { favorites } = req.body;
 
     console.log('[Favorites UPDATE] Received request');
     console.log('[Favorites UPDATE] User ID:', userId);

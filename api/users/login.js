@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
+import { validateRequest, userLoginSchema } from '../_schemas.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vizzaro_jwt_secret_change_in_production_2025';
 const JWT_EXPIRATION = '7d';
@@ -22,25 +23,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, password } = req.body;
+    console.log('[Users LOGIN] Received request');
 
-    console.log('[Users LOGIN] Received request for:', email);
-
-    if (!email) {
-      return res.status(400).json({ success: false, error: 'Email requerido' });
+    const validation = validateRequest(userLoginSchema, req.body);
+    if (!validation.success) {
+      console.log('[Users LOGIN] Validation failed:', validation.errors);
+      return res.status(422).json({ 
+        success: false, 
+        error: 'Datos inválidos', 
+        validationErrors: validation.errors 
+      });
     }
 
-    if (!password) {
-      return res.status(400).json({ success: false, error: 'Contraseña requerida' });
-    }
-
-    if (typeof email !== 'string') {
-      return res.status(400).json({ success: false, error: 'Email debe ser un string' });
-    }
-
-    if (typeof password !== 'string') {
-      return res.status(400).json({ success: false, error: 'Contraseña debe ser un string' });
-    }
+    const { email, password } = validation.data;
     
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;

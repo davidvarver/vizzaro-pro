@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
+import { validateRequest, userRegisterSchema } from '../_schemas.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vizzaro_jwt_secret_change_in_production_2025';
 const JWT_EXPIRATION = '7d';
@@ -22,58 +23,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, password, name } = req.body;
+    console.log('[Users REGISTER] Received request');
 
-    console.log('[Users REGISTER] Received request for:', email);
-
-    if (!email) {
-      return res.status(400).json({ success: false, error: 'Email requerido' });
+    const validation = validateRequest(userRegisterSchema, req.body);
+    if (!validation.success) {
+      console.log('[Users REGISTER] Validation failed:', validation.errors);
+      return res.status(422).json({ 
+        success: false, 
+        error: 'Datos inválidos', 
+        validationErrors: validation.errors 
+      });
     }
 
-    if (!password) {
-      return res.status(400).json({ success: false, error: 'Contraseña requerida' });
-    }
-
-    if (!name) {
-      return res.status(400).json({ success: false, error: 'Nombre requerido' });
-    }
-
-    if (typeof email !== 'string') {
-      return res.status(400).json({ success: false, error: 'Email debe ser un string' });
-    }
-
-    if (typeof password !== 'string') {
-      return res.status(400).json({ success: false, error: 'Contraseña debe ser un string' });
-    }
-
-    if (typeof name !== 'string') {
-      return res.status(400).json({ success: false, error: 'Nombre debe ser un string' });
-    }
-
-    if (name.trim().length < 2) {
-      return res.status(400).json({ success: false, error: 'El nombre debe tener al menos 2 caracteres' });
-    }
-
-    if (name.trim().length > 100) {
-      return res.status(400).json({ success: false, error: 'El nombre no puede exceder 100 caracteres' });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({ success: false, error: 'La contraseña debe tener al menos 6 caracteres' });
-    }
-
-    if (password.length > 128) {
-      return res.status(400).json({ success: false, error: 'La contraseña no puede exceder 128 caracteres' });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ success: false, error: 'Email inválido' });
-    }
-
-    if (email.length > 254) {
-      return res.status(400).json({ success: false, error: 'Email demasiado largo' });
-    }
+    const { email, password, name } = validation.data;
     
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
