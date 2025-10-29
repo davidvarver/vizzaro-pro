@@ -117,15 +117,22 @@ export default function AdminCatalogScreen() {
             
             setErrorMessage('');
             try {
+              console.log('[Catalog] Starting catalog reset with token:', !!token);
               const success = await resetCatalog(token);
+              console.log('[Catalog] Reset result:', success);
               if (success) {
-                Alert.alert('Éxito', 'Catálogo reseteado correctamente. Las imágenes ahora deberían cargarse correctamente.');
+                console.log('[Catalog] Refetching wallpapers...');
                 await refetchWallpapers();
+                Alert.alert('Éxito', 'Catálogo reseteado correctamente. Las imágenes ahora deberían cargarse correctamente.');
               } else {
+                console.error('[Catalog] Reset returned false');
                 setErrorMessage('Error al resetear el catálogo');
               }
             } catch (error) {
-              setErrorMessage(error instanceof Error ? error.message : 'Error al resetear el catálogo');
+              console.error('[Catalog] Reset error:', error);
+              const errorMsg = error instanceof Error ? error.message : 'Error al resetear el catálogo';
+              setErrorMessage(errorMsg);
+              Alert.alert('Error', errorMsg);
             }
           },
         },
