@@ -7,7 +7,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
 import { CartProvider } from "@/contexts/CartContext";
 import { OrdersProvider } from "@/contexts/OrdersContext";
-
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { WallpapersProvider } from "@/contexts/WallpapersContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { AuthProvider } from "@/contexts/AuthContext";
@@ -45,24 +45,26 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <WallpapersProvider>
-          <CollectionsProvider>
-            <FavoritesProvider>
-              <OrdersProvider>
-                <CartProvider>
-                <GestureHandlerRootView style={styles.container}>
-                  <StatusBar style="dark" />
-                  <RootLayoutNav />
-                </GestureHandlerRootView>
-                </CartProvider>
-              </OrdersProvider>
-            </FavoritesProvider>
-          </CollectionsProvider>
-        </WallpapersProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <WallpapersProvider>
+            <CollectionsProvider>
+              <FavoritesProvider>
+                <OrdersProvider>
+                  <CartProvider>
+                  <GestureHandlerRootView style={styles.container}>
+                    <StatusBar style="dark" />
+                    <RootLayoutNav />
+                  </GestureHandlerRootView>
+                  </CartProvider>
+                </OrdersProvider>
+              </FavoritesProvider>
+            </CollectionsProvider>
+          </WallpapersProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

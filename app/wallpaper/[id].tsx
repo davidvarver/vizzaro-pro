@@ -66,14 +66,37 @@ export default function WallpaperDetailsScreen() {
   
   if (!wallpaper) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Papel tapiz no encontrado</Text>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+        />
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorTitle}>Producto no encontrado</Text>
+          <Text style={styles.errorMessage}>
+            El papel tapiz que buscas no existe o ha sido eliminado del catálogo.
+          </Text>
+          <TouchableOpacity
+            style={styles.errorButton}
+            onPress={() => router.back()}
+          >
+            <Text style={styles.errorButtonText}>Volver</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 
-  const rollsNeeded = Math.ceil(wallArea / wallpaper.dimensions.coverage);
-  const totalPrice = wallpaper.price * rollsNeeded;
+  const safePrice = typeof wallpaper.price === 'number' && !isNaN(wallpaper.price) ? wallpaper.price : 0;
+  const safeDimensions = {
+    width: wallpaper.dimensions?.width || 0.53,
+    height: wallpaper.dimensions?.height || 10,
+    coverage: wallpaper.dimensions?.coverage || 5.3,
+  };
+
+  const rollsNeeded = Math.ceil(wallArea / safeDimensions.coverage);
+  const totalPrice = safePrice * rollsNeeded;
   const isAlreadyInCart = isInCart(wallpaper.id);
 
   const handleAddToCart = () => {
@@ -92,7 +115,7 @@ export default function WallpaperDetailsScreen() {
     }
     
     const finalRollsNeeded = purchaseType === 'roll' ? rollQuantity : rollsNeeded;
-    const finalWallArea = purchaseType === 'roll' ? rollQuantity * wallpaper.dimensions.coverage : wallArea;
+    const finalWallArea = purchaseType === 'roll' ? rollQuantity * safeDimensions.coverage : wallArea;
     
     addToCart(wallpaper, finalRollsNeeded, finalWallArea, purchaseType);
     if (Platform.OS !== 'web') {
@@ -279,7 +302,7 @@ export default function WallpaperDetailsScreen() {
 
           <View style={styles.priceSection}>
             <Text style={styles.priceLabel}>Precio por rollo</Text>
-            <Text style={styles.price}>${wallpaper.price.toFixed(2)}</Text>
+            <Text style={styles.price}>${safePrice.toFixed(2)}</Text>
           </View>
 
           <View style={styles.descriptionSection}>
@@ -308,7 +331,7 @@ export default function WallpaperDetailsScreen() {
                 <Text style={styles.specLabel}>Dimensiones</Text>
               </View>
               <Text style={styles.specValue}>
-                {wallpaper.dimensions.width}m × {wallpaper.dimensions.height}m
+                {safeDimensions.width}m × {safeDimensions.height}m
               </Text>
             </View>
             
@@ -317,7 +340,7 @@ export default function WallpaperDetailsScreen() {
                 <Package size={16} color={Colors.light.primary} />
                 <Text style={styles.specLabel}>Cobertura</Text>
               </View>
-              <Text style={styles.specValue}>{wallpaper.dimensions.coverage}m² por rollo</Text>
+              <Text style={styles.specValue}>{safeDimensions.coverage}m² por rollo</Text>
             </View>
             
             <View style={styles.specRow}>
@@ -411,9 +434,9 @@ export default function WallpaperDetailsScreen() {
                 </TouchableOpacity>
               </View>
               <Text style={styles.rollInfo}>
-                {rollQuantity} rollo{rollQuantity > 1 ? 's' : ''} • {(rollQuantity * wallpaper.dimensions.coverage).toFixed(1)}m² de cobertura
+                {rollQuantity} rollo{rollQuantity > 1 ? 's' : ''} • {(rollQuantity * safeDimensions.coverage).toFixed(1)}m² de cobertura
               </Text>
-              <Text style={styles.totalPrice}>Total: ${(wallpaper.price * rollQuantity).toFixed(2)}</Text>
+              <Text style={styles.totalPrice}>Total: ${(safePrice * rollQuantity).toFixed(2)}</Text>
             </View>
           ) : (
             <View style={styles.measurementSection}>
@@ -947,6 +970,37 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.success,
   },
   addToCartButtonText: {
+    color: Colors.light.background,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  errorTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: Colors.light.text,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  errorMessage: {
+    fontSize: 16,
+    color: Colors.light.textSecondary,
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  errorButton: {
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: 32,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  errorButtonText: {
     color: Colors.light.background,
     fontSize: 16,
     fontWeight: '600',
