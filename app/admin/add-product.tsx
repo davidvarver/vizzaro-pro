@@ -23,6 +23,7 @@ import {
   Upload,
   Download,
   FileSpreadsheet,
+  Palette,
 } from 'lucide-react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
@@ -41,6 +42,7 @@ interface ProductForm {
   price: string;
   category: string;
   style: string;
+  colors: string[];
   width: string;
   height: string;
   coverage: string;
@@ -58,6 +60,7 @@ export default function AddProductScreen() {
     price: '',
     category: '',
     style: '',
+    colors: [],
     width: '',
     height: '',
     coverage: '',
@@ -66,6 +69,7 @@ export default function AddProductScreen() {
     imageUris: [],
   });
   const [imageUrlInput, setImageUrlInput] = useState<string>('');
+  const [colorInput, setColorInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showBulkModal, setShowBulkModal] = useState<boolean>(false);
   const [bulkUrls, setBulkUrls] = useState<string>('');
@@ -214,6 +218,11 @@ export default function AddProductScreen() {
       Alert.alert('Error', 'El estilo es obligatorio');
       return false;
     }
+    if (!form.colors || form.colors.length === 0) {
+      console.log('Error: Sin colores');
+      Alert.alert('Error', 'Debe agregar al menos un color');
+      return false;
+    }
     if (!form.width.trim() || isNaN(Number(form.width))) {
       console.log('Error: Ancho inválido:', form.width);
       Alert.alert('Error', 'El ancho debe ser un número válido');
@@ -294,7 +303,7 @@ export default function AddProductScreen() {
         price: Number(form.price),
         category: form.category,
         style: form.style,
-        colors: [],
+        colors: form.colors,
         dimensions: {
           width: Number(form.width),
           height: Number(form.height),
@@ -831,6 +840,63 @@ export default function AddProductScreen() {
               ))}
             </ScrollView>
           </View>
+        </View>
+
+        {/* Colores */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Colores disponibles</Text>
+          
+          <View style={styles.urlInputContainer}>
+            <TextInput
+              style={[styles.textInput, { flex: 1 }]}
+              placeholder="Ej: Blanco, Gris, Azul"
+              value={colorInput}
+              onChangeText={setColorInput}
+            />
+            <TouchableOpacity 
+              style={styles.addUrlButton}
+              onPress={() => {
+                if (colorInput.trim() && !form.colors.includes(colorInput.trim())) {
+                  setForm(prev => ({ ...prev, colors: [...prev.colors, colorInput.trim()] }));
+                  setColorInput('');
+                } else if (form.colors.includes(colorInput.trim())) {
+                  Alert.alert('Error', 'Este color ya fue agregado');
+                }
+              }}
+            >
+              <Plus size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+
+          {form.colors.length > 0 ? (
+            <View style={styles.imageUrlsList}>
+              {form.colors.map((color, index) => (
+                <View key={index} style={styles.imageUrlItem}>
+                  <View style={styles.imageUrlInfo}>
+                    <Text style={styles.imageUrlText}>{color}</Text>
+                  </View>
+                  <TouchableOpacity 
+                    style={styles.removeUrlButton}
+                    onPress={() => {
+                      setForm(prev => ({ ...prev, colors: prev.colors.filter((_, i) => i !== index) }));
+                    }}
+                  >
+                    <X size={20} color={Colors.light.error} />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.noImagesPlaceholder}>
+              <Palette size={32} color={Colors.light.tabIconDefault} />
+              <Text style={styles.noImagesText}>
+                No hay colores agregados
+              </Text>
+              <Text style={styles.noImagesHint}>
+                Agrega los colores disponibles para este papel tapiz
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Especificaciones técnicas */}
