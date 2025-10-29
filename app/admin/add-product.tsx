@@ -11,6 +11,7 @@ import {
   Modal,
   ActivityIndicator,
   Platform,
+  Switch,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -24,6 +25,7 @@ import {
   Download,
   FileSpreadsheet,
   Palette,
+  Home,
 } from 'lucide-react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
@@ -49,6 +51,7 @@ interface ProductForm {
   weight: string;
   imageUri: string;
   imageUris: string[];
+  showInHome: boolean;
 }
 
 export default function AddProductScreen() {
@@ -67,6 +70,7 @@ export default function AddProductScreen() {
     weight: '',
     imageUri: '',
     imageUris: [],
+    showInHome: false,
   });
   const [imageUrlInput, setImageUrlInput] = useState<string>('');
   const [colorInput, setColorInput] = useState<string>('');
@@ -321,6 +325,7 @@ export default function AddProductScreen() {
         inStock: true,
         rating: 0,
         reviews: 0,
+        showInHome: form.showInHome,
       };
 
       console.log('Guardando nuevo producto:', newProduct);
@@ -577,6 +582,7 @@ export default function AddProductScreen() {
             inStock: true,
             rating: 0,
             reviews: 0,
+            showInHome: false,
           };
           
           console.log(`[Excel] Producto creado para fila ${i + 2}:`, { id: newProduct.id, name: newProduct.name, price: newProduct.price });
@@ -946,6 +952,29 @@ export default function AddProductScreen() {
               value={form.weight}
               onChangeText={(value) => updateForm('weight', value)}
               keyboardType="numeric"
+            />
+          </View>
+        </View>
+
+        {/* Visibilidad en Home */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Visibilidad</Text>
+            <Home size={20} color={Colors.light.tint} />
+          </View>
+          
+          <View style={styles.switchGroup}>
+            <View style={styles.switchLabelContainer}>
+              <Text style={styles.inputLabel}>Mostrar en home</Text>
+              <Text style={styles.switchDescription}>
+                Este producto aparecerá en la pantalla principal
+              </Text>
+            </View>
+            <Switch
+              value={form.showInHome}
+              onValueChange={(value) => setForm(prev => ({ ...prev, showInHome: value }))}
+              trackColor={{ false: Colors.light.tabIconDefault, true: Colors.light.tint }}
+              thumbColor={form.showInHome ? Colors.light.background : Colors.light.background}
             />
           </View>
         </View>
@@ -1628,5 +1657,19 @@ const styles = StyleSheet.create({
   replaceModeSubtitle: {
     fontSize: 12,
     color: Colors.light.tabIconDefault,
+  },
+  switchGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  switchLabelContainer: {
+    flex: 1,
+    marginRight: 16,
+  },
+  switchDescription: {
+    fontSize: 12,
+    color: Colors.light.tabIconDefault,
+    marginTop: 4,
   },
 });

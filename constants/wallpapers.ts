@@ -23,6 +23,7 @@ export interface Wallpaper {
   inStock: boolean;
   rating: number;
   reviews: number;
+  showInHome?: boolean;
 }
 
 export const wallpapers: Wallpaper[] = [

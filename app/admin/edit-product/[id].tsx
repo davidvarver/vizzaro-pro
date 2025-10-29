@@ -23,6 +23,7 @@ import {
   Ruler,
   Settings,
   Plus,
+  Home,
 } from 'lucide-react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useWallpapers } from '@/contexts/WallpapersContext';
@@ -622,6 +623,28 @@ export default function EditProductScreen() {
           </View>
         </View>
 
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Home size={20} color={Colors.light.tint} />
+            <Text style={styles.sectionTitle}>Visibilidad</Text>
+          </View>
+          
+          <View style={styles.switchGroup}>
+            <View style={styles.switchLabelContainer}>
+              <Text style={styles.inputLabel}>Mostrar en home</Text>
+              <Text style={styles.switchDescription}>
+                Este producto aparecerá en la pantalla principal
+              </Text>
+            </View>
+            <Switch
+              value={formData.showInHome || false}
+              onValueChange={(value) => setFormData(prev => prev ? ({ ...prev, showInHome: value }) : null)}
+              trackColor={{ false: Colors.light.tabIconDefault, true: Colors.light.tint }}
+              thumbColor={formData.showInHome ? Colors.light.background : Colors.light.background}
+            />
+          </View>
+        </View>
+
         <View style={styles.bottomPadding} />
       </ScrollView>
 
@@ -950,5 +973,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
+  },
+  switchLabelContainer: {
+    flex: 1,
+    marginRight: 16,
+  },
+  switchDescription: {
+    fontSize: 12,
+    color: Colors.light.tabIconDefault,
+    marginTop: 4,
   },
 });
