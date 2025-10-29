@@ -281,6 +281,58 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
     return loadWallpapers(true);
   }, [loadWallpapers]);
 
+  const resetCatalog = useCallback(async (adminToken?: string): Promise<boolean> => {
+    try {
+      console.log('[WallpapersContext] Resetting catalog...');
+      
+      if (!adminToken) {
+        throw new Error('No hay token de autenticación. Por favor inicia sesión.');
+      }
+      
+      if (!API_BASE_URL) {
+        throw new Error('No hay URL de API configurada.');
+      }
+
+      const apiUrl = `${API_BASE_URL}/api/catalog/reset`;
+      console.log('[WallpapersContext] Calling reset API:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${adminToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('[WallpapersContext] Reset API error:', response.status, errorText);
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: errorText };
+        }
+        throw new Error(errorData.error || `Error del servidor (${response.status})`);
+      }
+      
+      const data = await response.json();
+      console.log('[WallpapersContext] Catalog reset successfully:', data);
+      
+      if (data.success && data.catalog) {
+        setWallpapers(data.catalog);
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data.catalog));
+        await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('[WallpapersContext] Error resetting catalog:', error);
+      throw error;
+    }
+  }, []);
+
   return useMemo(() => ({
     wallpapers,
     isLoading,
@@ -292,5 +344,6 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
     deleteWallpaper,
     getWallpaperById,
     refetchWallpapers,
-  }), [wallpapers, isLoading, error, updateWallpaper, addWallpaper, addMultipleWallpapers, replaceAllWallpapers, deleteWallpaper, getWallpaperById, refetchWallpapers]);
+    resetCatalog,
+  }), [wallpapers, isLoading, error, updateWallpaper, addWallpaper, addMultipleWallpapers, replaceAllWallpapers, deleteWallpaper, getWallpaperById, refetchWallpapers, resetCatalog]);
 });

@@ -65,8 +65,9 @@ export default function HomeScreen() {
     return featured;
   }, [wallpapers]);
 
-  const handleImageError = useCallback((wallpaperId: string) => {
+  const handleImageError = useCallback((wallpaperId: string, wallpaper: Wallpaper) => {
     console.log('[Home] Image failed to load for wallpaper:', wallpaperId);
+    console.log('[Home] Image URL was:', wallpaper.imageUrls?.[0] || wallpaper.imageUrl);
   }, []);
 
   const handleCollectionImageError = useCallback((collectionId: string) => {
@@ -198,7 +199,7 @@ export default function HomeScreen() {
                   source={{ uri: wallpaper.imageUrls?.[0] || wallpaper.imageUrl }} 
                   style={styles.wallpaperImage}
                   resizeMode="cover"
-                  onError={() => handleImageError(wallpaper.id)}
+                  onError={() => handleImageError(wallpaper.id, wallpaper)}
                 />
               </View>
               <View style={styles.patternPreviewSmall}>

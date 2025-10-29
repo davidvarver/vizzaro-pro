@@ -8,6 +8,7 @@ import {
   TextInput,
   Image,
   FlatList,
+  Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -20,6 +21,7 @@ import {
   Package,
   Eye,
   EyeOff,
+  RotateCcw,
 } from 'lucide-react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useWallpapers } from '@/contexts/WallpapersContext';
@@ -32,7 +34,7 @@ export default function AdminCatalogScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const { wallpapers: catalogItems, updateWallpaper, deleteWallpaper, isLoading, error: contextError, refetchWallpapers } = useWallpapers();
+  const { wallpapers: catalogItems, updateWallpaper, deleteWallpaper, isLoading, error: contextError, refetchWallpapers, resetCatalog } = useWallpapers();
   const { token } = useAuth();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -93,6 +95,42 @@ export default function AdminCatalogScreen() {
     } else {
       setErrorMessage('No hay token de administrador disponible');
     }
+  };
+
+  const handleResetCatalog = () => {
+    Alert.alert(
+      'Resetear Catálogo',
+      '¿Estás seguro de que quieres resetear el catálogo a los valores por defecto? Esto eliminará todos los productos actuales y restaurará el catálogo original con imágenes de ejemplo.',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Resetear',
+          style: 'destructive',
+          onPress: async () => {
+            if (!token) {
+              setErrorMessage('No hay token de administrador disponible');
+              return;
+            }
+            
+            setErrorMessage('');
+            try {
+              const success = await resetCatalog(token);
+              if (success) {
+                Alert.alert('Éxito', 'Catálogo reseteado correctamente. Las imágenes ahora deberían cargarse correctamente.');
+                await refetchWallpapers();
+              } else {
+                setErrorMessage('Error al resetear el catálogo');
+              }
+            } catch (error) {
+              setErrorMessage(error instanceof Error ? error.message : 'Error al resetear el catálogo');
+            }
+          },
+        },
+      ]
+    );
   };
 
   const ProductCard = ({ item }: { item: Wallpaper }) => {
@@ -230,12 +268,21 @@ export default function AdminCatalogScreen() {
       </ScrollView>
 
       <View style={styles.statsBar}>
-        <Text style={styles.statsText}>
-          {filteredItems.length} productos encontrados
-        </Text>
-        <Text style={styles.statsText}>
-          {filteredItems.filter(item => item.inStock).length} en stock
-        </Text>
+        <View style={styles.statsLeft}>
+          <Text style={styles.statsText}>
+            {filteredItems.length} productos encontrados
+          </Text>
+          <Text style={styles.statsText}>
+            {filteredItems.filter(item => item.inStock).length} en stock
+          </Text>
+        </View>
+        <TouchableOpacity 
+          style={styles.resetButton}
+          onPress={handleResetCatalog}
+        >
+          <RotateCcw size={14} color="#EF4444" />
+          <Text style={styles.resetButtonText}>Resetear</Text>
+        </TouchableOpacity>
       </View>
 
       {errorMessage ? (
@@ -378,11 +425,32 @@ const styles = StyleSheet.create({
   statsBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 3,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
+  },
+  statsLeft: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#FEE2E2',
+    backgroundColor: '#FEF2F2',
+  },
+  resetButtonText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#EF4444',
   },
   statsText: {
     fontSize: 12,
