@@ -187,7 +187,7 @@ export default function OrderConfirmationScreen() {
         <View style={styles.emailNotice}>
           <Mail size={20} color={Colors.light.primary} />
           <Text style={styles.emailNoticeText}>
-            Te hemos enviado un email de confirmación a {customerEmail} con todos los detalles de tu pedido.
+            Se ha generado tu pedido correctamente. Por favor, guarda tu número de pedido #{orderId} y contáctanos por WhatsApp para confirmar tu compra.
           </Text>
         </View>
 
