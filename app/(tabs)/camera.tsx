@@ -21,6 +21,7 @@ export default function CameraScreen() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isCameraReady, setIsCameraReady] = useState<boolean>(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [showLowLightWarning, setShowLowLightWarning] = useState<boolean>(false);
   const cameraRef = useRef<CameraView>(null);
   const { getWallpaperById, wallpapers } = useWallpapers();
   const { getProjectById } = useFavorites();
@@ -112,6 +113,11 @@ export default function CameraScreen() {
         const imageBase64 = result.assets[0].base64;
         if (imageBase64) {
           console.log('Image selected from gallery, base64 length:', imageBase64.length);
+          
+          const isLowLight = await detectLowLight(imageBase64);
+          console.log('Low light detected:', isLowLight);
+          setShowLowLightWarning(isLowLight);
+          
           setUploadedImage(imageBase64);
           
           if (currentWallpaper) {
@@ -186,6 +192,11 @@ export default function CameraScreen() {
       }
 
       setUploadedImage(photo.base64);
+      
+      const isLowLight = await detectLowLight(photo.base64);
+      console.log('Low light detected:', isLowLight);
+      setShowLowLightWarning(isLowLight);
+      
       console.log('Processing image with AI...');
       await processImageWithAI(photo.base64, currentWallpaper);
       
@@ -391,6 +402,64 @@ export default function CameraScreen() {
       console.error('Error compressing image:', error instanceof Error ? error.message : 'Unknown error');
       return base64;
     }
+  }
+  
+  function detectLowLight(imageBase64: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (Platform.OS === 'web') {
+        try {
+          const img = new window.Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            
+            if (!ctx) {
+              resolve(false);
+              return;
+            }
+            
+            const sampleSize = 100;
+            canvas.width = sampleSize;
+            canvas.height = sampleSize;
+            
+            ctx.drawImage(img, 0, 0, sampleSize, sampleSize);
+            
+            try {
+              const imageData = ctx.getImageData(0, 0, sampleSize, sampleSize);
+              const data = imageData.data;
+              
+              let totalBrightness = 0;
+              for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
+                totalBrightness += brightness;
+              }
+              
+              const avgBrightness = totalBrightness / (sampleSize * sampleSize);
+              console.log('Average brightness:', avgBrightness);
+              
+              const isLowLight = avgBrightness < 80;
+              resolve(isLowLight);
+            } catch (error) {
+              console.error('Error analyzing brightness:', error);
+              resolve(false);
+            }
+          };
+          
+          img.onerror = () => resolve(false);
+          img.crossOrigin = 'anonymous';
+          const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+          img.src = `data:image/jpeg;base64,${cleanBase64}`;
+        } catch (error) {
+          console.error('Error in detectLowLight:', error);
+          resolve(false);
+        }
+      } else {
+        resolve(false);
+      }
+    });
   }
   
   async function compressBase64ImageWeb(base64: string, maxSize: number = 1024): Promise<string> {
@@ -855,6 +924,14 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
               </TouchableOpacity>
             ))}
           </ScrollView>
+        </View>
+      )}
+      
+      {showLowLightWarning && !isProcessing && (
+        <View style={styles.lightWarningContainer}>
+          <Text style={styles.lightWarningText}>
+            💡 Para obtener un resultado más exacto, mejora la iluminación
+          </Text>
         </View>
       )}
       
@@ -1333,5 +1410,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     opacity: 0.8,
+  },
+  lightWarningContainer: {
+    backgroundColor: '#FFA500',
+    marginHorizontal: 16,
+    marginBottom: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  lightWarningText: {
+    color: Colors.light.background,
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
