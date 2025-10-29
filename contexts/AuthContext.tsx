@@ -28,7 +28,19 @@ interface PendingVerification {
 
 const AUTH_TOKEN_KEY = '@auth_token';
 const AUTH_USER_KEY = '@auth_user';
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
+
+function getApiBaseUrl(): string {
+  if (process.env.EXPO_PUBLIC_API_URL) {
+    const url = process.env.EXPO_PUBLIC_API_URL;
+    return url.endsWith('/') ? url.slice(0, -1) : url;
+  }
+  
+  if (typeof window !== 'undefined' && window.location) {
+    return window.location.origin;
+  }
+  
+  return 'https://www.vizzarowallpaper.com';
+}
 
 function getAuthHeaders(token: string | null) {
   return {
@@ -43,11 +55,8 @@ const generateVerificationCode = (): string => {
 
 const sendVerificationEmail = async (email: string, code: string): Promise<void> => {
   try {
-    const apiUrl = API_BASE_URL 
-      ? `${API_BASE_URL}/api/verification-send`
-      : (typeof window !== 'undefined' 
-        ? `${window.location.origin}/api/verification-send`
-        : 'https://www.vizzarowallpaper.com/api/verification-send');
+    const baseUrl = getApiBaseUrl();
+    const apiUrl = `${baseUrl}/api/verification-send`;
 
     console.log('📤 Enviando request a:', apiUrl);
     console.log('📧 Para:', email);
@@ -187,16 +196,11 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         return { success: false, error: 'Código incorrecto' };
       }
 
-      const apiUrl = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
-      
-      if (!apiUrl) {
-        console.error('[AuthContext] No API URL available for registration');
-        return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
-      }
-      
       try {
-        console.log('[AuthContext] Registering user via API:', `${apiUrl}/api/users/register`);
-        const response = await fetch(`${apiUrl}/api/users/register`, {
+        const baseUrl = getApiBaseUrl();
+        const apiUrl = `${baseUrl}/api/users/register`;
+        console.log('[AuthContext] Registering user via API:', apiUrl);
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -275,16 +279,12 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     try {
       console.log('[AuthContext] Logging in...', email);
       
-      const apiUrl = API_BASE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
-      
-      if (!apiUrl) {
-        console.error('[AuthContext] No API URL available');
-        return { success: false, error: 'Servicio no disponible. Intenta más tarde.' };
-      }
-      
       try {
-        console.log('[AuthContext] Attempting login via API:', `${apiUrl}/api/users/login`);
-        const response = await fetch(`${apiUrl}/api/users/login`, {
+        const baseUrl = getApiBaseUrl();
+        console.log('[AuthContext] Base URL:', baseUrl);
+        const apiUrl = `${baseUrl}/api/users/login`;
+        console.log('[AuthContext] Attempting login via API:', apiUrl);
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
