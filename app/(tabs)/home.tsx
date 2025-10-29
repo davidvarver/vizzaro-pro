@@ -46,19 +46,12 @@ export default function HomeScreen() {
     router.push('/catalog');
   };
 
-  const handleCollectionPress = (collection: { id: string; name: string; image: string; colors: string[]; category?: string; featured: boolean }) => {
+  const handleCollectionPress = (collection: { id: string; name: string; image: string; category: string; featured: boolean }) => {
     console.log('[Home] Collection pressed:', collection.name, 'Category:', collection.category);
-    if (collection.category) {
-      router.push({
-        pathname: '/catalog',
-        params: { category: collection.category }
-      });
-    } else {
-      router.push({
-        pathname: '/catalog',
-        params: { colors: collection.colors.join(',') }
-      });
-    }
+    router.push({
+      pathname: '/catalog',
+      params: { category: collection.category }
+    });
   };
 
   const handleWallpaperPress = (wallpaper: Wallpaper) => {
@@ -124,7 +117,7 @@ export default function HomeScreen() {
 
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Explora por habitación</Text>
+          <Text style={styles.sectionTitle}>Categorías destacadas</Text>
           <TouchableOpacity onPress={() => router.push('/catalog')}>
             <Text style={styles.seeAll}>Ver todo</Text>
           </TouchableOpacity>

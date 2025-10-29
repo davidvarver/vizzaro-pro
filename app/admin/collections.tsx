@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -13,8 +13,10 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, Plus, Edit2, Trash2, Save, X } from 'lucide-react-native';
+import { ArrowLeft, Plus, Edit2, Trash2, Save, X, ChevronDown } from 'lucide-react-native';
 import { useCollections, Collection } from '@/contexts/CollectionsContext';
+import { useWallpapers } from '@/contexts/WallpapersContext';
+import { getCategoriesFromWallpapers } from '@/constants/wallpapers';
 import Colors from '@/constants/colors';
 import AdminGuard from '@/components/AdminGuard';
 
@@ -22,15 +24,21 @@ export default function AdminCollections() {
   const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [showCategoryPicker, setShowCategoryPicker] = useState<boolean>(false);
   const { collections, addCollection, updateCollection, deleteCollection } = useCollections();
+  const { wallpapers } = useWallpapers();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  
+  const availableCategories = useMemo(() => {
+    const categories = getCategoriesFromWallpapers(wallpapers);
+    return categories.filter(cat => cat !== 'Todos');
+  }, [wallpapers]);
 
   const [formData, setFormData] = useState<Collection>({
     id: '',
     name: '',
     image: '',
-    colors: [],
     category: '',
     featured: false,
   });
@@ -40,7 +48,6 @@ export default function AdminCollections() {
       id: `collection-${Date.now()}`,
       name: '',
       image: '',
-      colors: [],
       category: '',
       featured: false,
     });
@@ -67,11 +74,6 @@ export default function AdminCollections() {
 
     if (!formData.category || !formData.category.trim()) {
       Alert.alert('Error', 'Debes seleccionar una categoría');
-      return;
-    }
-
-    if (formData.colors.length === 0) {
-      Alert.alert('Error', 'Debes agregar al menos un color');
       return;
     }
 
@@ -120,27 +122,7 @@ export default function AdminCollections() {
     );
   };
 
-  const addColor = () => {
-    Alert.prompt(
-      'Agregar color',
-      'Ingresa el nombre del color',
-      (text) => {
-        if (text?.trim()) {
-          setFormData({
-            ...formData,
-            colors: [...formData.colors, text.trim()],
-          });
-        }
-      }
-    );
-  };
 
-  const removeColor = (index: number) => {
-    setFormData({
-      ...formData,
-      colors: formData.colors.filter((_, i) => i !== index),
-    });
-  };
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -175,18 +157,9 @@ export default function AdminCollections() {
                     </View>
                   )}
                 </View>
-                {collection.category && (
-                  <View style={styles.categoryContainer}>
-                    <Text style={styles.categoryLabel}>Categoría: </Text>
-                    <Text style={styles.categoryValue}>{collection.category}</Text>
-                  </View>
-                )}
-                <View style={styles.colorsContainer}>
-                  {collection.colors.map((color, index) => (
-                    <View key={index} style={styles.colorChip}>
-                      <Text style={styles.colorText}>{color}</Text>
-                    </View>
-                  ))}
+                <View style={styles.categoryContainer}>
+                  <Text style={styles.categoryLabel}>Categoría: </Text>
+                  <Text style={styles.categoryValue}>{collection.category}</Text>
                 </View>
                 <View style={styles.collectionActions}>
                   <TouchableOpacity
@@ -240,12 +213,43 @@ export default function AdminCollections() {
 
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Categoría *</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.category}
-                  onChangeText={(text) => setFormData({ ...formData, category: text })}
-                  placeholder="Ej: Tropical, Geométrico, Floral, Textura, etc."
-                />
+                <TouchableOpacity
+                  style={styles.pickerButton}
+                  onPress={() => setShowCategoryPicker(!showCategoryPicker)}
+                >
+                  <Text style={[styles.pickerButtonText, !formData.category && styles.pickerPlaceholder]}>
+                    {formData.category || 'Selecciona una categoría'}
+                  </Text>
+                  <ChevronDown size={20} color={Colors.light.textSecondary} />
+                </TouchableOpacity>
+                {showCategoryPicker && (
+                  <View style={styles.pickerOptions}>
+                    <ScrollView style={styles.pickerScroll} nestedScrollEnabled>
+                      {availableCategories.map((cat) => (
+                        <TouchableOpacity
+                          key={cat}
+                          style={[
+                            styles.pickerOption,
+                            formData.category === cat && styles.pickerOptionSelected,
+                          ]}
+                          onPress={() => {
+                            setFormData({ ...formData, category: cat, name: cat });
+                            setShowCategoryPicker(false);
+                          }}
+                        >
+                          <Text
+                            style={[
+                              styles.pickerOptionText,
+                              formData.category === cat && styles.pickerOptionTextSelected,
+                            ]}
+                          >
+                            {cat}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  </View>
+                )}
               </View>
 
               <View style={styles.formGroup}>
@@ -262,25 +266,7 @@ export default function AdminCollections() {
                 )}
               </View>
 
-              <View style={styles.formGroup}>
-                <View style={styles.labelRow}>
-                  <Text style={styles.label}>Colores *</Text>
-                  <TouchableOpacity onPress={addColor} style={styles.addColorButton}>
-                    <Plus size={16} color={Colors.light.primary} />
-                    <Text style={styles.addColorText}>Agregar</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.colorsContainer}>
-                  {formData.colors.map((color, index) => (
-                    <View key={index} style={styles.colorChipEditable}>
-                      <Text style={styles.colorText}>{color}</Text>
-                      <TouchableOpacity onPress={() => removeColor(index)}>
-                        <X size={14} color={Colors.light.textSecondary} />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
-              </View>
+
 
               <View style={styles.formGroup}>
                 <TouchableOpacity
@@ -290,7 +276,7 @@ export default function AdminCollections() {
                   <View style={[styles.checkbox, formData.featured && styles.checkboxChecked]}>
                     {formData.featured && <Text style={styles.checkmark}>✓</Text>}
                   </View>
-                  <Text style={styles.checkboxLabel}>Marcar como destacada</Text>
+                  <Text style={styles.checkboxLabel}>Mostrar en página principal</Text>
                 </TouchableOpacity>
               </View>
 
@@ -582,5 +568,50 @@ const styles = StyleSheet.create({
     color: Colors.light.background,
     fontSize: 16,
     fontWeight: '600',
+  },
+  pickerButton: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    borderRadius: 8,
+    padding: 12,
+  },
+  pickerButtonText: {
+    fontSize: 16,
+    color: Colors.light.text,
+  },
+  pickerPlaceholder: {
+    color: Colors.light.textSecondary,
+  },
+  pickerOptions: {
+    marginTop: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    borderRadius: 8,
+    maxHeight: 200,
+    overflow: 'hidden' as const,
+  },
+  pickerScroll: {
+    maxHeight: 200,
+  },
+  pickerOption: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
+  pickerOptionSelected: {
+    backgroundColor: Colors.light.primary + '20',
+  },
+  pickerOptionText: {
+    fontSize: 16,
+    color: Colors.light.text,
+  },
+  pickerOptionTextSelected: {
+    color: Colors.light.primary,
+    fontWeight: '600' as const,
   },
 });
