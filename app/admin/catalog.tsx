@@ -97,8 +97,15 @@ export default function AdminCatalogScreen() {
 
   const ProductCard = ({ item }: { item: Wallpaper }) => {
     const price = typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0;
-    const dimensions = item.dimensions || { width: 0, height: 0, coverage: 0 };
+    const dimensions = {
+      width: typeof item.dimensions?.width === 'number' && !isNaN(item.dimensions.width) ? item.dimensions.width : 0.53,
+      height: typeof item.dimensions?.height === 'number' && !isNaN(item.dimensions.height) ? item.dimensions.height : 10.05,
+      coverage: typeof item.dimensions?.coverage === 'number' && !isNaN(item.dimensions.coverage) ? item.dimensions.coverage : 5.33,
+    };
     const style = item.style || 'Sin estilo';
+    const category = item.category || 'General';
+    const name = item.name || 'Sin nombre';
+    const description = item.description || '';
     
     return (
       <View style={styles.productCard}>
@@ -112,12 +119,14 @@ export default function AdminCatalogScreen() {
         </View>
 
         <View style={styles.productInfo}>
-          <Text style={styles.productName} numberOfLines={1}>{item.name || 'Sin nombre'}</Text>
+          <Text style={styles.productName} numberOfLines={1}>{name}</Text>
           <Text style={styles.productPrice}>${price.toFixed(2)}</Text>
         
-        <Text style={styles.productDescription} numberOfLines={1}>
-          {item.description}
-        </Text>
+        {description && (
+          <Text style={styles.productDescription} numberOfLines={1}>
+            {description}
+          </Text>
+        )}
         
         <View style={styles.colorDots}>
           <View style={[styles.colorDot, { backgroundColor: '#8B4513' }]} />

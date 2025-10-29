@@ -474,30 +474,88 @@ export default function AddProductScreen() {
         
         try {
           const imageUrls: string[] = [];
-          if (row['URL Imagen 1']) imageUrls.push(row['URL Imagen 1']);
-          if (row['URL Imagen 2']) imageUrls.push(row['URL Imagen 2']);
-          if (row['URL Imagen 3']) imageUrls.push(row['URL Imagen 3']);
-          if (row['URL Imagen 4']) imageUrls.push(row['URL Imagen 4']);
+          const imageUrl1 = row['URL Imagen 1'] || row['url imagen 1'] || row['URL_Imagen_1'];
+          const imageUrl2 = row['URL Imagen 2'] || row['url imagen 2'] || row['URL_Imagen_2'];
+          const imageUrl3 = row['URL Imagen 3'] || row['url imagen 3'] || row['URL_Imagen_3'];
+          const imageUrl4 = row['URL Imagen 4'] || row['url imagen 4'] || row['URL_Imagen_4'];
+          
+          if (imageUrl1 && String(imageUrl1).trim()) imageUrls.push(String(imageUrl1).trim());
+          if (imageUrl2 && String(imageUrl2).trim()) imageUrls.push(String(imageUrl2).trim());
+          if (imageUrl3 && String(imageUrl3).trim()) imageUrls.push(String(imageUrl3).trim());
+          if (imageUrl4 && String(imageUrl4).trim()) imageUrls.push(String(imageUrl4).trim());
+          
+          const name = row['Nombre'] || row['nombre'];
+          const description = row['Descripción'] || row['Descripcion'] || row['descripción'] || row['descripcion'];
+          const priceRaw = row['Precio'] || row['precio'];
+          
+          console.log(`[Excel] Fila ${i + 2}:`, { name, description, priceRaw, imageCount: imageUrls.length });
 
-          if (!row['Nombre'] || !row['Descripción'] || !row['Precio'] || imageUrls.length === 0) {
-            errors.push(`Fila ${i + 2}: Faltan campos obligatorios`);
+          if (!name || !String(name).trim()) {
+            errors.push(`Fila ${i + 2}: Falta el nombre del producto`);
+            errorCount++;
+            continue;
+          }
+          
+          if (!description || !String(description).trim()) {
+            errors.push(`Fila ${i + 2}: Falta la descripción del producto`);
+            errorCount++;
+            continue;
+          }
+          
+          if (priceRaw === undefined || priceRaw === null || priceRaw === '') {
+            errors.push(`Fila ${i + 2}: Falta el precio del producto`);
+            errorCount++;
+            continue;
+          }
+          
+          const price = Number(priceRaw);
+          if (isNaN(price) || price < 0) {
+            errors.push(`Fila ${i + 2}: Precio inválido (${priceRaw})`);
+            errorCount++;
+            continue;
+          }
+          
+          if (imageUrls.length === 0) {
+            errors.push(`Fila ${i + 2}: Falta al menos una URL de imagen`);
             errorCount++;
             continue;
           }
 
+          const category = row['Categoría'] || row['Categoria'] || row['categoría'] || row['categoria'] || 'General';
+          const style = row['Estilo'] || row['estilo'] || 'Moderno';
+          const widthRaw = row['Ancho (m)'] || row['ancho (m)'] || row['Ancho'] || row['ancho'];
+          const heightRaw = row['Altura (m)'] || row['altura (m)'] || row['Altura'] || row['altura'];
+          const coverageRaw = row['Cobertura (m²)'] || row['cobertura (m²)'] || row['Cobertura'] || row['cobertura'];
+          const weightRaw = row['Peso (kg)'] || row['peso (kg)'] || row['Peso'] || row['peso'];
+          
+          const width = widthRaw !== undefined && widthRaw !== null && widthRaw !== '' ? Number(widthRaw) : 0.53;
+          const height = heightRaw !== undefined && heightRaw !== null && heightRaw !== '' ? Number(heightRaw) : 10.05;
+          const coverage = coverageRaw !== undefined && coverageRaw !== null && coverageRaw !== '' ? Number(coverageRaw) : 5.33;
+          const weight = weightRaw !== undefined && weightRaw !== null && weightRaw !== '' ? Number(weightRaw) : undefined;
+          
+          if (isNaN(width) || width <= 0) {
+            console.warn(`[Excel] Fila ${i + 2}: Ancho inválido (${widthRaw}), usando 0.53`);
+          }
+          if (isNaN(height) || height <= 0) {
+            console.warn(`[Excel] Fila ${i + 2}: Altura inválida (${heightRaw}), usando 10.05`);
+          }
+          if (isNaN(coverage) || coverage <= 0) {
+            console.warn(`[Excel] Fila ${i + 2}: Cobertura inválida (${coverageRaw}), usando 5.33`);
+          }
+
           const newProduct: Wallpaper = {
             id: Date.now().toString() + '_' + i + '_' + Math.random().toString(36).substr(2, 9),
-            name: row['Nombre'],
-            description: row['Descripción'],
-            price: Number(row['Precio']),
-            category: row['Categoría'] || 'Sin categoría',
-            style: row['Estilo'] || 'Moderno',
+            name: String(name).trim(),
+            description: String(description).trim(),
+            price,
+            category: String(category).trim(),
+            style: String(style).trim(),
             colors: [],
             dimensions: {
-              width: Number(row['Ancho (m)']) || 0.53,
-              height: Number(row['Altura (m)']) || 10.05,
-              coverage: Number(row['Cobertura (m²)']) || 5.33,
-              weight: row['Peso (kg)'] ? Number(row['Peso (kg)']) : undefined,
+              width: isNaN(width) || width <= 0 ? 0.53 : width,
+              height: isNaN(height) || height <= 0 ? 10.05 : height,
+              coverage: isNaN(coverage) || coverage <= 0 ? 5.33 : coverage,
+              weight: weight !== undefined && !isNaN(weight) && weight > 0 ? weight : undefined,
             },
             specifications: {
               material: 'Vinilo',
@@ -511,6 +569,8 @@ export default function AddProductScreen() {
             rating: 0,
             reviews: 0,
           };
+          
+          console.log(`[Excel] Producto creado para fila ${i + 2}:`, { id: newProduct.id, name: newProduct.name, price: newProduct.price });
 
           productsToAdd.push(newProduct);
           successCount++;

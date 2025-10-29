@@ -85,6 +85,38 @@ export default async function handler(req, res) {
             console.warn('[Catalog GET] Catalog is not an array, resetting');
             catalog = null;
           }
+
+          if (catalog && Array.isArray(catalog)) {
+            catalog = catalog.map(item => {
+              if (!item || typeof item !== 'object') return null;
+              
+              return {
+                ...item,
+                price: typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0,
+                imageUrl: item.imageUrl || '',
+                imageUrls: Array.isArray(item.imageUrls) ? item.imageUrls : [],
+                category: item.category || 'General',
+                style: item.style || 'Moderno',
+                colors: Array.isArray(item.colors) ? item.colors : [],
+                dimensions: {
+                  width: typeof item.dimensions?.width === 'number' && !isNaN(item.dimensions.width) ? item.dimensions.width : 0.53,
+                  height: typeof item.dimensions?.height === 'number' && !isNaN(item.dimensions.height) ? item.dimensions.height : 10.05,
+                  coverage: typeof item.dimensions?.coverage === 'number' && !isNaN(item.dimensions.coverage) ? item.dimensions.coverage : 5.33,
+                  weight: item.dimensions?.weight,
+                },
+                specifications: {
+                  material: item.specifications?.material || 'Vinilo',
+                  washable: item.specifications?.washable !== undefined ? item.specifications.washable : true,
+                  removable: item.specifications?.removable !== undefined ? item.specifications.removable : true,
+                  textured: item.specifications?.textured !== undefined ? item.specifications.textured : false,
+                },
+                inStock: item.inStock !== undefined ? item.inStock : true,
+                rating: typeof item.rating === 'number' && !isNaN(item.rating) ? item.rating : 0,
+                reviews: typeof item.reviews === 'number' && !isNaN(item.reviews) ? item.reviews : 0,
+                description: item.description || '',
+              };
+            }).filter(item => item !== null && item.id && item.name);
+          }
           
           console.log('[Catalog GET] KV fetch successful, catalog exists:', !!catalog);
           console.log('[Catalog GET] Catalog items count:', Array.isArray(catalog) ? catalog.length : 0);

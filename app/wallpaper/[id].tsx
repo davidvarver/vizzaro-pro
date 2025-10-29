@@ -90,9 +90,16 @@ export default function WallpaperDetailsScreen() {
 
   const safePrice = typeof wallpaper.price === 'number' && !isNaN(wallpaper.price) ? wallpaper.price : 0;
   const safeDimensions = {
-    width: wallpaper.dimensions?.width || 0.53,
-    height: wallpaper.dimensions?.height || 10,
-    coverage: wallpaper.dimensions?.coverage || 5.3,
+    width: typeof wallpaper.dimensions?.width === 'number' && !isNaN(wallpaper.dimensions.width) ? wallpaper.dimensions.width : 0.53,
+    height: typeof wallpaper.dimensions?.height === 'number' && !isNaN(wallpaper.dimensions.height) ? wallpaper.dimensions.height : 10.05,
+    coverage: typeof wallpaper.dimensions?.coverage === 'number' && !isNaN(wallpaper.dimensions.coverage) ? wallpaper.dimensions.coverage : 5.33,
+  };
+  const safeColors = Array.isArray(wallpaper.colors) ? wallpaper.colors : [];
+  const safeSpecifications = {
+    material: wallpaper.specifications?.material || 'Vinilo',
+    washable: wallpaper.specifications?.washable !== undefined ? wallpaper.specifications.washable : true,
+    removable: wallpaper.specifications?.removable !== undefined ? wallpaper.specifications.removable : true,
+    textured: wallpaper.specifications?.textured !== undefined ? wallpaper.specifications.textured : false,
   };
 
   const rollsNeeded = Math.ceil(wallArea / safeDimensions.coverage);
@@ -310,17 +317,19 @@ export default function WallpaperDetailsScreen() {
             <Text style={styles.description}>{wallpaper.description}</Text>
           </View>
 
-          <View style={styles.colorsSection}>
-            <Text style={styles.sectionTitle}>Colores</Text>
-            <View style={styles.colorsList}>
-              {wallpaper.colors.map((color: string) => (
-                <View key={color} style={styles.colorChip}>
-                  <Palette size={14} color={Colors.light.primary} />
-                  <Text style={styles.colorText}>{color}</Text>
-                </View>
-              ))}
+          {safeColors.length > 0 && (
+            <View style={styles.colorsSection}>
+              <Text style={styles.sectionTitle}>Colores</Text>
+              <View style={styles.colorsList}>
+                {safeColors.map((color: string) => (
+                  <View key={color} style={styles.colorChip}>
+                    <Palette size={14} color={Colors.light.primary} />
+                    <Text style={styles.colorText}>{color}</Text>
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
+          )}
 
           <View style={styles.specificationsSection}>
             <Text style={styles.sectionTitle}>Especificaciones</Text>
@@ -348,12 +357,12 @@ export default function WallpaperDetailsScreen() {
                 <Info size={16} color={Colors.light.primary} />
                 <Text style={styles.specLabel}>Material</Text>
               </View>
-              <Text style={styles.specValue}>{wallpaper.specifications.material}</Text>
+              <Text style={styles.specValue}>{safeSpecifications.material}</Text>
             </View>
             
             <View style={styles.featuresGrid}>
               <View style={styles.featureItem}>
-                {wallpaper.specifications.washable ? (
+                {safeSpecifications.washable ? (
                   <CheckCircle size={16} color={Colors.light.success} />
                 ) : (
                   <XCircle size={16} color={Colors.light.error} />
@@ -362,7 +371,7 @@ export default function WallpaperDetailsScreen() {
               </View>
               
               <View style={styles.featureItem}>
-                {wallpaper.specifications.removable ? (
+                {safeSpecifications.removable ? (
                   <CheckCircle size={16} color={Colors.light.success} />
                 ) : (
                   <XCircle size={16} color={Colors.light.error} />
@@ -371,7 +380,7 @@ export default function WallpaperDetailsScreen() {
               </View>
               
               <View style={styles.featureItem}>
-                {wallpaper.specifications.textured ? (
+                {safeSpecifications.textured ? (
                   <CheckCircle size={16} color={Colors.light.success} />
                 ) : (
                   <XCircle size={16} color={Colors.light.error} />
