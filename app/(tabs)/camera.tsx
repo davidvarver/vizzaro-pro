@@ -499,7 +499,7 @@ export default function CameraScreen() {
       
       // First, compress the captured/uploaded image
       console.log('Compressing user image...');
-      const compressedUserImage = await compressBase64Image(imageBase64, 1024);
+      const compressedUserImage = await compressBase64Image(imageBase64, 1280);
       
       const selectedImageUrl = selectedWallpaper.imageUrls && selectedWallpaper.imageUrls.length > 0 
         ? selectedWallpaper.imageUrls[selectedImageIndex] || selectedWallpaper.imageUrls[0]
@@ -517,7 +517,7 @@ export default function CameraScreen() {
         
         // Compress wallpaper image too
         console.log('Compressing wallpaper image...');
-        wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1024);
+        wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
         
       } catch (error) {
         console.error('Error converting wallpaper image to base64:', error);
@@ -544,28 +544,36 @@ export default function CameraScreen() {
         return; // Exit early, don't throw error
       }
       
-      const prompt = `You are tasked with applying a wallpaper pattern to walls in a room photo.
+      const prompt = `You are an expert at applying wallpaper patterns to walls in photos.
 
-FIRST IMAGE: The target room/wall where wallpaper should be applied.
-SECOND IMAGE: The source wallpaper - this is a PRODUCT IMAGE showing the wallpaper design.
+TASK: Apply the wallpaper pattern from the SECOND IMAGE onto the walls in the FIRST IMAGE.
 
-CRITICAL INSTRUCTIONS:
-1. The second image is a WALLPAPER PRODUCT - it may show the wallpaper pattern in ANY of these contexts:
-   - Close-up of the pattern/texture
-   - Installed on walls in a room or showroom
-   - Being held or displayed
-   - On a roll or sample
-   - In a styled room setting with furniture and decor
+KEY INSTRUCTIONS:
 
-2. YOUR TASK: Identify the wallpaper pattern/design from the second image (ignoring furniture, people, tools, room context) and apply THAT PATTERN to the walls in the first image.
+1. WALL DETECTION:
+   - Identify ALL visible walls in the first image, focusing on the largest, most central wall as the primary target
+   - Detect wall boundaries, edges, corners, and surfaces automatically
+   - Include side walls and background walls if visible
 
-3. Even if the second image shows a full room with furniture and decorations, FOCUS ON THE WALLPAPER ON THE WALLS in that image - that's the pattern you need to extract and apply.
+2. PATTERN EXTRACTION (from SECOND image):
+   - Extract the core wallpaper design/pattern
+   - Ignore any room context, furniture, people, or objects in the product image
+   - Focus ONLY on the wallpaper texture and pattern itself
 
-4. Apply the extracted wallpaper design to all visible walls in the first image, matching natural lighting, perspective, and shadows.
+3. APPLICATION:
+   - Apply the pattern to the MAIN CENTRAL WALL first and foremost
+   - Extend to other walls maintaining perspective and continuity
+   - Match lighting, shadows, and depth of the original photo
+   - Preserve realistic texture and scale
+   - Keep all non-wall elements (furniture, objects, people) exactly as they are
 
-5. The second image is ALWAYS a wallpaper product reference - never treat it as an unrelated image.
+4. REALISM:
+   - Respect perspective and vanishing points
+   - Match the lighting direction and intensity
+   - Maintain natural shadows and reflections
+   - Ensure seamless pattern tiling
 
-Extract the wallpaper pattern from the second image and apply it realistically to the walls in the first image.`;
+PRIORITY: The central/main wall should receive the wallpaper application with highest quality and accuracy.`;
       
       const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
       const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
@@ -589,7 +597,7 @@ Extract the wallpaper pattern from the second image and apply it realistically t
       console.log('Making API request to image editing service...');
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000);
+      const timeoutId = setTimeout(() => controller.abort(), 90000);
       
       let response;
       try {
