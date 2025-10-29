@@ -52,10 +52,10 @@ export default function CartScreen() {
                   </View>
                   
                   <Text style={styles.itemDetails}>
-                    {item.rollsNeeded} rollo{item.rollsNeeded > 1 ? 's' : ''} {"•"} {item.wallArea.toFixed(1)}m²
+                    {item.rollsNeeded} rollo{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)}m²
                   </Text>
                   <Text style={styles.itemPrice}>
-                    ${item.wallpaper.price.toFixed(2)} {"×"} {item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}
+                    ${item.wallpaper.price.toFixed(2)} × {item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}
                   </Text>
                 </View>
                 
@@ -101,7 +101,7 @@ export default function CartScreen() {
             >
               <View style={styles.deliveryOptionContent}>
                 <Text style={styles.deliveryOptionTitle}>Recoger en Tienda</Text>
-                <Text style={styles.deliveryOptionSubtitle}>Gratis {"•"} Listo en 2 horas</Text>
+                <Text style={styles.deliveryOptionSubtitle}>Gratis • Listo en 2 horas</Text>
               </View>
               <Text style={styles.deliveryPrice}>$0.00</Text>
             </TouchableOpacity>
@@ -150,7 +150,7 @@ export default function CartScreen() {
           >
             <CreditCard size={20} color={Colors.light.background} />
             <Text style={styles.checkoutButtonText}>
-              Proceder al Pago {"•"} ${total.toFixed(2)}
+              Proceder al Pago • ${total.toFixed(2)}
             </Text>
           </TouchableOpacity>
         </View>
