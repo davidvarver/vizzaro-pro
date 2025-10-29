@@ -31,6 +31,7 @@ export default function AdminCollections() {
     name: '',
     image: '',
     colors: [],
+    category: '',
     featured: false,
   });
 
@@ -40,6 +41,7 @@ export default function AdminCollections() {
       name: '',
       image: '',
       colors: [],
+      category: '',
       featured: false,
     });
     setEditingCollection(null);
@@ -60,6 +62,11 @@ export default function AdminCollections() {
 
     if (!formData.image.trim()) {
       Alert.alert('Error', 'La URL de la imagen es obligatoria');
+      return;
+    }
+
+    if (!formData.category || !formData.category.trim()) {
+      Alert.alert('Error', 'Debes seleccionar una categoría');
       return;
     }
 
@@ -168,6 +175,12 @@ export default function AdminCollections() {
                     </View>
                   )}
                 </View>
+                {collection.category && (
+                  <View style={styles.categoryContainer}>
+                    <Text style={styles.categoryLabel}>Categoría: </Text>
+                    <Text style={styles.categoryValue}>{collection.category}</Text>
+                  </View>
+                )}
                 <View style={styles.colorsContainer}>
                   {collection.colors.map((color, index) => (
                     <View key={index} style={styles.colorChip}>
@@ -222,6 +235,16 @@ export default function AdminCollections() {
                   value={formData.name}
                   onChangeText={(text) => setFormData({ ...formData, name: text })}
                   placeholder="Ej: Blanco & Negro Moderno"
+                />
+              </View>
+
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>Categoría *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={formData.category}
+                  onChangeText={(text) => setFormData({ ...formData, category: text })}
+                  placeholder="Ej: Tropical, Geométrico, Floral, Textura, etc."
                 />
               </View>
 
@@ -372,7 +395,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
+  },
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  categoryLabel: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: Colors.light.textSecondary,
+  },
+  categoryValue: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: Colors.light.primary,
   },
   collectionName: {
     fontSize: 18,

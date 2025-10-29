@@ -46,11 +46,19 @@ export default function HomeScreen() {
     router.push('/catalog');
   };
 
-  const handleCollectionPress = (collection: { id: string; name: string; image: string; colors: string[]; featured: boolean }) => {
-    router.push({
-      pathname: '/catalog',
-      params: { colors: collection.colors.join(',') }
-    });
+  const handleCollectionPress = (collection: { id: string; name: string; image: string; colors: string[]; category?: string; featured: boolean }) => {
+    console.log('[Home] Collection pressed:', collection.name, 'Category:', collection.category);
+    if (collection.category) {
+      router.push({
+        pathname: '/catalog',
+        params: { category: collection.category }
+      });
+    } else {
+      router.push({
+        pathname: '/catalog',
+        params: { colors: collection.colors.join(',') }
+      });
+    }
   };
 
   const handleWallpaperPress = (wallpaper: Wallpaper) => {

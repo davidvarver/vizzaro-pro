@@ -96,6 +96,7 @@ function getDefaultCollections() {
       name: 'Blanco & Negro Moderno',
       image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&h=600&fit=crop&auto=format&q=80',
       colors: ['Blanco', 'Negro', 'Gris'],
+      category: 'Geométrico',
       featured: true,
     },
     {
@@ -103,6 +104,7 @@ function getDefaultCollections() {
       name: 'Textura Beige Soft',
       image: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=800&h=600&fit=crop&auto=format&q=80',
       colors: ['Beige', 'Crema'],
+      category: 'Textura',
       featured: false,
     },
     {
@@ -110,6 +112,7 @@ function getDefaultCollections() {
       name: 'Geometría Gold Line',
       image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&auto=format&q=80',
       colors: ['Dorado', 'Negro'],
+      category: 'Geométrico',
       featured: false,
     },
   ];
