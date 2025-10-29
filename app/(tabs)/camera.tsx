@@ -245,8 +245,6 @@ export default function CameraScreen() {
       
       const proxyServices = [
         cleanUrl,
-        `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&default=1`,
-        `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
       ];
       
       let lastError: Error | null = null;
@@ -261,14 +259,10 @@ export default function CameraScreen() {
           const fetchOptions: RequestInit = {
             signal: controller.signal,
             method: 'GET',
-          };
-          
-          if (i === 0) {
-            fetchOptions.headers = {
+            headers: {
               'Accept': 'image/*,*/*',
-              'Cache-Control': 'no-cache',
-            };
-          }
+            },
+          };
           
           console.log(`Fetching with options:`, { method: fetchOptions.method });
           const response = await fetch(url, fetchOptions);
@@ -377,7 +371,7 @@ export default function CameraScreen() {
       const manipulated = await ImageManipulator.manipulateAsync(
         imageUri,
         [{ resize: { width: maxSize } }],
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+        { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
       
       if (!manipulated.base64) {
@@ -434,7 +428,7 @@ export default function CameraScreen() {
             ctx.drawImage(img, 0, 0, Math.round(width), Math.round(height));
             
             try {
-              const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+              const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
               if (!compressedDataUrl || !compressedDataUrl.includes(',')) {
                 console.error('Invalid dataURL generated');
                 resolve(base64);
@@ -499,7 +493,7 @@ export default function CameraScreen() {
       
       // First, compress the captured/uploaded image
       console.log('Compressing user image...');
-      const compressedUserImage = await compressBase64Image(imageBase64, 1024);
+      const compressedUserImage = await compressBase64Image(imageBase64, 768);
       
       const selectedImageUrl = selectedWallpaper.imageUrls && selectedWallpaper.imageUrls.length > 0 
         ? selectedWallpaper.imageUrls[selectedImageIndex] || selectedWallpaper.imageUrls[0]
@@ -517,7 +511,7 @@ export default function CameraScreen() {
         
         // Compress wallpaper image too
         console.log('Compressing wallpaper image...');
-        wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1024);
+        wallpaperBase64 = await compressBase64Image(wallpaperBase64, 768);
         
       } catch (error) {
         console.error('Error converting wallpaper image to base64:', error);
@@ -544,28 +538,7 @@ export default function CameraScreen() {
         return; // Exit early, don't throw error
       }
       
-      const prompt = `You are tasked with applying a wallpaper pattern to walls in a room photo.
-
-FIRST IMAGE: The target room/wall where wallpaper should be applied.
-SECOND IMAGE: The source wallpaper - this is a PRODUCT IMAGE showing the wallpaper design.
-
-CRITICAL INSTRUCTIONS:
-1. The second image is a WALLPAPER PRODUCT - it may show the wallpaper pattern in ANY of these contexts:
-   - Close-up of the pattern/texture
-   - Installed on walls in a room or showroom
-   - Being held or displayed
-   - On a roll or sample
-   - In a styled room setting with furniture and decor
-
-2. YOUR TASK: Identify the wallpaper pattern/design from the second image (ignoring furniture, people, tools, room context) and apply THAT PATTERN to the walls in the first image.
-
-3. Even if the second image shows a full room with furniture and decorations, FOCUS ON THE WALLPAPER ON THE WALLS in that image - that's the pattern you need to extract and apply.
-
-4. Apply the extracted wallpaper design to all visible walls in the first image, matching natural lighting, perspective, and shadows.
-
-5. The second image is ALWAYS a wallpaper product reference - never treat it as an unrelated image.
-
-Extract the wallpaper pattern from the second image and apply it realistically to the walls in the first image.`;
+      const prompt = `Apply wallpaper from image 2 to walls in image 1. Extract the wallpaper pattern/texture from image 2 (ignore any furniture or room context) and apply it realistically to all visible walls in image 1, matching lighting and perspective.`;
       
       const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
       const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
