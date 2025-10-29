@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -58,8 +58,20 @@ export default function HomeScreen() {
   };
 
   const featuredWallpapers = useMemo(() => {
-    return wallpapers.filter(w => w.inStock).slice(0, 6);
+    console.log('[Home] Total wallpapers:', wallpapers.length);
+    console.log('[Home] In stock wallpapers:', wallpapers.filter(w => w.inStock).length);
+    const featured = wallpapers.filter(w => w.inStock).slice(0, 6);
+    console.log('[Home] Featured wallpapers:', featured.map(w => ({ id: w.id, name: w.name, imageUrl: w.imageUrl })));
+    return featured;
   }, [wallpapers]);
+
+  const handleImageError = useCallback((wallpaperId: string) => {
+    console.log('[Home] Image failed to load for wallpaper:', wallpaperId);
+  }, []);
+
+  const handleCollectionImageError = useCallback((collectionId: string) => {
+    console.log('[Home] Collection image failed to load:', collectionId);
+  }, []);
 
   return (
     <ScrollView 
@@ -139,6 +151,8 @@ export default function HomeScreen() {
                 source={{ uri: collection.image }}
                 style={styles.collectionImage}
                 imageStyle={styles.collectionImageStyle}
+                resizeMode="cover"
+                onError={() => handleCollectionImageError(collection.id)}
               >
                 <View style={styles.collectionOverlay} />
                 <View style={styles.collectionContent}>
@@ -179,10 +193,14 @@ export default function HomeScreen() {
               style={styles.wallpaperCard}
               onPress={() => handleWallpaperPress(wallpaper)}
             >
-              <Image 
-                source={{ uri: wallpaper.imageUrls?.[0] || wallpaper.imageUrl }} 
-                style={styles.wallpaperImage}
-              />
+              <View style={styles.wallpaperImageContainer}>
+                <Image 
+                  source={{ uri: wallpaper.imageUrls?.[0] || wallpaper.imageUrl }} 
+                  style={styles.wallpaperImage}
+                  resizeMode="cover"
+                  onError={() => handleImageError(wallpaper.id)}
+                />
+              </View>
               <View style={styles.patternPreviewSmall}>
                 <View style={styles.patternSquareSmall} />
               </View>
@@ -396,11 +414,17 @@ const styles = StyleSheet.create({
     width: 160,
     marginRight: 16,
   },
-  wallpaperImage: {
+  wallpaperImageContainer: {
     width: 160,
     height: 160,
     borderRadius: 12,
     marginBottom: 8,
+    backgroundColor: Colors.light.border,
+    overflow: 'hidden',
+  },
+  wallpaperImage: {
+    width: '100%',
+    height: '100%',
   },
   patternPreviewSmall: {
     position: 'absolute',
