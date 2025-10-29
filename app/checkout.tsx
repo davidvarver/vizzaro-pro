@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { Stack, router } from 'expo-router';
 import {
@@ -47,6 +48,9 @@ export default function CheckoutScreen() {
     cvv: '',
     cardholderName: '',
   });
+  
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const subtotal = getCartTotal();
   const deliveryFee = 15.00;
@@ -66,17 +70,23 @@ export default function CheckoutScreen() {
   }, [paymentMethod, zelleReference]);
 
   const handlePlaceOrder = async () => {
+    setErrorMessage('');
+    
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+      const errorMsg = 'Por favor completa todos los campos requeridos (Nombre, Email y Teléfono).';
+      setErrorMessage(errorMsg);
       if (Platform.OS !== 'web') {
-        Alert.alert('Información Incompleta', 'Por favor completa todos los campos requeridos.');
+        Alert.alert('Información Incompleta', errorMsg);
       }
       return;
     }
 
     if (paymentMethod === 'credit_card') {
       if (!creditCardInfo.cardNumber || !creditCardInfo.expiryDate || !creditCardInfo.cvv || !creditCardInfo.cardholderName) {
+        const errorMsg = 'Por favor completa todos los campos de la tarjeta de crédito.';
+        setErrorMessage(errorMsg);
         if (Platform.OS !== 'web') {
-          Alert.alert('Información de Tarjeta Incompleta', 'Por favor completa todos los campos de la tarjeta.');
+          Alert.alert('Información de Tarjeta Incompleta', errorMsg);
         }
         return;
       }
@@ -84,8 +94,9 @@ export default function CheckoutScreen() {
 
     const finalZelleReference = paymentMethod === 'zelle' ? zelleReference : undefined;
 
+    setIsProcessing(true);
     try {
-      await createOrder({
+      const newOrder = await createOrder({
         customerName: customerInfo.name,
         customerEmail: customerInfo.email,
         customerPhone: customerInfo.phone,
@@ -100,9 +111,11 @@ export default function CheckoutScreen() {
         zelleConfirmed: false,
       });
 
+      const orderId = newOrder?.id || finalZelleReference || 'PEDIDO-' + Date.now().toString().slice(-8);
+      
       const confirmMessage = paymentMethod === 'zelle' 
-        ? `Tu pedido ha sido recibido.\n\nCódigo de Referencia: ${finalZelleReference}\n\nEnvía el pago a: 7326646800\nMonto: ${total.toFixed(2)}\n\nIMPORTANTE: Incluye el código de referencia en la nota del pago.`
-        : 'Tu pedido ha sido procesado exitosamente. Recibirás un email de confirmación.';
+        ? `Tu pedido ha sido recibido.\n\nNúmero de Pedido: ${orderId}\nCódigo de Referencia: ${finalZelleReference}\n\nEnvía el pago a: 7326646800\nMonto: ${total.toFixed(2)}\n\nIMPORTANTE: Incluye el código de referencia en la nota del pago.`
+        : `Tu pedido ha sido procesado exitosamente.\n\nNúmero de Pedido: ${orderId}\n\nRecibirás un email de confirmación.`;
 
       if (Platform.OS !== 'web') {
         Alert.alert(
@@ -125,9 +138,13 @@ export default function CheckoutScreen() {
       }
     } catch (error) {
       console.error('Error creating order:', error);
+      const errorMsg = 'Hubo un problema al procesar tu pedido. Por favor intenta de nuevo.';
+      setErrorMessage(errorMsg);
       if (Platform.OS !== 'web') {
-        Alert.alert('Error', 'Hubo un problema al procesar tu pedido. Por favor intenta de nuevo.');
+        Alert.alert('Error', errorMsg);
       }
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -365,13 +382,27 @@ export default function CheckoutScreen() {
       </ScrollView>
 
       <View style={styles.bottomContainer}>
+        {errorMessage ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          </View>
+        ) : null}
+        
         <TouchableOpacity
-          style={styles.placeOrderButton}
+          style={[styles.placeOrderButton, isProcessing && styles.placeOrderButtonDisabled]}
           onPress={handlePlaceOrder}
+          disabled={isProcessing}
         >
-          <Text style={styles.placeOrderButtonText}>
-            Confirmar Pedido • ${total.toFixed(2)}
-          </Text>
+          {isProcessing ? (
+            <View style={styles.processingContainer}>
+              <ActivityIndicator color={Colors.light.background} size="small" />
+              <Text style={styles.placeOrderButtonText}>Procesando...</Text>
+            </View>
+          ) : (
+            <Text style={styles.placeOrderButtonText}>
+              Confirmar Pedido • ${total.toFixed(2)}
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -622,5 +653,27 @@ const styles = StyleSheet.create({
     color: Colors.light.background,
     fontSize: 16,
     fontWeight: '600',
+  },
+  placeOrderButtonDisabled: {
+    opacity: 0.6,
+  },
+  processingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  errorContainer: {
+    backgroundColor: '#FEE2E2',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#DC2626',
+  },
+  errorText: {
+    color: '#991B1B',
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 20,
   },
 });
