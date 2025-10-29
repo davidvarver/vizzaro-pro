@@ -113,29 +113,20 @@ export default function CheckoutScreen() {
 
       const orderId = newOrder?.id || finalZelleReference || 'PEDIDO-' + Date.now().toString().slice(-8);
       
-      const confirmMessage = paymentMethod === 'zelle' 
-        ? `Tu pedido ha sido recibido.\n\nNúmero de Pedido: ${orderId}\nCódigo de Referencia: ${finalZelleReference}\n\nEnvía el pago a: 7326646800\nMonto: ${total.toFixed(2)}\n\nIMPORTANTE: Incluye el código de referencia en la nota del pago.`
-        : `Tu pedido ha sido procesado exitosamente.\n\nNúmero de Pedido: ${orderId}\n\nRecibirás un email de confirmación.`;
-
-      if (Platform.OS !== 'web') {
-        Alert.alert(
-          'Pedido Confirmado',
-          confirmMessage,
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                clearCart();
-                router.replace('/(tabs)/home');
-              }
-            }
-          ]
-        );
-      } else {
-        alert(`Pedido Confirmado\n\n${confirmMessage}`);
-        clearCart();
-        router.replace('/(tabs)/home');
-      }
+      clearCart();
+      
+      router.replace({
+        pathname: '/order-confirmation',
+        params: {
+          orderId,
+          total: total.toFixed(2),
+          paymentMethod,
+          zelleReference: finalZelleReference || '',
+          customerName: customerInfo.name,
+          customerEmail: customerInfo.email,
+          items: JSON.stringify(cartItems),
+        },
+      });
     } catch (error) {
       console.error('Error creating order:', error);
       const errorMsg = 'Hubo un problema al procesar tu pedido. Por favor intenta de nuevo.';
