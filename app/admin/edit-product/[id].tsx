@@ -9,6 +9,7 @@ import {
   Alert,
   Platform,
   Switch,
+  Modal,
 } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,6 +22,7 @@ import {
   Palette,
   Ruler,
   Settings,
+  Plus,
 } from 'lucide-react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useWallpapers } from '@/contexts/WallpapersContext';
@@ -40,6 +42,32 @@ export default function EditProductScreen() {
 
   const [colorInput, setColorInput] = useState<string>('');
   const [imageUrlInput, setImageUrlInput] = useState<string>('');
+  const [showCategoryModal, setShowCategoryModal] = useState<boolean>(false);
+  const [showStyleModal, setShowStyleModal] = useState<boolean>(false);
+  const [newCategoryName, setNewCategoryName] = useState<string>('');
+  const [newStyleName, setNewStyleName] = useState<string>('');
+
+  const [categories, setCategories] = useState<string[]>([
+    'Floral',
+    'Geométrico',
+    'Textura',
+    'Rayas',
+    'Tropical',
+    'Moderno',
+    'Clásico',
+    'Infantil',
+  ]);
+
+  const [stylesOptions, setStylesOptions] = useState<string[]>([
+    'Elegante',
+    'Moderno',
+    'Clásico',
+    'Minimalista',
+    'Vintage',
+    'Contemporáneo',
+    'Rústico',
+    'Bohemio',
+  ]);
 
   useEffect(() => {
     if (originalProduct) {
@@ -68,8 +96,6 @@ export default function EditProductScreen() {
     );
   }
 
-  const categories = ['Floral', 'Geométrico', 'Textura', 'Rayas', 'Tropical'];
-  const stylesOptions = ['Moderno', 'Clásico', 'Minimalista', 'Luxury'];
   const materials = ['Vinilo', 'No tejido', 'Papel', 'Vinilo Premium'];
 
   const handleSave = async () => {
@@ -211,6 +237,44 @@ export default function EditProductScreen() {
     });
   };
 
+  const addNewCategory = () => {
+    if (!newCategoryName.trim()) {
+      Alert.alert('Error', 'El nombre de la categoría no puede estar vacío');
+      return;
+    }
+    
+    if (categories.includes(newCategoryName.trim())) {
+      Alert.alert('Error', 'Esta categoría ya existe');
+      return;
+    }
+    
+    const newCategory = newCategoryName.trim();
+    setCategories(prev => [...prev, newCategory]);
+    setFormData(prev => prev ? ({ ...prev, category: newCategory }) : null);
+    setNewCategoryName('');
+    setShowCategoryModal(false);
+    Alert.alert('Éxito', `Categoría "${newCategory}" agregada correctamente`);
+  };
+
+  const addNewStyle = () => {
+    if (!newStyleName.trim()) {
+      Alert.alert('Error', 'El nombre del estilo no puede estar vacío');
+      return;
+    }
+    
+    if (stylesOptions.includes(newStyleName.trim())) {
+      Alert.alert('Error', 'Este estilo ya existe');
+      return;
+    }
+    
+    const newStyle = newStyleName.trim();
+    setStylesOptions(prev => [...prev, newStyle]);
+    setFormData(prev => prev ? ({ ...prev, style: newStyle }) : null);
+    setNewStyleName('');
+    setShowStyleModal(false);
+    Alert.alert('Éxito', `Estilo "${newStyle}" agregado correctamente`);
+  };
+
   return (
     <AdminGuard>
       <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -335,7 +399,16 @@ export default function EditProductScreen() {
           </View>
           
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Categoría</Text>
+            <View style={styles.labelWithButton}>
+              <Text style={styles.inputLabel}>Categoría</Text>
+              <TouchableOpacity 
+                style={styles.addButton}
+                onPress={() => setShowCategoryModal(true)}
+              >
+                <Plus size={16} color={Colors.light.tint} />
+                <Text style={styles.addButtonText}>Agregar</Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.optionsScroll}>
               {categories.map((category) => (
                 <TouchableOpacity
@@ -358,7 +431,16 @@ export default function EditProductScreen() {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Estilo</Text>
+            <View style={styles.labelWithButton}>
+              <Text style={styles.inputLabel}>Estilo</Text>
+              <TouchableOpacity 
+                style={styles.addButton}
+                onPress={() => setShowStyleModal(true)}
+              >
+                <Plus size={16} color={Colors.light.tint} />
+                <Text style={styles.addButtonText}>Agregar</Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.optionsScroll}>
               {stylesOptions.map((style) => (
                 <TouchableOpacity
@@ -542,6 +624,88 @@ export default function EditProductScreen() {
 
         <View style={styles.bottomPadding} />
       </ScrollView>
+
+      {/* Modal para agregar nueva categoría */}
+      <Modal
+        visible={showCategoryModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowCategoryModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Agregar Nueva Categoría</Text>
+            
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Nombre de la categoría"
+              value={newCategoryName}
+              onChangeText={setNewCategoryName}
+              autoFocus
+            />
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.modalButtonCancel]}
+                onPress={() => {
+                  setShowCategoryModal(false);
+                  setNewCategoryName('');
+                }}
+              >
+                <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.modalButtonConfirm]}
+                onPress={addNewCategory}
+              >
+                <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal para agregar nuevo estilo */}
+      <Modal
+        visible={showStyleModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowStyleModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Agregar Nuevo Estilo</Text>
+            
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Nombre del estilo"
+              value={newStyleName}
+              onChangeText={setNewStyleName}
+              autoFocus
+            />
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.modalButtonCancel]}
+                onPress={() => {
+                  setShowStyleModal(false);
+                  setNewStyleName('');
+                }}
+              >
+                <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.modalButton, styles.modalButtonConfirm]}
+                onPress={addNewStyle}
+              >
+                <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
     </AdminGuard>
   );
@@ -704,5 +868,87 @@ const styles = StyleSheet.create({
     color: Colors.light.error,
     textAlign: 'center',
     marginTop: 50,
+  },
+  labelWithButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  addButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: Colors.light.tint,
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    gap: 4,
+  },
+  addButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: Colors.light.tint,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: Colors.light.text,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: Colors.light.text,
+    backgroundColor: '#FFFFFF',
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  modalButtonCancel: {
+    backgroundColor: Colors.light.background,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+  },
+  modalButtonConfirm: {
+    backgroundColor: Colors.light.tint,
+  },
+  modalButtonTextCancel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.light.text,
+  },
+  modalButtonTextConfirm: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
   },
 });
