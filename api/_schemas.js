@@ -35,7 +35,7 @@ export const catalogItemSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(200),
   description: z.string().max(2000).optional(),
   price: z.number().nonnegative('El precio debe ser positivo'),
-  imageUrl: z.string().url('URL de imagen inválida').optional(),
+  imageUrl: z.string().url('URL de imagen inválida').or(z.literal('')).optional(),
   category: z.string().optional(),
   inStock: z.boolean().optional(),
   featured: z.boolean().optional(),
@@ -44,7 +44,6 @@ export const catalogItemSchema = z.object({
 
 export const catalogUpdateSchema = z.object({
   catalog: z.array(catalogItemSchema).min(1, 'El catálogo debe tener al menos un item'),
-  adminToken: z.string().min(1, 'Token requerido'),
 });
 
 export const collectionSchema = z.object({
@@ -57,7 +56,6 @@ export const collectionSchema = z.object({
 
 export const collectionsUpdateSchema = z.object({
   collections: z.array(collectionSchema),
-  adminToken: z.string().min(1),
 });
 
 export const verificationEmailSchema = z.object({
