@@ -45,7 +45,7 @@ export default function FavoritesScreen() {
 
   const roomTypes = ['all', 'sala', 'dormitorio', 'cocina', 'baño', 'comedor', 'oficina'];
 
-  const filteredProjects = favoriteProjects.filter(project => {
+  const filteredProjects = (favoriteProjects || []).filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          (project.wallpapers.length > 0 && project.wallpapers[0].name.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesRoom = selectedRoom === 'all' || 
