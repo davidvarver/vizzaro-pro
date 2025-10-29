@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { User, Heart, Clock, Settings, ChevronRight, Package, Shield, LogOut, LogIn } from 'lucide-react-native';
+import { User, Heart, Clock, ChevronRight, Package, Shield, LogOut, LogIn } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Colors from '@/constants/colors';
@@ -188,21 +188,18 @@ export default function ProfileScreen() {
             <ChevronRight size={16} color={Colors.light.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuItemLeft}>
-              <Package size={20} color={Colors.light.textSecondary} />
-              <Text style={styles.menuItemText}>Historial de Pedidos</Text>
-            </View>
-            <ChevronRight size={16} color={Colors.light.textSecondary} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuItemLeft}>
-              <Settings size={20} color={Colors.light.textSecondary} />
-              <Text style={styles.menuItemText}>Configuración</Text>
-            </View>
-            <ChevronRight size={16} color={Colors.light.textSecondary} />
-          </TouchableOpacity>
+          {isAuthenticated && (
+            <TouchableOpacity 
+              style={styles.menuItem}
+              onPress={() => router.push('/order-history' as any)}
+            >
+              <View style={styles.menuItemLeft}>
+                <Package size={20} color={Colors.light.textSecondary} />
+                <Text style={styles.menuItemText}>Historial de Pedidos</Text>
+              </View>
+              <ChevronRight size={16} color={Colors.light.textSecondary} />
+            </TouchableOpacity>
+          )}
 
           {isAdmin && (
             <TouchableOpacity 
