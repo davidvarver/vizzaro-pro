@@ -101,7 +101,8 @@ export default function EditProductScreen() {
 
   const handleSave = async () => {
     console.log('=== INICIANDO GUARDADO ===');
-    console.log('Form data:', formData);
+    console.log('Form data completo:', JSON.stringify(formData, null, 2));
+    console.log('showInHome value:', formData.showInHome);
     console.log('Original product:', originalProduct);
     
     if (!formData.name.trim()) {
@@ -145,7 +146,8 @@ export default function EditProductScreen() {
     }
 
     try {
-      console.log('Llamando updateWallpaper con:', formData);
+      console.log('Llamando updateWallpaper con:', JSON.stringify(formData, null, 2));
+      console.log('showInHome antes de guardar:', formData.showInHome);
       console.log('Admin token:', token);
       
       if (!token) {

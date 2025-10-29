@@ -9,8 +9,9 @@ import {
   Image,
   ImageBackground,
   FlatList,
+  RefreshControl,
 } from 'react-native';
-import { Search } from 'lucide-react-native';
+import { Search, RefreshCw } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
@@ -21,8 +22,9 @@ import { Wallpaper } from '@/constants/wallpapers';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const { wallpapers } = useWallpapers();
+  const { wallpapers, refetchWallpapers } = useWallpapers();
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -39,15 +41,30 @@ export default function HomeScreen() {
 
   const homeWallpapers = useMemo(() => {
     console.log('[Home] Total wallpapers:', wallpapers.length);
+    console.log('[Home] All wallpapers with showInHome:', wallpapers.filter(w => w.showInHome).map(w => ({ id: w.id, name: w.name, showInHome: w.showInHome, inStock: w.inStock })));
     const featured = wallpapers.filter(w => w.showInHome && w.inStock).slice(0, 6);
-    console.log('[Home] Home wallpapers (showInHome=true):', featured.length);
+    console.log('[Home] Home wallpapers (showInHome=true && inStock=true):', featured.length);
     return featured;
   }, [wallpapers]);
+
+  const handleRefresh = async () => {
+    console.log('[Home] Manual refresh triggered');
+    setRefreshing(true);
+    await refetchWallpapers();
+    setRefreshing(false);
+  };
 
   return (
     <ScrollView 
       style={styles.container}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+          tintColor={Colors.light.primary}
+        />
+      }
     >
       <ImageBackground
         source={{ uri: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop&auto=format&q=80' }}
@@ -87,9 +104,22 @@ export default function HomeScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Papel Tapiz Destacado</Text>
-          <TouchableOpacity onPress={() => router.push('/catalog')}>
-            <Text style={styles.seeAll}>Ver todo</Text>
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity 
+              onPress={handleRefresh} 
+              style={styles.refreshButton}
+              disabled={refreshing}
+            >
+              <RefreshCw 
+                size={20} 
+                color={Colors.light.primary} 
+                style={refreshing ? styles.refreshIconSpinning : undefined}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/catalog')}>
+              <Text style={styles.seeAll}>Ver todo</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {homeWallpapers.length > 0 ? (
@@ -243,6 +273,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.light.primary,
     fontWeight: '600',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  refreshButton: {
+    padding: 4,
+  },
+  refreshIconSpinning: {
+    opacity: 0.5,
   },
   gridContainer: {
     paddingHorizontal: 20,
