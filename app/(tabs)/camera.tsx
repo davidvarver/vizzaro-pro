@@ -544,36 +544,55 @@ export default function CameraScreen() {
         return; // Exit early, don't throw error
       }
       
-      const prompt = `You are an expert at applying wallpaper patterns to walls in photos.
+      const prompt = `You are an expert at applying wallpaper patterns to walls in photos with advanced wall detection capabilities.
 
 TASK: Apply the wallpaper pattern from the SECOND IMAGE onto the walls in the FIRST IMAGE.
 
-KEY INSTRUCTIONS:
+CRITICAL WALL DETECTION RULES:
 
-1. WALL DETECTION:
-   - Identify ALL visible walls in the first image, focusing on the largest, most central wall as the primary target
-   - Detect wall boundaries, edges, corners, and surfaces automatically
-   - Include side walls and background walls if visible
+1. PRIMARY WALL IDENTIFICATION:
+   - FIRST: Analyze the entire image to identify wall surfaces by color, texture, and flatness
+   - PRIORITY: The largest continuous flat surface in the center of the image is the PRIMARY TARGET WALL
+   - Look for wall indicators: flat surfaces, paint/texture, behind furniture, between floor and ceiling
+   - Walls are typically vertical surfaces with uniform color/texture
+   - Ignore furniture, decorative items, doors, windows - these are NOT walls
+   - If there's a dominant colored wall (like green), that's likely the target wall
+   - The primary wall should occupy the largest area in the center/background of the image
 
-2. PATTERN EXTRACTION (from SECOND image):
+2. DISTINGUISH WALLS FROM NON-WALLS:
+   - Walls: Flat vertical surfaces, uniform texture, background elements
+   - NOT walls: Furniture (shelves, cabinets, wardrobes), decorative items, people, clocks, frames
+   - Furniture has depth, edges, and is in the foreground
+   - Walls are in the background, behind objects
+   - Focus ONLY on painting/coloring the background wall surface
+
+3. PATTERN EXTRACTION (from SECOND image):
    - Extract the core wallpaper design/pattern
    - Ignore any room context, furniture, people, or objects in the product image
    - Focus ONLY on the wallpaper texture and pattern itself
 
-3. APPLICATION:
-   - Apply the pattern to the MAIN CENTRAL WALL first and foremost
-   - Extend to other walls maintaining perspective and continuity
-   - Match lighting, shadows, and depth of the original photo
-   - Preserve realistic texture and scale
-   - Keep all non-wall elements (furniture, objects, people) exactly as they are
+4. APPLICATION STRATEGY:
+   - Apply wallpaper ONLY to the identified PRIMARY WALL (the largest, most central wall surface)
+   - DO NOT apply wallpaper to furniture, objects, or non-wall surfaces
+   - Start from the center of the main wall and extend to its edges
+   - If multiple walls are visible (like corner walls), apply to the MAIN WALL FIRST with highest priority
+   - Match the wall's perspective, lighting, and depth
+   - Keep all furniture, objects, people, and decorative items exactly as they are - DO NOT apply pattern to them
 
-4. REALISM:
-   - Respect perspective and vanishing points
-   - Match the lighting direction and intensity
-   - Maintain natural shadows and reflections
-   - Ensure seamless pattern tiling
+5. REALISM & QUALITY:
+   - Respect perspective and vanishing points of the wall surface
+   - Match the lighting direction and intensity of the wall
+   - Maintain natural shadows and reflections on the wall
+   - Ensure seamless pattern tiling on the wall
+   - The wallpaper should look like it's painted/applied on the wall surface only
 
-PRIORITY: The central/main wall should receive the wallpaper application with highest quality and accuracy.`;
+FINAL CHECK:
+- Is the wallpaper applied ONLY to the main wall surface?
+- Did I avoid applying wallpaper to furniture, shelves, or decorative items?
+- Does the main wall in the center/background have the wallpaper?
+- Are all objects and furniture preserved without wallpaper on them?
+
+PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in background/center), and apply wallpaper ONLY to that wall surface with highest quality and accuracy.`;
       
       const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
       const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
