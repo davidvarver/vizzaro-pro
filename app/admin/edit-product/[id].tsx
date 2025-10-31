@@ -152,8 +152,11 @@ export default function EditProductScreen() {
       
       if (!token) {
         console.error('No admin token available');
+        const errorMsg = 'No hay sesión de administrador activa. Por favor cierra sesión e inicia sesión nuevamente.';
         if (Platform.OS !== 'web') {
-          Alert.alert('Error', 'No hay sesión de administrador activa');
+          Alert.alert('Error de Autenticación', errorMsg);
+        } else {
+          alert(errorMsg);
         }
         return;
       }
@@ -174,18 +177,27 @@ export default function EditProductScreen() {
           );
         } else {
           console.log('Navegando de vuelta...');
+          alert('Producto actualizado exitosamente');
           router.back();
         }
       } else {
         console.log('Error: updateWallpaper retornó false');
+        const errorMsg = 'No se pudieron guardar los cambios. Inténtalo de nuevo.';
         if (Platform.OS !== 'web') {
-          Alert.alert('Error', 'No se pudieron guardar los cambios. Inténtalo de nuevo.');
+          Alert.alert('Error', errorMsg);
+        } else {
+          alert(errorMsg);
         }
       }
     } catch (error) {
       console.error('Error al actualizar producto:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Ocurrió un error al guardar los cambios.';
+      console.error('Error details:', errorMsg);
+      
       if (Platform.OS !== 'web') {
-        Alert.alert('Error', 'Ocurrió un error al guardar los cambios.');
+        Alert.alert('Error', errorMsg);
+      } else {
+        alert('Error: ' + errorMsg);
       }
     }
   };

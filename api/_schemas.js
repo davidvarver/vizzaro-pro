@@ -55,6 +55,7 @@ export const catalogItemSchema = z.object({
   inStock: z.boolean().optional().default(true),
   rating: z.number().min(0).max(5).optional().default(0),
   reviews: z.number().int().nonnegative().optional().default(0),
+  showInHome: z.boolean().optional().default(false),
   featured: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
 });

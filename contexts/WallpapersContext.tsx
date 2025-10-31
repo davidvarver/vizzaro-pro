@@ -199,16 +199,24 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
 
   const updateWallpaper = useCallback(async (updatedWallpaper: Wallpaper, adminToken?: string) => {
     try {
+      console.log('[WallpapersContext] Updating wallpaper:', updatedWallpaper.id);
+      console.log('[WallpapersContext] Updated data:', JSON.stringify(updatedWallpaper, null, 2));
+      console.log('[WallpapersContext] Admin token provided:', !!adminToken);
+      
       const updatedWallpapers = wallpapers.map(wallpaper =>
         wallpaper.id === updatedWallpaper.id ? updatedWallpaper : wallpaper
       );
       
       await saveWallpapers(updatedWallpapers, adminToken);
       console.log('[WallpapersContext] Wallpaper updated successfully:', updatedWallpaper.id);
+      console.log('[WallpapersContext] Updated wallpaper showInHome:', updatedWallpaper.showInHome);
       return true;
     } catch (error) {
       console.error('[WallpapersContext] Error updating wallpaper:', error);
-      return false;
+      if (error instanceof Error) {
+        console.error('[WallpapersContext] Error message:', error.message);
+      }
+      throw error;
     }
   }, [wallpapers, saveWallpapers]);
 
