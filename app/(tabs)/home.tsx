@@ -10,6 +10,7 @@ import {
   ImageBackground,
   FlatList,
   RefreshControl,
+  useWindowDimensions,
 } from 'react-native';
 import { Search, RefreshCw } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,9 +23,16 @@ import { Wallpaper } from '@/constants/wallpapers';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   const { wallpapers, refetchWallpapers } = useWallpapers();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  
+  const numColumns = useMemo(() => {
+    if (width >= 1200) return 4;
+    if (width >= 768) return 3;
+    return 2;
+  }, [width]);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -125,14 +133,15 @@ export default function HomeScreen() {
         {homeWallpapers.length > 0 ? (
           <FlatList
             data={homeWallpapers}
-            numColumns={2}
+            numColumns={numColumns}
+            key={numColumns}
             scrollEnabled={false}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.gridContainer}
             columnWrapperStyle={styles.gridRow}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={styles.gridCard}
+                style={[styles.gridCard, { width: `${100 / numColumns - 2}%` }]}
                 onPress={() => handleWallpaperPress(item)}
               >
                 <View style={styles.gridImageContainer}>
@@ -293,7 +302,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   gridCard: {
-    width: '48%',
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
     overflow: 'hidden',

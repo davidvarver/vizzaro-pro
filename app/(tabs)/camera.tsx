@@ -1008,6 +1008,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
             ref={cameraRef} 
             style={styles.camera} 
             facing={facing}
+            zoom={0}
             onCameraReady={() => {
               console.log('Camera ready callback triggered');
               setIsCameraReady(true);
