@@ -1009,6 +1009,9 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
             style={styles.camera} 
             facing={facing}
             zoom={0}
+            enableTorch={false}
+            videoQuality="1080p"
+            responsiveOrientationWhenOrientationLocked={true}
             onCameraReady={() => {
               console.log('Camera ready callback triggered');
               setIsCameraReady(true);
