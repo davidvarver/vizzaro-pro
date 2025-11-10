@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform, ActivityIndicator, ScrollView, Image } from 'react-native';
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { CameraView, CameraType, useCameraPermissions, CameraMode } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -1011,7 +1011,6 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
             zoom={0}
             enableTorch={false}
             mode="picture"
-            videoQuality="480p"
             responsiveOrientationWhenOrientationLocked={true}
             onCameraReady={() => {
               console.log('Camera ready callback triggered');
