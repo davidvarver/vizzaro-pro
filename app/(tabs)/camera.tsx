@@ -1010,6 +1010,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
             facing={facing}
             zoom={0}
             enableTorch={false}
+            mode="picture"
             videoQuality="480p"
             responsiveOrientationWhenOrientationLocked={true}
             onCameraReady={() => {
