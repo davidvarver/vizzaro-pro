@@ -14,8 +14,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Plus, Edit2, Trash2, Save, X, ChevronDown } from 'lucide-react-native';
-import { useCollections, Collection } from '@/contexts/CollectionsContext';
-import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useCollectionsStore, Collection } from '@/stores/useCollectionsStore';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
 import { getCategoriesFromWallpapers } from '@/constants/wallpapers';
 import Colors from '@/constants/colors';
 import AdminGuard from '@/components/AdminGuard';
@@ -25,11 +25,11 @@ export default function AdminCollections() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [showCategoryPicker, setShowCategoryPicker] = useState<boolean>(false);
-  const { collections, addCollection, updateCollection, deleteCollection } = useCollections();
-  const { wallpapers } = useWallpapers();
+  const { collections, addCollection, updateCollection, deleteCollection } = useCollectionsStore();
+  const { wallpapers } = useWallpaperStore();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  
+
   const availableCategories = useMemo(() => {
     const categories = getCategoriesFromWallpapers(wallpapers);
     return categories.filter(cat => cat !== 'Todos');
@@ -80,7 +80,7 @@ export default function AdminCollections() {
     setIsSaving(true);
     try {
       const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
-      
+
       if (editingCollection) {
         await updateCollection(formData, token);
         Alert.alert('Éxito', 'Colección actualizada exitosamente');
@@ -88,7 +88,7 @@ export default function AdminCollections() {
         await addCollection(formData, token);
         Alert.alert('Éxito', 'Colección agregada exitosamente');
       }
-      
+
       setIsModalVisible(false);
     } catch (error) {
       console.error('Error saving collection:', error);

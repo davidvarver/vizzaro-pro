@@ -14,12 +14,12 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Mail, Lock, ArrowLeft, Eye, EyeOff } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function LoginScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { login } = useAuth();
+  const login = useAuthStore(state => state.login);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

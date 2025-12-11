@@ -6,7 +6,8 @@
     "start": "bunx rork start -p cyx7smqfrwoy01qt0ftzn --tunnel",
     "start-web": "bunx rork start -p cyx7smqfrwoy01qt0ftzn --web --tunnel",
     "start-web-dev": "DEBUG=expo* bunx rork start -p cyx7smqfrwoy01qt0ftzn --web --tunnel",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test": "jest"
   },
   "dependencies": {
     "@ai-sdk/react": "^2.0.81",
@@ -64,9 +65,22 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@expo/ngrok": "^4.1.0",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.10",
+    "@types/react-test-renderer": "^19.1.0",
+    "babel-jest": "^30.2.0",
+    "babel-preset-expo": "^54.0.8",
     "eslint": "9.31.0",
     "eslint-config-expo": "9.2.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^30.2.0",
+    "jest-expo": "^54.0.14",
+    "prettier": "^3.2.5",
+    "react-test-renderer": "^19.0.2",
+    "ts-jest": "^29.4.6",
     "typescript": "~5.9.2"
   },
   "private": true,

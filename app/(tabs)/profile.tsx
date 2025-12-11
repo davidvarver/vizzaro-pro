@@ -5,8 +5,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
-import { useAuth } from '@/contexts/AuthContext';
-import { useFavorites } from '@/contexts/FavoritesContext';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useFavoritesStore } from '@/stores/useFavoritesStore';
 
 
 interface Project {
@@ -20,8 +20,10 @@ interface Project {
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const { favoriteProjects } = useFavorites();
+  const { user, logout } = useAuthStore();
+  const isAuthenticated = !!user;
+  const isAdmin = user?.isAdmin || false;
+  const { favoriteProjects } = useFavoritesStore();
 
   const recentProjects = useMemo(() => {
     return favoriteProjects
@@ -152,8 +154,8 @@ export default function ProfileScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Proyectos Recientes</Text>
             {recentProjects.map((project) => (
-              <TouchableOpacity 
-                key={project.id} 
+              <TouchableOpacity
+                key={project.id}
                 style={styles.projectCard}
                 onPress={() => router.push(`/project-comparison/${project.id}` as any)}
               >
@@ -176,8 +178,8 @@ export default function ProfileScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Configuración</Text>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.menuItem}
             onPress={() => router.push('/favorites' as any)}
           >
@@ -189,7 +191,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           {isAuthenticated && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/order-history' as any)}
             >
@@ -202,7 +204,7 @@ export default function ProfileScreen() {
           )}
 
           {isAdmin && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/admin/dashboard' as any)}
             >
@@ -215,7 +217,7 @@ export default function ProfileScreen() {
           )}
 
           {isAuthenticated ? (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={handleLogout}
             >
@@ -226,7 +228,7 @@ export default function ProfileScreen() {
               <ChevronRight size={16} color={Colors.light.error} />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/auth/login' as any)}
             >

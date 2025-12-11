@@ -11,7 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Lock, User } from 'lucide-react-native';
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAuthStore } from '@/stores/useAuthStore';
 import Colors from '@/constants/colors';
 
 export default function AdminLoginScreen() {
@@ -19,7 +19,7 @@ export default function AdminLoginScreen() {
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const { login } = useAdmin();
+  const login = useAuthStore(state => state.login);
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -52,69 +52,69 @@ export default function AdminLoginScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <View style={styles.iconContainer}>
-            <Lock size={40} color={Colors.light.tint} />
-          </View>
-          <Text style={styles.title}>Panel de Administración</Text>
-          <Text style={styles.subtitle}>Ingresa tus credenciales para continuar</Text>
-        </View>
-
-        <View style={styles.form}>
-          {error ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <View style={styles.iconContainer}>
+              <Lock size={40} color={Colors.light.tint} />
             </View>
-          ) : null}
-
-          <View style={styles.inputContainer}>
-            <User size={20} color={Colors.light.tabIconDefault} />
-            <TextInput
-              style={styles.input}
-              placeholder="Usuario"
-              value={username}
-              onChangeText={setUsername}
-              autoCapitalize="none"
-              autoCorrect={false}
-              testID="username-input"
-            />
+            <Text style={styles.title}>Panel de Administración</Text>
+            <Text style={styles.subtitle}>Ingresa tus credenciales para continuar</Text>
           </View>
 
-          <View style={styles.inputContainer}>
-            <Lock size={20} color={Colors.light.tabIconDefault} />
-            <TextInput
-              style={styles.input}
-              placeholder="Contraseña"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-              testID="password-input"
-            />
+          <View style={styles.form}>
+            {error ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            <View style={styles.inputContainer}>
+              <User size={20} color={Colors.light.tabIconDefault} />
+              <TextInput
+                style={styles.input}
+                placeholder="Usuario"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                autoCorrect={false}
+                testID="username-input"
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Lock size={20} color={Colors.light.tabIconDefault} />
+              <TextInput
+                style={styles.input}
+                placeholder="Contraseña"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                autoCapitalize="none"
+                autoCorrect={false}
+                testID="password-input"
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+              onPress={handleLogin}
+              disabled={isLoading}
+              testID="login-button"
+            >
+              <Text style={styles.loginButtonText}>
+                {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              </Text>
+            </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
-            style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
-            onPress={handleLogin}
-            disabled={isLoading}
-            testID="login-button"
-          >
-            <Text style={styles.loginButtonText}>
-              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              Credenciales por defecto:{'\n'}
+              Usuario: admin{'\n'}
+              Contraseña: admin123
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Credenciales por defecto:{'\n'}
-            Usuario: admin{'\n'}
-            Contraseña: admin123
-          </Text>
-        </View>
-      </View>
       </KeyboardAvoidingView>
     </View>
   );

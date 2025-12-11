@@ -9,24 +9,27 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import { Search, Filter, X } from 'lucide-react-native';
+import { Filter, X } from 'lucide-react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
 import { Wallpaper, getCategoriesFromWallpapers, getStylesFromWallpapers, getColorsFromWallpapers } from '@/constants/wallpapers';
+import { WallpaperCard } from '@/components/WallpaperCard';
+import { SearchBar } from '@/components/SearchBar';
+import { FilterGroup } from '@/components/FilterGroup';
 
 export default function CatalogScreen() {
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ search?: string; category?: string; style?: string; colors?: string }>();
-  const { wallpapers, isLoading } = useWallpapers();
-  
+  const { wallpapers, isLoading } = useWallpaperStore();
+
   const [searchQuery, setSearchQuery] = useState<string>(params.search || '');
   const [selectedCategory, setSelectedCategory] = useState<string>(params.category || 'Todos');
   const [selectedStyle, setSelectedStyle] = useState<string>(params.style || 'Todos');
   const [selectedColor, setSelectedColor] = useState<string>('Todos');
   const [showFilters, setShowFilters] = useState<boolean>(false);
-  
+
   const categories = useMemo(() => getCategoriesFromWallpapers(wallpapers), [wallpapers]);
   const availableStyles = useMemo(() => getStylesFromWallpapers(wallpapers), [wallpapers]);
   const availableColors = useMemo(() => getColorsFromWallpapers(wallpapers), [wallpapers]);
@@ -108,20 +111,13 @@ export default function CatalogScreen() {
       <View style={styleSheet.container}>
         <View style={[styleSheet.searchSection, { paddingTop: insets.top }]}>
           <View style={styleSheet.searchContainer}>
-            <Search size={20} color={Colors.light.textSecondary} style={styleSheet.searchIcon} />
-            <TextInput
-              style={styleSheet.searchInput}
-              placeholder="Busca: geométrico, beige, mármol..."
+            <SearchBar
               value={searchQuery}
               onChangeText={setSearchQuery}
-              placeholderTextColor={Colors.light.textSecondary}
-              returnKeyType="search"
+              placeholder="Busca: geométrico, beige, mármol..."
+              onClear={() => setSearchQuery('')}
+              containerStyle={{ flex: 1, borderWidth: 0 }}
             />
-            {searchQuery.trim().length > 0 && (
-              <TouchableOpacity onPress={() => setSearchQuery('')} style={styleSheet.clearButton}>
-                <X size={18} color={Colors.light.textSecondary} />
-              </TouchableOpacity>
-            )}
           </View>
 
           <TouchableOpacity
@@ -135,80 +131,26 @@ export default function CatalogScreen() {
 
         {showFilters && (
           <View style={styleSheet.filtersContainer}>
-            <View style={styleSheet.filterRow}>
-              <Text style={styleSheet.filterLabel}>Categoría</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styleSheet.filterChips}>
-                {categories.map((cat) => (
-                  <TouchableOpacity
-                    key={cat}
-                    style={[
-                      styleSheet.filterChip,
-                      selectedCategory === cat && styleSheet.filterChipActive,
-                    ]}
-                    onPress={() => setSelectedCategory(cat)}
-                  >
-                    <Text
-                      style={[
-                        styleSheet.filterChipText,
-                        selectedCategory === cat && styleSheet.filterChipTextActive,
-                      ]}
-                    >
-                      {cat}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            <FilterGroup
+              label="Categoría"
+              options={categories}
+              selected={selectedCategory}
+              onSelect={setSelectedCategory}
+            />
 
-            <View style={styleSheet.filterRow}>
-              <Text style={styleSheet.filterLabel}>Estilo</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styleSheet.filterChips}>
-                {availableStyles.map((style) => (
-                  <TouchableOpacity
-                    key={style}
-                    style={[
-                      styleSheet.filterChip,
-                      selectedStyle === style && styleSheet.filterChipActive,
-                    ]}
-                    onPress={() => setSelectedStyle(style)}
-                  >
-                    <Text
-                      style={[
-                        styleSheet.filterChipText,
-                        selectedStyle === style && styleSheet.filterChipTextActive,
-                      ]}
-                    >
-                      {style}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            <FilterGroup
+              label="Estilo"
+              options={availableStyles}
+              selected={selectedStyle}
+              onSelect={setSelectedStyle}
+            />
 
-            <View style={styleSheet.filterRow}>
-              <Text style={styleSheet.filterLabel}>Color</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styleSheet.filterChips}>
-                {availableColors.map((color) => (
-                  <TouchableOpacity
-                    key={color}
-                    style={[
-                      styleSheet.filterChip,
-                      selectedColor === color && styleSheet.filterChipActive,
-                    ]}
-                    onPress={() => setSelectedColor(color)}
-                  >
-                    <Text
-                      style={[
-                        styleSheet.filterChipText,
-                        selectedColor === color && styleSheet.filterChipTextActive,
-                      ]}
-                    >
-                      {color}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            <FilterGroup
+              label="Color"
+              options={availableColors}
+              selected={selectedColor}
+              onSelect={setSelectedColor}
+            />
 
             {hasActiveFilters && (
               <TouchableOpacity style={styleSheet.clearFiltersButton} onPress={clearFilters}>
@@ -231,7 +173,7 @@ export default function CatalogScreen() {
             <Text style={styleSheet.loadingText}>Cargando catálogo...</Text>
           </View>
         ) : (
-          <ScrollView 
+          <ScrollView
             style={styleSheet.scrollView}
             contentContainerStyle={styleSheet.wallpapersGrid}
             showsVerticalScrollIndicator={false}
@@ -250,30 +192,11 @@ export default function CatalogScreen() {
               </View>
             ) : (
               filteredWallpapers.map((wallpaper) => (
-                <TouchableOpacity
+                <WallpaperCard
                   key={wallpaper.id}
-                  style={styleSheet.wallpaperCard}
-                  onPress={() => handleWallpaperPress(wallpaper)}
-                >
-                  <Image
-                    source={{ uri: wallpaper.imageUrls?.[0] || wallpaper.imageUrl }}
-                    style={styleSheet.wallpaperImage}
-                  />
-                  {!wallpaper.inStock && (
-                    <View style={styleSheet.outOfStockBadge}>
-                      <Text style={styleSheet.outOfStockText}>Agotado</Text>
-                    </View>
-                  )}
-                  <View style={styleSheet.wallpaperInfo}>
-                    <Text style={styleSheet.wallpaperName} numberOfLines={2}>
-                      {wallpaper.name}
-                    </Text>
-                    <Text style={styleSheet.wallpaperCategory} numberOfLines={1}>
-                      {wallpaper.category} {"•"} {wallpaper.style}
-                    </Text>
-                    <Text style={styleSheet.wallpaperPrice}>desde ${wallpaper.price}</Text>
-                  </View>
-                </TouchableOpacity>
+                  wallpaper={wallpaper}
+                  onPress={handleWallpaperPress}
+                />
               ))
             )}
           </ScrollView>
@@ -310,12 +233,7 @@ const styleSheet = StyleSheet.create({
   searchIcon: {
     marginRight: 8,
   },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.light.text,
-    paddingVertical: 12,
-  },
+  // searchInput removed
   clearButton: {
     padding: 4,
   },
@@ -344,41 +262,8 @@ const styleSheet = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
   },
-  filterRow: {
-    marginBottom: 16,
-  },
-  filterLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.text,
-    marginLeft: 16,
-    marginBottom: 8,
-  },
-  filterChips: {
-    paddingHorizontal: 16,
-    gap: 8,
-  },
-  filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: Colors.light.background,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-    marginRight: 8,
-  },
-  filterChipActive: {
-    backgroundColor: Colors.light.primary,
-    borderColor: Colors.light.primary,
-  },
-  filterChipText: {
-    fontSize: 14,
-    color: Colors.light.text,
-    fontWeight: '500',
-  },
-  filterChipTextActive: {
-    color: Colors.light.background,
-  },
+  // Filter styles removed as now in component
+
   clearFiltersButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -426,50 +311,9 @@ const styleSheet = StyleSheet.create({
     gap: 12,
   },
   wallpaperCard: {
-    width: '48%',
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: Colors.light.border,
+    // Kept for layout if needed, or removed if handled by component
   },
-  wallpaperImage: {
-    width: '100%',
-    aspectRatio: 1,
-    backgroundColor: Colors.light.border,
-  },
-  outOfStockBadge: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
-  },
-  outOfStockText: {
-    color: Colors.light.background,
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  wallpaperInfo: {
-    padding: 12,
-    gap: 4,
-  },
-  wallpaperName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.text,
-  },
-  wallpaperCategory: {
-    fontSize: 12,
-    color: Colors.light.textSecondary,
-  },
-  wallpaperPrice: {
-    fontSize: 14,
-    color: Colors.light.primary,
-    fontWeight: '600',
-  },
+  // Individual wallpaper card styles removed as they are now in WallpaperCard component
   emptyContainer: {
     flex: 1,
     width: '100%',

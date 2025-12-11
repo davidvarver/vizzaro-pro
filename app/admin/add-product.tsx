@@ -33,8 +33,8 @@ import * as Sharing from 'expo-sharing';
 import * as XLSX from 'xlsx';
 import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { Wallpaper } from '@/constants/wallpapers';
 import AdminGuard from '@/components/AdminGuard';
 
@@ -55,8 +55,8 @@ interface ProductForm {
 }
 
 export default function AddProductScreen() {
-  const { addWallpaper, addMultipleWallpapers, replaceAllWallpapers } = useWallpapers();
-  const { token } = useAuth();
+  const { addWallpaper, addMultipleWallpapers, replaceAllWallpapers } = useWallpaperStore();
+  const { token } = useAuthStore();
   const [form, setForm] = useState<ProductForm>({
     name: '',
     description: '',
@@ -114,7 +114,7 @@ export default function AddProductScreen() {
 
   const addImageUrl = () => {
     console.log('Agregando imagen URL:', imageUrlInput);
-    
+
     if (!imageUrlInput.trim()) {
       Alert.alert('Error', 'Por favor ingresa una URL válida');
       return;
@@ -196,7 +196,7 @@ export default function AddProductScreen() {
 
   const validateForm = (): boolean => {
     console.log('Validando formulario:', form);
-    
+
     if (!form.name.trim()) {
       console.log('Error: Nombre vacío');
       Alert.alert('Error', 'El nombre del producto es obligatorio');
@@ -252,7 +252,7 @@ export default function AddProductScreen() {
       Alert.alert('Error', 'Al menos una imagen del producto es obligatoria');
       return false;
     }
-    
+
     console.log('Formulario válido');
     return true;
   };
@@ -262,12 +262,12 @@ export default function AddProductScreen() {
       Alert.alert('Error', 'El nombre de la categoría no puede estar vacío');
       return;
     }
-    
+
     if (categories.includes(newCategoryName.trim())) {
       Alert.alert('Error', 'Esta categoría ya existe');
       return;
     }
-    
+
     const newCategory = newCategoryName.trim();
     setCategories(prev => [...prev, newCategory]);
     updateForm('category', newCategory);
@@ -281,12 +281,12 @@ export default function AddProductScreen() {
       Alert.alert('Error', 'El nombre del estilo no puede estar vacío');
       return;
     }
-    
+
     if (styles_options.includes(newStyleName.trim())) {
       Alert.alert('Error', 'Este estilo ya existe');
       return;
     }
-    
+
     const newStyle = newStyleName.trim();
     setStylesOptions(prev => [...prev, newStyle]);
     updateForm('style', newStyle);
@@ -329,13 +329,13 @@ export default function AddProductScreen() {
       };
 
       console.log('Guardando nuevo producto:', newProduct);
-      
+
       if (!token) {
         throw new Error('No hay token de administrador');
       }
-      
+
       const success = await addWallpaper(newProduct, token);
-      
+
       if (success) {
         console.log('Producto guardado exitosamente');
         router.back();
@@ -353,7 +353,7 @@ export default function AddProductScreen() {
   const downloadExcelTemplate = async () => {
     try {
       console.log('[Excel] Starting template download...');
-      
+
       const templateData = [
         {
           'Nombre': 'Ejemplo Papel Tapiz',
@@ -376,19 +376,19 @@ export default function AddProductScreen() {
       const ws = XLSX.utils.json_to_sheet(templateData);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Productos');
-      
+
       console.log('[Excel] Platform:', Platform.OS);
-      
+
       if (Platform.OS === 'web') {
         console.log('[Excel] Generating file for web...');
         const wbout = XLSX.write(wb, { type: 'array', bookType: 'xlsx' });
-        
+
         console.log('[Excel] Creating blob...');
         const blob = new Blob(
           [wbout],
           { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
         );
-        
+
         console.log('[Excel] Creating download link...');
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -398,7 +398,7 @@ export default function AddProductScreen() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        
+
         console.log('[Excel] Download triggered successfully');
         if (Platform.OS !== 'web') {
           Alert.alert('Éxito', 'Plantilla descargada correctamente');
@@ -406,22 +406,22 @@ export default function AddProductScreen() {
       } else {
         console.log('[Excel] Generating file for mobile...');
         const wbout = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
-        
+
         const docDir = (FileSystem as any).documentDirectory || '';
         const fileUri = `${docDir}plantilla_productos.xlsx`;
         console.log('[Excel] Writing to:', fileUri);
-        
+
         await FileSystem.writeAsStringAsync(fileUri, wbout, {
           encoding: 'base64',
         });
-        
+
         console.log('[Excel] Sharing file...');
         await Sharing.shareAsync(fileUri, {
           mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           dialogTitle: 'Guardar plantilla',
           UTI: 'com.microsoft.excel.xlsx',
         });
-        
+
         console.log('[Excel] File shared successfully');
       }
     } catch (error) {
@@ -447,7 +447,7 @@ export default function AddProductScreen() {
 
       setIsLoading(true);
       const fileUri = result.assets[0].uri;
-      
+
       let fileContent: string;
       if (Platform.OS === 'web') {
         const response = await fetch(fileUri);
@@ -485,23 +485,23 @@ export default function AddProductScreen() {
 
       for (let i = 0; i < data.length; i++) {
         const row = data[i];
-        
+
         try {
           const imageUrls: string[] = [];
           const imageUrl1 = row['URL Imagen 1'] || row['url imagen 1'] || row['URL_Imagen_1'];
           const imageUrl2 = row['URL Imagen 2'] || row['url imagen 2'] || row['URL_Imagen_2'];
           const imageUrl3 = row['URL Imagen 3'] || row['url imagen 3'] || row['URL_Imagen_3'];
           const imageUrl4 = row['URL Imagen 4'] || row['url imagen 4'] || row['URL_Imagen_4'];
-          
+
           if (imageUrl1 && String(imageUrl1).trim()) imageUrls.push(String(imageUrl1).trim());
           if (imageUrl2 && String(imageUrl2).trim()) imageUrls.push(String(imageUrl2).trim());
           if (imageUrl3 && String(imageUrl3).trim()) imageUrls.push(String(imageUrl3).trim());
           if (imageUrl4 && String(imageUrl4).trim()) imageUrls.push(String(imageUrl4).trim());
-          
+
           const name = row['Nombre'] || row['nombre'];
           const description = row['Descripción'] || row['Descripcion'] || row['descripción'] || row['descripcion'];
           const priceRaw = row['Precio'] || row['precio'];
-          
+
           console.log(`[Excel] Fila ${i + 2}:`, { name, description, priceRaw, imageCount: imageUrls.length });
 
           if (!name || !String(name).trim()) {
@@ -509,26 +509,26 @@ export default function AddProductScreen() {
             errorCount++;
             continue;
           }
-          
+
           if (!description || !String(description).trim()) {
             errors.push(`Fila ${i + 2}: Falta la descripción del producto`);
             errorCount++;
             continue;
           }
-          
+
           if (priceRaw === undefined || priceRaw === null || priceRaw === '') {
             errors.push(`Fila ${i + 2}: Falta el precio del producto`);
             errorCount++;
             continue;
           }
-          
+
           const price = Number(priceRaw);
           if (isNaN(price) || price < 0) {
             errors.push(`Fila ${i + 2}: Precio inválido (${priceRaw})`);
             errorCount++;
             continue;
           }
-          
+
           if (imageUrls.length === 0) {
             errors.push(`Fila ${i + 2}: Falta al menos una URL de imagen`);
             errorCount++;
@@ -541,12 +541,12 @@ export default function AddProductScreen() {
           const heightRaw = row['Altura (m)'] || row['altura (m)'] || row['Altura'] || row['altura'];
           const coverageRaw = row['Cobertura (m²)'] || row['cobertura (m²)'] || row['Cobertura'] || row['cobertura'];
           const weightRaw = row['Peso (kg)'] || row['peso (kg)'] || row['Peso'] || row['peso'];
-          
+
           const width = widthRaw !== undefined && widthRaw !== null && widthRaw !== '' ? Number(widthRaw) : 0.53;
           const height = heightRaw !== undefined && heightRaw !== null && heightRaw !== '' ? Number(heightRaw) : 10.05;
           const coverage = coverageRaw !== undefined && coverageRaw !== null && coverageRaw !== '' ? Number(coverageRaw) : 5.33;
           const weight = weightRaw !== undefined && weightRaw !== null && weightRaw !== '' ? Number(weightRaw) : undefined;
-          
+
           if (isNaN(width) || width <= 0) {
             console.warn(`[Excel] Fila ${i + 2}: Ancho inválido (${widthRaw}), usando 0.53`);
           }
@@ -584,7 +584,7 @@ export default function AddProductScreen() {
             reviews: 0,
             showInHome: false,
           };
-          
+
           console.log(`[Excel] Producto creado para fila ${i + 2}:`, { id: newProduct.id, name: newProduct.name, price: newProduct.price });
 
           productsToAdd.push(newProduct);
@@ -601,11 +601,11 @@ export default function AddProductScreen() {
         if (!token) {
           throw new Error('No hay token de administrador');
         }
-        
-        const success = excelReplaceMode 
+
+        const success = excelReplaceMode
           ? await replaceAllWallpapers(productsToAdd, token)
           : await addMultipleWallpapers(productsToAdd, token);
-        
+
         if (!success) {
           throw new Error('Error al agregar productos');
         }
@@ -613,7 +613,7 @@ export default function AddProductScreen() {
       }
 
       setShowExcelModal(false);
-      
+
       const mode = excelReplaceMode ? 'reemplazado' : 'agregado(s)';
       let message = `${successCount} producto(s) ${mode} correctamente`;
       if (errorCount > 0) {
@@ -622,7 +622,7 @@ export default function AddProductScreen() {
           message += `\n... y ${errors.length - 3} más`;
         }
       }
-      
+
       Alert.alert(
         successCount > 0 ? 'Carga completada' : 'Error',
         message,
@@ -637,583 +637,583 @@ export default function AddProductScreen() {
   return (
     <AdminGuard>
       <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Agregar Producto</Text>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity 
-            style={styles.excelButton}
-            onPress={() => setShowExcelModal(true)}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
           >
-            <FileSpreadsheet size={20} color={Colors.light.tint} />
+            <ArrowLeft size={24} color={Colors.light.text} />
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.saveButton, isLoading && styles.saveButtonDisabled]}
-            onPress={saveProduct}
-            disabled={isLoading}
-          >
-            <Save size={20} color="#FFFFFF" />
-          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Agregar Producto</Text>
+          <View style={styles.headerButtons}>
+            <TouchableOpacity
+              style={styles.excelButton}
+              onPress={() => setShowExcelModal(true)}
+            >
+              <FileSpreadsheet size={20} color={Colors.light.tint} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.saveButton, isLoading && styles.saveButtonDisabled]}
+              onPress={saveProduct}
+              disabled={isLoading}
+            >
+              <Save size={20} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Imágenes del producto */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Imágenes del producto *</Text>
-            <TouchableOpacity 
-              style={styles.bulkButton}
-              onPress={() => setShowBulkModal(true)}
-            >
-              <Upload size={16} color={Colors.light.tint} />
-              <Text style={styles.bulkButtonText}>Masivo</Text>
-            </TouchableOpacity>
-          </View>
-          
-          {/* Input para agregar URL de imagen */}
-          <View style={styles.urlInputContainer}>
-            <TextInput
-              style={[styles.textInput, { flex: 1 }]}
-              placeholder="https://ejemplo.com/imagen.jpg"
-              value={imageUrlInput}
-              onChangeText={setImageUrlInput}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            <TouchableOpacity 
-              style={styles.addUrlButton}
-              onPress={addImageUrl}
-            >
-              <LinkIcon size={20} color="#FFFFFF" />
-            </TouchableOpacity>
-          </View>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {/* Imágenes del producto */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Imágenes del producto *</Text>
+              <TouchableOpacity
+                style={styles.bulkButton}
+                onPress={() => setShowBulkModal(true)}
+              >
+                <Upload size={16} color={Colors.light.tint} />
+                <Text style={styles.bulkButtonText}>Masivo</Text>
+              </TouchableOpacity>
+            </View>
 
-          {/* Lista de imágenes */}
-          {form.imageUris.length > 0 ? (
-            <View style={styles.imageUrlsList}>
-              {form.imageUris.map((imageUri, index) => (
-                <View key={index} style={styles.imageUrlItem}>
-                  <View style={styles.imagePreviewContainer}>
-                    <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+            {/* Input para agregar URL de imagen */}
+            <View style={styles.urlInputContainer}>
+              <TextInput
+                style={[styles.textInput, { flex: 1 }]}
+                placeholder="https://ejemplo.com/imagen.jpg"
+                value={imageUrlInput}
+                onChangeText={setImageUrlInput}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <TouchableOpacity
+                style={styles.addUrlButton}
+                onPress={addImageUrl}
+              >
+                <LinkIcon size={20} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Lista de imágenes */}
+            {form.imageUris.length > 0 ? (
+              <View style={styles.imageUrlsList}>
+                {form.imageUris.map((imageUri, index) => (
+                  <View key={index} style={styles.imageUrlItem}>
+                    <View style={styles.imagePreviewContainer}>
+                      <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+                    </View>
+                    <View style={styles.imageUrlInfo}>
+                      <Text style={styles.imageUrlText} numberOfLines={1}>
+                        {imageUri}
+                      </Text>
+                      {index === 0 && (
+                        <Text style={styles.mainImageLabel}>Principal</Text>
+                      )}
+                    </View>
+                    <TouchableOpacity
+                      style={styles.removeUrlButton}
+                      onPress={() => removeImage(index)}
+                    >
+                      <X size={20} color={Colors.light.error} />
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.imageUrlInfo}>
-                    <Text style={styles.imageUrlText} numberOfLines={1}>
-                      {imageUri}
+                ))}
+              </View>
+            ) : (
+              <View style={styles.noImagesPlaceholder}>
+                <LinkIcon size={32} color={Colors.light.tabIconDefault} />
+                <Text style={styles.noImagesText}>
+                  No hay imágenes agregadas
+                </Text>
+                <Text style={styles.noImagesHint}>
+                  Agrega URLs de imágenes desde internet
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {/* Información básica */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Información básica</Text>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Nombre del producto *</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="Ej: Papel Tapiz Floral Elegante"
+                value={form.name}
+                onChangeText={(value) => updateForm('name', value)}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Descripción *</Text>
+              <TextInput
+                style={[styles.textInput, styles.textArea]}
+                placeholder="Describe las características y detalles del producto..."
+                value={form.description}
+                onChangeText={(value) => updateForm('description', value)}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Precio (MXN) *</Text>
+              <TextInput
+                style={styles.textInput}
+                placeholder="0.00"
+                value={form.price}
+                onChangeText={(value) => updateForm('price', value)}
+                keyboardType="numeric"
+              />
+            </View>
+          </View>
+
+          {/* Categorización */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Categorización</Text>
+
+            <View style={styles.inputGroup}>
+              <View style={styles.labelWithButton}>
+                <Text style={styles.inputLabel}>Categoría *</Text>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => setShowCategoryModal(true)}
+                >
+                  <Plus size={16} color={Colors.light.tint} />
+                  <Text style={styles.addButtonText}>Agregar</Text>
+                </TouchableOpacity>
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.chipContainer}
+              >
+                {categories.map((category) => (
+                  <TouchableOpacity
+                    key={category}
+                    style={[
+                      styles.chip,
+                      form.category === category && styles.chipSelected
+                    ]}
+                    onPress={() => updateForm('category', category)}
+                  >
+                    <Text style={[
+                      styles.chipText,
+                      form.category === category && styles.chipTextSelected
+                    ]}>
+                      {category}
                     </Text>
-                    {index === 0 && (
-                      <Text style={styles.mainImageLabel}>Principal</Text>
-                    )}
-                  </View>
-                  <TouchableOpacity 
-                    style={styles.removeUrlButton}
-                    onPress={() => removeImage(index)}
-                  >
-                    <X size={20} color={Colors.light.error} />
                   </TouchableOpacity>
-                </View>
-              ))}
+                ))}
+              </ScrollView>
             </View>
-          ) : (
-            <View style={styles.noImagesPlaceholder}>
-              <LinkIcon size={32} color={Colors.light.tabIconDefault} />
-              <Text style={styles.noImagesText}>
-                No hay imágenes agregadas
-              </Text>
-              <Text style={styles.noImagesHint}>
-                Agrega URLs de imágenes desde internet
-              </Text>
-            </View>
-          )}
-        </View>
 
-        {/* Información básica */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Información básica</Text>
-          
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Nombre del producto *</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="Ej: Papel Tapiz Floral Elegante"
-              value={form.name}
-              onChangeText={(value) => updateForm('name', value)}
-            />
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Descripción *</Text>
-            <TextInput
-              style={[styles.textInput, styles.textArea]}
-              placeholder="Describe las características y detalles del producto..."
-              value={form.description}
-              onChangeText={(value) => updateForm('description', value)}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Precio (MXN) *</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="0.00"
-              value={form.price}
-              onChangeText={(value) => updateForm('price', value)}
-              keyboardType="numeric"
-            />
-          </View>
-        </View>
-
-        {/* Categorización */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Categorización</Text>
-          
-          <View style={styles.inputGroup}>
-            <View style={styles.labelWithButton}>
-              <Text style={styles.inputLabel}>Categoría *</Text>
-              <TouchableOpacity 
-                style={styles.addButton}
-                onPress={() => setShowCategoryModal(true)}
+            <View style={styles.inputGroup}>
+              <View style={styles.labelWithButton}>
+                <Text style={styles.inputLabel}>Estilo *</Text>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={() => setShowStyleModal(true)}
+                >
+                  <Plus size={16} color={Colors.light.tint} />
+                  <Text style={styles.addButtonText}>Agregar</Text>
+                </TouchableOpacity>
+              </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.chipContainer}
               >
-                <Plus size={16} color={Colors.light.tint} />
-                <Text style={styles.addButtonText}>Agregar</Text>
+                {styles_options.map((style) => (
+                  <TouchableOpacity
+                    key={style}
+                    style={[
+                      styles.chip,
+                      form.style === style && styles.chipSelected
+                    ]}
+                    onPress={() => updateForm('style', style)}
+                  >
+                    <Text style={[
+                      styles.chipText,
+                      form.style === style && styles.chipTextSelected
+                    ]}>
+                      {style}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+
+          {/* Colores */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Colores disponibles</Text>
+
+            <View style={styles.urlInputContainer}>
+              <TextInput
+                style={[styles.textInput, { flex: 1 }]}
+                placeholder="Ej: Blanco, Gris, Azul"
+                value={colorInput}
+                onChangeText={setColorInput}
+              />
+              <TouchableOpacity
+                style={styles.addUrlButton}
+                onPress={() => {
+                  if (colorInput.trim() && !form.colors.includes(colorInput.trim())) {
+                    setForm(prev => ({ ...prev, colors: [...prev.colors, colorInput.trim()] }));
+                    setColorInput('');
+                  } else if (form.colors.includes(colorInput.trim())) {
+                    Alert.alert('Error', 'Este color ya fue agregado');
+                  }
+                }}
+              >
+                <Plus size={20} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              style={styles.chipContainer}
-            >
-              {categories.map((category) => (
-                <TouchableOpacity
-                  key={category}
-                  style={[
-                    styles.chip,
-                    form.category === category && styles.chipSelected
-                  ]}
-                  onPress={() => updateForm('category', category)}
-                >
-                  <Text style={[
-                    styles.chipText,
-                    form.category === category && styles.chipTextSelected
-                  ]}>
-                    {category}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
 
-          <View style={styles.inputGroup}>
-            <View style={styles.labelWithButton}>
-              <Text style={styles.inputLabel}>Estilo *</Text>
-              <TouchableOpacity 
-                style={styles.addButton}
-                onPress={() => setShowStyleModal(true)}
-              >
-                <Plus size={16} color={Colors.light.tint} />
-                <Text style={styles.addButtonText}>Agregar</Text>
-              </TouchableOpacity>
-            </View>
-            <ScrollView 
-              horizontal 
-              showsHorizontalScrollIndicator={false}
-              style={styles.chipContainer}
-            >
-              {styles_options.map((style) => (
-                <TouchableOpacity
-                  key={style}
-                  style={[
-                    styles.chip,
-                    form.style === style && styles.chipSelected
-                  ]}
-                  onPress={() => updateForm('style', style)}
-                >
-                  <Text style={[
-                    styles.chipText,
-                    form.style === style && styles.chipTextSelected
-                  ]}>
-                    {style}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-
-        {/* Colores */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Colores disponibles</Text>
-          
-          <View style={styles.urlInputContainer}>
-            <TextInput
-              style={[styles.textInput, { flex: 1 }]}
-              placeholder="Ej: Blanco, Gris, Azul"
-              value={colorInput}
-              onChangeText={setColorInput}
-            />
-            <TouchableOpacity 
-              style={styles.addUrlButton}
-              onPress={() => {
-                if (colorInput.trim() && !form.colors.includes(colorInput.trim())) {
-                  setForm(prev => ({ ...prev, colors: [...prev.colors, colorInput.trim()] }));
-                  setColorInput('');
-                } else if (form.colors.includes(colorInput.trim())) {
-                  Alert.alert('Error', 'Este color ya fue agregado');
-                }
-              }}
-            >
-              <Plus size={20} color="#FFFFFF" />
-            </TouchableOpacity>
-          </View>
-
-          {form.colors.length > 0 ? (
-            <View style={styles.imageUrlsList}>
-              {form.colors.map((color, index) => (
-                <View key={index} style={styles.imageUrlItem}>
-                  <View style={styles.imageUrlInfo}>
-                    <Text style={styles.imageUrlText}>{color}</Text>
+            {form.colors.length > 0 ? (
+              <View style={styles.imageUrlsList}>
+                {form.colors.map((color, index) => (
+                  <View key={index} style={styles.imageUrlItem}>
+                    <View style={styles.imageUrlInfo}>
+                      <Text style={styles.imageUrlText}>{color}</Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.removeUrlButton}
+                      onPress={() => {
+                        setForm(prev => ({ ...prev, colors: prev.colors.filter((_, i) => i !== index) }));
+                      }}
+                    >
+                      <X size={20} color={Colors.light.error} />
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity 
-                    style={styles.removeUrlButton}
-                    onPress={() => {
-                      setForm(prev => ({ ...prev, colors: prev.colors.filter((_, i) => i !== index) }));
-                    }}
-                  >
-                    <X size={20} color={Colors.light.error} />
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          ) : (
-            <View style={styles.noImagesPlaceholder}>
-              <Palette size={32} color={Colors.light.tabIconDefault} />
-              <Text style={styles.noImagesText}>
-                No hay colores agregados
-              </Text>
-              <Text style={styles.noImagesHint}>
-                Agrega los colores disponibles para este papel tapiz
-              </Text>
-            </View>
-          )}
-        </View>
+                ))}
+              </View>
+            ) : (
+              <View style={styles.noImagesPlaceholder}>
+                <Palette size={32} color={Colors.light.tabIconDefault} />
+                <Text style={styles.noImagesText}>
+                  No hay colores agregados
+                </Text>
+                <Text style={styles.noImagesHint}>
+                  Agrega los colores disponibles para este papel tapiz
+                </Text>
+              </View>
+            )}
+          </View>
 
-        {/* Especificaciones técnicas */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Especificaciones técnicas</Text>
-          
-          <View style={styles.row}>
-            <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
-              <Text style={styles.inputLabel}>Ancho (m) *</Text>
+          {/* Especificaciones técnicas */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Especificaciones técnicas</Text>
+
+            <View style={styles.row}>
+              <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                <Text style={styles.inputLabel}>Ancho (m) *</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="0.53"
+                  value={form.width}
+                  onChangeText={(value) => updateForm('width', value)}
+                  keyboardType="numeric"
+                />
+              </View>
+
+              <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                <Text style={styles.inputLabel}>Altura (m) *</Text>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="10.05"
+                  value={form.height}
+                  onChangeText={(value) => updateForm('height', value)}
+                  keyboardType="numeric"
+                />
+              </View>
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Cobertura por rollo (m²) *</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="0.53"
-                value={form.width}
-                onChangeText={(value) => updateForm('width', value)}
+                placeholder="5.33"
+                value={form.coverage}
+                onChangeText={(value) => updateForm('coverage', value)}
                 keyboardType="numeric"
               />
             </View>
 
-            <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
-              <Text style={styles.inputLabel}>Altura (m) *</Text>
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Peso por rollo (kg)</Text>
               <TextInput
                 style={styles.textInput}
-                placeholder="10.05"
-                value={form.height}
-                onChangeText={(value) => updateForm('height', value)}
+                placeholder="2.5"
+                value={form.weight}
+                onChangeText={(value) => updateForm('weight', value)}
                 keyboardType="numeric"
               />
             </View>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Cobertura por rollo (m²) *</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="5.33"
-              value={form.coverage}
-              onChangeText={(value) => updateForm('coverage', value)}
-              keyboardType="numeric"
-            />
+          {/* Visibilidad en Home */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Visibilidad</Text>
+              <Home size={20} color={Colors.light.tint} />
+            </View>
+
+            <View style={styles.switchGroup}>
+              <View style={styles.switchLabelContainer}>
+                <Text style={styles.inputLabel}>Mostrar en home</Text>
+                <Text style={styles.switchDescription}>
+                  Este producto aparecerá en la pantalla principal
+                </Text>
+              </View>
+              <Switch
+                value={form.showInHome}
+                onValueChange={(value) => setForm(prev => ({ ...prev, showInHome: value }))}
+                trackColor={{ false: Colors.light.tabIconDefault, true: Colors.light.tint }}
+                thumbColor={form.showInHome ? Colors.light.background : Colors.light.background}
+              />
+            </View>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Peso por rollo (kg)</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="2.5"
-              value={form.weight}
-              onChangeText={(value) => updateForm('weight', value)}
-              keyboardType="numeric"
+          {/* Ayuda */}
+          <View style={styles.whatsappSection}>
+            <Text style={styles.whatsappTitle}>¿Necesitas ayuda?</Text>
+            <WhatsAppButton
+              message="Hola, necesito ayuda para agregar productos al catálogo"
+              style="secondary"
+              size="medium"
             />
           </View>
-        </View>
+        </ScrollView>
 
-        {/* Visibilidad en Home */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Visibilidad</Text>
-            <Home size={20} color={Colors.light.tint} />
+        {/* Modal para agregar nueva categoría */}
+        <Modal
+          visible={showCategoryModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowCategoryModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Agregar Nueva Categoría</Text>
+
+              <TextInput
+                style={styles.modalInput}
+                placeholder="Nombre de la categoría"
+                value={newCategoryName}
+                onChangeText={setNewCategoryName}
+                autoFocus
+              />
+
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonCancel]}
+                  onPress={() => {
+                    setShowCategoryModal(false);
+                    setNewCategoryName('');
+                  }}
+                >
+                  <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonConfirm]}
+                  onPress={addNewCategory}
+                >
+                  <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-          
-          <View style={styles.switchGroup}>
-            <View style={styles.switchLabelContainer}>
-              <Text style={styles.inputLabel}>Mostrar en home</Text>
-              <Text style={styles.switchDescription}>
-                Este producto aparecerá en la pantalla principal
+        </Modal>
+
+        {/* Modal para agregar nuevo estilo */}
+        <Modal
+          visible={showStyleModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowStyleModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Agregar Nuevo Estilo</Text>
+
+              <TextInput
+                style={styles.modalInput}
+                placeholder="Nombre del estilo"
+                value={newStyleName}
+                onChangeText={setNewStyleName}
+                autoFocus
+              />
+
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonCancel]}
+                  onPress={() => {
+                    setShowStyleModal(false);
+                    setNewStyleName('');
+                  }}
+                >
+                  <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonConfirm]}
+                  onPress={addNewStyle}
+                >
+                  <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Modal para agregar URLs masivamente */}
+        <Modal
+          visible={showBulkModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowBulkModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Agregar Imágenes Masivamente</Text>
+              <Text style={styles.modalSubtitle}>
+                Ingresa una URL por línea
               </Text>
-            </View>
-            <Switch
-              value={form.showInHome}
-              onValueChange={(value) => setForm(prev => ({ ...prev, showInHome: value }))}
-              trackColor={{ false: Colors.light.tabIconDefault, true: Colors.light.tint }}
-              thumbColor={form.showInHome ? Colors.light.background : Colors.light.background}
-            />
-          </View>
-        </View>
 
-        {/* Ayuda */}
-        <View style={styles.whatsappSection}>
-          <Text style={styles.whatsappTitle}>¿Necesitas ayuda?</Text>
-          <WhatsAppButton
-            message="Hola, necesito ayuda para agregar productos al catálogo"
-            style="secondary"
-            size="medium"
-          />
-        </View>
-      </ScrollView>
+              <TextInput
+                style={[styles.modalInput, styles.bulkTextArea]}
+                placeholder="https://ejemplo.com/imagen1.jpg&#10;https://ejemplo.com/imagen2.jpg&#10;https://ejemplo.com/imagen3.jpg"
+                value={bulkUrls}
+                onChangeText={setBulkUrls}
+                multiline
+                numberOfLines={8}
+                textAlignVertical="top"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
 
-      {/* Modal para agregar nueva categoría */}
-      <Modal
-        visible={showCategoryModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowCategoryModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Agregar Nueva Categoría</Text>
-            
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Nombre de la categoría"
-              value={newCategoryName}
-              onChangeText={setNewCategoryName}
-              autoFocus
-            />
-            
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonCancel]}
-                onPress={() => {
-                  setShowCategoryModal(false);
-                  setNewCategoryName('');
-                }}
-              >
-                <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonConfirm]}
-                onPress={addNewCategory}
-              >
-                <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
-              </TouchableOpacity>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonCancel]}
+                  onPress={() => {
+                    setShowBulkModal(false);
+                    setBulkUrls('');
+                  }}
+                >
+                  <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonConfirm]}
+                  onPress={processBulkUrls}
+                >
+                  <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Modal para agregar nuevo estilo */}
-      <Modal
-        visible={showStyleModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowStyleModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Agregar Nuevo Estilo</Text>
-            
-            <TextInput
-              style={styles.modalInput}
-              placeholder="Nombre del estilo"
-              value={newStyleName}
-              onChangeText={setNewStyleName}
-              autoFocus
-            />
-            
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonCancel]}
-                onPress={() => {
-                  setShowStyleModal(false);
-                  setNewStyleName('');
-                }}
-              >
-                <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonConfirm]}
-                onPress={addNewStyle}
-              >
-                <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        {/* Modal para carga masiva con Excel */}
+        <Modal
+          visible={showExcelModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowExcelModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Carga Masiva con Excel</Text>
+              <Text style={styles.modalSubtitle}>
+                Descarga la plantilla, llénala con tus productos y súbela
+              </Text>
 
-      {/* Modal para agregar URLs masivamente */}
-      <Modal
-        visible={showBulkModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowBulkModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Agregar Imágenes Masivamente</Text>
-            <Text style={styles.modalSubtitle}>
-              Ingresa una URL por línea
-            </Text>
-            
-            <TextInput
-              style={[styles.modalInput, styles.bulkTextArea]}
-              placeholder="https://ejemplo.com/imagen1.jpg&#10;https://ejemplo.com/imagen2.jpg&#10;https://ejemplo.com/imagen3.jpg"
-              value={bulkUrls}
-              onChangeText={setBulkUrls}
-              multiline
-              numberOfLines={8}
-              textAlignVertical="top"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            
-            <View style={styles.modalButtons}>
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonCancel]}
-                onPress={() => {
-                  setShowBulkModal(false);
-                  setBulkUrls('');
-                }}
+              <View style={styles.excelActions}>
+                <TouchableOpacity
+                  style={styles.excelActionButton}
+                  onPress={downloadExcelTemplate}
+                >
+                  <Download size={24} color={Colors.light.tint} />
+                  <Text style={styles.excelActionTitle}>Descargar Plantilla</Text>
+                  <Text style={styles.excelActionSubtitle}>
+                    Archivo Excel con formato
+                  </Text>
+                </TouchableOpacity>
+
+                <View style={styles.excelDivider} />
+
+                <TouchableOpacity
+                  style={styles.excelActionButton}
+                  onPress={uploadExcelFile}
+                >
+                  <Upload size={24} color={Colors.light.tint} />
+                  <Text style={styles.excelActionTitle}>Subir Excel</Text>
+                  <Text style={styles.excelActionSubtitle}>
+                    Cargar productos masivamente
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.replaceModeContainer}>
+                <TouchableOpacity
+                  style={styles.replaceModeOption}
+                  onPress={() => setExcelReplaceMode(false)}
+                >
+                  <View style={[
+                    styles.radioButton,
+                    !excelReplaceMode && styles.radioButtonSelected
+                  ]}>
+                    {!excelReplaceMode && <View style={styles.radioButtonInner} />}
+                  </View>
+                  <View style={styles.replaceModeText}>
+                    <Text style={styles.replaceModeTitle}>Agregar al catálogo</Text>
+                    <Text style={styles.replaceModeSubtitle}>Mantiene productos existentes</Text>
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.replaceModeOption}
+                  onPress={() => setExcelReplaceMode(true)}
+                >
+                  <View style={[
+                    styles.radioButton,
+                    excelReplaceMode && styles.radioButtonSelected
+                  ]}>
+                    {excelReplaceMode && <View style={styles.radioButtonInner} />}
+                  </View>
+                  <View style={styles.replaceModeText}>
+                    <Text style={styles.replaceModeTitle}>Reemplazar catálogo</Text>
+                    <Text style={styles.replaceModeSubtitle}>Elimina todos los productos actuales</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonCancel, { marginTop: 16 }]}
+                onPress={() => setShowExcelModal(false)}
               >
-                <Text style={styles.modalButtonTextCancel}>Cancelar</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.modalButton, styles.modalButtonConfirm]}
-                onPress={processBulkUrls}
-              >
-                <Text style={styles.modalButtonTextConfirm}>Agregar</Text>
+                <Text style={styles.modalButtonTextCancel}>Cerrar</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Modal para carga masiva con Excel */}
-      <Modal
-        visible={showExcelModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowExcelModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Carga Masiva con Excel</Text>
-            <Text style={styles.modalSubtitle}>
-              Descarga la plantilla, llénala con tus productos y súbela
-            </Text>
-            
-            <View style={styles.excelActions}>
-              <TouchableOpacity 
-                style={styles.excelActionButton}
-                onPress={downloadExcelTemplate}
-              >
-                <Download size={24} color={Colors.light.tint} />
-                <Text style={styles.excelActionTitle}>Descargar Plantilla</Text>
-                <Text style={styles.excelActionSubtitle}>
-                  Archivo Excel con formato
-                </Text>
-              </TouchableOpacity>
-
-              <View style={styles.excelDivider} />
-
-              <TouchableOpacity 
-                style={styles.excelActionButton}
-                onPress={uploadExcelFile}
-              >
-                <Upload size={24} color={Colors.light.tint} />
-                <Text style={styles.excelActionTitle}>Subir Excel</Text>
-                <Text style={styles.excelActionSubtitle}>
-                  Cargar productos masivamente
-                </Text>
-              </TouchableOpacity>
+        {/* Loading overlay */}
+        {isLoading && (
+          <View style={styles.loadingOverlay}>
+            <View style={styles.loadingContent}>
+              <ActivityIndicator size="large" color={Colors.light.tint} />
+              <Text style={styles.loadingText}>Guardando producto...</Text>
             </View>
-            
-            <View style={styles.replaceModeContainer}>
-              <TouchableOpacity 
-                style={styles.replaceModeOption}
-                onPress={() => setExcelReplaceMode(false)}
-              >
-                <View style={[
-                  styles.radioButton,
-                  !excelReplaceMode && styles.radioButtonSelected
-                ]}>
-                  {!excelReplaceMode && <View style={styles.radioButtonInner} />}
-                </View>
-                <View style={styles.replaceModeText}>
-                  <Text style={styles.replaceModeTitle}>Agregar al catálogo</Text>
-                  <Text style={styles.replaceModeSubtitle}>Mantiene productos existentes</Text>
-                </View>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.replaceModeOption}
-                onPress={() => setExcelReplaceMode(true)}
-              >
-                <View style={[
-                  styles.radioButton,
-                  excelReplaceMode && styles.radioButtonSelected
-                ]}>
-                  {excelReplaceMode && <View style={styles.radioButtonInner} />}
-                </View>
-                <View style={styles.replaceModeText}>
-                  <Text style={styles.replaceModeTitle}>Reemplazar catálogo</Text>
-                  <Text style={styles.replaceModeSubtitle}>Elimina todos los productos actuales</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            
-            <TouchableOpacity 
-              style={[styles.modalButton, styles.modalButtonCancel, { marginTop: 16 }]}
-              onPress={() => setShowExcelModal(false)}
-            >
-              <Text style={styles.modalButtonTextCancel}>Cerrar</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-
-      {/* Loading overlay */}
-      {isLoading && (
-        <View style={styles.loadingOverlay}>
-          <View style={styles.loadingContent}>
-            <ActivityIndicator size="large" color={Colors.light.tint} />
-            <Text style={styles.loadingText}>Guardando producto...</Text>
-          </View>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
     </AdminGuard>
   );
 }

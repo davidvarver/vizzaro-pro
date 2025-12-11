@@ -12,22 +12,24 @@ import {
   RefreshControl,
   useWindowDimensions,
 } from 'react-native';
-import { Search, RefreshCw } from 'lucide-react-native';
+import { RefreshCw } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
 import { router } from 'expo-router';
 import { Wallpaper } from '@/constants/wallpapers';
+import { WallpaperCard } from '@/components/WallpaperCard';
+import { SearchBar } from '@/components/SearchBar';
 
 
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const { wallpapers, refetchWallpapers } = useWallpapers();
+  const { wallpapers, loadWallpapers } = useWallpaperStore();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  
+
   const numColumns = useMemo(() => {
     if (width >= 1200) return 4;
     if (width >= 768) return 3;
@@ -58,12 +60,12 @@ export default function HomeScreen() {
   const handleRefresh = async () => {
     console.log('[Home] Manual refresh triggered');
     setRefreshing(true);
-    await refetchWallpapers();
+    await loadWallpapers(true);
     setRefreshing(false);
   };
 
   return (
-    <ScrollView 
+    <ScrollView
       style={styles.container}
       showsVerticalScrollIndicator={false}
       refreshControl={
@@ -90,17 +92,14 @@ export default function HomeScreen() {
           <Text style={styles.heroSubtitle}>
             Papel tapiz premium listo para instalar. Compra por habitación o explora nuestras colecciones
           </Text>
-          
-          <View style={styles.searchContainer}>
-            <Search size={20} color={Colors.light.textSecondary} style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Busca: geométrico, beige, mármol..."
+
+          <View style={styles.searchWrapper}>
+            <SearchBar
               value={searchQuery}
               onChangeText={setSearchQuery}
-              placeholderTextColor={Colors.light.textSecondary}
-              onSubmitEditing={handleSearch}
-              returnKeyType="search"
+              placeholder="Busca: geométrico, beige, mármol..."
+              onSubmit={handleSearch}
+              containerStyle={styles.searchBar}
             />
             <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
               <Text style={styles.searchButtonText}>Buscar</Text>
@@ -113,14 +112,14 @@ export default function HomeScreen() {
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Papel Tapiz Destacado</Text>
           <View style={styles.headerActions}>
-            <TouchableOpacity 
-              onPress={handleRefresh} 
+            <TouchableOpacity
+              onPress={handleRefresh}
               style={styles.refreshButton}
               disabled={refreshing}
             >
-              <RefreshCw 
-                size={20} 
-                color={Colors.light.primary} 
+              <RefreshCw
+                size={20}
+                color={Colors.light.primary}
                 style={refreshing ? styles.refreshIconSpinning : undefined}
               />
             </TouchableOpacity>
@@ -140,24 +139,11 @@ export default function HomeScreen() {
             contentContainerStyle={styles.gridContainer}
             columnWrapperStyle={styles.gridRow}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                style={[styles.gridCard, { width: `${100 / numColumns - 2}%` }]}
-                onPress={() => handleWallpaperPress(item)}
-              >
-                <View style={styles.gridImageContainer}>
-                  <Image 
-                    source={{ uri: item.imageUrls?.[0] || item.imageUrl }} 
-                    style={styles.gridImage}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View style={styles.gridInfo}>
-                  <Text style={styles.gridName} numberOfLines={2}>
-                    {item.name}
-                  </Text>
-                  <Text style={styles.gridPrice}>${item.price}</Text>
-                </View>
-              </TouchableOpacity>
+              <WallpaperCard
+                wallpaper={item}
+                onPress={handleWallpaperPress}
+                width={`${100 / numColumns - 2}%`}
+              />
             )}
           />
         ) : (
@@ -227,29 +213,22 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
-  searchContainer: {
+  searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.light.background,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
     width: '100%',
     maxWidth: 600,
+  },
+  searchBar: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+    borderColor: 'transparent',
     shadowColor: Colors.light.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.light.text,
-    paddingVertical: 12,
+    height: 56, // Keep original height feel
   },
   searchButton: {
     backgroundColor: Colors.light.primary,

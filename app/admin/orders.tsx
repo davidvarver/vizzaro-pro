@@ -20,14 +20,16 @@ import {
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react-native';
-import { useOrders } from '@/contexts/OrdersContext';
+import { useOrdersStore } from '@/stores/useOrdersStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 import Colors from '@/constants/colors';
 import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminOrdersScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
-  const { orders, updateOrderStatus, updateOrder } = useOrders();
+  const { orders, updateOrderStatus, updateOrder } = useOrdersStore();
+  const token = useAuthStore(state => state.token);
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -43,8 +45,8 @@ export default function AdminOrdersScreen() {
 
   const filteredOrders = orders.filter(order => {
     const matchesSearch = order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         order.customerPhone.includes(searchQuery) ||
-                         order.id.includes(searchQuery);
+      order.customerPhone.includes(searchQuery) ||
+      order.id.includes(searchQuery);
     const matchesStatus = selectedStatus === 'all' || order.status === selectedStatus;
     return matchesSearch && matchesStatus;
   });
@@ -60,7 +62,7 @@ export default function AdminOrdersScreen() {
       console.error('Invalid status value');
       return;
     }
-    await updateOrderStatus(orderId, trimmedStatus as any);
+    await updateOrderStatus(orderId, trimmedStatus as any, token || '');
   };
 
   const handleConfirmZellePayment = async (orderId: string) => {
@@ -68,7 +70,7 @@ export default function AdminOrdersScreen() {
       zelleConfirmed: true,
       zelleConfirmedAt: new Date().toISOString(),
       status: 'confirmed',
-    });
+    }, token || '');
   };
 
   const getStatusColor = (status: string): string => {
@@ -81,20 +83,20 @@ export default function AdminOrdersScreen() {
     return statusOption?.label || status;
   };
 
-  const StatusButton = ({ 
-    status, 
-    orderId, 
-    currentStatus 
-  }: { 
-    status: string; 
-    orderId: string; 
+  const StatusButton = ({
+    status,
+    orderId,
+    currentStatus
+  }: {
+    status: string;
+    orderId: string;
     currentStatus: string;
   }) => {
     if (status === 'all') return null;
-    
+
     const isActive = currentStatus === status;
     const color = getStatusColor(status);
-    
+
     return (
       <TouchableOpacity
         style={[
@@ -119,203 +121,203 @@ export default function AdminOrdersScreen() {
   return (
     <AdminGuard>
       <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Gestión de Pedidos</Text>
-        <View style={styles.headerRight} />
-      </View>
-
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Search size={20} color={Colors.light.tabIconDefault} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar por cliente, teléfono o ID..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
-      </View>
-
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {statusOptions.map((option) => (
+        <View style={styles.header}>
           <TouchableOpacity
-            key={option.key}
-            style={[
-              styles.filterChip,
-              selectedStatus === option.key && styles.filterChipActive,
-              { borderColor: option.color }
-            ]}
-            onPress={() => setSelectedStatus(option.key)}
+            style={styles.backButton}
+            onPress={() => router.back()}
           >
-            <Text style={[
-              styles.filterChipText,
-              selectedStatus === option.key && styles.filterChipTextActive,
-              { color: selectedStatus === option.key ? '#FFFFFF' : option.color }
-            ]}>
-              {option.label}
-            </Text>
+            <ArrowLeft size={24} color={Colors.light.text} />
           </TouchableOpacity>
-        ))}
-      </ScrollView>
+          <Text style={styles.headerTitle}>Gestión de Pedidos</Text>
+          <View style={styles.headerRight} />
+        </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {filteredOrders.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Package size={48} color={Colors.light.tabIconDefault} />
-            <Text style={styles.emptyStateText}>
-              {searchQuery || selectedStatus !== 'all' 
-                ? 'No se encontraron pedidos con los filtros aplicados'
-                : 'No hay pedidos aún'
-              }
-            </Text>
+        <View style={styles.searchContainer}>
+          <View style={styles.searchInputContainer}>
+            <Search size={20} color={Colors.light.tabIconDefault} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Buscar por cliente, teléfono o ID..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
           </View>
-        ) : (
-          filteredOrders.map((order) => (
-            <View key={order.id} style={styles.orderCard}>
-              <View style={styles.orderHeader}>
-                <View>
-                  <Text style={styles.orderId}>Pedido #{order.id}</Text>
-                  <Text style={styles.orderDate}>
-                    {new Date(order.createdAt).toLocaleDateString('es-ES', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </Text>
-                </View>
-                <View style={[
-                  styles.statusBadge,
-                  { backgroundColor: getStatusColor(order.status) + '20' }
-                ]}>
-                  <Text style={[
-                    styles.statusBadgeText,
-                    { color: getStatusColor(order.status) }
+        </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filterContainer}
+          contentContainerStyle={styles.filterContent}
+        >
+          {statusOptions.map((option) => (
+            <TouchableOpacity
+              key={option.key}
+              style={[
+                styles.filterChip,
+                selectedStatus === option.key && styles.filterChipActive,
+                { borderColor: option.color }
+              ]}
+              onPress={() => setSelectedStatus(option.key)}
+            >
+              <Text style={[
+                styles.filterChipText,
+                selectedStatus === option.key && styles.filterChipTextActive,
+                { color: selectedStatus === option.key ? '#FFFFFF' : option.color }
+              ]}>
+                {option.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {filteredOrders.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Package size={48} color={Colors.light.tabIconDefault} />
+              <Text style={styles.emptyStateText}>
+                {searchQuery || selectedStatus !== 'all'
+                  ? 'No se encontraron pedidos con los filtros aplicados'
+                  : 'No hay pedidos aún'
+                }
+              </Text>
+            </View>
+          ) : (
+            filteredOrders.map((order) => (
+              <View key={order.id} style={styles.orderCard}>
+                <View style={styles.orderHeader}>
+                  <View>
+                    <Text style={styles.orderId}>Pedido #{order.id}</Text>
+                    <Text style={styles.orderDate}>
+                      {new Date(order.createdAt).toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </Text>
+                  </View>
+                  <View style={[
+                    styles.statusBadge,
+                    { backgroundColor: getStatusColor(order.status) + '20' }
                   ]}>
-                    {getStatusText(order.status)}
+                    <Text style={[
+                      styles.statusBadgeText,
+                      { color: getStatusColor(order.status) }
+                    ]}>
+                      {getStatusText(order.status)}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.customerInfo}>
+                  <View style={styles.customerRow}>
+                    <Text style={styles.customerName}>{order.customerName}</Text>
+                  </View>
+                  <View style={styles.contactRow}>
+                    <Phone size={16} color={Colors.light.tabIconDefault} />
+                    <Text style={styles.contactText}>{order.customerPhone}</Text>
+                  </View>
+                  <View style={styles.contactRow}>
+                    <Mail size={16} color={Colors.light.tabIconDefault} />
+                    <Text style={styles.contactText}>{order.customerEmail}</Text>
+                  </View>
+                  <View style={styles.contactRow}>
+                    <MapPin size={16} color={Colors.light.tabIconDefault} />
+                    <Text style={styles.contactText}>{order.customerAddress}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.orderItems}>
+                  <Text style={styles.itemsTitle}>Productos ({order.items.length})</Text>
+                  {order.items.map((item) => (
+                    <View key={`${order.id}-${item.id}`} style={styles.orderItem}>
+                      <Text style={styles.itemName}>{item.wallpaper.name}</Text>
+                      <Text style={styles.itemDetails}>
+                        {item.rollsNeeded} rollos × ${item.wallpaper.price.toFixed(2)}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+
+                <View style={styles.orderFooter}>
+                  <View style={styles.totalContainer}>
+                    <Text style={styles.totalLabel}>Total:</Text>
+                    <Text style={styles.totalAmount}>${order.total.toFixed(2)}</Text>
+                  </View>
+                  <Text style={styles.deliveryMethod}>
+                    {order.deliveryMethod === 'pickup' ? 'Recoger en tienda' : 'Envío a domicilio'}
                   </Text>
                 </View>
-              </View>
 
-              <View style={styles.customerInfo}>
-                <View style={styles.customerRow}>
-                  <Text style={styles.customerName}>{order.customerName}</Text>
-                </View>
-                <View style={styles.contactRow}>
-                  <Phone size={16} color={Colors.light.tabIconDefault} />
-                  <Text style={styles.contactText}>{order.customerPhone}</Text>
-                </View>
-                <View style={styles.contactRow}>
-                  <Mail size={16} color={Colors.light.tabIconDefault} />
-                  <Text style={styles.contactText}>{order.customerEmail}</Text>
-                </View>
-                <View style={styles.contactRow}>
-                  <MapPin size={16} color={Colors.light.tabIconDefault} />
-                  <Text style={styles.contactText}>{order.customerAddress}</Text>
-                </View>
-              </View>
-
-              <View style={styles.orderItems}>
-                <Text style={styles.itemsTitle}>Productos ({order.items.length})</Text>
-                {order.items.map((item) => (
-                  <View key={`${order.id}-${item.id}`} style={styles.orderItem}>
-                    <Text style={styles.itemName}>{item.wallpaper.name}</Text>
-                    <Text style={styles.itemDetails}>
-                      {item.rollsNeeded} rollos × ${item.wallpaper.price.toFixed(2)}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-
-              <View style={styles.orderFooter}>
-                <View style={styles.totalContainer}>
-                  <Text style={styles.totalLabel}>Total:</Text>
-                  <Text style={styles.totalAmount}>${order.total.toFixed(2)}</Text>
-                </View>
-                <Text style={styles.deliveryMethod}>
-                  {order.deliveryMethod === 'pickup' ? 'Recoger en tienda' : 'Envío a domicilio'}
-                </Text>
-              </View>
-
-              {order.paymentMethod === 'zelle' && order.zelleReference && (
-                <View style={[styles.zelleContainer, order.zelleConfirmed ? styles.zelleConfirmed : styles.zellePending]}>
-                  <View style={styles.zelleHeader}>
-                    <DollarSign size={20} color={order.zelleConfirmed ? '#10B981' : '#F59E0B'} />
-                    <Text style={[styles.zelleTitle, { color: order.zelleConfirmed ? '#10B981' : '#F59E0B' }]}>
-                      Pago con Zelle
-                    </Text>
-                  </View>
-                  <View style={styles.zelleRow}>
-                    <Text style={styles.zelleLabel}>Código de Referencia:</Text>
-                    <Text style={styles.zelleValue}>{order.zelleReference}</Text>
-                  </View>
-                  <View style={styles.zelleStatus}>
-                    {order.zelleConfirmed ? (
-                      <View style={styles.zelleStatusRow}>
-                        <CheckCircle2 size={16} color="#10B981" />
-                        <Text style={styles.zelleConfirmedText}>
-                          Pago confirmado {order.zelleConfirmedAt && `el ${new Date(order.zelleConfirmedAt).toLocaleDateString('es-ES')}`}
-                        </Text>
-                      </View>
-                    ) : (
-                      <View style={styles.zelleStatusRow}>
-                        <AlertCircle size={16} color="#F59E0B" />
-                        <Text style={styles.zellePendingText}>Esperando confirmación de pago</Text>
-                      </View>
+                {order.paymentMethod === 'zelle' && order.zelleReference && (
+                  <View style={[styles.zelleContainer, order.zelleConfirmed ? styles.zelleConfirmed : styles.zellePending]}>
+                    <View style={styles.zelleHeader}>
+                      <DollarSign size={20} color={order.zelleConfirmed ? '#10B981' : '#F59E0B'} />
+                      <Text style={[styles.zelleTitle, { color: order.zelleConfirmed ? '#10B981' : '#F59E0B' }]}>
+                        Pago con Zelle
+                      </Text>
+                    </View>
+                    <View style={styles.zelleRow}>
+                      <Text style={styles.zelleLabel}>Código de Referencia:</Text>
+                      <Text style={styles.zelleValue}>{order.zelleReference}</Text>
+                    </View>
+                    <View style={styles.zelleStatus}>
+                      {order.zelleConfirmed ? (
+                        <View style={styles.zelleStatusRow}>
+                          <CheckCircle2 size={16} color="#10B981" />
+                          <Text style={styles.zelleConfirmedText}>
+                            Pago confirmado {order.zelleConfirmedAt && `el ${new Date(order.zelleConfirmedAt).toLocaleDateString('es-ES')}`}
+                          </Text>
+                        </View>
+                      ) : (
+                        <View style={styles.zelleStatusRow}>
+                          <AlertCircle size={16} color="#F59E0B" />
+                          <Text style={styles.zellePendingText}>Esperando confirmación de pago</Text>
+                        </View>
+                      )}
+                    </View>
+                    {!order.zelleConfirmed && (
+                      <TouchableOpacity
+                        style={styles.confirmPaymentButton}
+                        onPress={() => handleConfirmZellePayment(order.id)}
+                      >
+                        <CheckCircle2 size={18} color="#FFFFFF" />
+                        <Text style={styles.confirmPaymentButtonText}>Confirmar Pago Recibido</Text>
+                      </TouchableOpacity>
                     )}
                   </View>
-                  {!order.zelleConfirmed && (
-                    <TouchableOpacity
-                      style={styles.confirmPaymentButton}
-                      onPress={() => handleConfirmZellePayment(order.id)}
-                    >
-                      <CheckCircle2 size={18} color="#FFFFFF" />
-                      <Text style={styles.confirmPaymentButtonText}>Confirmar Pago Recibido</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              )}
+                )}
 
-              {order.notes && (
-                <View style={styles.notesContainer}>
-                  <Text style={styles.notesLabel}>Notas:</Text>
-                  <Text style={styles.notesText}>{order.notes}</Text>
-                </View>
-              )}
+                {order.notes && (
+                  <View style={styles.notesContainer}>
+                    <Text style={styles.notesLabel}>Notas:</Text>
+                    <Text style={styles.notesText}>{order.notes}</Text>
+                  </View>
+                )}
 
-              <View style={styles.statusActions}>
-                <Text style={styles.statusActionsTitle}>Cambiar estado:</Text>
-                <ScrollView 
-                  horizontal 
-                  showsHorizontalScrollIndicator={false}
-                  style={styles.statusButtonsContainer}
-                >
-                  {statusOptions.map((option) => (
-                    <StatusButton
-                      key={option.key}
-                      status={option.key}
-                      orderId={order.id}
-                      currentStatus={order.status}
-                    />
-                  ))}
-                </ScrollView>
+                <View style={styles.statusActions}>
+                  <Text style={styles.statusActionsTitle}>Cambiar estado:</Text>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.statusButtonsContainer}
+                  >
+                    {statusOptions.map((option) => (
+                      <StatusButton
+                        key={option.key}
+                        status={option.key}
+                        orderId={order.id}
+                        currentStatus={order.status}
+                      />
+                    ))}
+                  </ScrollView>
+                </View>
               </View>
-            </View>
-          ))
-        )}
-      </ScrollView>
+            ))
+          )}
+        </ScrollView>
       </View>
     </AdminGuard>
   );

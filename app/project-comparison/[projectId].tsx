@@ -21,16 +21,16 @@ import {
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useFavorites } from '@/contexts/FavoritesContext';
-import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useFavoritesStore } from '@/stores/useFavoritesStore';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function ProjectComparisonScreen() {
   const { projectId } = useLocalSearchParams<{ projectId: string }>();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { getProjectById, addWallpaperToProject, removeWallpaperFromProject, removeFromFavorites } = useFavorites();
-  const { wallpapers } = useWallpapers();
+  const { getProjectById, addWallpaperToProject, removeWallpaperFromProject, removeFromFavorites } = useFavoritesStore();
+  const { wallpapers } = useWallpaperStore();
 
   const [showWallpaperModal, setShowWallpaperModal] = useState<boolean>(false);
 
@@ -133,7 +133,7 @@ export default function ProjectComparisonScreen() {
   const handleTryWallpaper = (wallpaperId: string) => {
     router.push({
       pathname: '/(tabs)/camera',
-      params: { 
+      params: {
         wallpaperId: wallpaperId,
         source: 'project',
         projectId: project.id
@@ -143,15 +143,15 @@ export default function ProjectComparisonScreen() {
 
   const renderWallpaperOption = ({ item: wallpaper }: { item: any }) => {
     const isInProject = project.wallpapers.some(w => w.id === wallpaper.id);
-    
+
     return (
       <TouchableOpacity
         style={styles.wallpaperOption}
         onPress={() => handleAddWallpaper(wallpaper)}
         disabled={isInProject}
       >
-        <Image 
-          source={{ uri: wallpaper.imageUrl }} 
+        <Image
+          source={{ uri: wallpaper.imageUrl }}
           style={styles.wallpaperOptionImage}
           onError={(error) => {
             console.log('Error loading wallpaper option image:', error.nativeEvent.error);
@@ -175,138 +175,138 @@ export default function ProjectComparisonScreen() {
   return (
     <ErrorBoundary>
       <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+        />
 
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>{project.name}</Text>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={handleDeleteProject}
-        >
-          <Trash2 size={24} color={Colors.light.error} />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.projectInfo}>
-          <Text style={styles.projectName}>{project.name}</Text>
-          <Text style={styles.projectRoom}>{project.roomType}</Text>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
+            <ArrowLeft size={24} color={Colors.light.text} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{project.name}</Text>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleDeleteProject}
+          >
+            <Trash2 size={24} color={Colors.light.error} />
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.wallpapersSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Papeles en este Proyecto ({project.wallpapers.length})</Text>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => setShowWallpaperModal(true)}
-            >
-              <Plus size={20} color={Colors.light.primary} />
-              <Text style={styles.addButtonText}>Agregar</Text>
-            </TouchableOpacity>
+        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.projectInfo}>
+            <Text style={styles.projectName}>{project.name}</Text>
+            <Text style={styles.projectRoom}>{project.roomType}</Text>
           </View>
 
-          {project.wallpapers.map((wallpaper, index) => (
-            <View key={wallpaper.id} style={styles.wallpaperCard}>
-              <Image 
-                source={{ uri: wallpaper.imageUrl }} 
-                style={styles.wallpaperImage}
-                onError={(error) => {
-                  console.log('Error loading wallpaper image:', error.nativeEvent.error);
-                }}
-                defaultSource={require('@/assets/images/icon.png')}
-              />
-              <View style={styles.wallpaperInfo}>
-                <Text style={styles.wallpaperName}>{wallpaper.name}</Text>
-                <Text style={styles.wallpaperCategory}>{wallpaper.category}</Text>
-                <Text style={styles.wallpaperPrice}>${wallpaper.price}</Text>
-              </View>
-              <View style={styles.wallpaperActions}>
-                <TouchableOpacity
-                  style={styles.tryButton}
-                  onPress={() => handleTryWallpaper(wallpaper.id)}
-                >
-                  <Text style={styles.tryButtonText}>Probar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.removeButton}
-                  onPress={() => handleRemoveWallpaper(wallpaper.id, wallpaper.name)}
-                >
-                  <Trash2 size={18} color={Colors.light.error} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        {project.userPhoto && (
-          <View style={styles.userPhotoContainer}>
-            <Text style={styles.sectionTitle}>Tu Foto</Text>
-            <Image 
-              source={{ uri: project.userPhoto }} 
-              style={styles.userPhoto}
-              onError={(error) => {
-                console.log('Error loading user photo:', error.nativeEvent.error);
-              }}
-              defaultSource={require('@/assets/images/icon.png')}
-            />
-          </View>
-        )}
-
-        {project.notes && (
-          <View style={styles.notesContainer}>
-            <Text style={styles.sectionTitle}>Notas</Text>
-            <Text style={styles.notesText}>{project.notes}</Text>
-          </View>
-        )}
-      </ScrollView>
-
-      <Modal
-        visible={showWallpaperModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowWallpaperModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Agregar Papel al Proyecto</Text>
+          <View style={styles.wallpapersSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Papeles en este Proyecto ({project.wallpapers.length})</Text>
               <TouchableOpacity
-                style={styles.modalCloseButton}
-                onPress={() => setShowWallpaperModal(false)}
+                style={styles.addButton}
+                onPress={() => setShowWallpaperModal(true)}
               >
-                <X size={24} color={Colors.light.textSecondary} />
+                <Plus size={20} color={Colors.light.primary} />
+                <Text style={styles.addButtonText}>Agregar</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={styles.currentProjectInfo}>
-              <Text style={styles.currentProjectText}>
-                Proyecto: {project.name}
-              </Text>
-              <Text style={styles.currentWallpaperText}>
-                {project.wallpapers.length} papel{project.wallpapers.length !== 1 ? 'es' : ''} en el proyecto
-              </Text>
-            </View>
-
-            <FlatList
-              data={wallpapers}
-              renderItem={renderWallpaperOption}
-              keyExtractor={(item) => item.id}
-              style={styles.wallpapersList}
-              showsVerticalScrollIndicator={false}
-            />
+            {project.wallpapers.map((wallpaper, index) => (
+              <View key={wallpaper.id} style={styles.wallpaperCard}>
+                <Image
+                  source={{ uri: wallpaper.imageUrl }}
+                  style={styles.wallpaperImage}
+                  onError={(error) => {
+                    console.log('Error loading wallpaper image:', error.nativeEvent.error);
+                  }}
+                  defaultSource={require('@/assets/images/icon.png')}
+                />
+                <View style={styles.wallpaperInfo}>
+                  <Text style={styles.wallpaperName}>{wallpaper.name}</Text>
+                  <Text style={styles.wallpaperCategory}>{wallpaper.category}</Text>
+                  <Text style={styles.wallpaperPrice}>${wallpaper.price}</Text>
+                </View>
+                <View style={styles.wallpaperActions}>
+                  <TouchableOpacity
+                    style={styles.tryButton}
+                    onPress={() => handleTryWallpaper(wallpaper.id)}
+                  >
+                    <Text style={styles.tryButtonText}>Probar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.removeButton}
+                    onPress={() => handleRemoveWallpaper(wallpaper.id, wallpaper.name)}
+                  >
+                    <Trash2 size={18} color={Colors.light.error} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
           </View>
-        </View>
-      </Modal>
+
+          {project.userPhoto && (
+            <View style={styles.userPhotoContainer}>
+              <Text style={styles.sectionTitle}>Tu Foto</Text>
+              <Image
+                source={{ uri: project.userPhoto }}
+                style={styles.userPhoto}
+                onError={(error) => {
+                  console.log('Error loading user photo:', error.nativeEvent.error);
+                }}
+                defaultSource={require('@/assets/images/icon.png')}
+              />
+            </View>
+          )}
+
+          {project.notes && (
+            <View style={styles.notesContainer}>
+              <Text style={styles.sectionTitle}>Notas</Text>
+              <Text style={styles.notesText}>{project.notes}</Text>
+            </View>
+          )}
+        </ScrollView>
+
+        <Modal
+          visible={showWallpaperModal}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setShowWallpaperModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Agregar Papel al Proyecto</Text>
+                <TouchableOpacity
+                  style={styles.modalCloseButton}
+                  onPress={() => setShowWallpaperModal(false)}
+                >
+                  <X size={24} color={Colors.light.textSecondary} />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.currentProjectInfo}>
+                <Text style={styles.currentProjectText}>
+                  Proyecto: {project.name}
+                </Text>
+                <Text style={styles.currentWallpaperText}>
+                  {project.wallpapers.length} papel{project.wallpapers.length !== 1 ? 'es' : ''} en el proyecto
+                </Text>
+              </View>
+
+              <FlatList
+                data={wallpapers}
+                renderItem={renderWallpaperOption}
+                keyExtractor={(item) => item.id}
+                style={styles.wallpapersList}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+          </View>
+        </Modal>
       </View>
     </ErrorBoundary>
   );

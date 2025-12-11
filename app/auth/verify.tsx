@@ -14,12 +14,14 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function VerifyScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { verifyCode, resendCode, hasPendingVerification, pendingEmail } = useAuth();
+  const { verifyCode, resendCode, pendingVerification } = useAuthStore();
+  const hasPendingVerification = !!pendingVerification;
+  const pendingEmail = pendingVerification?.email;
 
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);

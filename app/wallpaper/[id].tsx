@@ -30,20 +30,20 @@ import {
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useCart } from '@/contexts/CartContext';
-import { useFavorites } from '@/contexts/FavoritesContext';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
+import { useCartStore } from '@/stores/useCartStore';
+import { useFavoritesStore } from '@/stores/useFavoritesStore';
 
 
 
 export default function WallpaperDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
-  const { getWallpaperById } = useWallpapers();
-  const { addToCart, isInCart } = useCart();
-  const { addToFavorites, favoriteProjects, addWallpaperToProject } = useFavorites();
+  const { getWallpaperById } = useWallpaperStore();
+  const { addToCart, isInCart } = useCartStore();
+  const { addToFavorites, favoriteProjects, addWallpaperToProject } = useFavoritesStore();
 
-  
+
 
   const [purchaseType, setPurchaseType] = useState<'roll' | 'measurement'>('roll');
   const [showMeasurementModal, setShowMeasurementModal] = useState<boolean>(false);
@@ -57,13 +57,13 @@ export default function WallpaperDetailsScreen() {
   const [projectNotes, setProjectNotes] = useState<string>('');
   const [saveMode, setSaveMode] = useState<'new' | 'existing'>('existing');
   const [selectedExistingProjectId, setSelectedExistingProjectId] = useState<string>('');
-  
+
   const { width: screenWidth } = Dimensions.get('window');
-  
+
   const wallArea = wallWidth && wallHeight ? parseFloat(wallWidth) * parseFloat(wallHeight) : 10;
-  
+
   const wallpaper = getWallpaperById(id || '');
-  
+
   if (!wallpaper) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -113,23 +113,23 @@ export default function WallpaperDetailsScreen() {
       }
       return;
     }
-    
+
     if (purchaseType === 'measurement' && (!wallWidth || !wallHeight)) {
       if (Platform.OS !== 'web') {
         Alert.alert('Medidas Requeridas', 'Por favor ingresa las medidas de tu pared.');
       }
       return;
     }
-    
+
     const finalRollsNeeded = purchaseType === 'roll' ? rollQuantity : rollsNeeded;
     const finalWallArea = purchaseType === 'roll' ? rollQuantity * safeDimensions.coverage : wallArea;
-    
+
     addToCart(wallpaper, finalRollsNeeded, finalWallArea, purchaseType);
     if (Platform.OS !== 'web') {
-      const message = purchaseType === 'roll' 
+      const message = purchaseType === 'roll'
         ? `${rollQuantity} rollo${rollQuantity > 1 ? 's' : ''} de "${wallpaper.name}" agregado${rollQuantity > 1 ? 's' : ''} al carrito.`
         : `${finalRollsNeeded} rollo${finalRollsNeeded > 1 ? 's' : ''} de "${wallpaper.name}" para ${wallArea.toFixed(1)}m² agregado${finalRollsNeeded > 1 ? 's' : ''} al carrito.`;
-      
+
       Alert.alert(
         'Agregado al Carrito',
         message,
@@ -147,7 +147,7 @@ export default function WallpaperDetailsScreen() {
     console.log('Wallpaper name:', wallpaper.name);
     router.push({
       pathname: '/(tabs)/camera',
-      params: { 
+      params: {
         wallpaperId: wallpaper.id,
         source: 'wallpaper-detail'
       }
@@ -182,7 +182,7 @@ export default function WallpaperDetailsScreen() {
         setProjectNotes('');
         setSaveMode('existing');
         setSelectedExistingProjectId('');
-        
+
         if (Platform.OS !== 'web') {
           Alert.alert(
             'Proyecto Guardado',
@@ -209,7 +209,7 @@ export default function WallpaperDetailsScreen() {
         setShowSaveProjectModal(false);
         setSelectedExistingProjectId('');
         setSaveMode('existing');
-        
+
         if (Platform.OS !== 'web') {
           Alert.alert(
             'Papel Agregado',
@@ -231,7 +231,7 @@ export default function WallpaperDetailsScreen() {
           headerShown: false,
         }}
       />
-      
+
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -239,7 +239,7 @@ export default function WallpaperDetailsScreen() {
         >
           <ArrowLeft size={24} color={Colors.light.text} />
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={styles.favoriteButton}
           onPress={handleSaveToFavorites}
@@ -270,7 +270,7 @@ export default function WallpaperDetailsScreen() {
                 )}
                 keyExtractor={(item, index) => `${item}-${index}`}
               />
-              
+
               {wallpaper.imageUrls.length > 1 && (
                 <View style={styles.imageIndicators}>
                   {wallpaper.imageUrls.map((_, index) => (
@@ -288,7 +288,7 @@ export default function WallpaperDetailsScreen() {
           ) : (
             <Image source={{ uri: wallpaper.imageUrl }} style={styles.wallpaperImage} />
           )}
-          
+
           {!wallpaper.inStock && (
             <View style={styles.outOfStockOverlay}>
               <View style={styles.outOfStockBadge}>
@@ -303,7 +303,7 @@ export default function WallpaperDetailsScreen() {
           <View style={styles.titleSection}>
             <Text style={styles.wallpaperName}>{wallpaper.name}</Text>
             <Text style={styles.wallpaperCategory}>{wallpaper.category} • {wallpaper.style}</Text>
-            
+
 
           </View>
 
@@ -333,7 +333,7 @@ export default function WallpaperDetailsScreen() {
 
           <View style={styles.specificationsSection}>
             <Text style={styles.sectionTitle}>Especificaciones</Text>
-            
+
             <View style={styles.specRow}>
               <View style={styles.specItem}>
                 <Ruler size={16} color={Colors.light.primary} />
@@ -343,7 +343,7 @@ export default function WallpaperDetailsScreen() {
                 {safeDimensions.width}m × {safeDimensions.height}m
               </Text>
             </View>
-            
+
             <View style={styles.specRow}>
               <View style={styles.specItem}>
                 <Package size={16} color={Colors.light.primary} />
@@ -351,7 +351,7 @@ export default function WallpaperDetailsScreen() {
               </View>
               <Text style={styles.specValue}>{safeDimensions.coverage}m² por rollo</Text>
             </View>
-            
+
             <View style={styles.specRow}>
               <View style={styles.specItem}>
                 <Info size={16} color={Colors.light.primary} />
@@ -359,7 +359,7 @@ export default function WallpaperDetailsScreen() {
               </View>
               <Text style={styles.specValue}>{safeSpecifications.material}</Text>
             </View>
-            
+
             <View style={styles.featuresGrid}>
               <View style={styles.featureItem}>
                 {safeSpecifications.washable ? (
@@ -369,7 +369,7 @@ export default function WallpaperDetailsScreen() {
                 )}
                 <Text style={styles.featureText}>Lavable</Text>
               </View>
-              
+
               <View style={styles.featureItem}>
                 {safeSpecifications.removable ? (
                   <CheckCircle size={16} color={Colors.light.success} />
@@ -378,7 +378,7 @@ export default function WallpaperDetailsScreen() {
                 )}
                 <Text style={styles.featureText}>Removible</Text>
               </View>
-              
+
               <View style={styles.featureItem}>
                 {safeSpecifications.textured ? (
                   <CheckCircle size={16} color={Colors.light.success} />
@@ -392,7 +392,7 @@ export default function WallpaperDetailsScreen() {
 
           <View style={styles.purchaseTypeSection}>
             <Text style={styles.sectionTitle}>Tipo de Compra</Text>
-            
+
             <View style={styles.purchaseOptions}>
               <TouchableOpacity
                 style={[
@@ -407,7 +407,7 @@ export default function WallpaperDetailsScreen() {
                   purchaseType === 'roll' && styles.purchaseOptionTextSelected
                 ]}>Por Rollo</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 style={[
                   styles.purchaseOption,
@@ -450,20 +450,20 @@ export default function WallpaperDetailsScreen() {
           ) : (
             <View style={styles.measurementSection}>
               <Text style={styles.sectionTitle}>Medidas de tu Pared</Text>
-              
+
               <TouchableOpacity
                 style={styles.measurementButton}
                 onPress={() => setShowMeasurementModal(true)}
               >
                 <Calculator size={20} color={Colors.light.primary} />
                 <Text style={styles.measurementButtonText}>
-                  {wallWidth && wallHeight 
+                  {wallWidth && wallHeight
                     ? `${wallWidth}m × ${wallHeight}m = ${wallArea.toFixed(1)}m²`
                     : 'Ingresar Medidas'
                   }
                 </Text>
               </TouchableOpacity>
-              
+
               {wallWidth && wallHeight && (
                 <View style={styles.calculatorResults}>
                   <Text style={styles.calculatorDescription}>
@@ -484,7 +484,7 @@ export default function WallpaperDetailsScreen() {
         >
           <Text style={styles.tryButtonText}>Probar en mi Pared</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[
             styles.addToCartButton,
@@ -496,10 +496,10 @@ export default function WallpaperDetailsScreen() {
         >
           <ShoppingCart size={20} color={Colors.light.background} />
           <Text style={styles.addToCartButtonText}>
-            {!wallpaper.inStock 
-              ? 'Agotado' 
-              : isAlreadyInCart 
-                ? 'Agregar Más' 
+            {!wallpaper.inStock
+              ? 'Agotado'
+              : isAlreadyInCart
+                ? 'Agregar Más'
                 : 'Agregar al Carrito'
             }
           </Text>
@@ -523,7 +523,7 @@ export default function WallpaperDetailsScreen() {
                 <X size={24} color={Colors.light.textSecondary} />
               </TouchableOpacity>
             </View>
-            
+
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Ancho (metros)</Text>
               <TextInput
@@ -535,7 +535,7 @@ export default function WallpaperDetailsScreen() {
                 placeholderTextColor={Colors.light.textSecondary}
               />
             </View>
-            
+
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Alto (metros)</Text>
               <TextInput
@@ -547,7 +547,7 @@ export default function WallpaperDetailsScreen() {
                 placeholderTextColor={Colors.light.textSecondary}
               />
             </View>
-            
+
             {wallWidth && wallHeight && (
               <View style={styles.modalCalculation}>
                 <Text style={styles.modalCalculationText}>
@@ -558,7 +558,7 @@ export default function WallpaperDetailsScreen() {
                 </Text>
               </View>
             )}
-            
+
             <TouchableOpacity
               style={styles.modalSaveButton}
               onPress={() => setShowMeasurementModal(false)}
@@ -586,7 +586,7 @@ export default function WallpaperDetailsScreen() {
                 <X size={24} color={Colors.light.textSecondary} />
               </TouchableOpacity>
             </View>
-            
+
             <View style={styles.saveModeContainer}>
               <TouchableOpacity
                 style={[
@@ -604,7 +604,7 @@ export default function WallpaperDetailsScreen() {
                   Proyecto Existente
                 </Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 style={[
                   styles.saveModeButton,
@@ -622,7 +622,7 @@ export default function WallpaperDetailsScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
-            
+
             {saveMode === 'existing' ? (
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Selecciona un Proyecto</Text>
@@ -676,7 +676,7 @@ export default function WallpaperDetailsScreen() {
                     placeholderTextColor={Colors.light.textSecondary}
                   />
                 </View>
-                
+
                 <View style={styles.inputContainer}>
                   <Text style={styles.inputLabel}>Tipo de Habitación</Text>
                   <ScrollView
@@ -705,7 +705,7 @@ export default function WallpaperDetailsScreen() {
                     ))}
                   </ScrollView>
                 </View>
-                
+
                 <View style={styles.inputContainer}>
                   <Text style={styles.inputLabel}>Notas (Opcional)</Text>
                   <TextInput
@@ -720,7 +720,7 @@ export default function WallpaperDetailsScreen() {
                 </View>
               </>
             )}
-            
+
             <TouchableOpacity
               style={styles.modalSaveButton}
               onPress={handleSaveProject}

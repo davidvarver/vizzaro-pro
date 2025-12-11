@@ -23,16 +23,16 @@ import {
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useCart } from '@/contexts/CartContext';
-import { useOrders } from '@/contexts/OrdersContext';
+import { useCartStore } from '@/stores/useCartStore';
+import { useOrdersStore } from '@/stores/useOrdersStore';
 
 type PaymentMethod = 'zelle' | 'credit_card';
 
 export default function CheckoutScreen() {
   const insets = useSafeAreaInsets();
-  const { cartItems, getCartTotal, clearCart } = useCart();
-  const { createOrder } = useOrders();
-  
+  const { cartItems, getCartTotal, clearCart } = useCartStore();
+  const { createOrder } = useOrdersStore();
+
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('zelle');
   const [zelleReference, setZelleReference] = useState<string>('');
   const [customerInfo, setCustomerInfo] = useState({
@@ -41,14 +41,14 @@ export default function CheckoutScreen() {
     phone: '',
     address: '',
   });
-  
+
   const [creditCardInfo, setCreditCardInfo] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
     cardholderName: '',
   });
-  
+
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
@@ -71,7 +71,7 @@ export default function CheckoutScreen() {
 
   const handlePlaceOrder = async () => {
     setErrorMessage('');
-    
+
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       const errorMsg = 'Por favor completa todos los campos requeridos (Nombre, Email y Teléfono).';
       setErrorMessage(errorMsg);
@@ -96,7 +96,7 @@ export default function CheckoutScreen() {
 
     setIsProcessing(true);
     try {
-      const newOrder = await createOrder({
+      const createdOrderId = await createOrder({
         customerName: customerInfo.name,
         customerEmail: customerInfo.email,
         customerPhone: customerInfo.phone,
@@ -111,10 +111,10 @@ export default function CheckoutScreen() {
         zelleConfirmed: false,
       });
 
-      const orderId = newOrder?.id || finalZelleReference || 'PEDIDO-' + Date.now().toString().slice(-8);
-      
+      const orderId = createdOrderId || finalZelleReference || 'PEDIDO-' + Date.now().toString().slice(-8);
+
       clearCart();
-      
+
       router.replace({
         pathname: '/order-confirmation',
         params: {
@@ -146,7 +146,7 @@ export default function CheckoutScreen() {
           headerShown: false,
         }}
       />
-      
+
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -162,7 +162,7 @@ export default function CheckoutScreen() {
         {/* Customer Information */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Información del Cliente</Text>
-          
+
           <View style={styles.inputContainer}>
             <User size={20} color={Colors.light.primary} />
             <TextInput
@@ -173,7 +173,7 @@ export default function CheckoutScreen() {
               placeholderTextColor={Colors.light.textSecondary}
             />
           </View>
-          
+
           <View style={styles.inputContainer}>
             <Mail size={20} color={Colors.light.primary} />
             <TextInput
@@ -186,7 +186,7 @@ export default function CheckoutScreen() {
               placeholderTextColor={Colors.light.textSecondary}
             />
           </View>
-          
+
           <View style={styles.inputContainer}>
             <Phone size={20} color={Colors.light.primary} />
             <TextInput
@@ -198,7 +198,7 @@ export default function CheckoutScreen() {
               placeholderTextColor={Colors.light.textSecondary}
             />
           </View>
-          
+
           <View style={styles.inputContainer}>
             <MapPin size={20} color={Colors.light.primary} />
             <TextInput
@@ -215,7 +215,7 @@ export default function CheckoutScreen() {
         {/* Payment Method */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Método de Pago</Text>
-          
+
           <TouchableOpacity
             style={[
               styles.paymentOption,
@@ -273,7 +273,7 @@ export default function CheckoutScreen() {
               <Text style={styles.zelleInfoText}>
                 Monto: <Text style={styles.zelleNumber}>${total.toFixed(2)}</Text>
               </Text>
-              
+
               {zelleReference && (
                 <View style={styles.referenceBox}>
                   <Text style={styles.referenceLabel}>Tu Código de Referencia:</Text>
@@ -309,7 +309,7 @@ export default function CheckoutScreen() {
                   placeholderTextColor={Colors.light.textSecondary}
                 />
               </View>
-              
+
               <View style={styles.row}>
                 <View style={[styles.inputContainer, styles.halfWidth]}>
                   <TextInput
@@ -322,7 +322,7 @@ export default function CheckoutScreen() {
                     placeholderTextColor={Colors.light.textSecondary}
                   />
                 </View>
-                
+
                 <View style={[styles.inputContainer, styles.halfWidth]}>
                   <TextInput
                     style={styles.input}
@@ -336,7 +336,7 @@ export default function CheckoutScreen() {
                   />
                 </View>
               </View>
-              
+
               <View style={styles.inputContainer}>
                 <User size={20} color={Colors.light.primary} />
                 <TextInput
@@ -354,17 +354,17 @@ export default function CheckoutScreen() {
         {/* Order Summary */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Resumen del Pedido</Text>
-          
+
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Subtotal ({cartItems.length} productos)</Text>
             <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
           </View>
-          
+
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Entrega</Text>
             <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
           </View>
-          
+
           <View style={[styles.summaryRow, styles.totalRow]}>
             <Text style={styles.totalLabel}>Total</Text>
             <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
@@ -378,7 +378,7 @@ export default function CheckoutScreen() {
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         ) : null}
-        
+
         <TouchableOpacity
           style={[styles.placeOrderButton, isProcessing && styles.placeOrderButtonDisabled]}
           onPress={handlePlaceOrder}

@@ -31,9 +31,9 @@ import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import ViewShot from 'react-native-view-shot';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useCart } from '@/contexts/CartContext';
-import { useFavorites } from '@/contexts/FavoritesContext';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
+import { useCartStore } from '@/stores/useCartStore';
+import { useFavoritesStore } from '@/stores/useFavoritesStore';
 
 export default function WallpaperResultScreen() {
   const { originalImage, processedImage, wallpaperId, aiProcessingFailed, isGenerated, errorMessage, projectId } = useLocalSearchParams<{
@@ -46,10 +46,10 @@ export default function WallpaperResultScreen() {
     projectId?: string;
   }>();
   const insets = useSafeAreaInsets();
-  const { addToCart, isInCart } = useCart();
-  const { getWallpaperById } = useWallpapers();
-  const { getProjectById } = useFavorites();
-  
+  const { addToCart, isInCart } = useCartStore();
+  const { getWallpaperById } = useWallpaperStore();
+  const { getProjectById } = useFavoritesStore();
+
   const [showOriginal, setShowOriginal] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [showMeasurementModal, setShowMeasurementModal] = useState<boolean>(false);
@@ -57,20 +57,20 @@ export default function WallpaperResultScreen() {
   const [wallLength, setWallLength] = useState<string>('3');
   const [wallHeight, setWallHeight] = useState<string>('2.5');
   const viewShotRef = useRef<ViewShot>(null);
-  
+
   const project = projectId ? getProjectById(projectId) : null;
-  
+
   const wallpaper = getWallpaperById(wallpaperId);
-  
+
   // Calculate wall area from length and height
   const calculateWallArea = () => {
     const length = parseFloat(wallLength) || 0;
     const height = parseFloat(wallHeight) || 0;
     return length * height;
   };
-  
+
   const wallArea = calculateWallArea();
-  
+
   if (!wallpaper || (!processedImage && !originalImage)) {
     return (
       <View style={styles.container}>
@@ -90,7 +90,7 @@ export default function WallpaperResultScreen() {
       }
       return;
     }
-    
+
     addToCart(wallpaper, rollsNeeded, wallArea);
     if (Platform.OS !== 'web') {
       Alert.alert(
@@ -107,7 +107,7 @@ export default function WallpaperResultScreen() {
   const addWatermarkToImage = async (imageBase64: string): Promise<string> => {
     try {
       const imageUri = `data:image/jpeg;base64,${imageBase64}`;
-      
+
       if (Platform.OS === 'web') {
         const manipulatedImage = await ImageManipulator.manipulateAsync(
           imageUri,
@@ -127,32 +127,32 @@ export default function WallpaperResultScreen() {
 
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
+
         return new Promise((resolve, reject) => {
           const img = new window.Image();
           img.onload = () => {
             canvas.width = img.width;
             canvas.height = img.height;
-            
+
             if (ctx) {
               ctx.drawImage(img, 0, 0);
-              
+
               const watermarkText = 'www.vizzarowallpaper.com';
               const fontSize = Math.floor(img.width / 25);
               ctx.font = `bold ${fontSize}px Arial`;
-              
+
               ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
               ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
               ctx.lineWidth = 2;
-              
+
               const textMetrics = ctx.measureText(watermarkText);
               const textWidth = textMetrics.width;
               const x = (canvas.width - textWidth) / 2;
               const y = canvas.height - fontSize - 20;
-              
+
               ctx.strokeText(watermarkText, x, y);
               ctx.fillText(watermarkText, x, y);
-              
+
               const watermarkedBase64 = canvas.toDataURL('image/jpeg', 0.9).split(',')[1];
               resolve(watermarkedBase64);
             } else {
@@ -182,7 +182,7 @@ export default function WallpaperResultScreen() {
     setIsDownloading(true);
     try {
       const imageToSave = shouldShowOriginal ? originalImage : processedImage;
-      
+
       if (Platform.OS === 'web') {
         const watermarkedBase64 = await addWatermarkToImage(imageToSave);
         const link = document.createElement('a');
@@ -203,10 +203,10 @@ export default function WallpaperResultScreen() {
         await FileSystem.writeAsStringAsync(fileUri, watermarkedBase64, {
           encoding: 'base64',
         });
-        
+
         const asset = await MediaLibrary.createAssetAsync(fileUri);
         await MediaLibrary.createAlbumAsync('Vizzaro Wallpaper', asset, false);
-        
+
         Alert.alert(
           'Imagen Guardada',
           'La imagen con marca de agua se ha guardado en tu galería.',
@@ -225,11 +225,11 @@ export default function WallpaperResultScreen() {
     try {
       const imageToShare = shouldShowOriginal ? originalImage : processedImage;
       const watermarkedBase64 = await addWatermarkToImage(imageToShare);
-      
+
       if (Platform.OS === 'web') {
         const blob = await (await fetch(`data:image/jpeg;base64,${watermarkedBase64}`)).blob();
         const file = new File([blob], 'vizzaro-wallpaper.jpg', { type: 'image/jpeg' });
-        
+
         if (navigator.share && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
@@ -249,7 +249,7 @@ export default function WallpaperResultScreen() {
         await FileSystem.writeAsStringAsync(fileUri, watermarkedBase64, {
           encoding: 'base64',
         });
-        
+
         const canShare = await Sharing.isAvailableAsync();
         if (canShare) {
           await Sharing.shareAsync(fileUri, {
@@ -296,7 +296,7 @@ export default function WallpaperResultScreen() {
           headerShown: false,
         }}
       />
-      
+
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -304,12 +304,12 @@ export default function WallpaperResultScreen() {
         >
           <ArrowLeft size={24} color={Colors.light.text} />
         </TouchableOpacity>
-        
+
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>Resultado</Text>
           <Text style={styles.headerSubtitle}>{wallpaper.name}</Text>
         </View>
-        
+
         {aiProcessingFailed !== 'true' && (
           <TouchableOpacity
             style={styles.toggleButton}
@@ -324,20 +324,20 @@ export default function WallpaperResultScreen() {
         <ViewShot ref={viewShotRef} options={{ format: 'jpg', quality: 0.9 }}>
           <View style={styles.imageContainer}>
             <Image source={imageSource} style={styles.resultImage} />
-            
+
             <View style={styles.watermarkOverlay}>
               <Text style={styles.watermarkText}>www.vizzarowallpaper.com</Text>
             </View>
-            
+
             <View style={styles.imageOverlay}>
               <View style={styles.toggleIndicator}>
                 <Text style={styles.toggleText}>
-                  {aiProcessingFailed === 'true' 
-                    ? 'Tu Foto Original' 
-                    : shouldShowOriginal 
-                      ? 'Tu Foto' 
-                      : isGenerated === 'true' 
-                        ? 'Visualización IA' 
+                  {aiProcessingFailed === 'true'
+                    ? 'Tu Foto Original'
+                    : shouldShowOriginal
+                      ? 'Tu Foto'
+                      : isGenerated === 'true'
+                        ? 'Visualización IA'
                         : 'Con Papel Tapiz'
                   }
                 </Text>
@@ -357,7 +357,7 @@ export default function WallpaperResultScreen() {
               {isDownloading ? 'Guardando...' : 'Guardar'}
             </Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={styles.actionButton}
             onPress={handleShare}
@@ -365,7 +365,7 @@ export default function WallpaperResultScreen() {
             <Share2 size={20} color={Colors.light.primary} />
             <Text style={styles.actionButtonText}>Compartir</Text>
           </TouchableOpacity>
-          
+
           {project && project.wallpapers.length > 1 ? (
             <TouchableOpacity
               style={styles.actionButton}
@@ -398,9 +398,9 @@ export default function WallpaperResultScreen() {
               </Text>
             </View>
           )}
-          
+
           <Text style={styles.resultDescription}>
-            {aiProcessingFailed === 'true' 
+            {aiProcessingFailed === 'true'
               ? `Esta es tu imagen original. ${errorMessage || 'El servicio de IA está temporalmente no disponible'}, pero puedes usar esta imagen como referencia para visualizar cómo se vería el papel tapiz "${wallpaper.name}" en tu pared.`
               : isGenerated === 'true'
                 ? `La IA ha generado una visualización profesional mostrando cómo se vería el papel tapiz "${wallpaper.name}" en un ambiente real. Esta imagen te da una idea clara del estilo y los colores en un contexto de hogar.`
@@ -411,23 +411,23 @@ export default function WallpaperResultScreen() {
 
         <View style={styles.wallpaperDetails}>
           <Text style={styles.sectionTitle}>Detalles del Papel Tapiz</Text>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Nombre:</Text>
             <Text style={styles.detailValue}>{wallpaper.name}</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Estilo:</Text>
             <Text style={styles.detailValue}>{wallpaper.style}</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Precio por rollo:</Text>
             <Text style={styles.detailValue}>${wallpaper.price.toFixed(2)}</Text>
           </View>
-          
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={[styles.detailRow, styles.editableRow]}
             onPress={() => setShowMeasurementModal(true)}
             activeOpacity={0.7}
@@ -438,17 +438,17 @@ export default function WallpaperResultScreen() {
               <Edit3 size={16} color={Colors.light.primary} />
             </View>
           </TouchableOpacity>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Área total:</Text>
             <Text style={styles.detailValue}>{wallArea.toFixed(2)} m²</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Rollos necesarios:</Text>
             <Text style={styles.detailValue}>{rollsNeeded} rollo{rollsNeeded > 1 ? 's' : ''}</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Total estimado:</Text>
             <Text style={[styles.detailValue, styles.totalPrice]}>${totalPrice.toFixed(2)}</Text>
@@ -468,16 +468,16 @@ export default function WallpaperResultScreen() {
         >
           <ShoppingCart size={20} color={Colors.light.background} />
           <Text style={styles.addToCartButtonText}>
-            {!wallpaper.inStock 
-              ? 'Agotado' 
-              : isAlreadyInCart 
-                ? 'Agregar Más al Carrito' 
+            {!wallpaper.inStock
+              ? 'Agotado'
+              : isAlreadyInCart
+                ? 'Agregar Más al Carrito'
                 : 'Agregar al Carrito'
             }
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       {/* Measurement Modal */}
       <Modal
         visible={showMeasurementModal}
@@ -496,11 +496,11 @@ export default function WallpaperResultScreen() {
                 <X size={24} color={Colors.light.textSecondary} />
               </TouchableOpacity>
             </View>
-            
+
             <Text style={styles.modalDescription}>
               Ingresa las medidas de tu pared para calcular exactamente cuántos rollos necesitas.
             </Text>
-            
+
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Largo de la pared (metros)</Text>
               <TextInput
@@ -512,7 +512,7 @@ export default function WallpaperResultScreen() {
                 placeholderTextColor={Colors.light.textSecondary}
               />
             </View>
-            
+
             <View style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Alto de la pared (metros)</Text>
               <TextInput
@@ -524,14 +524,14 @@ export default function WallpaperResultScreen() {
                 placeholderTextColor={Colors.light.textSecondary}
               />
             </View>
-            
+
             <View style={styles.calculationResult}>
               <Calculator size={20} color={Colors.light.primary} />
               <Text style={styles.calculationText}>
                 Área total: {calculateWallArea().toFixed(2)} m²
               </Text>
             </View>
-            
+
             <View style={styles.modalActions}>
               <TouchableOpacity
                 style={styles.cancelButton}
@@ -539,7 +539,7 @@ export default function WallpaperResultScreen() {
               >
                 <Text style={styles.cancelButtonText}>Cancelar</Text>
               </TouchableOpacity>
-              
+
               <TouchableOpacity
                 style={styles.confirmButton}
                 onPress={() => setShowMeasurementModal(false)}
@@ -570,11 +570,11 @@ export default function WallpaperResultScreen() {
                   <X size={24} color={Colors.light.textSecondary} />
                 </TouchableOpacity>
               </View>
-              
+
               <Text style={styles.modalDescription}>
                 Selecciona otro papel tapiz del proyecto &quot;{project.name}&quot; para visualizar con la misma foto.
               </Text>
-              
+
               <ScrollView style={styles.wallpaperSelectorList}>
                 {project.wallpapers.map((wp) => (
                   <TouchableOpacity

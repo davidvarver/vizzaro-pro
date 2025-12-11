@@ -4,11 +4,11 @@ import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Package, Ruler } from 'l
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Colors from '@/constants/colors';
-import { useCart } from '@/contexts/CartContext';
+import { useCartStore } from '@/stores/useCartStore';
 
 export default function CartScreen() {
   const insets = useSafeAreaInsets();
-  const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCartStore();
   const [deliveryOption, setDeliveryOption] = useState<'pickup' | 'delivery'>('pickup');
 
   const subtotal = getCartTotal();
@@ -36,10 +36,10 @@ export default function CartScreen() {
             {cartItems.map((item) => (
               <View key={item.id} style={styles.cartItem}>
                 <Image source={{ uri: item.wallpaper.imageUrl }} style={styles.itemImage} />
-                
+
                 <View style={styles.itemInfo}>
                   <Text style={styles.itemName}>{item.wallpaper.name}</Text>
-                  
+
                   <View style={styles.purchaseTypeIndicator}>
                     {item.purchaseType === 'roll' ? (
                       <Package size={14} color={Colors.light.primary} />
@@ -50,7 +50,7 @@ export default function CartScreen() {
                       {item.purchaseType === 'roll' ? 'Por Rollo' : 'Por Medida'}
                     </Text>
                   </View>
-                  
+
                   <Text style={styles.itemDetails}>
                     {item.rollsNeeded} rollo{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)}m²
                   </Text>
@@ -58,7 +58,7 @@ export default function CartScreen() {
                     ${item.wallpaper.price.toFixed(2)} × {item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}
                   </Text>
                 </View>
-                
+
                 <View style={styles.itemControls}>
                   <View style={styles.quantityContainer}>
                     <TouchableOpacity
@@ -77,7 +77,7 @@ export default function CartScreen() {
                       <Plus size={16} color={Colors.light.primary} />
                     </TouchableOpacity>
                   </View>
-                  
+
                   <TouchableOpacity
                     style={styles.removeButton}
                     onPress={() => removeFromCart(item.id)}
@@ -91,7 +91,7 @@ export default function CartScreen() {
 
           <View style={styles.deliverySection}>
             <Text style={styles.sectionTitle}>Opciones de Entrega</Text>
-            
+
             <TouchableOpacity
               style={[
                 styles.deliveryOption,
@@ -123,17 +123,17 @@ export default function CartScreen() {
 
           <View style={styles.summarySection}>
             <Text style={styles.sectionTitle}>Resumen del Pedido</Text>
-            
+
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Subtotal</Text>
               <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
             </View>
-            
+
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Entrega</Text>
               <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
             </View>
-            
+
             <View style={[styles.summaryRow, styles.totalRow]}>
               <Text style={styles.totalLabel}>Total</Text>
               <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
@@ -144,7 +144,7 @@ export default function CartScreen() {
 
       {cartItems.length > 0 && (
         <View style={styles.checkoutContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.checkoutButton}
             onPress={() => router.push('/checkout')}
           >

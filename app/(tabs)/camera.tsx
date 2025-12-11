@@ -7,9 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Camera, FlipHorizontal, Circle, ArrowLeft, ImageIcon, Repeat } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useFavorites } from '@/contexts/FavoritesContext';
-import { useCart } from '@/contexts/CartContext';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
+import { useFavoritesStore } from '@/stores/useFavoritesStore';
+import { useCartStore } from '@/stores/useCartStore';
 
 
 export default function CameraScreen() {
@@ -23,39 +23,39 @@ export default function CameraScreen() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [showLowLightWarning, setShowLowLightWarning] = useState<boolean>(false);
   const cameraRef = useRef<CameraView>(null);
-  const { getWallpaperById, wallpapers } = useWallpapers();
-  const { getProjectById } = useFavorites();
-  const { cartItems } = useCart();
-  
+  const { getWallpaperById, wallpapers } = useWallpaperStore();
+  const { getProjectById } = useFavoritesStore();
+  const { cartItems } = useCartStore();
+
   console.log('=== CAMERA SCREEN MOUNTED ===');
   console.log('Wallpaper ID from params:', wallpaperId);
   console.log('Source:', source);
   console.log('Project ID from params:', projectId);
-  
+
   const project = projectId ? getProjectById(projectId) : null;
   const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
-  
+
   console.log('Project found:', project ? { id: project.id, name: project.name } : 'null');
   console.log('Wallpaper found:', wallpaper ? { id: wallpaper.id, name: wallpaper.name } : 'null');
-  
+
   const cartWallpapers = cartItems.map(item => item.wallpaper);
-  
-  const availableWallpapers = (source === 'favorite' || source === 'project') && project 
-    ? wallpapers 
-    : cartWallpapers.length > 0 
+
+  const availableWallpapers = (source === 'favorite' || source === 'project') && project
+    ? wallpapers
+    : cartWallpapers.length > 0
       ? cartWallpapers
       : wallpaper ? [wallpaper] : [];
-  
+
   const [currentWallpaperIndex, setCurrentWallpaperIndex] = useState<number>(
-    availableWallpapers.findIndex(w => w.id === wallpaperId) >= 0 
-      ? availableWallpapers.findIndex(w => w.id === wallpaperId) 
+    availableWallpapers.findIndex(w => w.id === wallpaperId) >= 0
+      ? availableWallpapers.findIndex(w => w.id === wallpaperId)
       : 0
   );
-  
+
   const currentWallpaper = availableWallpapers[currentWallpaperIndex] || wallpaper;
-  
-  const availableImages = currentWallpaper?.imageUrls && currentWallpaper.imageUrls.length > 0 
-    ? currentWallpaper.imageUrls 
+
+  const availableImages = currentWallpaper?.imageUrls && currentWallpaper.imageUrls.length > 0
+    ? currentWallpaper.imageUrls
     : [currentWallpaper?.imageUrl].filter(Boolean);
 
   if (!permission) {
@@ -91,16 +91,16 @@ export default function CameraScreen() {
 
   async function pickImage() {
     console.log('=== PICKING IMAGE FROM GALLERY ===');
-    
+
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (!permissionResult.granted) {
       if (Platform.OS !== 'web') {
         Alert.alert('Permiso requerido', 'Se necesita acceso a la galería para seleccionar una foto.');
       }
       return;
     }
-    
+
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: 'images' as ImagePicker.MediaTypeOptions,
@@ -108,18 +108,18 @@ export default function CameraScreen() {
         quality: 0.8,
         base64: true,
       });
-      
+
       if (!result.canceled && result.assets[0]) {
         const imageBase64 = result.assets[0].base64;
         if (imageBase64) {
           console.log('Image selected from gallery, base64 length:', imageBase64.length);
-          
+
           const isLowLight = await detectLowLight(imageBase64);
           console.log('Low light detected:', isLowLight);
           setShowLowLightWarning(isLowLight);
-          
+
           setUploadedImage(imageBase64);
-          
+
           if (currentWallpaper) {
             setIsProcessing(true);
             await processImageWithAI(imageBase64, currentWallpaper);
@@ -134,7 +134,7 @@ export default function CameraScreen() {
       }
     }
   }
-  
+
   async function takePicture() {
     console.log('=== TAKING PICTURE ===');
     console.log('Camera ref exists:', !!cameraRef.current);
@@ -142,7 +142,7 @@ export default function CameraScreen() {
     console.log('Wallpaper exists:', !!wallpaper);
     console.log('Wallpaper ID from params:', wallpaperId);
     console.log('Selected wallpaper:', wallpaper ? { id: wallpaper.id, name: wallpaper.name } : 'null');
-    
+
     if (!cameraRef.current) {
       console.error('Camera ref is null');
       if (Platform.OS !== 'web') {
@@ -150,7 +150,7 @@ export default function CameraScreen() {
       }
       return;
     }
-    
+
     if (!isCameraReady) {
       console.log('Camera not ready yet, waiting...');
       if (Platform.OS !== 'web') {
@@ -158,7 +158,7 @@ export default function CameraScreen() {
       }
       return;
     }
-    
+
     if (!currentWallpaper) {
       console.error('No wallpaper selected');
       if (Platform.OS !== 'web') {
@@ -170,12 +170,12 @@ export default function CameraScreen() {
     try {
       setIsProcessing(true);
       console.log('Starting photo capture...');
-      
+
       if (Platform.OS === 'web') {
         console.log('Web platform detected, adding delay for camera stream...');
         await new Promise(resolve => setTimeout(resolve, 300));
       }
-      
+
       const photo = await cameraRef.current.takePictureAsync({
         quality: 0.8,
         base64: true,
@@ -192,14 +192,14 @@ export default function CameraScreen() {
       }
 
       setUploadedImage(photo.base64);
-      
+
       const isLowLight = await detectLowLight(photo.base64);
       console.log('Low light detected:', isLowLight);
       setShowLowLightWarning(isLowLight);
-      
+
       console.log('Processing image with AI...');
       await processImageWithAI(photo.base64, currentWallpaper);
-      
+
     } catch (error) {
       console.error('Error capturing photo:', error);
       if (Platform.OS !== 'web') {
@@ -209,23 +209,23 @@ export default function CameraScreen() {
       setIsProcessing(false);
     }
   }
-  
+
   async function reprocessWithDifferentWallpaper(wallpaperIndex: number) {
     console.log('=== REPROCESSING WITH DIFFERENT WALLPAPER ===');
-    
+
     if (!uploadedImage) {
       if (Platform.OS !== 'web') {
         Alert.alert('Error', 'Primero debes tomar o subir una foto.');
       }
       return;
     }
-    
+
     const selectedWallpaper = availableWallpapers[wallpaperIndex];
     if (!selectedWallpaper) {
       console.error('Wallpaper not found at index:', wallpaperIndex);
       return;
     }
-    
+
     try {
       setIsProcessing(true);
       setCurrentWallpaperIndex(wallpaperIndex);
@@ -241,83 +241,83 @@ export default function CameraScreen() {
       setIsProcessing(false);
     }
   }
-  
+
   async function fetchImageAsBase64(imageUrl: string): Promise<string> {
     console.log('Starting fetchImageAsBase64 for URL:', imageUrl);
-    
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       console.log('Fetch timeout reached, aborting...');
       controller.abort();
     }, 45000);
-    
+
     try {
       const cleanUrl = imageUrl.trim();
-      
+
       const proxyServices = [
         cleanUrl,
         `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&default=1`,
         `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
       ];
-      
+
       let lastError: Error | null = null;
-      
+
       for (let i = 0; i < proxyServices.length; i++) {
         const url = proxyServices[i];
         const methodName = i === 0 ? 'Direct' : `Proxy ${i}`;
         console.log(`[${i + 1}/${proxyServices.length}] Trying ${methodName}...`);
         console.log(`URL: ${url.substring(0, 100)}...`);
-        
+
         try {
           const fetchOptions: RequestInit = {
             signal: controller.signal,
             method: 'GET',
           };
-          
+
           if (i === 0) {
             fetchOptions.headers = {
               'Accept': 'image/*,*/*',
               'Cache-Control': 'no-cache',
             };
           }
-          
+
           console.log(`Fetching with options:`, { method: fetchOptions.method });
           const response = await fetch(url, fetchOptions);
-          
+
           console.log(`Response status: ${response.status} ${response.statusText}`);
           console.log(`Response headers:`, {
             contentType: response.headers.get('content-type'),
             contentLength: response.headers.get('content-length'),
           });
-          
+
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
-          
+
           const contentType = response.headers.get('content-type');
           if (contentType && !contentType.startsWith('image/')) {
             console.warn('Response is not an image:', contentType);
             throw new Error('Invalid content type');
           }
-          
+
           const blob = await response.blob();
           console.log(`Blob received - size: ${blob.size}, type: ${blob.type}`);
-          
+
           if (blob.size === 0) {
             throw new Error('Empty image response');
           }
-          
+
           if (blob.size > 10 * 1024 * 1024) {
             console.warn('Large image detected:', blob.size, 'bytes');
           }
-          
+
           const base64 = await new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
-            
+
             const readerTimeout = setTimeout(() => {
               reject(new Error('FileReader timeout'));
             }, 15000);
-            
+
             reader.onloadend = () => {
               clearTimeout(readerTimeout);
               const result = reader.result as string;
@@ -325,41 +325,41 @@ export default function CameraScreen() {
                 reject(new Error('Failed to convert to base64'));
                 return;
               }
-              
+
               const base64Data = result.split(',')[1];
               if (!base64Data) {
                 reject(new Error('Invalid base64 format'));
                 return;
               }
-              
+
               console.log(`Base64 conversion successful, length: ${base64Data.length}`);
               resolve(base64Data);
             };
-            
+
             reader.onerror = (error) => {
               clearTimeout(readerTimeout);
               console.error('FileReader error:', error);
               reject(new Error('FileReader error'));
             };
-            
+
             reader.readAsDataURL(blob);
           });
-          
+
           clearTimeout(timeoutId);
           console.log(`✓ Successfully fetched and converted image using ${methodName}`);
           return base64;
-          
+
         } catch (error) {
           const errorMsg = error instanceof Error ? error.message : String(error);
           console.error(`✗ Method ${i + 1} (${methodName}) failed:`, errorMsg);
-          
+
           lastError = error instanceof Error ? error : new Error(String(error));
-          
+
           if (error instanceof Error && error.name === 'AbortError') {
             console.error('Request aborted due to timeout');
             break;
           }
-          
+
           if (i < proxyServices.length - 1) {
             console.log('Trying next method...');
             await new Promise(resolve => setTimeout(resolve, 1000));
@@ -367,35 +367,35 @@ export default function CameraScreen() {
           continue;
         }
       }
-      
+
       console.error('All fetch methods failed');
       const errorMessage = lastError?.message || 'Unknown error';
       throw new Error(`No se pudo cargar la imagen del papel tapiz. ${errorMessage.includes('Failed to fetch') ? 'Verifica tu conexión a internet o intenta con otra imagen.' : errorMessage}`);
-      
+
     } finally {
       clearTimeout(timeoutId);
     }
   }
-  
+
   async function compressBase64Image(base64: string, maxSize: number = 1024): Promise<string> {
     try {
       if (Platform.OS === 'web') {
         console.log('Web platform - using canvas compression');
         return await compressBase64ImageWeb(base64, maxSize);
       }
-      
+
       const imageUri = `data:image/jpeg;base64,${base64}`;
       const manipulated = await ImageManipulator.manipulateAsync(
         imageUri,
         [{ resize: { width: maxSize } }],
         { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
-      
+
       if (!manipulated.base64) {
         console.log('No base64 in manipulated result, returning original');
         return base64;
       }
-      
+
       console.log('Image compressed - original:', base64.length, 'compressed:', manipulated.base64.length);
       return manipulated.base64;
     } catch (error) {
@@ -403,7 +403,7 @@ export default function CameraScreen() {
       return base64;
     }
   }
-  
+
   function detectLowLight(imageBase64: string): Promise<boolean> {
     return new Promise((resolve) => {
       if (Platform.OS === 'web') {
@@ -412,22 +412,22 @@ export default function CameraScreen() {
           img.onload = () => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d', { willReadFrequently: true });
-            
+
             if (!ctx) {
               resolve(false);
               return;
             }
-            
+
             const sampleSize = 100;
             canvas.width = sampleSize;
             canvas.height = sampleSize;
-            
+
             ctx.drawImage(img, 0, 0, sampleSize, sampleSize);
-            
+
             try {
               const imageData = ctx.getImageData(0, 0, sampleSize, sampleSize);
               const data = imageData.data;
-              
+
               let totalBrightness = 0;
               for (let i = 0; i < data.length; i += 4) {
                 const r = data[i];
@@ -436,10 +436,10 @@ export default function CameraScreen() {
                 const brightness = (r * 0.299 + g * 0.587 + b * 0.114);
                 totalBrightness += brightness;
               }
-              
+
               const avgBrightness = totalBrightness / (sampleSize * sampleSize);
               console.log('Average brightness:', avgBrightness);
-              
+
               const isLowLight = avgBrightness < 80;
               resolve(isLowLight);
             } catch (error) {
@@ -447,7 +447,7 @@ export default function CameraScreen() {
               resolve(false);
             }
           };
-          
+
           img.onerror = () => resolve(false);
           img.crossOrigin = 'anonymous';
           const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
@@ -461,25 +461,25 @@ export default function CameraScreen() {
       }
     });
   }
-  
+
   async function compressBase64ImageWeb(base64: string, maxSize: number = 1024): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
         const img = new window.Image();
-        
+
         img.onload = () => {
           try {
             console.log('Image loaded successfully, dimensions:', img.width, 'x', img.height);
-            
+
             if (!img.width || !img.height || img.width === 0 || img.height === 0) {
               console.error('Invalid image dimensions');
               resolve(base64);
               return;
             }
-            
+
             const canvas = document.createElement('canvas');
             let { width, height } = img;
-            
+
             if (width > maxSize || height > maxSize) {
               if (width > height) {
                 height = (height / width) * maxSize;
@@ -489,19 +489,19 @@ export default function CameraScreen() {
                 height = maxSize;
               }
             }
-            
+
             canvas.width = Math.round(width);
             canvas.height = Math.round(height);
-            
+
             const ctx = canvas.getContext('2d', { willReadFrequently: false });
             if (!ctx) {
               console.error('Failed to get canvas context');
               resolve(base64);
               return;
             }
-            
+
             ctx.drawImage(img, 0, 0, Math.round(width), Math.round(height));
-            
+
             try {
               const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
               if (!compressedDataUrl || !compressedDataUrl.includes(',')) {
@@ -509,14 +509,14 @@ export default function CameraScreen() {
                 resolve(base64);
                 return;
               }
-              
+
               const compressedBase64 = compressedDataUrl.split(',')[1];
               if (!compressedBase64) {
                 console.error('Failed to extract base64 from dataURL');
                 resolve(base64);
                 return;
               }
-              
+
               console.log('Web compression - original:', base64.length, 'compressed:', compressedBase64.length);
               resolve(compressedBase64);
             } catch (toDataURLError) {
@@ -528,25 +528,25 @@ export default function CameraScreen() {
             resolve(base64);
           }
         };
-        
+
         img.onerror = (error) => {
           console.error('Image load error:', error instanceof Event ? 'Load failed' : String(error));
           resolve(base64);
         };
-        
+
         // Set crossOrigin before src to avoid CORS issues
         img.crossOrigin = 'anonymous';
-        
+
         // Validate base64 before setting src
         if (!base64 || base64.length === 0) {
           console.error('Empty base64 string provided');
           resolve(base64);
           return;
         }
-        
+
         // Remove any existing data URI prefix from base64
         const cleanBase64 = base64.replace(/^data:image\/[a-z]+;base64,/, '');
-        
+
         img.src = `data:image/jpeg;base64,${cleanBase64}`;
       } catch (error) {
         console.error('Web compression setup error:', error instanceof Error ? error.message : String(error));
@@ -557,46 +557,46 @@ export default function CameraScreen() {
 
   async function processImageWithAI(imageBase64: string, selectedWallpaper: typeof wallpaper) {
     console.log('=== AI PROCESSING START ===');
-    
+
     if (!selectedWallpaper) {
       console.error('No wallpaper selected for AI processing');
       throw new Error('No se seleccionó papel tapiz');
     }
-    
+
     try {
       console.log('Preparing AI request...');
-      
+
       // First, compress the captured/uploaded image
       console.log('Compressing user image...');
       const compressedUserImage = await compressBase64Image(imageBase64, 1280);
-      
-      const selectedImageUrl = selectedWallpaper.imageUrls && selectedWallpaper.imageUrls.length > 0 
+
+      const selectedImageUrl = selectedWallpaper.imageUrls && selectedWallpaper.imageUrls.length > 0
         ? selectedWallpaper.imageUrls[selectedImageIndex] || selectedWallpaper.imageUrls[0]
         : selectedWallpaper.imageUrl;
       console.log('Selected wallpaper image URL:', selectedImageUrl);
       console.log('Selected image index:', selectedImageIndex);
-      
+
       // Then, convert and compress the wallpaper image URL to base64
       let wallpaperBase64: string;
       try {
         console.log('Attempting to fetch wallpaper image...');
-        
+
         wallpaperBase64 = await fetchImageAsBase64(selectedImageUrl);
         console.log('Wallpaper image converted to base64, length:', wallpaperBase64.length);
-        
+
         // Compress wallpaper image too
         console.log('Compressing wallpaper image...');
         wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
-        
+
       } catch (error) {
         console.error('Error converting wallpaper image to base64:', error);
-        
+
         // Navigate to result screen without AI processing
         console.log('Falling back to result screen without AI processing...');
-        const errorMessage = error instanceof Error && error.name === 'AbortError' 
+        const errorMessage = error instanceof Error && error.name === 'AbortError'
           ? 'Tiempo de espera agotado al cargar la imagen. Mostrando imagen original.'
           : 'No se pudo cargar la imagen del papel tapiz. Mostrando imagen original.';
-          
+
         const navigationParams = {
           originalImage: compressedUserImage,
           processedImage: '', // Empty processed image
@@ -604,15 +604,15 @@ export default function CameraScreen() {
           aiProcessingFailed: 'true',
           errorMessage
         };
-        
+
         router.push({
           pathname: '/wallpaper-result',
           params: navigationParams
         });
-        
+
         return; // Exit early, don't throw error
       }
-      
+
       const prompt = `You are an expert at applying wallpaper patterns to walls in photos with advanced wall detection capabilities.
 
 TASK: Apply the wallpaper pattern from the SECOND IMAGE onto the walls in the FIRST IMAGE.
@@ -662,12 +662,12 @@ FINAL CHECK:
 - Are all objects and furniture preserved without wallpaper on them?
 
 PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in background/center), and apply wallpaper ONLY to that wall surface with highest quality and accuracy.`;
-      
+
       const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
       const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
-      
+
       console.log('Final image sizes - User:', cleanImageBase64.length, 'Wallpaper:', cleanWallpaperBase64.length);
-      
+
       const requestBody = {
         prompt: prompt,
         images: [
@@ -681,12 +681,12 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           }
         ]
       };
-      
+
       console.log('Making API request to image editing service...');
-      
+
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 90000);
-      
+
       let response;
       try {
         response = await fetch('https://toolkit.rork.com/images/edit/', {
@@ -703,11 +703,11 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
         clearTimeout(timeoutId);
         throw fetchError;
       }
-      
+
       if (!response.ok) {
         const errorData = await response.text();
         console.error('API Error Response:', errorData);
-        
+
         let errorMessage = 'El servicio de IA no está disponible temporalmente. Mostrando imagen original.';
         if (response.status === 429) {
           errorMessage = 'Servicio de IA ocupado. Por favor intenta nuevamente en unos momentos.';
@@ -716,7 +716,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
         } else if (response.status === 400) {
           errorMessage = 'No se pudo procesar la imagen. Intenta con otra foto más clara. Mostrando imagen original.';
         }
-        
+
         // Navigate to result screen without AI processing
         const navigationParams = {
           originalImage: compressedUserImage,
@@ -725,21 +725,21 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           aiProcessingFailed: 'true',
           errorMessage
         };
-        
+
         router.push({
           pathname: '/wallpaper-result',
           params: navigationParams
         });
-        
+
         return; // Exit early, don't throw error
       }
-      
+
       const result = await response.json();
       console.log('AI processing successful, response:', { hasImage: !!result.image, hasBase64: !!result.image?.base64Data });
-      
+
       if (!result.image || !result.image.base64Data) {
         console.error('Invalid AI response format:', result);
-        
+
         // Navigate to result screen without AI processing
         const navigationParams = {
           originalImage: compressedUserImage,
@@ -748,15 +748,15 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           aiProcessingFailed: 'true',
           errorMessage: 'La IA no pudo generar la imagen. Mostrando imagen original.'
         };
-        
+
         router.push({
           pathname: '/wallpaper-result',
           params: navigationParams
         });
-        
+
         return; // Exit early, don't throw error
       }
-      
+
       // Navigate to result screen with processed image
       const navigationParams = {
         originalImage: compressedUserImage,
@@ -764,19 +764,19 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
         wallpaperId: selectedWallpaper.id,
         aiProcessingFailed: 'false'
       };
-      
+
       console.log('Navigating to result screen with processed image...');
       router.push({
         pathname: '/wallpaper-result',
         params: navigationParams
       });
-      
+
     } catch (error) {
       console.error('=== AI PROCESSING ERROR ===');
       console.error('Error details:', error);
       console.error('Error message:', error instanceof Error ? error.message : String(error));
       console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-      
+
       // Determine error message based on error type
       let errorMessage = 'Error inesperado. Mostrando imagen original.';
       if (error instanceof Error) {
@@ -786,7 +786,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           errorMessage = 'Error de conexión. Verifica tu conexión a internet.';
         }
       }
-      
+
       // Determine error message based on error type
       const compressedImageToUse = imageBase64;
       try {
@@ -799,7 +799,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           aiProcessingFailed: 'true',
           errorMessage
         };
-        
+
         console.log('Navigating to result screen with error fallback...');
         router.push({
           pathname: '/wallpaper-result',
@@ -809,7 +809,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
       } catch (compressError) {
         console.error('Error compressing fallback image:', compressError);
       }
-      
+
       const navigationParams = {
         originalImage: compressedImageToUse,
         processedImage: '', // Empty processed image
@@ -817,7 +817,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
         aiProcessingFailed: 'true',
         errorMessage
       };
-      
+
       console.log('Navigating to result screen with error fallback...');
       router.push({
         pathname: '/wallpaper-result',
@@ -854,7 +854,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           )}
         </View>
       </View>
-      
+
       {availableWallpapers.length > 1 && !isProcessing && (
         <View style={styles.wallpaperSelectionContainer}>
           <View style={styles.wallpaperSelectionHeader}>
@@ -901,7 +901,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           </ScrollView>
         </View>
       )}
-      
+
       {availableImages.length > 1 && !isProcessing && (
         <View style={styles.imageSelectionContainer}>
           <Text style={styles.imageSelectionTitle}>Imágenes del papel tapiz:</Text>
@@ -926,7 +926,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           </ScrollView>
         </View>
       )}
-      
+
       {showLowLightWarning && !isProcessing && (
         <View style={styles.lightWarningContainer}>
           <Text style={styles.lightWarningText}>
@@ -934,7 +934,7 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           </Text>
         </View>
       )}
-      
+
       {isProcessing && (
         <View style={styles.processingContainer}>
           <ActivityIndicator size="large" color={Colors.light.primary} />
@@ -946,12 +946,12 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
           </Text>
         </View>
       )}
-      
+
       <View style={styles.cameraContainer}>
         {uploadedImage ? (
           <View style={styles.camera}>
-            <Image 
-              source={{ uri: `data:image/jpeg;base64,${uploadedImage}` }} 
+            <Image
+              source={{ uri: `data:image/jpeg;base64,${uploadedImage}` }}
               style={styles.uploadedImagePreview}
               resizeMode="contain"
             />
@@ -959,24 +959,24 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
               <View style={styles.uploadedInfo}>
                 <Text style={styles.uploadedInfoText}>Foto lista para procesar</Text>
                 <Text style={styles.uploadedInfoSubtext}>
-                  {availableWallpapers.length > 1 
+                  {availableWallpapers.length > 1
                     ? 'Selecciona diferentes papeles tapiz arriba para ver cambios'
                     : 'Toca capturar para procesar'}
                 </Text>
               </View>
             </View>
-            
+
             <View style={styles.controls}>
-              <TouchableOpacity 
-                style={[styles.changePhotoButton, isProcessing && styles.disabledButton]} 
+              <TouchableOpacity
+                style={[styles.changePhotoButton, isProcessing && styles.disabledButton]}
                 onPress={() => setUploadedImage(null)}
                 disabled={isProcessing}
               >
                 <Camera size={24} color={Colors.light.background} />
               </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.captureButton, isProcessing && styles.disabledButton]} 
+
+              <TouchableOpacity
+                style={[styles.captureButton, isProcessing && styles.disabledButton]}
                 onPress={() => {
                   if (currentWallpaper && uploadedImage) {
                     setIsProcessing(true);
@@ -993,9 +993,9 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
                   )}
                 </View>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.galleryButton, isProcessing && styles.disabledButton]} 
+
+              <TouchableOpacity
+                style={[styles.galleryButton, isProcessing && styles.disabledButton]}
                 onPress={pickImage}
                 disabled={isProcessing}
               >
@@ -1004,9 +1004,9 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
             </View>
           </View>
         ) : (
-          <CameraView 
-            ref={cameraRef} 
-            style={styles.camera} 
+          <CameraView
+            ref={cameraRef}
+            style={styles.camera}
             facing={facing}
             zoom={0}
             enableTorch={false}
@@ -1023,18 +1023,18 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
                 Apunta hacia la pared donde quieres colocar el papel tapiz
               </Text>
             </View>
-            
+
             <View style={styles.controls}>
-              <TouchableOpacity 
-                style={[styles.flipButton, isProcessing && styles.disabledButton]} 
+              <TouchableOpacity
+                style={[styles.flipButton, isProcessing && styles.disabledButton]}
                 onPress={toggleCameraFacing}
                 disabled={isProcessing}
               >
                 <FlipHorizontal size={24} color={Colors.light.background} />
               </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.captureButton, (isProcessing || !isCameraReady) && styles.disabledButton]} 
+
+              <TouchableOpacity
+                style={[styles.captureButton, (isProcessing || !isCameraReady) && styles.disabledButton]}
                 onPress={takePicture}
                 disabled={isProcessing || !isCameraReady}
               >
@@ -1046,9 +1046,9 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
                   )}
                 </View>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.galleryButton, isProcessing && styles.disabledButton]} 
+
+              <TouchableOpacity
+                style={[styles.galleryButton, isProcessing && styles.disabledButton]}
                 onPress={pickImage}
                 disabled={isProcessing}
               >

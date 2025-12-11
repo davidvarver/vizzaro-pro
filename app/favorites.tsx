@@ -27,16 +27,18 @@ import {
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useFavorites, FavoriteProject } from '@/contexts/FavoritesContext';
-import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useFavoritesStore, FavoriteProject } from '@/stores/useFavoritesStore';
+import { useWallpaperStore } from '@/stores/useWallpaperStore';
+import { SearchBar } from '@/components/SearchBar';
+import { FilterGroup } from '@/components/FilterGroup';
 
 
 
 export default function FavoritesScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { favoriteProjects, removeFromFavorites } = useFavorites();
-  const { wallpapers } = useWallpapers();
+  const { favoriteProjects, removeFromFavorites } = useFavoritesStore();
+  const { wallpapers } = useWallpaperStore();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedRoom, setSelectedRoom] = useState<string>('all');
@@ -47,9 +49,9 @@ export default function FavoritesScreen() {
 
   const filteredProjects = (favoriteProjects || []).filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (project.wallpapers.length > 0 && project.wallpapers[0].name.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesRoom = selectedRoom === 'all' || 
-                       project.roomType.toLowerCase() === selectedRoom.toLowerCase();
+      (project.wallpapers.length > 0 && project.wallpapers[0].name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesRoom = selectedRoom === 'all' ||
+      project.roomType.toLowerCase() === selectedRoom.toLowerCase();
     return matchesSearch && matchesRoom;
   });
 
@@ -118,7 +120,7 @@ export default function FavoritesScreen() {
           onPress={() => {
             router.push({
               pathname: '/(tabs)/camera',
-              params: { 
+              params: {
                 wallpaperId: project.wallpapers.length > 0 ? project.wallpapers[0].id : '',
                 source: 'favorite',
                 projectId: project.id
@@ -198,44 +200,22 @@ export default function FavoritesScreen() {
       </View>
 
       <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Search size={20} color={Colors.light.textSecondary} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar proyectos..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholderTextColor={Colors.light.textSecondary}
-          />
-        </View>
+        <SearchBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="Buscar proyectos..."
+          containerStyle={styles.searchInputContainerRefactored}
+        />
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {roomTypes.map((room) => (
-          <TouchableOpacity
-            key={room}
-            style={[
-              styles.filterChip,
-              selectedRoom === room && styles.filterChipSelected,
-            ]}
-            onPress={() => setSelectedRoom(room)}
-          >
-            <Text
-              style={[
-                styles.filterChipText,
-                selectedRoom === room && styles.filterChipTextSelected,
-              ]}
-            >
-              {room === 'all' ? 'Todos' : room.charAt(0).toUpperCase() + room.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      <View style={styles.filterContainer}>
+        <FilterGroup
+          label=""
+          options={roomTypes.map(r => r === 'all' ? 'Todos' : r.charAt(0).toUpperCase() + r.slice(1))}
+          selected={selectedRoom === 'all' ? 'Todos' : selectedRoom.charAt(0).toUpperCase() + selectedRoom.slice(1)}
+          onSelect={(opt) => setSelectedRoom(opt === 'Todos' ? 'all' : opt.toLowerCase())}
+        />
+      </View>
 
       {filteredProjects.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -344,47 +324,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
-  searchInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.backgroundSecondary,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 12,
+  searchInputContainerRefactored: {
+    backgroundColor: Colors.light.backgroundSecondary, // Match original bg
+    borderWidth: 0,
   },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.light.text,
-  },
+  // searchInputContainer and searchInput removed
   filterContainer: {
     paddingBottom: 16,
   },
-  filterContent: {
-    paddingHorizontal: 20,
-    gap: 8,
-  },
-  filterChip: {
-    backgroundColor: Colors.light.backgroundSecondary,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  filterChipSelected: {
-    backgroundColor: Colors.light.primary,
-    borderColor: Colors.light.primary,
-  },
-  filterChipText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.textSecondary,
-  },
-  filterChipTextSelected: {
-    color: Colors.light.background,
-  },
+  // Filter styles removed
   projectsList: {
     paddingHorizontal: 20,
     paddingBottom: 20,
