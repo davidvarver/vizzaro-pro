@@ -1,0 +1,15 @@
+{
+  "summary": "Crear app/health/route.ts para endpoint /health.",
+  "impact": "Falta endpoint de salud; tests de salud podrían fallar.",
+  "proposed_fix": "Crear app/health/route.ts que responda 200 y {status:'ok'}.",
+  "unified_diff": "--- a/app/health/route.ts\n+++ b/app/health/route.ts\n@@ -0,0 +1,9 @@\n+import { NextResponse } from 'next/server';\n\n+\n\n+/**\n\n+ * Auto-created by CI-Healing demo.\n\n+ * Returns { status: 'ok' } with HTTP 200.\n\n+ */\n\n+export async function GET() {\n\n+  return NextResponse.json({ status: 'ok' }, { status: 200 });\n\n+}\n\n",
+  "test_updates": "N/A",
+  "risk_notes": "Cambio seguro (comentario o archivo nuevo).",
+  "retry_hint": "Re-ejecutar el workflow si fuera necesario.",
+  "files": [
+    {
+      "path": "app/health/route.ts",
+      "content": "import { NextResponse } from 'next/server';\n\n/**\n * Auto-created by CI-Healing demo.\n * Returns { status: 'ok' } with HTTP 200.\n */\nexport async function GET() {\n  return NextResponse.json({ status: 'ok' }, { status: 200 });\n}\n"
+    }
+  ]
+}
