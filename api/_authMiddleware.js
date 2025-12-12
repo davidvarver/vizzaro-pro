@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, ADMIN_SECRET_TOKEN } from './config.js';
+import logger from './logger.js';
 
 export function verifyToken(req, res) {
   try {
@@ -24,7 +25,7 @@ export function verifyToken(req, res) {
         user: decoded
       };
     } catch (jwtError) {
-      console.error('[Auth Middleware] JWT verification failed:', jwtError.message);
+      logger.warn('[Auth Middleware] JWT verification failed:', jwtError.message);
 
       if (jwtError.name === 'TokenExpiredError') {
         return {
@@ -41,7 +42,7 @@ export function verifyToken(req, res) {
       };
     }
   } catch (error) {
-    console.error('[Auth Middleware] Error:', error);
+    logger.error('[Auth Middleware] Error:', error);
     return {
       success: false,
       error: 'Error de autenticación',

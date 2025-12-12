@@ -4,6 +4,7 @@ import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
 import { validateRequest, userRegisterSchema } from '../_schemas.js';
 import { JWT_SECRET } from '../config.js';
+import logger from '../logger.js';
 const JWT_EXPIRATION = '7d';
 
 export default async function handler(req, res) {
@@ -22,11 +23,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    console.log('[Users REGISTER] Received request');
+    logger.info('[Users REGISTER] Received request');
 
     const validation = validateRequest(userRegisterSchema, req.body);
     if (!validation.success) {
-      console.log('[Users REGISTER] Validation failed:', validation.errors);
+      logger.warn('[Users REGISTER] Validation failed:', validation.errors);
       return res.status(422).json({
         success: false,
         error: 'Datos inválidos',
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
     const kvConfigured = kvUrl && kvUrl !== 'your_vercel_kv_url' && kvToken && kvToken !== 'your_vercel_kv_token';
 
     if (!kvConfigured) {
-      console.warn('[Users REGISTER] KV not configured properly');
+      logger.warn('[Users REGISTER] KV not configured properly');
       return res.status(503).json({
         error: '⚠️ Base de datos no configurada',
         needsConfig: true
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
     }
 
     const userKey = `user:${email}`;
-    console.log('[Users REGISTER] Checking if user exists:', userKey);
+    logger.debug('[Users REGISTER] Checking if user exists:', userKey);
 
     const existingUserResponse = await fetch(`${kvUrl}/get/${userKey}`, {
       method: 'GET',
@@ -62,12 +63,12 @@ export default async function handler(req, res) {
     if (existingUserResponse.ok) {
       const existingData = await existingUserResponse.json();
       if (existingData.result) {
-        console.log('[Users REGISTER] User already exists:', email);
+        logger.info('[Users REGISTER] User already exists:', email);
         return res.status(400).json({ success: false, error: 'Este correo ya está registrado' });
       }
     }
 
-    console.log('[Users REGISTER] Hashing password...');
+    logger.debug('[Users REGISTER] Hashing password...');
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
@@ -79,7 +80,7 @@ export default async function handler(req, res) {
       createdAt: new Date().toISOString(),
     };
 
-    console.log('[Users REGISTER] Saving to KV with key:', userKey);
+    logger.debug('[Users REGISTER] Saving to KV with key:', userKey);
     const kvResponse = await fetch(`${kvUrl}/set/${userKey}`, {
       method: 'POST',
       headers: {
@@ -91,11 +92,11 @@ export default async function handler(req, res) {
 
     if (!kvResponse.ok) {
       const errorText = await kvResponse.text();
-      console.error('[Users REGISTER] KV API error:', kvResponse.status, errorText);
+      logger.error('[Users REGISTER] KV API error:', kvResponse.status, errorText);
       throw new Error(`KV API error: ${kvResponse.status} - ${errorText}`);
     }
 
-    console.log('[Users REGISTER] Adding to users index...');
+    logger.debug('[Users REGISTER] Adding to users index...');
     const usersIndexResponse = await fetch(`${kvUrl}/get/users:index`, {
       method: 'GET',
       headers: {
@@ -114,7 +115,7 @@ export default async function handler(req, res) {
           usersList = rawResult;
         }
       } catch (parseError) {
-        console.error('[Users REGISTER] Error parsing users index:', parseError);
+        logger.error('[Users REGISTER] Error parsing users index:', parseError);
         usersList = [];
       }
     }
@@ -135,7 +136,7 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log('[Users REGISTER] Generating JWT token...');
+    logger.debug('[Users REGISTER] Generating JWT token...');
     const token = jwt.sign(
       {
         userId: newUser.id,
@@ -147,7 +148,7 @@ export default async function handler(req, res) {
       { expiresIn: JWT_EXPIRATION }
     );
 
-    console.log('[Users REGISTER] User registered successfully:', newUser.id);
+    logger.info('[Users REGISTER] User registered successfully:', newUser.id);
 
     const { passwordHash: _, ...userWithoutPassword } = newUser;
 
@@ -159,7 +160,7 @@ export default async function handler(req, res) {
       usingKV: true
     });
   } catch (error) {
-    console.error('[Users REGISTER] Error registering user:', error);
+    logger.error('[Users REGISTER] Error registering user:', error);
     return res.status(500).json({
       success: false,
       error: 'Error al registrar usuario',
