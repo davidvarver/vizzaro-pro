@@ -18,6 +18,7 @@ import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
 import { router } from 'expo-router';
 import { WallpaperCard } from '@/components/WallpaperCard';
+import { WallpaperCard } from '@/components/WallpaperCard';
 
 export default function HomeScreen() {
   // ... (imports and hooks)
@@ -168,24 +169,11 @@ return (
           contentContainerStyle={styles.gridContainer}
           columnWrapperStyle={styles.gridRow}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[styles.gridCard, { width: `${100 / numColumns - 2}%` }]}
-              onPress={() => handleWallpaperPress(item)}
-            >
-              <View style={styles.gridImageContainer}>
-                <Image
-                  source={{ uri: item.imageUrls?.[0] || item.imageUrl }}
-                  style={styles.gridImage}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={styles.gridInfo}>
-                <Text style={styles.gridName} numberOfLines={2}>
-                  {item.name}
-                </Text>
-                <Text style={styles.gridPrice}>${item.price}</Text>
-              </View>
-            </TouchableOpacity>
+            <WallpaperCard
+              item={item}
+              onPress={handleWallpaperPress}
+              width={`${100 / numColumns - 2}%`}
+            />
           )}
         />
       ) : (

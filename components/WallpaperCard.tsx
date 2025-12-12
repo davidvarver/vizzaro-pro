@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, DimensionValue } from 'react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import Colors from '@/constants/colors';
 
 interface WallpaperCardProps {
     item: Wallpaper;
     onPress: (item: Wallpaper) => void;
-    width: string;
+    width: DimensionValue;
 }
 
 export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
