@@ -46,14 +46,14 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
     try {
       console.log('[CollectionsContext] Loading collections... (forceRefresh:', forceRefresh, ')');
       setError(null);
-      
+
       if (API_BASE_URL) {
         try {
           console.log('[CollectionsContext] Attempting to load from API:', `${API_BASE_URL}/api/collections/get`);
-          
+
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 8000);
-          
+
           const response = await fetch(`${API_BASE_URL}/api/collections/get?t=${Date.now()}`, {
             method: 'GET',
             headers: {
@@ -63,13 +63,13 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
             },
             signal: controller.signal,
           });
-          
+
           clearTimeout(timeoutId);
 
           if (response.ok) {
             const data = await response.json();
             console.log('[CollectionsContext] Loaded from API:', data.collections?.length || 0, 'items');
-            
+
             if (data.success && data.collections) {
               setCollections(data.collections);
               await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data.collections));
@@ -84,7 +84,7 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
       } else {
         console.log('[CollectionsContext] No API URL configured, using local storage mode');
       }
-      
+
       if (!forceRefresh) {
         console.log('[CollectionsContext] Loading from AsyncStorage...');
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
@@ -95,11 +95,11 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
           return;
         }
       }
-      
+
       console.log('[CollectionsContext] Using default collections:', defaultCollections.length, 'items');
       setCollections(defaultCollections);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(defaultCollections));
-      
+
     } catch (error) {
       console.error('[CollectionsContext] Error loading collections:', error);
       setError('Error al cargar las colecciones');
@@ -112,16 +112,16 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
   const saveCollections = useCallback(async (collectionsData: Collection[], adminToken?: string): Promise<boolean> => {
     try {
       console.log('[CollectionsContext] Saving collections with', collectionsData.length, 'items...');
-      
-      const tokenToUse = adminToken || process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
-      
+
+      const tokenToUse = adminToken || process.env.EXPO_PUBLIC_ADMIN_TOKEN || '';
+
       if (API_BASE_URL) {
         const apiUrl = `${API_BASE_URL}/api/collections/update`;
         console.log('[CollectionsContext] Syncing to API:', apiUrl);
-        
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 15000);
-        
+
         let response;
         try {
           response = await fetch(apiUrl, {
@@ -130,7 +130,7 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
               collections: collectionsData,
               adminToken: tokenToUse
             }),
@@ -139,20 +139,20 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
         } catch (fetchError) {
           clearTimeout(timeoutId);
           console.error('[CollectionsContext] Fetch error:', fetchError);
-          
+
           if (fetchError instanceof Error) {
             if (fetchError.name === 'AbortError') {
               throw new Error('⏱️ Tiempo de espera agotado.\n\nEl servidor no respondió a tiempo. Verifica tu conexión a internet.');
             }
-            
+
             if (fetchError.message.includes('Failed to fetch') || fetchError.message.includes('Network request failed')) {
               throw new Error('🌐 Error de conexión\n\nNo se pudo conectar al servidor. Verifica tu conexión.');
             }
           }
-          
+
           throw new Error('Error de red: ' + (fetchError instanceof Error ? fetchError.message : 'Desconocido'));
         }
-        
+
         clearTimeout(timeoutId);
 
         if (!response.ok) {
@@ -164,34 +164,34 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
           } catch {
             errorData = { error: errorText };
           }
-          
+
           if (errorData.needsConfig) {
             throw new Error('⚠️ Base de datos no configurada\n\nPor favor configura Vercel KV.');
           }
-          
+
           if (response.status === 401) {
             throw new Error('🔒 No autorizado\n\nToken de administrador inválido.');
           }
-          
+
           throw new Error(errorData.error || `Error del servidor (${response.status})`);
         }
-        
+
         const data = await response.json();
         console.log('[CollectionsContext] Synced to API successfully:', data);
-        
+
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(collectionsData));
         console.log('[CollectionsContext] Saved to AsyncStorage');
-        
+
         setCollections(collectionsData);
       } else {
         console.log('[CollectionsContext] No API URL configured, saving only to local storage');
-        
+
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(collectionsData));
         console.log('[CollectionsContext] Saved to AsyncStorage');
-        
+
         setCollections(collectionsData);
       }
-      
+
       return true;
     } catch (error) {
       console.error('[CollectionsContext] Error saving collections:', error);

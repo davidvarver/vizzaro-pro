@@ -148,11 +148,11 @@ ALLOWED_ORIGINS=https://www.vizzarowallpaper.com,https://vizzarowallpaper.com
 # ❌ VALORES POR DEFECTO - CAMBIAR INMEDIATAMENTE
 
 # Token de administrador
-ADMIN_SECRET_TOKEN=vizzaro_admin_secret_2025
+ADMIN_SECRET_TOKEN=your_admin_secret_here
 # ⚠️ Debe ser: cadena aleatoria larga y segura
 
 # JWT Secret
-JWT_SECRET=vizzaro_jwt_secret_change_in_production_2025
+JWT_SECRET=your_jwt_secret_here
 # ⚠️ Debe ser: cadena aleatoria larga (mínimo 32 chars)
 ```
 

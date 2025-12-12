@@ -110,7 +110,7 @@ Si ves esto, significa que las variables de entorno no están configuradas corre
 
 ### Problema 2: "No autorizado"
 **Causa**: Token de admin incorrecto
-**Solución**: Verifica que `ADMIN_SECRET_TOKEN` en Vercel sea `vizzaro_admin_secret_2025`
+**Solución**: Verifica que `ADMIN_SECRET_TOKEN` en Vercel sea correcto.
 
 ### Problema 3: "Base de datos no configurada"
 **Causa**: Variables de KV no configuradas

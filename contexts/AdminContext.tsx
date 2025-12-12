@@ -17,7 +17,7 @@ const ADMIN_CREDENTIALS = {
 };
 
 const generateAdminToken = () => {
-  const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
+  const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || '';
   console.log('[AdminContext] Generated token:', token);
   return token;
 };
@@ -48,7 +48,7 @@ export const [AdminProvider, useAdmin] = createContextHook(() => {
       if (stored && storedToken) {
         const admin = JSON.parse(stored);
         const currentToken = generateAdminToken();
-        
+
         if (storedToken !== currentToken) {
           console.log('[AdminContext] Token mismatch, updating stored token');
           console.log('[AdminContext] Old token:', storedToken);
@@ -58,7 +58,7 @@ export const [AdminProvider, useAdmin] = createContextHook(() => {
         } else {
           setAdminToken(storedToken);
         }
-        
+
         setCurrentAdmin(admin);
         setIsAuthenticated(true);
       }
@@ -82,9 +82,9 @@ export const [AdminProvider, useAdmin] = createContextHook(() => {
           name: 'Administrador',
           role: 'admin',
         };
-        
+
         const token = generateAdminToken();
-        
+
         setCurrentAdmin(admin);
         setAdminToken(token);
         setIsAuthenticated(true);

@@ -49,8 +49,8 @@ También necesitas estas variables para la app:
 
 ```env
 EXPO_PUBLIC_API_URL=https://tu-proyecto.vercel.app
-EXPO_PUBLIC_ADMIN_TOKEN=vizzaro_admin_secret_2025
-ADMIN_SECRET_TOKEN=vizzaro_admin_secret_2025
+EXPO_PUBLIC_ADMIN_TOKEN=your_admin_secret_here
+ADMIN_SECRET_TOKEN=your_admin_secret_here
 ```
 
 ### 4. Redesplegar

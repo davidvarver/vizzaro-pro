@@ -29,7 +29,7 @@ export default function AdminCollections() {
   const { wallpapers } = useWallpapers();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  
+
   const availableCategories = useMemo(() => {
     const categories = getCategoriesFromWallpapers(wallpapers);
     return categories.filter(cat => cat !== 'Todos');
@@ -79,8 +79,8 @@ export default function AdminCollections() {
 
     setIsSaving(true);
     try {
-      const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
-      
+      const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || '';
+
       if (editingCollection) {
         await updateCollection(formData, token);
         Alert.alert('Éxito', 'Colección actualizada exitosamente');
@@ -88,7 +88,7 @@ export default function AdminCollections() {
         await addCollection(formData, token);
         Alert.alert('Éxito', 'Colección agregada exitosamente');
       }
-      
+
       setIsModalVisible(false);
     } catch (error) {
       console.error('Error saving collection:', error);
@@ -109,7 +109,7 @@ export default function AdminCollections() {
           style: 'destructive',
           onPress: async () => {
             try {
-              const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || 'vizzaro_admin_secret_2025';
+              const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || '';
               await deleteCollection(collection.id, token);
               Alert.alert('Éxito', 'Colección eliminada exitosamente');
             } catch (error) {
