@@ -1,21 +1,23 @@
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
+import { ADMIN_SECRET_TOKEN } from '../config.js';
 
 export default async function handler(req, res) {
   setCorsHeaders(req, res);
-  
+
   if (handleCorsOptions(req, res)) {
     return;
   }
-  
+
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
 
   try {
     const { email, secretKey } = req.body;
-    
-    const MAKE_ADMIN_SECRET = process.env.MAKE_ADMIN_SECRET || 'vizzaro_make_admin_secret_2025';
-    
+
+    // Centralized secret check
+    const MAKE_ADMIN_SECRET = ADMIN_SECRET_TOKEN;
+
     if (secretKey !== MAKE_ADMIN_SECRET) {
       return res.status(403).json({ success: false, error: 'Acceso denegado' });
     }
@@ -26,12 +28,12 @@ export default async function handler(req, res) {
 
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
-    
+
     const kvConfigured = kvUrl && kvUrl !== 'your_vercel_kv_url' && kvToken && kvToken !== 'your_vercel_kv_token';
-    
+
     if (!kvConfigured) {
       console.warn('[Make Admin] KV not configured properly');
-      return res.status(503).json({ 
+      return res.status(503).json({
         error: 'Base de datos no configurada',
         needsConfig: true
       });
@@ -39,7 +41,7 @@ export default async function handler(req, res) {
 
     const userKey = `user:${email}`;
     console.log('[Make Admin] Fetching user:', userKey);
-    
+
     const getResponse = await fetch(`${kvUrl}/get/${userKey}`, {
       method: 'GET',
       headers: {
@@ -73,7 +75,7 @@ export default async function handler(req, res) {
     }
 
     user.isAdmin = true;
-    
+
     console.log('[Make Admin] Updating user to admin:', userKey);
     const updateResponse = await fetch(`${kvUrl}/set/${userKey}`, {
       method: 'POST',
@@ -91,17 +93,17 @@ export default async function handler(req, res) {
     }
 
     console.log('[Make Admin] User updated successfully:', email);
-    
+
     const { passwordHash: _, ...userWithoutPassword } = user;
-    
-    return res.status(200).json({ 
+
+    return res.status(200).json({
       success: true,
       user: userWithoutPassword,
       message: `Usuario ${email} ahora es administrador`
     });
   } catch (error) {
     console.error('[Make Admin] Error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       success: false,
       error: 'Error al actualizar usuario',
       details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined

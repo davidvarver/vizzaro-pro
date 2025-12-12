@@ -3,17 +3,16 @@ import jwt from 'jsonwebtoken';
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
 import { validateRequest, userLoginSchema } from '../_schemas.js';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'vizzaro_jwt_secret_change_in_production_2025';
+import { JWT_SECRET } from '../config.js';
 const JWT_EXPIRATION = '7d';
 
 export default async function handler(req, res) {
   setCorsHeaders(req, res);
-  
+
   if (handleCorsOptions(req, res)) {
     return;
   }
-  
+
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
@@ -28,23 +27,23 @@ export default async function handler(req, res) {
     const validation = validateRequest(userLoginSchema, req.body);
     if (!validation.success) {
       console.log('[Users LOGIN] Validation failed:', validation.errors);
-      return res.status(422).json({ 
-        success: false, 
-        error: 'Datos inválidos', 
-        validationErrors: validation.errors 
+      return res.status(422).json({
+        success: false,
+        error: 'Datos inválidos',
+        validationErrors: validation.errors
       });
     }
 
     const { email, password } = validation.data;
-    
+
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
-    
+
     const kvConfigured = kvUrl && kvUrl !== 'your_vercel_kv_url' && kvToken && kvToken !== 'your_vercel_kv_token';
-    
+
     if (!kvConfigured) {
       console.warn('[Users LOGIN] KV not configured properly');
-      return res.status(503).json({ 
+      return res.status(503).json({
         error: '⚠️ Base de datos no configurada',
         needsConfig: true
       });
@@ -52,7 +51,7 @@ export default async function handler(req, res) {
 
     const userKey = `user:${email}`;
     console.log('[Users LOGIN] Fetching user:', userKey);
-    
+
     const getResponse = await fetch(`${kvUrl}/get/${userKey}`, {
       method: 'GET',
       headers: {
@@ -84,19 +83,19 @@ export default async function handler(req, res) {
       console.log('[Users LOGIN] Invalid user data for:', email);
       return res.status(401).json({ success: false, error: 'Correo o contraseña incorrectos' });
     }
-    
+
     console.log('[Users LOGIN] Comparing passwords...');
     const passwordMatch = await bcrypt.compare(password, user.passwordHash);
-    
+
     if (!passwordMatch) {
       console.log('[Users LOGIN] Invalid password for:', email);
       return res.status(401).json({ success: false, error: 'Correo o contraseña incorrectos' });
     }
-    
+
     console.log('[Users LOGIN] Generating JWT token...');
     const token = jwt.sign(
-      { 
-        userId: user.id, 
+      {
+        userId: user.id,
         email: user.email,
         name: user.name,
         isAdmin: user.isAdmin || false
@@ -104,12 +103,12 @@ export default async function handler(req, res) {
       JWT_SECRET,
       { expiresIn: JWT_EXPIRATION }
     );
-    
+
     console.log('[Users LOGIN] User logged in successfully:', user.id);
-    
+
     const { passwordHash: _, ...userWithoutPassword } = user;
-    
-    return res.status(200).json({ 
+
+    return res.status(200).json({
       success: true,
       token,
       user: userWithoutPassword,
@@ -118,7 +117,7 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('[Users LOGIN] Error logging in:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       success: false,
       error: 'Error al iniciar sesión',
       details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined

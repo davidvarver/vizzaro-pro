@@ -3,17 +3,16 @@ import jwt from 'jsonwebtoken';
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
 import { validateRequest, userRegisterSchema } from '../_schemas.js';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'vizzaro_jwt_secret_change_in_production_2025';
+import { JWT_SECRET } from '../config.js';
 const JWT_EXPIRATION = '7d';
 
 export default async function handler(req, res) {
   setCorsHeaders(req, res);
-  
+
   if (handleCorsOptions(req, res)) {
     return;
   }
-  
+
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['POST', 'OPTIONS'] });
   }
@@ -28,23 +27,23 @@ export default async function handler(req, res) {
     const validation = validateRequest(userRegisterSchema, req.body);
     if (!validation.success) {
       console.log('[Users REGISTER] Validation failed:', validation.errors);
-      return res.status(422).json({ 
-        success: false, 
-        error: 'Datos inválidos', 
-        validationErrors: validation.errors 
+      return res.status(422).json({
+        success: false,
+        error: 'Datos inválidos',
+        validationErrors: validation.errors
       });
     }
 
     const { email, password, name } = validation.data;
-    
+
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
-    
+
     const kvConfigured = kvUrl && kvUrl !== 'your_vercel_kv_url' && kvToken && kvToken !== 'your_vercel_kv_token';
-    
+
     if (!kvConfigured) {
       console.warn('[Users REGISTER] KV not configured properly');
-      return res.status(503).json({ 
+      return res.status(503).json({
         error: '⚠️ Base de datos no configurada',
         needsConfig: true
       });
@@ -52,7 +51,7 @@ export default async function handler(req, res) {
 
     const userKey = `user:${email}`;
     console.log('[Users REGISTER] Checking if user exists:', userKey);
-    
+
     const existingUserResponse = await fetch(`${kvUrl}/get/${userKey}`, {
       method: 'GET',
       headers: {
@@ -70,7 +69,7 @@ export default async function handler(req, res) {
 
     console.log('[Users REGISTER] Hashing password...');
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
     const newUser = {
       id: Date.now().toString(),
       email,
@@ -79,7 +78,7 @@ export default async function handler(req, res) {
       isAdmin: false,
       createdAt: new Date().toISOString(),
     };
-    
+
     console.log('[Users REGISTER] Saving to KV with key:', userKey);
     const kvResponse = await fetch(`${kvUrl}/set/${userKey}`, {
       method: 'POST',
@@ -138,8 +137,8 @@ export default async function handler(req, res) {
 
     console.log('[Users REGISTER] Generating JWT token...');
     const token = jwt.sign(
-      { 
-        userId: newUser.id, 
+      {
+        userId: newUser.id,
         email: newUser.email,
         name: newUser.name,
         isAdmin: newUser.isAdmin
@@ -149,10 +148,10 @@ export default async function handler(req, res) {
     );
 
     console.log('[Users REGISTER] User registered successfully:', newUser.id);
-    
+
     const { passwordHash: _, ...userWithoutPassword } = newUser;
-    
-    return res.status(200).json({ 
+
+    return res.status(200).json({
       success: true,
       token,
       user: userWithoutPassword,
@@ -161,7 +160,7 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('[Users REGISTER] Error registering user:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       success: false,
       error: 'Error al registrar usuario',
       details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
