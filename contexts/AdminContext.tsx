@@ -18,7 +18,6 @@ const ADMIN_CREDENTIALS = {
 
 const generateAdminToken = () => {
   const token = process.env.EXPO_PUBLIC_ADMIN_TOKEN || '';
-  console.log('[AdminContext] Generated token:', token);
   return token;
 };
 

@@ -51,15 +51,11 @@ export default function HomeScreen() {
   };
 
   const homeWallpapers = useMemo(() => {
-    console.log('[Home] Total wallpapers:', wallpapers.length);
-    console.log('[Home] All wallpapers with showInHome:', wallpapers.filter(w => w.showInHome).map(w => ({ id: w.id, name: w.name, showInHome: w.showInHome, inStock: w.inStock })));
     const featured = wallpapers.filter(w => w.showInHome && w.inStock).slice(0, 6);
-    console.log('[Home] Home wallpapers (showInHome=true && inStock=true):', featured.length);
     return featured;
   }, [wallpapers]);
 
   const handleRefresh = async () => {
-    console.log('[Home] Manual refresh triggered');
     setRefreshing(true);
     await refetchWallpapers();
     setRefreshing(false);

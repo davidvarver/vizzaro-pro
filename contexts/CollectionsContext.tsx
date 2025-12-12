@@ -111,7 +111,8 @@ export const [CollectionsProvider, useCollections] = createContextHook(() => {
 
   const saveCollections = useCallback(async (collectionsData: Collection[], adminToken?: string): Promise<boolean> => {
     try {
-      console.log('[CollectionsContext] Saving collections with', collectionsData.length, 'items...');
+      // console.log('[CollectionsContext] Saving collections with', collectionsData.length, 'items...');
+
 
       const tokenToUse = adminToken || process.env.EXPO_PUBLIC_ADMIN_TOKEN || '';
 
