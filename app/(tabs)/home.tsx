@@ -19,6 +19,7 @@ import { useWallpapers } from '@/contexts/WallpapersContext';
 import { router } from 'expo-router';
 import { WallpaperCard } from '@/components/WallpaperCard';
 import { Wallpaper } from '@/constants/wallpapers';
+import { SearchBar } from '@/components/SearchBar';
 
 
 export default function HomeScreen() {
@@ -94,21 +95,12 @@ export default function HomeScreen() {
             Papel tapiz premium listo para instalar. Compra por habitación o explora nuestras colecciones
           </Text>
 
-          <View style={styles.searchContainer}>
-            <Search size={20} color={Colors.light.textSecondary} style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Busca: geométrico, beige, mármol..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholderTextColor={Colors.light.textSecondary}
-              onSubmitEditing={handleSearch}
-              returnKeyType="search"
-            />
-            <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-              <Text style={styles.searchButtonText}>Buscar</Text>
-            </TouchableOpacity>
-          </View>
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmit={handleSearch}
+            placeholder="Busca: geométrico, beige, mármol..."
+          />
         </View>
       </ImageBackground>
 
@@ -217,42 +209,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.background,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-    width: '100%',
-    maxWidth: 600,
-    shadowColor: Colors.light.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: Colors.light.text,
-    paddingVertical: 12,
-  },
-  searchButton: {
-    backgroundColor: Colors.light.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginLeft: 8,
-  },
-  searchButtonText: {
-    color: Colors.light.background,
-    fontSize: 16,
-    fontWeight: '600',
-  },
+
   section: {
     paddingVertical: 32,
   },
