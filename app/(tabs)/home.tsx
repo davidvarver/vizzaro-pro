@@ -17,164 +17,192 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
 import { router } from 'expo-router';
-import { Wallpaper } from '@/constants/wallpapers';
-
-
+import { WallpaperCard } from '@/components/WallpaperCard';
 
 export default function HomeScreen() {
-  const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-  const { wallpapers, refetchWallpapers } = useWallpapers();
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  
-  const numColumns = useMemo(() => {
-    if (width >= 1200) return 4;
-    if (width >= 768) return 3;
-    return 2;
-  }, [width]);
+  // ... (imports and hooks)
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      router.push({
-        pathname: '/catalog',
-        params: { search: searchQuery }
-      });
+  renderItem = {({ item }) => (
+    <WallpaperCard
+      item={item}
+      onPress={handleWallpaperPress}
+      width={`${100 / numColumns - 2}%`}
+    />
+  )
+}
+          />
+
+// ... (remove grid styles)
+refreshIconSpinning: {
+  opacity: 0.5,
+  },
+gridContainer: {
+  paddingHorizontal: 20,
+  },
+gridRow: {
+  justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+emptyState: {
+  paddingHorizontal: 40,
+    paddingVertical: 60,
+      alignItems: 'center',
+        gap: 12,
+  },
+// ...
+const insets = useSafeAreaInsets();
+const { width } = useWindowDimensions();
+const { wallpapers, refetchWallpapers } = useWallpapers();
+const [searchQuery, setSearchQuery] = useState<string>('');
+const [refreshing, setRefreshing] = useState<boolean>(false);
+
+const numColumns = useMemo(() => {
+  if (width >= 1200) return 4;
+  if (width >= 768) return 3;
+  return 2;
+}, [width]);
+
+const handleSearch = () => {
+  if (searchQuery.trim()) {
+    router.push({
+      pathname: '/catalog',
+      params: { search: searchQuery }
+    });
+  }
+};
+
+const handleWallpaperPress = (wallpaper: Wallpaper) => {
+  router.push(`/wallpaper/${wallpaper.id}`);
+};
+
+const homeWallpapers = useMemo(() => {
+  console.log('[Home] Total wallpapers:', wallpapers.length);
+  console.log('[Home] All wallpapers with showInHome:', wallpapers.filter(w => w.showInHome).map(w => ({ id: w.id, name: w.name, showInHome: w.showInHome, inStock: w.inStock })));
+  const featured = wallpapers.filter(w => w.showInHome && w.inStock).slice(0, 6);
+  console.log('[Home] Home wallpapers (showInHome=true && inStock=true):', featured.length);
+  return featured;
+}, [wallpapers]);
+
+const handleRefresh = async () => {
+  console.log('[Home] Manual refresh triggered');
+  setRefreshing(true);
+  await refetchWallpapers();
+  setRefreshing(false);
+};
+
+return (
+  <ScrollView
+    style={styles.container}
+    showsVerticalScrollIndicator={false}
+    refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+        tintColor={Colors.light.primary}
+      />
     }
-  };
-
-  const handleWallpaperPress = (wallpaper: Wallpaper) => {
-    router.push(`/wallpaper/${wallpaper.id}`);
-  };
-
-  const homeWallpapers = useMemo(() => {
-    console.log('[Home] Total wallpapers:', wallpapers.length);
-    console.log('[Home] All wallpapers with showInHome:', wallpapers.filter(w => w.showInHome).map(w => ({ id: w.id, name: w.name, showInHome: w.showInHome, inStock: w.inStock })));
-    const featured = wallpapers.filter(w => w.showInHome && w.inStock).slice(0, 6);
-    console.log('[Home] Home wallpapers (showInHome=true && inStock=true):', featured.length);
-    return featured;
-  }, [wallpapers]);
-
-  const handleRefresh = async () => {
-    console.log('[Home] Manual refresh triggered');
-    setRefreshing(true);
-    await refetchWallpapers();
-    setRefreshing(false);
-  };
-
-  return (
-    <ScrollView 
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={handleRefresh}
-          tintColor={Colors.light.primary}
-        />
-      }
+  >
+    <ImageBackground
+      source={{ uri: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop&auto=format&q=80' }}
+      style={[styles.hero, { paddingTop: insets.top + 20 }]}
+      imageStyle={styles.heroImage}
     >
-      <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop&auto=format&q=80' }}
-        style={[styles.hero, { paddingTop: insets.top + 20 }]}
-        imageStyle={styles.heroImage}
-      >
-        <View style={styles.heroOverlay} />
-        <View style={styles.heroContent}>
-          <Image
-            source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/sre9ivu48wqqxw9hgy49l' }}
-            style={styles.logo}
-            resizeMode="contain"
+      <View style={styles.heroOverlay} />
+      <View style={styles.heroContent}>
+        <Image
+          source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/sre9ivu48wqqxw9hgy49l' }}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text style={styles.heroTitle}>Tu espacio, tu estilo</Text>
+        <Text style={styles.heroSubtitle}>
+          Papel tapiz premium listo para instalar. Compra por habitación o explora nuestras colecciones
+        </Text>
+
+        <View style={styles.searchContainer}>
+          <Search size={20} color={Colors.light.textSecondary} style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Busca: geométrico, beige, mármol..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor={Colors.light.textSecondary}
+            onSubmitEditing={handleSearch}
+            returnKeyType="search"
           />
-          <Text style={styles.heroTitle}>Tu espacio, tu estilo</Text>
-          <Text style={styles.heroSubtitle}>
-            Papel tapiz premium listo para instalar. Compra por habitación o explora nuestras colecciones
-          </Text>
-          
-          <View style={styles.searchContainer}>
-            <Search size={20} color={Colors.light.textSecondary} style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Busca: geométrico, beige, mármol..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholderTextColor={Colors.light.textSecondary}
-              onSubmitEditing={handleSearch}
-              returnKeyType="search"
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+            <Text style={styles.searchButtonText}>Buscar</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ImageBackground>
+
+    <View style={styles.section}>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Papel Tapiz Destacado</Text>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            onPress={handleRefresh}
+            style={styles.refreshButton}
+            disabled={refreshing}
+          >
+            <RefreshCw
+              size={20}
+              color={Colors.light.primary}
+              style={refreshing ? styles.refreshIconSpinning : undefined}
             />
-            <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
-              <Text style={styles.searchButtonText}>Buscar</Text>
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/catalog')}>
+            <Text style={styles.seeAll}>Ver todo</Text>
+          </TouchableOpacity>
         </View>
-      </ImageBackground>
-
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Papel Tapiz Destacado</Text>
-          <View style={styles.headerActions}>
-            <TouchableOpacity 
-              onPress={handleRefresh} 
-              style={styles.refreshButton}
-              disabled={refreshing}
-            >
-              <RefreshCw 
-                size={20} 
-                color={Colors.light.primary} 
-                style={refreshing ? styles.refreshIconSpinning : undefined}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/catalog')}>
-              <Text style={styles.seeAll}>Ver todo</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {homeWallpapers.length > 0 ? (
-          <FlatList
-            data={homeWallpapers}
-            numColumns={numColumns}
-            key={numColumns}
-            scrollEnabled={false}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.gridContainer}
-            columnWrapperStyle={styles.gridRow}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={[styles.gridCard, { width: `${100 / numColumns - 2}%` }]}
-                onPress={() => handleWallpaperPress(item)}
-              >
-                <View style={styles.gridImageContainer}>
-                  <Image 
-                    source={{ uri: item.imageUrls?.[0] || item.imageUrl }} 
-                    style={styles.gridImage}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View style={styles.gridInfo}>
-                  <Text style={styles.gridName} numberOfLines={2}>
-                    {item.name}
-                  </Text>
-                  <Text style={styles.gridPrice}>${item.price}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>
-              No hay papel tapiz destacado.
-            </Text>
-            <Text style={styles.emptyStateSubtext}>
-              Marca algunos productos como {`"`}Mostrar en home{`"`} desde el panel de administración.
-            </Text>
-          </View>
-        )}
       </View>
 
-      <View style={{ height: 40 }} />
-    </ScrollView>
-  );
+      {homeWallpapers.length > 0 ? (
+        <FlatList
+          data={homeWallpapers}
+          numColumns={numColumns}
+          key={numColumns}
+          scrollEnabled={false}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.gridContainer}
+          columnWrapperStyle={styles.gridRow}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[styles.gridCard, { width: `${100 / numColumns - 2}%` }]}
+              onPress={() => handleWallpaperPress(item)}
+            >
+              <View style={styles.gridImageContainer}>
+                <Image
+                  source={{ uri: item.imageUrls?.[0] || item.imageUrl }}
+                  style={styles.gridImage}
+                  resizeMode="cover"
+                />
+              </View>
+              <View style={styles.gridInfo}>
+                <Text style={styles.gridName} numberOfLines={2}>
+                  {item.name}
+                </Text>
+                <Text style={styles.gridPrice}>${item.price}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      ) : (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyStateText}>
+            No hay papel tapiz destacado.
+          </Text>
+          <Text style={styles.emptyStateSubtext}>
+            Marca algunos productos como {`"`}Mostrar en home{`"`} desde el panel de administración.
+          </Text>
+        </View>
+      )}
+    </View>
+
+    <View style={{ height: 40 }} />
+  </ScrollView>
+);
 }
 
 const styles = StyleSheet.create({
