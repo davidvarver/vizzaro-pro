@@ -5,14 +5,13 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Image,
   ImageBackground,
   FlatList,
   RefreshControl,
   useWindowDimensions,
 } from 'react-native';
-import { Search, RefreshCw } from 'lucide-react-native';
+import { RefreshCw } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
