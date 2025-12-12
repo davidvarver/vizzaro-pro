@@ -25,25 +25,6 @@ export default function HomeScreen() {
   // ... (imports and hooks)
 
 
-
-  // ... (remove grid styles)
-  refreshIconSpinning: {
-    opacity: 0.5,
-  },
-  gridContainer: {
-    paddingHorizontal: 20,
-  },
-  gridRow: {
-    justifyContent: 'space-between',
-      marginBottom: 16,
-  },
-  emptyState: {
-    paddingHorizontal: 40,
-      paddingVertical: 60,
-        alignItems: 'center',
-          gap: 12,
-  },
-  // ...
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const { wallpapers, refetchWallpapers } = useWallpapers();
