@@ -18,7 +18,7 @@ import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
 import { router } from 'expo-router';
 import { WallpaperCard } from '@/components/WallpaperCard';
-import { WallpaperCard } from '@/components/WallpaperCard';
+
 
 export default function HomeScreen() {
   // ... (imports and hooks)
