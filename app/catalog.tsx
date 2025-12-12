@@ -15,18 +15,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
 import { Wallpaper, getCategoriesFromWallpapers, getStylesFromWallpapers, getColorsFromWallpapers } from '@/constants/wallpapers';
+import { FilterGroup } from '@/components/FilterGroup';
 
 export default function CatalogScreen() {
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ search?: string; category?: string; style?: string; colors?: string }>();
   const { wallpapers, isLoading } = useWallpapers();
-  
+
   const [searchQuery, setSearchQuery] = useState<string>(params.search || '');
   const [selectedCategory, setSelectedCategory] = useState<string>(params.category || 'Todos');
   const [selectedStyle, setSelectedStyle] = useState<string>(params.style || 'Todos');
   const [selectedColor, setSelectedColor] = useState<string>('Todos');
   const [showFilters, setShowFilters] = useState<boolean>(false);
-  
+
   const categories = useMemo(() => getCategoriesFromWallpapers(wallpapers), [wallpapers]);
   const availableStyles = useMemo(() => getStylesFromWallpapers(wallpapers), [wallpapers]);
   const availableColors = useMemo(() => getColorsFromWallpapers(wallpapers), [wallpapers]);
@@ -135,80 +136,26 @@ export default function CatalogScreen() {
 
         {showFilters && (
           <View style={styleSheet.filtersContainer}>
-            <View style={styleSheet.filterRow}>
-              <Text style={styleSheet.filterLabel}>Categoría</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styleSheet.filterChips}>
-                {categories.map((cat) => (
-                  <TouchableOpacity
-                    key={cat}
-                    style={[
-                      styleSheet.filterChip,
-                      selectedCategory === cat && styleSheet.filterChipActive,
-                    ]}
-                    onPress={() => setSelectedCategory(cat)}
-                  >
-                    <Text
-                      style={[
-                        styleSheet.filterChipText,
-                        selectedCategory === cat && styleSheet.filterChipTextActive,
-                      ]}
-                    >
-                      {cat}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            <FilterGroup
+              label="Categoría"
+              options={categories}
+              selected={selectedCategory}
+              onSelect={setSelectedCategory}
+            />
 
-            <View style={styleSheet.filterRow}>
-              <Text style={styleSheet.filterLabel}>Estilo</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styleSheet.filterChips}>
-                {availableStyles.map((style) => (
-                  <TouchableOpacity
-                    key={style}
-                    style={[
-                      styleSheet.filterChip,
-                      selectedStyle === style && styleSheet.filterChipActive,
-                    ]}
-                    onPress={() => setSelectedStyle(style)}
-                  >
-                    <Text
-                      style={[
-                        styleSheet.filterChipText,
-                        selectedStyle === style && styleSheet.filterChipTextActive,
-                      ]}
-                    >
-                      {style}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            <FilterGroup
+              label="Estilo"
+              options={availableStyles}
+              selected={selectedStyle}
+              onSelect={setSelectedStyle}
+            />
 
-            <View style={styleSheet.filterRow}>
-              <Text style={styleSheet.filterLabel}>Color</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styleSheet.filterChips}>
-                {availableColors.map((color) => (
-                  <TouchableOpacity
-                    key={color}
-                    style={[
-                      styleSheet.filterChip,
-                      selectedColor === color && styleSheet.filterChipActive,
-                    ]}
-                    onPress={() => setSelectedColor(color)}
-                  >
-                    <Text
-                      style={[
-                        styleSheet.filterChipText,
-                        selectedColor === color && styleSheet.filterChipTextActive,
-                      ]}
-                    >
-                      {color}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
+            <FilterGroup
+              label="Color"
+              options={availableColors}
+              selected={selectedColor}
+              onSelect={setSelectedColor}
+            />
 
             {hasActiveFilters && (
               <TouchableOpacity style={styleSheet.clearFiltersButton} onPress={clearFilters}>
@@ -231,7 +178,7 @@ export default function CatalogScreen() {
             <Text style={styleSheet.loadingText}>Cargando catálogo...</Text>
           </View>
         ) : (
-          <ScrollView 
+          <ScrollView
             style={styleSheet.scrollView}
             contentContainerStyle={styleSheet.wallpapersGrid}
             showsVerticalScrollIndicator={false}
@@ -344,41 +291,7 @@ const styleSheet = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
   },
-  filterRow: {
-    marginBottom: 16,
-  },
-  filterLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.text,
-    marginLeft: 16,
-    marginBottom: 8,
-  },
-  filterChips: {
-    paddingHorizontal: 16,
-    gap: 8,
-  },
-  filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: Colors.light.background,
-    borderWidth: 1,
-    borderColor: Colors.light.border,
-    marginRight: 8,
-  },
-  filterChipActive: {
-    backgroundColor: Colors.light.primary,
-    borderColor: Colors.light.primary,
-  },
-  filterChipText: {
-    fontSize: 14,
-    color: Colors.light.text,
-    fontWeight: '500',
-  },
-  filterChipTextActive: {
-    color: Colors.light.background,
-  },
+
   clearFiltersButton: {
     flexDirection: 'row',
     alignItems: 'center',
