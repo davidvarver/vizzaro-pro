@@ -29,6 +29,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useFavorites, FavoriteProject } from '@/contexts/FavoritesContext';
 import { useWallpapers } from '@/contexts/WallpapersContext';
+import { FilterGroup } from '@/components/FilterGroup';
 
 
 
@@ -47,9 +48,9 @@ export default function FavoritesScreen() {
 
   const filteredProjects = (favoriteProjects || []).filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (project.wallpapers.length > 0 && project.wallpapers[0].name.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesRoom = selectedRoom === 'all' || 
-                       project.roomType.toLowerCase() === selectedRoom.toLowerCase();
+      (project.wallpapers.length > 0 && project.wallpapers[0].name.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesRoom = selectedRoom === 'all' ||
+      project.roomType.toLowerCase() === selectedRoom.toLowerCase();
     return matchesSearch && matchesRoom;
   });
 
@@ -118,7 +119,7 @@ export default function FavoritesScreen() {
           onPress={() => {
             router.push({
               pathname: '/(tabs)/camera',
-              params: { 
+              params: {
                 wallpaperId: project.wallpapers.length > 0 ? project.wallpapers[0].id : '',
                 source: 'favorite',
                 projectId: project.id
@@ -210,32 +211,12 @@ export default function FavoritesScreen() {
         </View>
       </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {roomTypes.map((room) => (
-          <TouchableOpacity
-            key={room}
-            style={[
-              styles.filterChip,
-              selectedRoom === room && styles.filterChipSelected,
-            ]}
-            onPress={() => setSelectedRoom(room)}
-          >
-            <Text
-              style={[
-                styles.filterChipText,
-                selectedRoom === room && styles.filterChipTextSelected,
-              ]}
-            >
-              {room === 'all' ? 'Todos' : room.charAt(0).toUpperCase() + room.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+      <FilterGroup
+        options={roomTypes}
+        selected={selectedRoom}
+        onSelect={setSelectedRoom}
+        formatLabel={(room) => room === 'all' ? 'Todos' : room.charAt(0).toUpperCase() + room.slice(1)}
+      />
 
       {filteredProjects.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -358,33 +339,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.light.text,
   },
-  filterContainer: {
-    paddingBottom: 16,
-  },
-  filterContent: {
-    paddingHorizontal: 20,
-    gap: 8,
-  },
-  filterChip: {
-    backgroundColor: Colors.light.backgroundSecondary,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  filterChipSelected: {
-    backgroundColor: Colors.light.primary,
-    borderColor: Colors.light.primary,
-  },
-  filterChipText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.textSecondary,
-  },
-  filterChipTextSelected: {
-    color: Colors.light.background,
-  },
+
   projectsList: {
     paddingHorizontal: 20,
     paddingBottom: 20,
