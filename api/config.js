@@ -33,6 +33,9 @@ const getEnvVar = (key, defaultValue) => {
 module.exports = {
     JWT_SECRET: getEnvVar('JWT_SECRET'),
     ADMIN_SECRET_TOKEN: getEnvVar('ADMIN_SECRET_TOKEN'),
+    // Database (Vercel KV / Upstash Redis)
+    KV_REST_API_URL: getEnvVar('KV_REST_API_URL', null),
+    KV_REST_API_TOKEN: getEnvVar('KV_REST_API_TOKEN', null),
     DATABASE_URL: getEnvVar('DATABASE_URL', null), // Optional for now if using Supabase directly via SDK
     NODE_ENV: process.env.NODE_ENV || 'development',
     isProduction: process.env.NODE_ENV === 'production',

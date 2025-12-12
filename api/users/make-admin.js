@@ -1,5 +1,6 @@
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
-import { ADMIN_SECRET_TOKEN } from '../config.js';
+import { ADMIN_SECRET_TOKEN, KV_REST_API_URL, KV_REST_API_TOKEN } from '../config.js';
+import logger from '../logger.js';
 
 export default async function handler(req, res) {
   setCorsHeaders(req, res);
@@ -26,13 +27,14 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, error: 'Email requerido' });
     }
 
-    const kvUrl = process.env.KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN;
+    // Use centralized config
+    const kvUrl = KV_REST_API_URL;
+    const kvToken = KV_REST_API_TOKEN;
 
     const kvConfigured = kvUrl && kvUrl !== 'your_vercel_kv_url' && kvToken && kvToken !== 'your_vercel_kv_token';
 
     if (!kvConfigured) {
-      console.warn('[Make Admin] KV not configured properly');
+      logger.warn('[Make Admin] KV not configured properly');
       return res.status(503).json({
         error: 'Base de datos no configurada',
         needsConfig: true
@@ -40,7 +42,7 @@ export default async function handler(req, res) {
     }
 
     const userKey = `user:${email}`;
-    console.log('[Make Admin] Fetching user:', userKey);
+    logger.info('[Make Admin] Fetching user:', userKey);
 
     const getResponse = await fetch(`${kvUrl}/get/${userKey}`, {
       method: 'GET',
@@ -50,7 +52,7 @@ export default async function handler(req, res) {
     });
 
     if (!getResponse.ok) {
-      console.log('[Make Admin] User not found:', email);
+      logger.warn('[Make Admin] User not found:', email);
       return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
     }
 
@@ -65,18 +67,18 @@ export default async function handler(req, res) {
         user = rawResult;
       }
     } catch (parseError) {
-      console.error('[Make Admin] Error parsing user data:', parseError);
+      logger.error('[Make Admin] Error parsing user data:', parseError);
       return res.status(500).json({ success: false, error: 'Error al procesar datos del usuario' });
     }
 
     if (!user) {
-      console.log('[Make Admin] Invalid user data for:', email);
+      logger.warn('[Make Admin] Invalid user data for:', email);
       return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
     }
 
     user.isAdmin = true;
 
-    console.log('[Make Admin] Updating user to admin:', userKey);
+    logger.info('[Make Admin] Updating user to admin:', userKey);
     const updateResponse = await fetch(`${kvUrl}/set/${userKey}`, {
       method: 'POST',
       headers: {
@@ -88,11 +90,11 @@ export default async function handler(req, res) {
 
     if (!updateResponse.ok) {
       const errorText = await updateResponse.text();
-      console.error('[Make Admin] KV API error:', updateResponse.status, errorText);
+      logger.error('[Make Admin] KV API error:', updateResponse.status, errorText);
       throw new Error(`KV API error: ${updateResponse.status} - ${errorText}`);
     }
 
-    console.log('[Make Admin] User updated successfully:', email);
+    logger.info('[Make Admin] User updated successfully:', email);
 
     const { passwordHash: _, ...userWithoutPassword } = user;
 
@@ -102,7 +104,7 @@ export default async function handler(req, res) {
       message: `Usuario ${email} ahora es administrador`
     });
   } catch (error) {
-    console.error('[Make Admin] Error:', error);
+    logger.error('[Make Admin] Error:', error);
     return res.status(500).json({
       success: false,
       error: 'Error al actualizar usuario',

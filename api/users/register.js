@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { setCorsHeaders, handleCorsOptions } from '../_cors.js';
 import { rateLimit } from '../_rateLimit.js';
 import { validateRequest, userRegisterSchema } from '../_schemas.js';
-import { JWT_SECRET } from '../config.js';
+import { JWT_SECRET, KV_REST_API_URL, KV_REST_API_TOKEN } from '../config.js';
 import logger from '../logger.js';
 const JWT_EXPIRATION = '7d';
 
@@ -37,8 +37,9 @@ export default async function handler(req, res) {
 
     const { email, password, name } = validation.data;
 
-    const kvUrl = process.env.KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN;
+    // Use centralized config
+    const kvUrl = KV_REST_API_URL;
+    const kvToken = KV_REST_API_TOKEN;
 
     const kvConfigured = kvUrl && kvUrl !== 'your_vercel_kv_url' && kvToken && kvToken !== 'your_vercel_kv_token';
 

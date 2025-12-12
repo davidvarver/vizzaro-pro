@@ -73,7 +73,7 @@ Después de configurar Vercel KV:
 **Solución**:
 1. Verifica que `ADMIN_SECRET_TOKEN` esté configurado en Vercel
 2. Debe ser el mismo valor que `EXPO_PUBLIC_ADMIN_TOKEN`
-3. Valor actual: `vizzaro_admin_secret_2025`
+3. Valor actual: `your_admin_secret_here`
 
 ### Los cambios no se guardan
 
