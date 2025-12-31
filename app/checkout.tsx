@@ -32,7 +32,7 @@ export default function CheckoutScreen() {
   const insets = useSafeAreaInsets();
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { createOrder } = useOrders();
-  
+
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('zelle');
   const [zelleReference, setZelleReference] = useState<string>('');
   const [customerInfo, setCustomerInfo] = useState({
@@ -41,14 +41,14 @@ export default function CheckoutScreen() {
     phone: '',
     address: '',
   });
-  
+
   const [creditCardInfo, setCreditCardInfo] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
     cardholderName: '',
   });
-  
+
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
@@ -56,22 +56,16 @@ export default function CheckoutScreen() {
   const deliveryFee = 15.00;
   const total = subtotal + deliveryFee;
 
-  const generateZelleReference = () => {
-    const timestamp = Date.now().toString();
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-    return `VZWP-${timestamp.slice(-6)}-${random}`;
-  };
+  /* REMOVED AUTO-GENERATED REFERENCE LOGIC - WE WANT USER INPUT */
+  /* const generateZelleReference = () => { ... } */
 
-  React.useEffect(() => {
-    if (paymentMethod === 'zelle' && !zelleReference) {
-      const newReference = generateZelleReference();
-      setZelleReference(newReference);
-    }
-  }, [paymentMethod, zelleReference]);
+
+  /* REMOVED EFFECT modifying zelleReference */
+
 
   const handlePlaceOrder = async () => {
     setErrorMessage('');
-    
+
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
       const errorMsg = 'Por favor completa todos los campos requeridos (Nombre, Email y Teléfono).';
       setErrorMessage(errorMsg);
@@ -92,6 +86,17 @@ export default function CheckoutScreen() {
       }
     }
 
+    if (paymentMethod === 'zelle') {
+      if (!zelleReference.trim()) {
+        const errorMsg = 'Por favor ingresa el número de referencia/confirmación de tu pago Zelle.';
+        setErrorMessage(errorMsg);
+        if (Platform.OS !== 'web') {
+          Alert.alert('Falta Referencia de Pago', errorMsg);
+        }
+        return;
+      }
+    }
+
     const finalZelleReference = paymentMethod === 'zelle' ? zelleReference : undefined;
 
     setIsProcessing(true);
@@ -105,16 +110,16 @@ export default function CheckoutScreen() {
         total,
         status: 'pending',
         deliveryMethod: customerInfo.address ? 'delivery' : 'pickup',
-        notes: paymentMethod === 'zelle' ? 'Pago por Zelle' : 'Pago con tarjeta',
+        notes: paymentMethod === 'zelle' ? `Pago por Zelle (Ref: ${finalZelleReference})` : 'Pago con tarjeta',
         paymentMethod,
-        zelleReference: finalZelleReference,
+        paymentReference: finalZelleReference,
         zelleConfirmed: false,
       });
 
       const orderId = newOrder?.id || finalZelleReference || 'PEDIDO-' + Date.now().toString().slice(-8);
-      
+
       clearCart();
-      
+
       router.replace({
         pathname: '/order-confirmation',
         params: {
@@ -146,7 +151,7 @@ export default function CheckoutScreen() {
           headerShown: false,
         }}
       />
-      
+
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
@@ -162,7 +167,7 @@ export default function CheckoutScreen() {
         {/* Customer Information */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Información del Cliente</Text>
-          
+
           <View style={styles.inputContainer}>
             <User size={20} color={Colors.light.primary} />
             <TextInput
@@ -173,7 +178,7 @@ export default function CheckoutScreen() {
               placeholderTextColor={Colors.light.textSecondary}
             />
           </View>
-          
+
           <View style={styles.inputContainer}>
             <Mail size={20} color={Colors.light.primary} />
             <TextInput
@@ -186,7 +191,7 @@ export default function CheckoutScreen() {
               placeholderTextColor={Colors.light.textSecondary}
             />
           </View>
-          
+
           <View style={styles.inputContainer}>
             <Phone size={20} color={Colors.light.primary} />
             <TextInput
@@ -198,7 +203,7 @@ export default function CheckoutScreen() {
               placeholderTextColor={Colors.light.textSecondary}
             />
           </View>
-          
+
           <View style={styles.inputContainer}>
             <MapPin size={20} color={Colors.light.primary} />
             <TextInput
@@ -215,7 +220,7 @@ export default function CheckoutScreen() {
         {/* Payment Method */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Método de Pago</Text>
-          
+
           <TouchableOpacity
             style={[
               styles.paymentOption,
@@ -273,23 +278,22 @@ export default function CheckoutScreen() {
               <Text style={styles.zelleInfoText}>
                 Monto: <Text style={styles.zelleNumber}>${total.toFixed(2)}</Text>
               </Text>
-              
-              {zelleReference && (
-                <View style={styles.referenceBox}>
-                  <Text style={styles.referenceLabel}>Tu Código de Referencia:</Text>
-                  <View style={styles.referenceCodeContainer}>
-                    <Text style={styles.referenceCode}>{zelleReference}</Text>
-                  </View>
-                  <Text style={styles.referenceSubtext}>
-                    Copia este código para incluirlo en la nota del pago Zelle.
-                  </Text>
-                </View>
-              )}
+
+              <View style={styles.inputContainer}>
+                <Text style={{ marginRight: 8 }}>#</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Número de Confirmación Zelle *"
+                  value={zelleReference}
+                  onChangeText={setZelleReference}
+                  placeholderTextColor={Colors.light.textSecondary}
+                />
+              </View>
 
               <View style={styles.zelleWarning}>
-                <Text style={styles.zelleWarningTitle}>⚠️ Importante</Text>
+                <Text style={styles.zelleWarningTitle}>⚠️ Confirmación Requerida</Text>
                 <Text style={styles.zelleWarningText}>
-                  Debes incluir el código de referencia <Text style={styles.zelleWarningBold}>{zelleReference}</Text> en la nota o descripción de tu pago Zelle. Esto nos permite identificar y procesar tu pedido automáticamente.
+                  Realiza el pago en tu app bancaria y luego ingresa aquí el número de confirmación para procesar tu pedido.
                 </Text>
               </View>
             </View>
@@ -309,7 +313,7 @@ export default function CheckoutScreen() {
                   placeholderTextColor={Colors.light.textSecondary}
                 />
               </View>
-              
+
               <View style={styles.row}>
                 <View style={[styles.inputContainer, styles.halfWidth]}>
                   <TextInput
@@ -322,7 +326,7 @@ export default function CheckoutScreen() {
                     placeholderTextColor={Colors.light.textSecondary}
                   />
                 </View>
-                
+
                 <View style={[styles.inputContainer, styles.halfWidth]}>
                   <TextInput
                     style={styles.input}
@@ -336,7 +340,7 @@ export default function CheckoutScreen() {
                   />
                 </View>
               </View>
-              
+
               <View style={styles.inputContainer}>
                 <User size={20} color={Colors.light.primary} />
                 <TextInput
@@ -354,17 +358,17 @@ export default function CheckoutScreen() {
         {/* Order Summary */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Resumen del Pedido</Text>
-          
+
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Subtotal ({cartItems.length} productos)</Text>
             <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
           </View>
-          
+
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Entrega</Text>
             <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
           </View>
-          
+
           <View style={[styles.summaryRow, styles.totalRow]}>
             <Text style={styles.totalLabel}>Total</Text>
             <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
@@ -378,7 +382,7 @@ export default function CheckoutScreen() {
             <Text style={styles.errorText}>{errorMessage}</Text>
           </View>
         ) : null}
-        
+
         <TouchableOpacity
           style={[styles.placeOrderButton, isProcessing && styles.placeOrderButtonDisabled]}
           onPress={handlePlaceOrder}

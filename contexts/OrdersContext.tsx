@@ -18,7 +18,7 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   paymentMethod?: 'zelle' | 'credit_card';
-  zelleReference?: string;
+  paymentReference?: string;
   zelleConfirmed?: boolean;
   zelleConfirmedAt?: string;
   zelleConfirmedBy?: string;
@@ -43,7 +43,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
   const loadOrders = useCallback(async () => {
     try {
       console.log('[OrdersContext] Loading orders...');
-      
+
       if (API_BASE_URL) {
         try {
           console.log('[OrdersContext] Fetching from API:', `${API_BASE_URL}/api/orders/get`);
@@ -70,7 +70,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
           console.warn('[OrdersContext] API fetch failed, trying local storage:', apiError);
         }
       }
-      
+
       console.log('[OrdersContext] Loading from local storage...');
       const stored = await AsyncStorage.getItem(ORDERS_STORAGE_KEY);
       if (stored) {
@@ -196,7 +196,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
                               <div style="color: #ffffff; font-size: 32px; font-weight: 700;">${order.total.toFixed(2)}</div>
                             </div>
 
-                            ${order.paymentMethod === 'zelle' && order.zelleReference ? `
+                            ${order.paymentMethod === 'zelle' && order.paymentReference ? `
                             <div style="margin-top: 30px; padding: 20px; background-color: #FEF3C7; border-radius: 8px; border-left: 4px solid #F59E0B;">
                               <div style="color: #92400e; font-size: 16px; font-weight: 600; margin-bottom: 12px;">💳 Instrucciones para Pago con Zelle</div>
                               <div style="background-color: #ffffff; border-radius: 6px; padding: 16px; margin-bottom: 12px;">
@@ -206,13 +206,13 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
                                 <div style="color: #1a1a1a; font-size: 18px; font-weight: 700; margin-bottom: 16px;">${order.total.toFixed(2)}</div>
                                 <div style="background-color: #FEF3C7; border-radius: 6px; padding: 12px; border: 2px dashed #F59E0B;">
                                   <div style="color: #92400e; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Código de Referencia:</div>
-                                  <div style="color: #1a1a1a; font-size: 20px; font-weight: 700; letter-spacing: 1px;">${order.zelleReference}</div>
+                                  <div style="color: #1a1a1a; font-size: 20px; font-weight: 700; letter-spacing: 1px;">${order.paymentReference}</div>
                                 </div>
                               </div>
                               <div style="background-color: #FEE2E2; border-radius: 6px; padding: 12px; border-left: 4px solid #EF4444;">
                                 <div style="color: #991B1B; font-size: 14px; font-weight: 600; margin-bottom: 4px;">⚠️ MUY IMPORTANTE</div>
                                 <div style="color: #7F1D1D; font-size: 13px; line-height: 1.6;">
-                                  Debes incluir el código de referencia <strong>${order.zelleReference}</strong> en la nota o descripción de tu pago Zelle. Esto nos permite identificar y procesar tu pedido automáticamente.
+                                  Debes incluir el código de referencia <strong>${order.paymentReference}</strong> en la nota o descripción de tu pago Zelle. Esto nos permite identificar y procesar tu pedido automáticamente.
                                 </div>
                               </div>
                             </div>
@@ -261,7 +261,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
   const createOrder = useCallback(async (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
       console.log('[OrdersContext] Creating order...');
-      
+
       if (API_BASE_URL) {
         try {
           const response = await fetch(`${API_BASE_URL}/api/orders/create`, {
@@ -275,7 +275,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
           if (response.ok) {
             const data = await response.json();
             console.log('[OrdersContext] Order created via API:', data.orderId);
-            
+
             if (data.success && data.order) {
               setOrders(prevOrders => [data.order, ...prevOrders]);
               await sendOrderConfirmationEmail(data.order);
@@ -288,7 +288,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
           console.warn('[OrdersContext] API create error, falling back to local:', apiError);
         }
       }
-      
+
       const newOrder: Order = {
         ...orderData,
         id: Date.now().toString(),
@@ -298,7 +298,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
 
       setOrders(prevOrders => [newOrder, ...prevOrders]);
       await sendOrderConfirmationEmail(newOrder);
-      
+
       return newOrder.id;
     } catch (error) {
       console.error('[OrdersContext] Error creating order:', error);
@@ -309,7 +309,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
   const updateOrderStatus = useCallback(async (orderId: string, status: Order['status']) => {
     try {
       console.log('[OrdersContext] Updating order status:', orderId, status);
-      
+
       if (API_BASE_URL && adminToken) {
         try {
           const response = await fetch(`${API_BASE_URL}/api/orders/update`, {
@@ -317,10 +317,10 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ 
-              orderId, 
+            body: JSON.stringify({
+              orderId,
               updates: { status },
-              adminToken 
+              adminToken
             }),
           });
 
@@ -338,7 +338,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
           console.warn('[OrdersContext] API update failed:', apiError);
         }
       }
-      
+
       setOrders(prevOrders =>
         prevOrders.map(order =>
           order.id === orderId
@@ -354,7 +354,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
   const updateOrder = useCallback(async (orderId: string, updates: Partial<Order>) => {
     try {
       console.log('[OrdersContext] Updating order:', orderId);
-      
+
       if (API_BASE_URL && adminToken) {
         try {
           const response = await fetch(`${API_BASE_URL}/api/orders/update`, {
@@ -379,7 +379,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
           console.warn('[OrdersContext] API update failed:', apiError);
         }
       }
-      
+
       setOrders(prevOrders =>
         prevOrders.map(order =>
           order.id === orderId
@@ -395,7 +395,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
   const deleteOrder = useCallback(async (orderId: string) => {
     try {
       console.log('[OrdersContext] Deleting order:', orderId);
-      
+
       if (API_BASE_URL && adminToken) {
         try {
           const response = await fetch(`${API_BASE_URL}/api/orders/delete`, {
@@ -415,7 +415,7 @@ export const [OrdersProvider, useOrders] = createContextHook(() => {
           console.warn('[OrdersContext] API delete failed:', apiError);
         }
       }
-      
+
       setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
     } catch (error) {
       console.error('[OrdersContext] Error deleting order:', error);

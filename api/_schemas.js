@@ -23,6 +23,7 @@ export const orderCreateSchema = z.object({
     total: z.number().nonnegative().optional(),
     status: z.enum(['pending', 'processing', 'completed', 'cancelled']).optional(),
     paymentMethod: z.string().optional(),
+    paymentReference: z.string().optional(),
     shippingAddress: z.string().optional(),
     customerName: z.string().optional(),
     customerEmail: z.string().email().optional(),
