@@ -34,13 +34,22 @@ const IS_DESKTOP = SCREEN_WIDTH >= 1024;
 export default function WallpaperDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
-  const { getWallpaperById } = useWallpapers();
+  const { getWallpaperById, wallpapers } = useWallpapers(); // Get all wallpapers to find variants
   const { addToCart } = useCart();
   const { addToHistory } = useHistory();
 
   const wallpaper = getWallpaperById(id || '');
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+
+  // Find variants: Same name, different ID
+  const variants = React.useMemo(() => {
+    if (!wallpaper) return [];
+    return wallpapers.filter(w =>
+      w.name.toLowerCase().trim() === wallpaper.name.toLowerCase().trim() &&
+      w.id !== wallpaper.id
+    );
+  }, [wallpaper, wallpapers]);
 
   // Zoom State
   const [zoomStyle, setZoomStyle] = useState({ opacity: 0, x: 0, y: 0 });
@@ -385,6 +394,15 @@ const styles = StyleSheet.create({
     color: Colors.light.primary,
     marginBottom: 24,
   },
+
+  sectionTitle: { fontSize: 18, fontFamily: 'PlayfairDisplay_600SemiBold', marginBottom: 15, color: '#111' },
+
+  // Variants
+  variantItem: { width: 60, height: 60, borderRadius: 30, borderWidth: 1, borderColor: '#EEE', overflow: 'hidden' },
+  variantSelected: { borderWidth: 2, borderColor: Colors.light.primary },
+  variantImage: { width: '100%', height: '100%' },
+
+  addToCartContainer: { gap: 15 },
 
   divider: { height: 1, backgroundColor: Colors.light.border, marginVertical: 24 },
 
