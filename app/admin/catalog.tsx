@@ -54,8 +54,8 @@ export default function AdminCatalogScreen() {
 
   const filteredItems = validCatalogItems.filter(item => {
     const matchesSearch = String(item.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         String(item.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         String(item.category || '').toLowerCase().includes(searchQuery.toLowerCase());
+      String(item.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(item.category || '').toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -114,7 +114,7 @@ export default function AdminCatalogScreen() {
               setErrorMessage('No hay token de administrador disponible');
               return;
             }
-            
+
             setErrorMessage('');
             try {
               console.log('[Catalog] Starting catalog reset with token:', !!token);
@@ -151,7 +151,7 @@ export default function AdminCatalogScreen() {
     const category = item.category || 'General';
     const name = item.name || 'Sin nombre';
     const description = item.description || '';
-    
+
     return (
       <View style={styles.productCard}>
         <View style={styles.productImageContainer}>
@@ -165,190 +165,193 @@ export default function AdminCatalogScreen() {
 
         <View style={styles.productInfo}>
           <Text style={styles.productName} numberOfLines={1}>{name}</Text>
+          <Text style={styles.productSku}>SKU: {item.id}</Text>
+          <Text style={styles.productSku}>SKU: {item.id}</Text>
+          <Text style={styles.productSku}>SKU: {item.id}</Text>
           <Text style={styles.productPrice}>${price.toFixed(2)}</Text>
-        
-        {description && (
-          <Text style={styles.productDescription} numberOfLines={1}>
-            {description}
+
+          {description && (
+            <Text style={styles.productDescription} numberOfLines={1}>
+              {description}
+            </Text>
+          )}
+
+          <View style={styles.colorDots}>
+            <View style={[styles.colorDot, { backgroundColor: '#8B4513' }]} />
+            <View style={[styles.colorDot, { backgroundColor: '#4169E1' }]} />
+            <View style={[styles.colorDot, { backgroundColor: '#FFD700' }]} />
+            <Text style={styles.productStyle}>{style}</Text>
+          </View>
+
+          <Text style={styles.specText}>
+            {dimensions.width}m x {dimensions.height}m
           </Text>
-        )}
-        
-        <View style={styles.colorDots}>
-          <View style={[styles.colorDot, { backgroundColor: '#8B4513' }]} />
-          <View style={[styles.colorDot, { backgroundColor: '#4169E1' }]} />
-          <View style={[styles.colorDot, { backgroundColor: '#FFD700' }]} />
-          <Text style={styles.productStyle}>{style}</Text>
-        </View>
+          <Text style={styles.specText}>
+            {dimensions.coverage}m² por rollo
+          </Text>
 
-        <Text style={styles.specText}>
-          {dimensions.width}m x {dimensions.height}m
-        </Text>
-        <Text style={styles.specText}>
-          {dimensions.coverage}m² por rollo
-        </Text>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity
+              style={styles.stockToggleButton}
+              onPress={() => toggleStock(item.id)}
+            >
+              {item.inStock ? (
+                <Eye size={14} color="#10B981" />
+              ) : (
+                <EyeOff size={14} color="#EF4444" />
+              )}
+            </TouchableOpacity>
 
-        <View style={styles.actionButtons}>
-          <TouchableOpacity
-            style={styles.stockToggleButton}
-            onPress={() => toggleStock(item.id)}
-          >
-            {item.inStock ? (
-              <Eye size={14} color="#10B981" />
-            ) : (
-              <EyeOff size={14} color="#EF4444" />
-            )}
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => router.push(`/admin/edit-product/${item.id}`)}
+            >
+              <Edit3 size={14} color="#3B82F6" />
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => router.push(`/admin/edit-product/${item.id}`)}
-          >
-            <Edit3 size={14} color="#3B82F6" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => deleteItem(item.id)}
-          >
-            <Trash2 size={14} color="#EF4444" />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => deleteItem(item.id)}
+            >
+              <Trash2 size={14} color="#EF4444" />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
     );
   };
 
   return (
     <AdminGuard>
       <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Gestión de Catálogo</Text>
-        <TouchableOpacity 
-          style={styles.addButton}
-          onPress={() => router.push('/admin/add-product')}
-        >
-          <Plus size={24} color={Colors.light.tint} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Search size={20} color={Colors.light.tabIconDefault} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Buscar productos..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-        </View>
-      </View>
-
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filterContainer}
-        contentContainerStyle={styles.filterContent}
-      >
-        {categories.map((category) => (
+        <View style={styles.header}>
           <TouchableOpacity
-            key={category.key}
-            style={[
-              styles.filterChip,
-              selectedCategory === category.key && styles.filterChipActive
-            ]}
-            onPress={() => setSelectedCategory(category.key)}
+            style={styles.backButton}
+            onPress={() => router.back()}
           >
-            <Text style={[
-              styles.filterChipText,
-              selectedCategory === category.key && styles.filterChipTextActive
-            ]}>
-              {category.label}
-            </Text>
+            <ArrowLeft size={24} color={Colors.light.text} />
           </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      <View style={styles.statsBar}>
-        <View style={styles.statsLeft}>
-          <Text style={styles.statsText}>
-            {filteredItems.length} productos encontrados
-          </Text>
-          <Text style={styles.statsText}>
-            {filteredItems.filter(item => item.inStock).length} en stock
-          </Text>
+          <Text style={styles.headerTitle}>Gestión de Catálogo</Text>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => router.push('/admin/add-product')}
+          >
+            <Plus size={24} color={Colors.light.tint} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity 
-          style={styles.resetButton}
-          onPress={handleResetCatalog}
+
+        <View style={styles.searchContainer}>
+          <View style={styles.searchInputContainer}>
+            <Search size={20} color={Colors.light.tabIconDefault} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Buscar productos..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
+          </View>
+        </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filterContainer}
+          contentContainerStyle={styles.filterContent}
         >
-          <RotateCcw size={14} color="#EF4444" />
-          <Text style={styles.resetButtonText}>Resetear</Text>
-        </TouchableOpacity>
-      </View>
+          {categories.map((category) => (
+            <TouchableOpacity
+              key={category.key}
+              style={[
+                styles.filterChip,
+                selectedCategory === category.key && styles.filterChipActive
+              ]}
+              onPress={() => setSelectedCategory(category.key)}
+            >
+              <Text style={[
+                styles.filterChipText,
+                selectedCategory === category.key && styles.filterChipTextActive
+              ]}>
+                {category.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
 
-      {errorMessage ? (
-        <View style={styles.errorBanner}>
-          <Text style={styles.errorText}>{errorMessage}</Text>
-          <TouchableOpacity onPress={() => setErrorMessage('')}>
-            <Text style={styles.errorClose}>×</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null}
-
-      {contextError && !isLoading ? (
-        <View style={styles.errorState}>
-          <Package size={48} color="#EF4444" />
-          <Text style={styles.errorStateTitle}>Error al cargar catálogo</Text>
-          <Text style={styles.errorStateText}>{contextError}</Text>
-          <TouchableOpacity 
-            style={styles.retryButton}
-            onPress={() => refetchWallpapers()}
+        <View style={styles.statsBar}>
+          <View style={styles.statsLeft}>
+            <Text style={styles.statsText}>
+              {filteredItems.length} productos encontrados
+            </Text>
+            <Text style={styles.statsText}>
+              {filteredItems.filter(item => item.inStock).length} en stock
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.resetButton}
+            onPress={handleResetCatalog}
           >
-            <Text style={styles.retryButtonText}>Reintentar</Text>
+            <RotateCcw size={14} color="#EF4444" />
+            <Text style={styles.resetButtonText}>Resetear</Text>
           </TouchableOpacity>
         </View>
-      ) : isLoading ? (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyStateText}>Cargando catálogo...</Text>
-        </View>
-      ) : filteredItems.length === 0 ? (
-        <View style={styles.emptyState}>
-          <Package size={48} color={Colors.light.tabIconDefault} />
-          <Text style={styles.emptyStateText}>
-            {searchQuery || selectedCategory !== 'all' 
-              ? 'No se encontraron productos con los filtros aplicados'
-              : 'No hay productos en el catálogo'
+
+        {errorMessage ? (
+          <View style={styles.errorBanner}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+            <TouchableOpacity onPress={() => setErrorMessage('')}>
+              <Text style={styles.errorClose}>×</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
+        {contextError && !isLoading ? (
+          <View style={styles.errorState}>
+            <Package size={48} color="#EF4444" />
+            <Text style={styles.errorStateTitle}>Error al cargar catálogo</Text>
+            <Text style={styles.errorStateText}>{contextError}</Text>
+            <TouchableOpacity
+              style={styles.retryButton}
+              onPress={() => refetchWallpapers()}
+            >
+              <Text style={styles.retryButtonText}>Reintentar</Text>
+            </TouchableOpacity>
+          </View>
+        ) : isLoading ? (
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyStateText}>Cargando catálogo...</Text>
+          </View>
+        ) : filteredItems.length === 0 ? (
+          <View style={styles.emptyState}>
+            <Package size={48} color={Colors.light.tabIconDefault} />
+            <Text style={styles.emptyStateText}>
+              {searchQuery || selectedCategory !== 'all'
+                ? 'No se encontraron productos con los filtros aplicados'
+                : 'No hay productos en el catálogo'
+              }
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={filteredItems}
+            renderItem={({ item }) => <ProductCard item={item} />}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            columnWrapperStyle={styles.row}
+            contentContainerStyle={styles.gridContent}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={
+              <View style={styles.whatsappSection}>
+                <Text style={styles.whatsappTitle}>¿Necesitas ayuda con el catálogo?</Text>
+                <WhatsAppButton
+                  message="Hola, necesito ayuda con la gestión del catálogo de papel tapiz"
+                  style="secondary"
+                  size="medium"
+                />
+              </View>
             }
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={filteredItems}
-          renderItem={({ item }) => <ProductCard item={item} />}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
-          contentContainerStyle={styles.gridContent}
-          showsVerticalScrollIndicator={false}
-          ListFooterComponent={
-            <View style={styles.whatsappSection}>
-              <Text style={styles.whatsappTitle}>¿Necesitas ayuda con el catálogo?</Text>
-              <WhatsAppButton
-                message="Hola, necesito ayuda con la gestión del catálogo de papel tapiz"
-                style="secondary"
-                size="medium"
-              />
-            </View>
-          }
-        />
-      )}
-    </View>
+          />
+        )}
+      </View>
     </AdminGuard>
   );
 }

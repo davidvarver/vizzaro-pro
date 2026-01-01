@@ -31,7 +31,7 @@ async function explore() {
             console.log(`[${item.type}] ${item.name} \t (${formatSize(item.size)})`);
         });
 
-        const subDirs = ['/WallpaperBooks', '/general_inventory', '/New Products'];
+        const subDirs = ['All Data New', 'All Images'];
 
         for (const dir of subDirs) {
             try {

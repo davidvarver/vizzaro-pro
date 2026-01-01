@@ -1,0 +1,76 @@
+Total Items: 15
+Name: "$3823A78BB2734B74BA0C3D729F76D827"
+Length: 33
+Type: d
+CharCodes: 36,51,56,50,51,65,55,56,66,66,50,55,51,52,66,55,52,66,65,48,67,51,68,55,50,57,70,55,54,68,56,50,55
+---
+Name: ".DS_Store"
+Length: 9
+Type: -
+CharCodes: 46,68,83,95,83,116,111,114,101
+---
+Name: "aspnet_client"
+Length: 13
+Type: d
+CharCodes: 97,115,112,110,101,116,95,99,108,105,101,110,116
+---
+Name: "desktop.ini"
+Length: 11
+Type: -
+CharCodes: 100,101,115,107,116,111,112,46,105,110,105
+---
+Name: "DIY Products"
+Length: 12
+Type: d
+CharCodes: 68,73,89,32,80,114,111,100,117,99,116,115
+---
+Name: "general_inventory"
+Length: 17
+Type: d
+CharCodes: 103,101,110,101,114,97,108,95,105,110,118,101,110,116,111,114,121
+---
+Name: "key.php"
+Length: 7
+Type: -
+CharCodes: 107,101,121,46,112,104,112
+---
+Name: "New Price Inserts (2022)"
+Length: 24
+Type: d
+CharCodes: 78,101,119,32,80,114,105,99,101,32,73,110,115,101,114,116,115,32,40,50,48,50,50,41
+---
+Name: "New Products"
+Length: 12
+Type: d
+CharCodes: 78,101,119,32,80,114,111,100,117,99,116,115
+---
+Name: "sync.ffs_db"
+Length: 11
+Type: -
+CharCodes: 115,121,110,99,46,102,102,115,95,100,98
+---
+Name: "Terms of Use - Please Read Before Using.docx"
+Length: 44
+Type: -
+CharCodes: 84,101,114,109,115,32,111,102,32,85,115,101,32,45,32,80,108,101,97,115,101,32,82,101,97,100,32,66,101,102,111,114,101,32,85,115,105,110,103,46,100,111,99,120
+---
+Name: "Thumbs.db"
+Length: 9
+Type: -
+CharCodes: 84,104,117,109,98,115,46,100,98
+---
+Name: "WallpaperBooks"
+Length: 14
+Type: d
+CharCodes: 87,97,108,108,112,97,112,101,114,66,111,111,107,115
+---
+Name: "web.config"
+Length: 10
+Type: -
+CharCodes: 119,101,98,46,99,111,110,102,105,103
+---
+Name: "~$rms of Use - Please Read Before Using.docx"
+Length: 44
+Type: -
+CharCodes: 126,36,114,109,115,32,111,102,32,85,115,101,32,45,32,80,108,101,97,115,101,32,82,101,97,100,32,66,101,102,111,114,101,32,85,115,105,110,103,46,100,111,99,120
+---
