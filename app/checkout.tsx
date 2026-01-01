@@ -33,25 +33,9 @@ type PaymentMethod = 'zelle' | 'credit_card';
 
 export default function CheckoutScreen() {
   const insets = useSafeAreaInsets();
-  const { cartItems, getCartTotal, clearCart } = useCart(); // Assuming useCart exposes cartItems (or items) - checking previous file it used cartItems
-  // Actually cart.tsx used 'items'. Let's check consistency. 
-  // The previous read of cart.tsx used 'items'. The previous read of checkout.tsx used 'cartItems'.
-  // I will assume the context provides 'items' and I'll alias it if needed or check context definition.
-  // Wait, I saw 'items' in the cart.tsx I wrote. But the checkout.tsx I read in step 4070 had 'cartItems'.
-  // Let's stick to 'items' which seems to be what I used in cart.
-  // Actually, let me check the checkout file I read again in 4070. It said "const { cartItems, ... } = useCart()". 
-  // This implies the context exports 'cartItems'. 
-  // BUT my cart.tsx rewrite used 'items'. 
-  // Let me be safe and check the CartContext if I can, OR just use 'items' if that's what I used in cart.
-  // Double checking cart.tsx I wrote in 4068: "const { items, ... } = useCart()".
-  // So likely 'items' is correct if I updated the Context? Or maybe 'cartItems' is an alias? 
-  // I'll stick to 'items' as standard, if it fails I'll fix. 
+  const { cartItems, getCartTotal, clearCart: contextClearCart } = useCart();
 
-  const { items, totalPrice, clearCart: contextClearCart } = useCart();
-  // Note: Previous checkout used getCartTotal(). My new cart logic uses totalPrice direct from context if available?
-  // Let's use `items` and calculate total if needed, or use `totalPrice` from context if it exists.
-  // Looking at CartContext in my memory: usually `items`.
-
+  const items = cartItems || [];
   const { createOrder } = useOrders();
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('zelle');
@@ -75,9 +59,7 @@ export default function CheckoutScreen() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-  const subtotal = items.reduce((sum: number, item: any) => sum + (item.wallpaper.price * item.quantity), 0);
-  const deliveryFee = 0; // Free shipping in new design
-  const total = subtotal + deliveryFee;
+  const total = getCartTotal(); // Use the context function for consistency
 
   let [fontsLoaded] = useFonts({
     PlayfairDisplay_700Bold,
