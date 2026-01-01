@@ -24,7 +24,7 @@ const FTP_CONFIG = {
 };
 
 const EXCEL_FILE = 'All_NewProduct_Data.xlsx';
-const IMPORT_LIMIT = 1; // Test run
+const IMPORT_LIMIT = 150; // Modified: Run import for 150 items
 const IMAGE_DIR = '/New Products/All Images';
 
 function cleanPrice(priceStr) {
@@ -51,7 +51,15 @@ async function addWatermark(imageBuffer) {
         const svgImage = `
         <svg width="${width}" height="${metadata.height}">
           <style>
-            .title { fill: rgba(255, 255, 255, 0.5); font-size: ${fontSize}px; font-weight: bold; font-family: sans-serif; }
+            .title { 
+              fill: rgba(255, 255, 255, 0.5); 
+              font-size: ${fontSize}px; 
+              font-weight: bold; 
+              font-family: sans-serif;
+              stroke: rgba(0, 0, 0, 0.4);
+              stroke-width: ${Math.max(1, fontSize * 0.03)}px;
+              paint-order: stroke;
+            }
           </style>
           <text x="50%" y="50%" text-anchor="middle" class="title">vizzarowallpaper.com</text>
         </svg>
@@ -186,19 +194,12 @@ async function main() {
             processed++;
             displayItems.push(`${product.id} - ${product.name}`);
 
+            // ALWAYS add to the list for the new catalog
+            importedProducts.push(product);
+
             // Add to list, replacing old if exists
             if (catalogMap.has(product.id)) {
                 catalogMap.set(product.id, product);
-            } else {
-                // Or actually, user wanted only NEW items or overwrite?
-                // Previous logic was: overwrite wallpapers_catalog with ONLY imports
-                // But wait, if we are doing partial imports or re-runs, maybe we want to keep?
-                // Script logic from before was:
-                // importedProducts.push(product);
-                // then kv.set('wallpapers_catalog', importedProducts);
-                // This implies "Only what is in this run becomes the catalog".
-                // Detailed implementation below follows that exactly as requested before.
-                importedProducts.push(product);
             }
         }
 
