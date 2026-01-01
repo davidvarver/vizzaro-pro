@@ -1,28 +1,30 @@
-const primary = "#2F5233";
-const secondary = "#F5F1E8";
-const accent = "#8B5A3C";
-const cream = "#F5F1E8";
-const darkGreen = "#1A3A1D";
+// Premium Palette
+const primary = "#1C1C1C"; // Deep Charcoal (Luxury Black)
+const secondary = "#F8F5F2"; // Off-White / Cream (Soft Background)
+const accent = "#D4AF37"; // Metallic Gold (Elegant Details)
+const gold = "#C5A028";
+const darkGray = "#2D2D2D";
+const softGray = "#EAEAEA";
 
 export default {
   light: {
-    text: "#1A1A1A",
-    textSecondary: "#666666",
+    text: "#111111",
+    textSecondary: "#555555",
     background: "#FFFFFF",
-    backgroundSecondary: cream,
+    backgroundSecondary: secondary,
     tint: primary,
-    tabIconDefault: "#CCCCCC",
+    tabIconDefault: "#B0B0B0",
     tabIconSelected: primary,
-    border: "#E5E5E5",
+    border: softGray,
     card: "#FFFFFF",
-    shadow: "rgba(0, 0, 0, 0.1)",
+    shadow: "rgba(0, 0, 0, 0.08)", // Softer, premium shadow
     primary,
     secondary,
     accent,
-    cream,
-    darkGreen,
-    success: "#28A745",
-    warning: "#FFC107",
-    error: "#DC3545",
+    gold,
+    darkGray,
+    success: "#2E7D32", // Forest Green (More elegant)
+    warning: "#F57F17",
+    error: "#C62828",
   },
 };

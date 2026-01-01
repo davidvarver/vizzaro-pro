@@ -11,18 +11,16 @@ async function checkStatus() {
         console.log('🔍 Checking KV "wallpapers_catalog"...');
         const catalog = await kv.get('wallpapers_catalog');
 
+        // Check Set Count (Real-time progress)
+        const count = await kv.scard('wallpapers:ids');
+        console.log(`📊 SCARD (wallpapers:ids): ${count}`);
+
         if (!catalog) {
-            console.log('❌ Catalog is NULL or undefined.');
+            console.log('❌ COUNT: 0 (Catalog NULL)');
         } else if (Array.isArray(catalog)) {
-            console.log(`✅ Catalog found with ${catalog.length} items.`);
+            console.log(`✅ COUNT: ${catalog.length}`);
             if (catalog.length > 0) {
-                const item = catalog[0];
-                console.log('--- First Item ---');
-                console.log(`ID: ${item.id}`);
-                console.log(`Name: ${item.name}`);
-                console.log(`Image URL: ${item.imageUrl}`);
-                console.log(`In Stock: ${item.inStock}`);
-                console.log('------------------');
+                console.log(`LAST ITEM: ${catalog[catalog.length - 1].id}`);
             }
         } else {
             console.log('⚠️ Catalog is not an array:', typeof catalog);
