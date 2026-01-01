@@ -44,8 +44,7 @@
       ]
     },
     "web": {
-      "favicon": "./assets/images/favicon.png",
-      "output": "static"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       [
