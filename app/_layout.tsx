@@ -1,3 +1,4 @@
+import "../global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -53,10 +54,10 @@ export default function RootLayout() {
               <FavoritesProvider>
                 <OrdersProvider>
                   <CartProvider>
-                  <GestureHandlerRootView style={styles.container}>
-                    <StatusBar style="dark" />
-                    <RootLayoutNav />
-                  </GestureHandlerRootView>
+                    <GestureHandlerRootView style={styles.container}>
+                      <StatusBar style="dark" />
+                      <RootLayoutNav />
+                    </GestureHandlerRootView>
                   </CartProvider>
                 </OrdersProvider>
               </FavoritesProvider>
