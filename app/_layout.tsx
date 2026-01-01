@@ -40,6 +40,10 @@ function RootLayoutNav() {
   );
 }
 
+import { HistoryProvider } from '@/contexts/HistoryContext';
+
+// ... items
+
 export default function RootLayout() {
   useEffect(() => {
     initSentry();
@@ -55,10 +59,12 @@ export default function RootLayout() {
               <FavoritesProvider>
                 <OrdersProvider>
                   <CartProvider>
-                    <GestureHandlerRootView style={styles.container}>
-                      <StatusBar style="dark" />
-                      <RootLayoutNav />
-                    </GestureHandlerRootView>
+                    <HistoryProvider>
+                      <GestureHandlerRootView style={styles.container}>
+                        <StatusBar style="dark" />
+                        <RootLayoutNav />
+                      </GestureHandlerRootView>
+                    </HistoryProvider>
                   </CartProvider>
                 </OrdersProvider>
               </FavoritesProvider>

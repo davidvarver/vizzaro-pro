@@ -26,10 +26,20 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useCart } from '@/contexts/CartContext';
-import { BlurView } from 'expo-blur';
+import { useHistory } from '@/contexts/HistoryContext';
+import { useEffect } from 'react';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+// ... inside component
+const { addToCart } = useCart();
+const { addToHistory } = useHistory();
+
+const wallpaper = getWallpaperById(id || '');
+
+useEffect(() => {
+  if (wallpaper) {
+    addToHistory(wallpaper);
+  }
+}, [wallpaper]);
 const IS_DESKTOP = SCREEN_WIDTH >= 1024;
 const IS_TABLET = SCREEN_WIDTH >= 768 && SCREEN_WIDTH < 1024;
 
