@@ -11,6 +11,8 @@ try {
     console.error("CRITICAL ERROR: Failed to load nativewind/metro:", e);
 }
 
+const config = getDefaultConfig(__dirname);
+
 if (withNativeWind) {
     module.exports = withNativeWind(config, { input: "./global.css" });
 } else {
