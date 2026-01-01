@@ -1,25 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAdmin } from '../../../contexts/AdminContext';
+import { useOrders } from '../../../contexts/OrdersContext'; // Added this
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, Check, Truck, CreditCard } from 'lucide-react-native';
+import { ArrowLeft, CreditCard, Truck } from 'lucide-react-native';
 
 export default function OrderDetails() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
     const { adminToken } = useAdmin();
+    const { orders } = useOrders(); // Access loaded orders
+
     const [order, setOrder] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isUpdating, setIsUpdating] = useState(false);
 
     useEffect(() => {
-        if (id) fetchOrderDetails();
-    }, [id]);
+        if (!id) return;
+
+        // 1. Try to find in Context first (fast)
+        if (orders && orders.length > 0) {
+            const found = orders.find(o => o.id === id || o.id === String(id));
+            if (found) {
+                console.log('Found order in context:', found.id);
+                setOrder(found);
+                setIsLoading(false);
+                return; // Can stop here or optionally re-fetch to ensure freshness
+            }
+        }
+
+        // 2. Fetch from API if not in context
+        fetchOrderDetails();
+    }, [id, orders]);
 
     const fetchOrderDetails = async () => {
         try {
             const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+            // If no API URL, we can't fetch.
+            if (!apiUrl) {
+                setIsLoading(false);
+                return;
+            }
+
             const response = await fetch(`${apiUrl}/api/orders/${id}`, {
                 headers: { 'Authorization': `Bearer ${adminToken}` }
             });
@@ -27,7 +50,9 @@ export default function OrderDetails() {
             if (data.success) {
                 setOrder(data.order);
             } else {
-                Alert.alert('Error', data.error);
+                // Only alert if we really expected it and didn't find it in context
+                // Alert.alert('Error', data.error);
+                console.warn('Order not found in API');
             }
         } catch (error) {
             console.error('Fetch details error:', error);
@@ -40,6 +65,14 @@ export default function OrderDetails() {
         setIsUpdating(true);
         try {
             const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+            if (!apiUrl) {
+                // Mock update if no API
+                setOrder({ ...order, status: newStatus });
+                Alert.alert('Success', `Order marked as ${newStatus} (Local)`);
+                setIsUpdating(false);
+                return;
+            }
+
             const response = await fetch(`${apiUrl}/api/orders/${id}`, {
                 method: 'PATCH',
                 headers: {
@@ -71,7 +104,24 @@ export default function OrderDetails() {
         );
     }
 
-    if (!order) return null;
+    if (!order) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                        <ArrowLeft color="#000" size={24} />
+                    </TouchableOpacity>
+                    <Text style={styles.title}>Detalles del Pedido</Text>
+                </View>
+                <View style={styles.center}>
+                    <Text style={styles.errorText}>No se encontró el pedido #{id}</Text>
+                    <TouchableOpacity style={styles.retryBtn} onPress={fetchOrderDetails}>
+                        <Text style={styles.retryText}>Reintentar</Text>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -79,16 +129,16 @@ export default function OrderDetails() {
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <ArrowLeft color="#000" size={24} />
                 </TouchableOpacity>
-                <Text style={styles.title}>Order #{order.id.slice(-6)}</Text>
+                <Text style={styles.title}>Pedido #{String(order.id).slice(-6)}</Text>
             </View>
 
             <ScrollView contentContainerStyle={styles.content}>
                 {/* Status Section */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Status</Text>
+                    <Text style={styles.sectionTitle}>Estado</Text>
                     <View style={styles.statusContainer}>
                         <View style={[styles.statusBadge, { backgroundColor: '#E5E7EB' }]}>
-                            <Text style={styles.statusText}>{order.status.toUpperCase()}</Text>
+                            <Text style={styles.statusText}>{order.status ? order.status.toUpperCase() : 'PENDING'}</Text>
                         </View>
                     </View>
 
@@ -100,7 +150,7 @@ export default function OrderDetails() {
                                 disabled={isUpdating}
                             >
                                 <CreditCard color="#fff" size={20} />
-                                <Text style={styles.actionText}>Mark Paid</Text>
+                                <Text style={styles.actionText}>Marcar Pagado</Text>
                             </TouchableOpacity>
                         )}
 
@@ -111,50 +161,54 @@ export default function OrderDetails() {
                                 disabled={isUpdating}
                             >
                                 <Truck color="#fff" size={20} />
-                                <Text style={styles.actionText}>Mark Shipped</Text>
+                                <Text style={styles.actionText}>Marcar Enviado</Text>
                             </TouchableOpacity>
                         )}
                     </View>
                 </View>
 
                 {/* Customer Info */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Customer</Text>
-                    <Text style={styles.text}>{order.customerInfo.name}</Text>
-                    <Text style={styles.text}>{order.customerInfo.email}</Text>
-                    <Text style={styles.text}>{order.customerInfo.phone}</Text>
-                </View>
+                {order.customerInfo && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Cliente</Text>
+                        <Text style={styles.text}>{order.customerInfo.name}</Text>
+                        <Text style={styles.text}>{order.customerInfo.email}</Text>
+                        <Text style={styles.text}>{order.customerInfo.phone}</Text>
+                    </View>
+                )}
 
                 {/* Shipping Address */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Shipping Address</Text>
-                    <Text style={styles.text}>{order.customerInfo.address}</Text>
-                    <Text style={styles.text}>{order.customerInfo.city}, {order.customerInfo.state} {order.customerInfo.zipCode}</Text>
-                </View>
+                {order.customerInfo && (
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Dirección de Envío</Text>
+                        <Text style={styles.text}>{order.customerInfo.address}</Text>
+                        <Text style={styles.text}>{order.customerInfo.city}, {order.customerInfo.zip}</Text>
+                    </View>
+                )}
 
                 {/* Items */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Items</Text>
-                    {order.items.map((item: any, index: number) => (
+                    <Text style={styles.sectionTitle}>Productos</Text>
+                    {order.items && order.items.map((item: any, index: number) => (
                         <View key={index} style={styles.itemRow}>
                             <View>
                                 <Text style={styles.itemName}>{item.name}</Text>
-                                <Text style={styles.itemMeta}>Qty: {item.quantity}</Text>
+                                <Text style={styles.itemMeta}>Cant: {item.quantity}</Text>
                             </View>
                             <Text style={styles.itemPrice}>${(item.price * item.quantity).toFixed(2)}</Text>
                         </View>
                     ))}
                     <View style={styles.totalRow}>
                         <Text style={styles.totalLabel}>Total</Text>
-                        <Text style={styles.totalValue}>${order.total.toFixed(2)}</Text>
+                        <Text style={styles.totalValue}>${order.total ? order.total.toFixed(2) : '0.00'}</Text>
                     </View>
                 </View>
 
                 {/* Payment Ref */}
-                {order.paymentReference && (
+                {order.payment && order.payment.reference && (
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Payment Reference (Zelle)</Text>
-                        <Text style={styles.refText}>{order.paymentReference}</Text>
+                        <Text style={styles.sectionTitle}>Referencia de Pago ({order.payment.method})</Text>
+                        <Text style={styles.refText}>{order.payment.reference}</Text>
                     </View>
                 )}
 
@@ -210,5 +264,8 @@ const styles = StyleSheet.create({
     totalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 4 },
     totalLabel: { fontSize: 16, fontWeight: 'bold' },
     totalValue: { fontSize: 18, fontWeight: 'bold', color: '#2563EB' },
-    refText: { fontSize: 16, fontFamily: 'monospace', color: '#111', backgroundColor: '#F3F4F6', padding: 8, borderRadius: 4 }
+    refText: { fontSize: 16, fontFamily: 'monospace', color: '#111', backgroundColor: '#F3F4F6', padding: 8, borderRadius: 4 },
+    errorText: { fontSize: 16, color: '#666', marginBottom: 20 },
+    retryBtn: { padding: 10, backgroundColor: '#000', borderRadius: 6 },
+    retryText: { color: '#FFF' }
 });
