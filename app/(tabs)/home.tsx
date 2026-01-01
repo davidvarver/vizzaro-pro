@@ -54,8 +54,6 @@ export default function HomeScreen() {
   };
 
   const handleMenuPress = () => {
-    // Just a stub for now, or route to profile/settings
-    // Since we are in tabs, maybe just navigate to Profile or show a modal
     router.push('/(tabs)/profile');
   };
 
@@ -88,7 +86,7 @@ export default function HomeScreen() {
         {/* CAROUSEL HERO */}
         <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.carousel}>
           <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1542887800-faca026197e3?q=80&w=1200' }} // Updated High Quality Image
+            source={{ uri: 'https://images.unsplash.com/photo-1542887800-faca026197e3?q=80&w=1200' }}
             style={[styles.heroSlide, { width: SCREEN_WIDTH }]}
           >
             <View style={styles.heroOverlay}>
@@ -108,7 +106,7 @@ export default function HomeScreen() {
             <View style={styles.heroOverlay}>
               <Text style={styles.heroTitle}>New Tropical Collection</Text>
               <Text style={styles.heroSubtitle}>Bring nature indoors.</Text>
-              <TouchableOpacity style={styles.heroButton} onPress={() => router.push({ pathname: '/catalog', params: { style: 'Floral' } })}>
+              <TouchableOpacity style={styles.heroButton} onPress={() => router.push({ pathname: '/catalog', params: { category: 'Floral' } })}>
                 <Text style={styles.heroButtonText}>EXPLORE</Text>
               </TouchableOpacity>
             </View>
@@ -123,7 +121,7 @@ export default function HomeScreen() {
               <TouchableOpacity
                 key={i}
                 style={styles.collectionCard}
-                onPress={() => router.push({ pathname: '/catalog', params: { style: cat } })}
+                onPress={() => router.push({ pathname: '/catalog', params: { category: cat } })}
               >
                 <Image
                   source={{ uri: wallpapers[i]?.imageUrl || 'https://via.placeholder.com/300' }}

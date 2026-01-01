@@ -34,18 +34,20 @@ const AVAILABLE_STYLES = [
 
 export default function CatalogScreen() {
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ style?: string; search?: string }>();
+  const params = useLocalSearchParams<{ style?: string; category?: string; search?: string }>();
   const { wallpapers } = useWallpapers();
 
   // Local State
   const [activeStyle, setActiveStyle] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeColors, setActiveColors] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
   // Sync params with state on load
   useEffect(() => {
     if (params.style) setActiveStyle(params.style);
-  }, [params.style]);
+    if (params.category) setActiveCategory(params.category);
+  }, [params.style, params.category]);
 
   // Load Fonts
   let [fontsLoaded] = useFonts({
@@ -59,18 +61,23 @@ export default function CatalogScreen() {
 
   const filteredWallpapers = useMemo(() => {
     return wallpapers.filter(w => {
-      // Filter by Style (Category)
+      // Filter by Style (Optional)
       if (activeStyle) {
-        // Normalize strings for comparison (remove accents, lowercase)
         const wStyle = w.style?.toLowerCase() || '';
         const filterStyle = activeStyle.toLowerCase();
         if (!wStyle.includes(filterStyle)) return false;
       }
 
+      // Filter by Category (Optional)
+      if (activeCategory) {
+        const wCat = w.category?.toLowerCase() || '';
+        const filterCat = activeCategory.toLowerCase();
+        if (!wCat.includes(filterCat)) return false;
+      }
+
       // Filter by Color
       if (activeColors.length > 0) {
         const wColors = w.colors || [];
-        // Check if any of the active colors match the wallpaper colors
         const hasColor = activeColors.some(c =>
           wColors.some(wc => wc.toLowerCase().includes(c.toLowerCase()))
         );
@@ -87,7 +94,7 @@ export default function CatalogScreen() {
 
       return true;
     });
-  }, [wallpapers, activeStyle, activeColors, params.search]);
+  }, [wallpapers, activeStyle, activeCategory, activeColors, params.search]);
 
   const toggleColor = (color: string) => {
     setActiveColors(prev =>
@@ -95,15 +102,18 @@ export default function CatalogScreen() {
     );
   };
 
-  if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: '#FFF' }} />;
-
   const clearFilters = () => {
     setActiveStyle(null);
+    setActiveCategory(null);
     setActiveColors([]);
+    router.setParams({ style: undefined, category: undefined });
   };
+
+  if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: '#FFF' }} />;
 
   return (
     <View style={styles.container}>
+      <Stack.Screen options={{ headerShown: false }} />
       <StatusBar barStyle="dark-content" />
 
       {/* HEADER */}
@@ -121,6 +131,12 @@ export default function CatalogScreen() {
         {/* ACTIVE FILTERS BAR */}
         <View style={styles.activeFilters}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterGap}>
+            {activeCategory && (
+              <TouchableOpacity style={styles.chip} onPress={() => setActiveCategory(null)}>
+                <Text style={styles.chipText}>{activeCategory}</Text>
+                <X size={14} color="#FFF" />
+              </TouchableOpacity>
+            )}
             {activeStyle && (
               <TouchableOpacity style={styles.chip} onPress={() => setActiveStyle(null)}>
                 <Text style={styles.chipText}>{activeStyle}</Text>
@@ -175,6 +191,8 @@ export default function CatalogScreen() {
           </View>
 
           <ScrollView style={styles.modalContent}>
+
+            {/* CATEGORY (New Section if needed, here treating styles as pseudo-cats or vice-versa, but stick to data) */}
 
             {/* STYLES */}
             <Text style={styles.filterSectionTitle}>Estilo</Text>
