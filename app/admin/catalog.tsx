@@ -166,8 +166,6 @@ export default function AdminCatalogScreen() {
         <View style={styles.productInfo}>
           <Text style={styles.productName} numberOfLines={1}>{name}</Text>
           <Text style={styles.productSku}>SKU: {item.id}</Text>
-          <Text style={styles.productSku}>SKU: {item.id}</Text>
-          <Text style={styles.productSku}>SKU: {item.id}</Text>
           <Text style={styles.productPrice}>${price.toFixed(2)}</Text>
 
           {description && (
