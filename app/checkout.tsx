@@ -71,26 +71,29 @@ export default function CheckoutScreen() {
   const handlePlaceOrder = async () => {
     setErrorMessage('');
 
+    if (items.length === 0) {
+      Alert.alert('Carrito Vacío', 'Agrega productos antes de pagar.');
+      router.back();
+      return;
+    }
+
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone || !customerInfo.address) {
-      const errorMsg = 'Please complete all shipping details.';
+      const errorMsg = 'Por favor completa todos los datos de envío.';
       setErrorMessage(errorMsg);
-      Alert.alert('Missing Information', errorMsg);
+      if (Platform.OS !== 'web') Alert.alert('Faltan Datos', errorMsg);
       return;
     }
 
     if (paymentMethod === 'zelle' && !zelleReference.trim()) {
-      const errorMsg = 'Please enter your Zelle confirmation number.';
+      const errorMsg = 'Ingresa el número de confirmación de Zelle.';
       setErrorMessage(errorMsg);
-      Alert.alert('Missing Reference', errorMsg);
+      if (Platform.OS !== 'web') Alert.alert('Falta Referencia', errorMsg);
       return;
     }
 
     setIsProcessing(true);
 
     try {
-      // Simulation of processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
       const orderData = {
         items,
         total,
@@ -102,14 +105,27 @@ export default function CheckoutScreen() {
         date: new Date().toISOString()
       };
 
+      // Create order
       await createOrder(orderData);
       contextClearCart();
 
-      Alert.alert('Order Confirmed!', 'Thank you for your purchase.', [
-        { text: 'OK', onPress: () => router.push('/') }
-      ]);
+      // Success handling
+      if (Platform.OS === 'web') {
+        // Web doesn't handle Alert in the same way, sometimes better to just route
+        if (window.confirm('¡Pedido Confirmado! Gracias por tu compra.\n\nPresiona OK para volver al inicio.')) {
+          router.push('/');
+        } else {
+          router.push('/');
+        }
+      } else {
+        Alert.alert('¡Pedido Confirmado!', 'Gracias por tu compra.', [
+          { text: 'OK', onPress: () => router.push('/') }
+        ]);
+      }
     } catch (error) {
-      setErrorMessage('Failed to place order. Please try again.');
+      console.error("Order error:", error);
+      setErrorMessage('Error al procesar el pedido. Intenta nuevamente.');
+    } finally {
       setIsProcessing(false);
     }
   };
