@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, DimensionValue } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, DimensionValue, Animated, Platform } from 'react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import Colors from '@/constants/colors';
 
@@ -10,16 +10,47 @@ interface WallpaperCardProps {
 }
 
 export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
+    const scaleAnim = useRef(new Animated.Value(1)).current;
+
+    // Web-specific hover handling
+    const handleMouseEnter = () => {
+        if (Platform.OS === 'web') {
+            Animated.spring(scaleAnim, {
+                toValue: 1.1,
+                useNativeDriver: true,
+                friction: 7,
+                tension: 40
+            }).start();
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (Platform.OS === 'web') {
+            Animated.spring(scaleAnim, {
+                toValue: 1,
+                useNativeDriver: true,
+                friction: 7,
+                tension: 40
+            }).start();
+        }
+    };
+
     return (
         <TouchableOpacity
             style={[styles.container, { width }]}
             onPress={() => onPress(item)}
             activeOpacity={0.9}
+            //@ts-ignore - Web props
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             <View style={styles.imageContainer}>
-                <Image
+                <Animated.Image
                     source={{ uri: item.imageUrls?.[0] || item.imageUrl }}
-                    style={styles.image}
+                    style={[
+                        styles.image,
+                        { transform: [{ scale: scaleAnim }] }
+                    ]}
                     resizeMode="cover"
                 />
                 {!item.inStock && (
