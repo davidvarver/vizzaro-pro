@@ -73,6 +73,7 @@
     "@testing-library/react-native": "^12.1.2",
     "@types/jest": "^29.5.12",
     "@types/react": "~19.1.10",
+    "autoprefixer": "^10.4.23",
     "babel-preset-expo": "^54.0.9",
     "eslint": "9.31.0",
     "eslint-config-expo": "9.2.0",
