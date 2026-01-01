@@ -73,69 +73,70 @@ export default function AdminOrdersList() {
                 </View>
             </TouchableOpacity>
         );
+    };
 
-        return (
-            <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                        <ArrowLeft color="#000" size={24} />
-                    </TouchableOpacity>
-                    <Text style={styles.title}>Manage Orders</Text>
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                    <ArrowLeft color="#000" size={24} />
+                </TouchableOpacity>
+                <Text style={styles.title}>Manage Orders</Text>
+            </View>
+
+            {orders.length === 0 ? (
+                <View style={styles.center}>
+                    <Package size={48} color="#9CA3AF" />
+                    <Text style={styles.emptyText}>No orders found</Text>
                 </View>
+            ) : (
+                <FlatList
+                    data={orders}
+                    renderItem={renderOrder}
+                    keyExtractor={item => item.id}
+                    contentContainerStyle={styles.list}
+                    refreshing={isRefreshing}
+                    onRefresh={onRefresh}
+                />
+            )}
+        </SafeAreaView>
+    );
+}
 
-                {orders.length === 0 ? (
-                    <View style={styles.center}>
-                        <Package size={48} color="#9CA3AF" />
-                        <Text style={styles.emptyText}>No orders found</Text>
-                    </View>
-                ) : (
-                    <FlatList
-                        data={orders}
-                        renderItem={renderOrder}
-                        keyExtractor={item => item.id}
-                        contentContainerStyle={styles.list}
-                        refreshing={isRefreshing}
-                        onRefresh={onRefresh}
-                    />
-                )}
-            </SafeAreaView>
-        );
-    }
-
-    const styles = StyleSheet.create({
-        container: { flex: 1, backgroundColor: '#F9FAFB' },
-        header: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: 16,
-            backgroundColor: '#fff',
-            borderBottomWidth: 1,
-            borderBottomColor: '#E5E7EB',
-        },
-        backButton: { marginRight: 16 },
-        title: { fontSize: 20, fontWeight: 'bold' },
-        center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-        list: { padding: 16 },
-        card: {
-            backgroundColor: '#fff',
-            borderRadius: 12,
-            padding: 16,
-            marginBottom: 12,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.05,
-            shadowRadius: 2,
-            elevation: 2,
-        },
-        cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
-        orderId: { fontSize: 16, fontWeight: '600', color: '#111' },
-        badge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
-        badgeText: { fontSize: 12, fontWeight: 'bold' },
-        cardContent: { marginBottom: 12 },
-        customerName: { fontSize: 14, color: '#374151', marginBottom: 4 },
-        date: { fontSize: 12, color: '#6B7280' },
-        cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#F3F4F6', paddingTop: 12 },
-        total: { fontSize: 18, fontWeight: 'bold', color: '#111' },
-        viewDetails: { fontSize: 14, color: '#2563EB', fontWeight: '500' },
-        emptyText: { marginTop: 12, color: '#6B7280', fontSize: 16 },
-    });
+const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: '#F9FAFB' },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: '#fff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E5E7EB',
+    },
+    backButton: { marginRight: 16 },
+    title: { fontSize: 20, fontWeight: 'bold' },
+    center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    list: { padding: 16 },
+    card: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 2,
+    },
+    cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+    orderId: { fontSize: 16, fontWeight: '600', color: '#111' },
+    badge: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
+    badgeText: { fontSize: 12, fontWeight: 'bold' },
+    cardContent: { marginBottom: 12 },
+    customerName: { fontSize: 14, color: '#374151', marginBottom: 4 },
+    date: { fontSize: 12, color: '#6B7280' },
+    cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 1, borderTopColor: '#F3F4F6', paddingTop: 12 },
+    total: { fontSize: 18, fontWeight: 'bold', color: '#111' },
+    viewDetails: { fontSize: 14, color: '#2563EB', fontWeight: '500' },
+    emptyText: { marginTop: 12, color: '#6B7280', fontSize: 16 },
+});
