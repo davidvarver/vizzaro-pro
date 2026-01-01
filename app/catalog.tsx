@@ -119,7 +119,18 @@ export default function CatalogScreen() {
       {/* HEADER */}
       <View style={[styles.header, { paddingTop: insets.top }]}>
         <View style={styles.headerTop}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <TouchableOpacity
+            onPress={() => {
+              // Safe navigation fallback
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace('/(tabs)/home');
+              }
+            }}
+            style={styles.backBtn}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          >
             <ArrowLeft color="#000" size={24} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Catálogo</Text>
@@ -192,7 +203,7 @@ export default function CatalogScreen() {
 
           <ScrollView style={styles.modalContent}>
 
-            {/* CATEGORY (New Section if needed, here treating styles as pseudo-cats or vice-versa, but stick to data) */}
+            {/* CATEGORY (New Section if needed) */}
 
             {/* STYLES */}
             <Text style={styles.filterSectionTitle}>Estilo</Text>
@@ -258,7 +269,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF' },
   header: { backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: '#EEE' },
   headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingBottom: 12 },
-  backBtn: { padding: 8 },
+  backBtn: { padding: 10 }, // Increased padding for touch target
   headerTitle: { fontFamily: 'PlayfairDisplay_600SemiBold', fontSize: 20 },
   filterBtn: { padding: 8 },
 
