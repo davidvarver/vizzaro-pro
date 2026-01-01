@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  Platform
+  Platform,
+  Alert
 } from 'react-native';
 import { ShoppingBag, Search, Menu } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,8 +22,6 @@ import { useWallpapers } from '@/contexts/WallpapersContext';
 import { useHistory } from '@/contexts/HistoryContext';
 import { router } from 'expo-router';
 import { WallpaperCard } from '@/components/WallpaperCard';
-import { SearchBar } from '@/components/SearchBar';
-import { BlurView } from 'expo-blur';
 import { useFonts, PlayfairDisplay_400Regular, PlayfairDisplay_600SemiBold, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 
@@ -34,7 +33,6 @@ export default function HomeScreen() {
   const { wallpapers, refetchWallpapers } = useWallpapers();
   const { recentItems } = useHistory();
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState('');
 
   let [fontsLoaded] = useFonts({
     PlayfairDisplay_400Regular,
@@ -44,7 +42,7 @@ export default function HomeScreen() {
     Lato_700Bold,
   });
 
-  const numColumns = useMemo(() => (width >= 1200 ? 4 : width >= 768 ? 3 : 2), [width]);
+  const numColumns = useMemo(() => (width >= 1200 ? 5 : width >= 768 ? 3 : 2), [width]);
 
   // Take first 12 items for "New Arrivals"
   const featuredWallpapers = useMemo(() => wallpapers.filter(w => w.showInHome).slice(0, 12), [wallpapers]);
@@ -55,10 +53,10 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      router.push({ pathname: '/catalog', params: { search: searchQuery } });
-    }
+  const handleMenuPress = () => {
+    // Just a stub for now, or route to profile/settings
+    // Since we are in tabs, maybe just navigate to Profile or show a modal
+    router.push('/(tabs)/profile');
   };
 
   if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: '#FFF' }} />;
@@ -69,14 +67,14 @@ export default function HomeScreen() {
 
       {/* PROFESSIONAL HEADER */}
       <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleMenuPress} style={styles.iconBtn}>
           <Menu color="#000" size={24} />
         </TouchableOpacity>
 
         <Text style={styles.brandTitle}>VIZZARO</Text>
 
         <View style={styles.headerIcons}>
-          <TouchableOpacity style={styles.iconBtn}><Search color="#000" size={24} /></TouchableOpacity>
+          <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('/catalog')}><Search color="#000" size={24} /></TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('/cart')}><ShoppingBag color="#000" size={24} /></TouchableOpacity>
         </View>
       </View>
@@ -90,7 +88,7 @@ export default function HomeScreen() {
         {/* CAROUSEL HERO */}
         <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.carousel}>
           <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1615529328331-f8e94aa06ea4?q=80&w=1200' }}
+            source={{ uri: 'https://images.unsplash.com/photo-1542887800-faca026197e3?q=80&w=1200' }} // Updated High Quality Image
             style={[styles.heroSlide, { width: SCREEN_WIDTH }]}
           >
             <View style={styles.heroOverlay}>
@@ -104,13 +102,13 @@ export default function HomeScreen() {
 
           {/* Slide 2 */}
           <ImageBackground
-            source={{ uri: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200' }}
+            source={{ uri: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=1200' }}
             style={[styles.heroSlide, { width: SCREEN_WIDTH }]}
           >
             <View style={styles.heroOverlay}>
               <Text style={styles.heroTitle}>New Tropical Collection</Text>
               <Text style={styles.heroSubtitle}>Bring nature indoors.</Text>
-              <TouchableOpacity style={styles.heroButton} onPress={() => router.push('/catalog')}>
+              <TouchableOpacity style={styles.heroButton} onPress={() => router.push({ pathname: '/catalog', params: { style: 'Floral' } })}>
                 <Text style={styles.heroButtonText}>EXPLORE</Text>
               </TouchableOpacity>
             </View>
@@ -121,8 +119,12 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Featured Collections</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.collectionList}>
-            {['Floral', 'Geometric', 'Texture', 'Luxury'].map((cat, i) => (
-              <TouchableOpacity key={i} style={styles.collectionCard} onPress={() => router.push('/catalog')}>
+            {['Floral', 'Geométrico', 'Textura', 'Lujo'].map((cat, i) => (
+              <TouchableOpacity
+                key={i}
+                style={styles.collectionCard}
+                onPress={() => router.push({ pathname: '/catalog', params: { style: cat } })}
+              >
                 <Image
                   source={{ uri: wallpapers[i]?.imageUrl || 'https://via.placeholder.com/300' }}
                   style={styles.collectionImage}
@@ -152,8 +154,8 @@ export default function HomeScreen() {
             contentContainerStyle={styles.gridContainer}
             columnWrapperStyle={styles.gridRow}
             renderItem={({ item }) => (
-              <View style={{ flex: 1, maxWidth: `${100 / numColumns}%` }}>
-                <WallpaperCard item={item} onPress={(w) => router.push(`/wallpaper/${w.id}`)} width="94%" />
+              <View style={{ flex: 1, paddingHorizontal: 4, maxWidth: `${100 / numColumns}%` }}>
+                <WallpaperCard item={item} onPress={(w) => router.push(`/wallpaper/${w.id}`)} width="100%" />
               </View>
             )}
           />
