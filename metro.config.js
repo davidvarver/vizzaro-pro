@@ -1,7 +1,19 @@
 const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
+let withNativeWind;
 
-const config = getDefaultConfig(__dirname);
+console.log("Loading Metro Config...");
 
-module.exports = withNativeWind(config, { input: "./global.css" });
+try {
+    const nativeWind = require("nativewind/metro");
+    withNativeWind = nativeWind.withNativeWind;
+    console.log("Successfully loaded nativewind/metro");
+} catch (e) {
+    console.error("CRITICAL ERROR: Failed to load nativewind/metro:", e);
+}
+
+if (withNativeWind) {
+    module.exports = withNativeWind(config, { input: "./global.css" });
+} else {
+    module.exports = config;
+}
 // module.exports = config;
