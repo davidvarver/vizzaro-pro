@@ -17,89 +17,86 @@ interface Order {
     createdAt: string;
 }
 
-const router = useRouter();
-const { adminToken } = useAdmin();
-// Use context as source of truth
-const { orders, refreshOrders } = useOrders();
-// If refreshOrders doesn't exist in useOrders signature yet, we might need to rely on just orders or ensure context has it.
-// Dashboard just used 'orders'. Let's check if refreshOrders exists or if we should just reload.
-// For now I will assume orders is enough, and maybe add a manual fetch if needed.
-// But wait, the file I read for dashboard.tsx didn't show refreshOrders destructuring.
-// I'll stick to 'orders' and 'isLoading' from context if available, or just manage local loading for refresh.
+export default function AdminOrdersList() {
+    const router = useRouter();
+    const { adminToken } = useAdmin();
+    // Use context as source of truth
+    const { orders } = useOrders();
+    // If refreshOrders doesn't exist in useOrders signature yet, we might need to rely on just orders or ensure context has it.
+    // Dashboard just used 'orders'. Let's check if refreshOrders exists or if we should just reload.
+    // For now I will assume orders is enough, and maybe add a manual fetch if needed.
+    // But wait, the file I read for dashboard.tsx didn't show refreshOrders destructuring.
+    // I'll stick to 'orders' and 'isLoading' from context if available, or just manage local loading for refresh.
 
-const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
-const onRefresh = async () => {
-    setIsRefreshing(true);
-    if (refreshOrders) {
-        await refreshOrders();
-    } else {
-        // Fallback or just wait
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        // Simulate refresh or implement actual refresh context method if available
         setTimeout(() => setIsRefreshing(false), 1000);
-    }
-    setIsRefreshing(false);
-};
+    };
 
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case 'paid': return '#10B981';
-        case 'shipped': return '#3B82F6';
-        case 'pending': return '#F59E0B';
-        default: return '#6B7280';
-    }
-};
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'paid': return '#10B981';
+            case 'shipped': return '#3B82F6';
+            case 'pending': return '#F59E0B';
+            default: return '#6B7280';
+        }
+    };
 
-const renderOrder = ({ item }: { item: Order }) => (
-    <TouchableOpacity
-        style={styles.card}
-        onPress={() => router.push(`/admin/orders/${item.id}`)}
-    >
-        <View style={styles.cardHeader}>
-            <Text style={styles.orderId}>Order #{item.id.slice(-6)}</Text>
-            <View style={[styles.badge, { backgroundColor: getStatusColor(item.status) + '20' }]}>
-                <Text style={[styles.badgeText, { color: getStatusColor(item.status) }]}>
-                    {item.status.toUpperCase()}
-                </Text>
+    const renderOrder = ({ item }: { item: Order }) => (
+        <TouchableOpacity
+            style={styles.card}
+            onPress={() => router.push(`/admin/orders/${item.id}`)}
+        >
+            <View style={styles.cardHeader}>
+                <Text style={styles.orderId}>Order #{item.id.slice(-6)}</Text>
+                <View style={[styles.badge, { backgroundColor: getStatusColor(item.status) + '20' }]}>
+                    <Text style={[styles.badgeText, { color: getStatusColor(item.status) }]}>
+                        {item.status.toUpperCase()}
+                    </Text>
+                </View>
             </View>
-        </View>
 
-        <View style={styles.cardContent}>
-            <Text style={styles.customerName}>{item.customerInfo.name}</Text>
-            <Text style={styles.date}>{new Date(item.createdAt).toLocaleDateString()}</Text>
-        </View>
-
-        <View style={styles.cardFooter}>
-            <Text style={styles.total}>${item.total.toFixed(2)}</Text>
-            <Text style={styles.viewDetails}>View Details →</Text>
-        </View>
-    </TouchableOpacity>
-);
-
-return (
-    <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                <ArrowLeft color="#000" size={24} />
-            </TouchableOpacity>
-            <Text style={styles.title}>Manage Orders</Text>
-        </View>
-
-        {orders.length === 0 ? (
-            <View style={styles.center}>
-                <Package size={48} color="#9CA3AF" />
-                <Text style={styles.emptyText}>No orders found</Text>
+            <View style={styles.cardContent}>
+                <Text style={styles.customerName}>{item.customerInfo.name}</Text>
+                <Text style={styles.date}>{new Date(item.createdAt).toLocaleDateString()}</Text>
             </View>
-        ) : <FlatList
-            data={orders}
-            renderItem={renderOrder}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.list}
-            refreshing={isRefreshing}
-            onRefresh={onRefresh}
-        />
-        )}
-    </SafeAreaView>
-);
+
+            <View style={styles.cardFooter}>
+                <Text style={styles.total}>${item.total.toFixed(2)}</Text>
+                <Text style={styles.viewDetails}>View Details →</Text>
+            </View>
+        </TouchableOpacity>
+    );
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                    <ArrowLeft color="#000" size={24} />
+                </TouchableOpacity>
+                <Text style={styles.title}>Manage Orders</Text>
+            </View>
+
+            {orders.length === 0 ? (
+                <View style={styles.center}>
+                    <Package size={48} color="#9CA3AF" />
+                    <Text style={styles.emptyText}>No orders found</Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={orders}
+                    renderItem={renderOrder}
+                    keyExtractor={item => item.id}
+                    contentContainerStyle={styles.list}
+                    refreshing={isRefreshing}
+                    onRefresh={onRefresh}
+                />
+            )}
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
