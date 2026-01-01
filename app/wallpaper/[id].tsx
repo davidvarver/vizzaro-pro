@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,734 +6,1108 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
-  Platform,
-  TextInput,
-  Modal,
-  FlatList,
   Dimensions,
+  Platform,
+  ActivityIndicator,
+  Animated,
+  PanResponder,
 } from 'react-native';
-import { Stack, useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import {
   ArrowLeft,
-  Heart,
-  ShoppingCart,
-
-  Info,
+  Share2,
+  Minus,
+  Plus,
+  ShieldCheck,
+  Truck,
   Ruler,
-  Palette,
-  Package,
-  CheckCircle,
-  XCircle,
-  Calculator,
-  X,
+  Info,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
 import { useCart } from '@/contexts/CartContext';
-import { useFavorites } from '@/contexts/FavoritesContext';
+import { BlurView } from 'expo-blur';
 
-
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const IS_DESKTOP = SCREEN_WIDTH >= 1024;
+const IS_TABLET = SCREEN_WIDTH >= 768 && SCREEN_WIDTH < 1024;
 
 export default function WallpaperDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const { getWallpaperById } = useWallpapers();
-  const { addToCart, isInCart } = useCart();
-  const { addToFavorites, favoriteProjects, addWallpaperToProject } = useFavorites();
+  const { addToCart } = useCart();
 
-  
-
-  const [purchaseType, setPurchaseType] = useState<'roll' | 'measurement'>('roll');
-  const [showMeasurementModal, setShowMeasurementModal] = useState<boolean>(false);
-  const [wallWidth, setWallWidth] = useState<string>('');
-  const [wallHeight, setWallHeight] = useState<string>('');
-  const [rollQuantity, setRollQuantity] = useState<number>(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const [showSaveProjectModal, setShowSaveProjectModal] = useState<boolean>(false);
-  const [projectName, setProjectName] = useState<string>('');
-  const [roomType, setRoomType] = useState<string>('sala');
-  const [projectNotes, setProjectNotes] = useState<string>('');
-  const [saveMode, setSaveMode] = useState<'new' | 'existing'>('existing');
-  const [selectedExistingProjectId, setSelectedExistingProjectId] = useState<string>('');
-  
-  const { width: screenWidth } = Dimensions.get('window');
-  
-  const wallArea = wallWidth && wallHeight ? parseFloat(wallWidth) * parseFloat(wallHeight) : 10;
-  
   const wallpaper = getWallpaperById(id || '');
-  
+  const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
+
+  // Zoom State
+  const [zoomStyle, setZoomStyle] = useState({ opacity: 0, x: 0, y: 0 });
+  const imageRef = useRef<View>(null);
+
   if (!wallpaper) {
-    return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-        />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorTitle}>Producto no encontrado</Text>
-          <Text style={styles.errorMessage}>
-            El papel tapiz que buscas no existe o ha sido eliminado del catálogo.
-          </Text>
-          <TouchableOpacity
-            style={styles.errorButton}
-            onPress={() => router.back()}
-          >
-            <Text style={styles.errorButtonText}>Volver</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+    return <View style={styles.center}><ActivityIndicator color={Colors.light.primary} /></View>;
   }
 
-  const safePrice = typeof wallpaper.price === 'number' && !isNaN(wallpaper.price) ? wallpaper.price : 0;
-  const safeDimensions = {
-    width: typeof wallpaper.dimensions?.width === 'number' && !isNaN(wallpaper.dimensions.width) ? wallpaper.dimensions.width : 0.53,
-    height: typeof wallpaper.dimensions?.height === 'number' && !isNaN(wallpaper.dimensions.height) ? wallpaper.dimensions.height : 10.05,
-    coverage: typeof wallpaper.dimensions?.coverage === 'number' && !isNaN(wallpaper.dimensions.coverage) ? wallpaper.dimensions.coverage : 5.33,
-  };
-  const safeColors = Array.isArray(wallpaper.colors) ? wallpaper.colors : [];
-  const safeSpecifications = {
-    material: wallpaper.specifications?.material || 'Vinilo',
-    washable: wallpaper.specifications?.washable !== undefined ? wallpaper.specifications.washable : true,
-    removable: wallpaper.specifications?.removable !== undefined ? wallpaper.specifications.removable : true,
-    textured: wallpaper.specifications?.textured !== undefined ? wallpaper.specifications.textured : false,
-  };
+  // Use all available images or fallback to main
+  const images = wallpaper.imageUrls && wallpaper.imageUrls.length > 0
+    ? wallpaper.imageUrls
+    : [wallpaper.imageUrl];
 
-  const rollsNeeded = Math.ceil(wallArea / safeDimensions.coverage);
-  const totalPrice = safePrice * rollsNeeded;
-  const isAlreadyInCart = isInCart(wallpaper.id);
+  const handleMouseMove = (event: any) => {
+    if (Platform.OS === 'web') {
+      const { layerX, layerY, target } = event.nativeEvent;
+      // Simple heuristic for hover zoom behavior
+      const width = target.clientWidth;
+      const height = target.clientHeight;
 
-  const handleAddToCart = () => {
-    if (!wallpaper.inStock) {
-      if (Platform.OS !== 'web') {
-        Alert.alert('Producto Agotado', 'Este papel tapiz no está disponible actualmente.');
-      }
-      return;
-    }
-    
-    if (purchaseType === 'measurement' && (!wallWidth || !wallHeight)) {
-      if (Platform.OS !== 'web') {
-        Alert.alert('Medidas Requeridas', 'Por favor ingresa las medidas de tu pared.');
-      }
-      return;
-    }
-    
-    const finalRollsNeeded = purchaseType === 'roll' ? rollQuantity : rollsNeeded;
-    const finalWallArea = purchaseType === 'roll' ? rollQuantity * safeDimensions.coverage : wallArea;
-    
-    addToCart(wallpaper, finalRollsNeeded, finalWallArea, purchaseType);
-    if (Platform.OS !== 'web') {
-      const message = purchaseType === 'roll' 
-        ? `${rollQuantity} rollo${rollQuantity > 1 ? 's' : ''} de "${wallpaper.name}" agregado${rollQuantity > 1 ? 's' : ''} al carrito.`
-        : `${finalRollsNeeded} rollo${finalRollsNeeded > 1 ? 's' : ''} de "${wallpaper.name}" para ${wallArea.toFixed(1)}m² agregado${finalRollsNeeded > 1 ? 's' : ''} al carrito.`;
-      
-      Alert.alert(
-        'Agregado al Carrito',
-        message,
-        [
-          { text: 'Continuar Comprando', style: 'cancel' },
-          { text: 'Ver Carrito', onPress: () => router.push('/(tabs)/cart') },
-        ]
-      );
+      const xPercent = (layerX / width) * 100;
+      const yPercent = (layerY / height) * 100;
+
+      setZoomStyle({
+        opacity: 1,
+        x: xPercent,
+        y: yPercent
+      });
     }
   };
 
-  const handleGoToCamera = () => {
-    console.log('=== NAVIGATING TO CAMERA ===');
-    console.log('Wallpaper ID:', wallpaper.id);
-    console.log('Wallpaper name:', wallpaper.name);
-    router.push({
-      pathname: '/(tabs)/camera',
-      params: { 
-        wallpaperId: wallpaper.id,
-        source: 'wallpaper-detail'
-      }
-    });
-  };
-
-  const handleSaveToFavorites = () => {
-    setShowSaveProjectModal(true);
-  };
-
-  const handleSaveProject = async () => {
-    if (saveMode === 'new') {
-      if (!projectName.trim()) {
-        if (Platform.OS !== 'web') {
-          Alert.alert('Nombre Requerido', 'Por favor ingresa un nombre para tu proyecto.');
-        }
-        return;
-      }
-
-      const savedProject = await addToFavorites(
-        projectName.trim(),
-        roomType,
-        wallpaper,
-        undefined,
-        projectNotes.trim() || undefined
-      );
-
-      if (savedProject) {
-        setShowSaveProjectModal(false);
-        setProjectName('');
-        setRoomType('sala');
-        setProjectNotes('');
-        setSaveMode('existing');
-        setSelectedExistingProjectId('');
-        
-        if (Platform.OS !== 'web') {
-          Alert.alert(
-            'Proyecto Guardado',
-            `"${savedProject.name}" ha sido guardado en tus favoritos.`,
-            [
-              { text: 'Continuar', style: 'cancel' },
-              { text: 'Ver Favoritos', onPress: () => router.push('/favorites') },
-            ]
-          );
-        }
-      }
-    } else {
-      if (!selectedExistingProjectId) {
-        if (Platform.OS !== 'web') {
-          Alert.alert('Proyecto Requerido', 'Por favor selecciona un proyecto.');
-        }
-        return;
-      }
-
-      const success = await addWallpaperToProject(selectedExistingProjectId, wallpaper);
-
-      if (success) {
-        const project = favoriteProjects.find(p => p.id === selectedExistingProjectId);
-        setShowSaveProjectModal(false);
-        setSelectedExistingProjectId('');
-        setSaveMode('existing');
-        
-        if (Platform.OS !== 'web') {
-          Alert.alert(
-            'Papel Agregado',
-            `El papel tapiz ha sido agregado a "${project?.name}".`,
-            [
-              { text: 'Continuar', style: 'cancel' },
-              { text: 'Ver Favoritos', onPress: () => router.push('/favorites') },
-            ]
-          );
-        }
-      }
-    }
+  const handleMouseLeave = () => {
+    setZoomStyle(prev => ({ ...prev, opacity: 0 }));
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
-      
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.light.text} />
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={styles.favoriteButton}
-          onPress={handleSaveToFavorites}
-        >
-          <Heart
-            size={24}
-            color={Colors.light.text}
-            fill={'transparent'}
-          />
-        </TouchableOpacity>
-      </View>
+    <View style={styles.mainContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.imageContainer}>
-          {wallpaper.imageUrls && wallpaper.imageUrls.length > 0 ? (
-            <>
-              <FlatList
-                data={wallpaper.imageUrls}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                onMomentumScrollEnd={(event) => {
-                  const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
-                  setCurrentImageIndex(index);
-                }}
-                renderItem={({ item }) => (
-                  <Image source={{ uri: item }} style={[styles.wallpaperImage, { width: screenWidth }]} />
-                )}
-                keyExtractor={(item, index) => `${item}-${index}`}
-              />
-              
-              {wallpaper.imageUrls.length > 1 && (
-                <View style={styles.imageIndicators}>
-                  {wallpaper.imageUrls.map((_, index) => (
-                    <View
-                      key={index}
-                      style={[
-                        styles.indicator,
-                        currentImageIndex === index && styles.indicatorActive
-                      ]}
-                    />
-                  ))}
-                </View>
-              )}
-            </>
-          ) : (
-            <Image source={{ uri: wallpaper.imageUrl }} style={styles.wallpaperImage} />
-          )}
-          
-          {!wallpaper.inStock && (
-            <View style={styles.outOfStockOverlay}>
-              <View style={styles.outOfStockBadge}>
-                <XCircle size={20} color={Colors.light.background} />
-                <Text style={styles.outOfStockText}>Agotado</Text>
-              </View>
-            </View>
-          )}
+        {/* Header Navigation */}
+        <View style={[styles.header, { marginTop: insets.top }]}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
+            <ArrowLeft color={Colors.light.text} size={24} />
+          </TouchableOpacity>
+          <Text style={styles.brandLogo}>VIZZARO</Text>
+          <TouchableOpacity style={styles.iconButton}>
+            <Share2 color={Colors.light.text} size={24} />
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.detailsContainer}>
-          <View style={styles.titleSection}>
-            <Text style={styles.wallpaperName}>{wallpaper.name}</Text>
-            <Text style={styles.wallpaperCategory}>{wallpaper.category} • {wallpaper.style}</Text>
-            
+        <View style={[styles.contentWrapper, IS_DESKTOP && styles.desktopLayout]}>
 
-          </View>
+          {/* LEFT COLUMN: IMAGES */}
+          <View style={[styles.imageSection, IS_DESKTOP && styles.desktopImageSection]}>
+            <View
+              style={styles.mainImageWrapper}
+              //@ts-ignore - Web hover events
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Image
+                source={{ uri: images[activeImage] }}
+                style={styles.mainImage}
+                resizeMode="cover"
+              />
 
-          <View style={styles.priceSection}>
-            <Text style={styles.priceLabel}>Precio por rollo</Text>
-            <Text style={styles.price}>${safePrice.toFixed(2)}</Text>
-          </View>
+              {/* Web Magnifier Lens Effect */}
+              {Platform.OS === 'web' && (
+                <View
+                  style={[
+                    styles.magnifier,
+                    {
+                      opacity: zoomStyle.opacity,
+                      backgroundImage: `url(${images[activeImage]})`,
+                      backgroundPosition: `${zoomStyle.x}% ${zoomStyle.y}%`,
+                      backgroundSize: '250%', // 2.5x Zoom
+                      left: `${zoomStyle.x}%`,
+                      top: `${zoomStyle.y}%`,
+                    }
+                  ]}
+                />
+              )}
 
-          <View style={styles.descriptionSection}>
-            <Text style={styles.sectionTitle}>Descripción</Text>
-            <Text style={styles.description}>{wallpaper.description}</Text>
-          </View>
-
-          {safeColors.length > 0 && (
-            <View style={styles.colorsSection}>
-              <Text style={styles.sectionTitle}>Colores</Text>
-              <View style={styles.colorsList}>
-                {safeColors.map((color: string) => (
-                  <View key={color} style={styles.colorChip}>
-                    <Palette size={14} color={Colors.light.primary} />
-                    <Text style={styles.colorText}>{color}</Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
-
-          <View style={styles.specificationsSection}>
-            <Text style={styles.sectionTitle}>Especificaciones</Text>
-            
-            <View style={styles.specRow}>
-              <View style={styles.specItem}>
-                <Ruler size={16} color={Colors.light.primary} />
-                <Text style={styles.specLabel}>Dimensiones</Text>
-              </View>
-              <Text style={styles.specValue}>
-                {safeDimensions.width}m × {safeDimensions.height}m
-              </Text>
-            </View>
-            
-            <View style={styles.specRow}>
-              <View style={styles.specItem}>
-                <Package size={16} color={Colors.light.primary} />
-                <Text style={styles.specLabel}>Cobertura</Text>
-              </View>
-              <Text style={styles.specValue}>{safeDimensions.coverage}m² por rollo</Text>
-            </View>
-            
-            <View style={styles.specRow}>
-              <View style={styles.specItem}>
-                <Info size={16} color={Colors.light.primary} />
-                <Text style={styles.specLabel}>Material</Text>
-              </View>
-              <Text style={styles.specValue}>{safeSpecifications.material}</Text>
-            </View>
-            
-            <View style={styles.featuresGrid}>
-              <View style={styles.featureItem}>
-                {safeSpecifications.washable ? (
-                  <CheckCircle size={16} color={Colors.light.success} />
-                ) : (
-                  <XCircle size={16} color={Colors.light.error} />
-                )}
-                <Text style={styles.featureText}>Lavable</Text>
-              </View>
-              
-              <View style={styles.featureItem}>
-                {safeSpecifications.removable ? (
-                  <CheckCircle size={16} color={Colors.light.success} />
-                ) : (
-                  <XCircle size={16} color={Colors.light.error} />
-                )}
-                <Text style={styles.featureText}>Removible</Text>
-              </View>
-              
-              <View style={styles.featureItem}>
-                {safeSpecifications.textured ? (
-                  <CheckCircle size={16} color={Colors.light.success} />
-                ) : (
-                  <XCircle size={16} color={Colors.light.error} />
-                )}
-                <Text style={styles.featureText}>Texturizado</Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={styles.purchaseTypeSection}>
-            <Text style={styles.sectionTitle}>Tipo de Compra</Text>
-            
-            <View style={styles.purchaseOptions}>
-              <TouchableOpacity
-                style={[
-                  styles.purchaseOption,
-                  purchaseType === 'roll' && styles.purchaseOptionSelected
-                ]}
-                onPress={() => setPurchaseType('roll')}
-              >
-                <Package size={20} color={purchaseType === 'roll' ? Colors.light.primary : Colors.light.textSecondary} />
-                <Text style={[
-                  styles.purchaseOptionText,
-                  purchaseType === 'roll' && styles.purchaseOptionTextSelected
-                ]}>Por Rollo</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={[
-                  styles.purchaseOption,
-                  purchaseType === 'measurement' && styles.purchaseOptionSelected
-                ]}
-                onPress={() => setPurchaseType('measurement')}
-              >
-                <Ruler size={20} color={purchaseType === 'measurement' ? Colors.light.primary : Colors.light.textSecondary} />
-                <Text style={[
-                  styles.purchaseOptionText,
-                  purchaseType === 'measurement' && styles.purchaseOptionTextSelected
-                ]}>Por Medida</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          {purchaseType === 'roll' ? (
-            <View style={styles.rollSection}>
-              <Text style={styles.sectionTitle}>Cantidad de Rollos</Text>
-              <View style={styles.rollQuantityContainer}>
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={() => setRollQuantity(Math.max(1, rollQuantity - 1))}
-                >
-                  <Text style={styles.quantityButtonText}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.rollQuantity}>{rollQuantity}</Text>
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={() => setRollQuantity(rollQuantity + 1)}
-                >
-                  <Text style={styles.quantityButtonText}>+</Text>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.rollInfo}>
-                {rollQuantity} rollo{rollQuantity > 1 ? 's' : ''} • {(rollQuantity * safeDimensions.coverage).toFixed(1)}m² de cobertura
-              </Text>
-              <Text style={styles.totalPrice}>Total: ${(safePrice * rollQuantity).toFixed(2)}</Text>
-            </View>
-          ) : (
-            <View style={styles.measurementSection}>
-              <Text style={styles.sectionTitle}>Medidas de tu Pared</Text>
-              
-              <TouchableOpacity
-                style={styles.measurementButton}
-                onPress={() => setShowMeasurementModal(true)}
-              >
-                <Calculator size={20} color={Colors.light.primary} />
-                <Text style={styles.measurementButtonText}>
-                  {wallWidth && wallHeight 
-                    ? `${wallWidth}m × ${wallHeight}m = ${wallArea.toFixed(1)}m²`
-                    : 'Ingresar Medidas'
-                  }
-                </Text>
-              </TouchableOpacity>
-              
-              {wallWidth && wallHeight && (
-                <View style={styles.calculatorResults}>
-                  <Text style={styles.calculatorDescription}>
-                    Para {wallArea.toFixed(1)}m² necesitas <Text style={styles.highlight}>{rollsNeeded} rollo{rollsNeeded > 1 ? 's' : ''}</Text>
-                  </Text>
-                  <Text style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</Text>
+              {/* Mobile Zoom Hint (Text) */}
+              {!IS_DESKTOP && (
+                <View style={styles.zoomHint}>
+                  <Text style={styles.zoomHintText}>Touch to Zoom</Text>
                 </View>
               )}
             </View>
-          )}
+
+            {/* Thumbnails */}
+            {images.length > 1 && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.thumbnailList}>
+                {images.map((img, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => setActiveImage(index)}
+                    style={[
+                      styles.thumbnailItem,
+                      activeImage === index && styles.thumbnailActive
+                    ]}
+                  >
+                    <Image source={{ uri: img }} style={styles.thumbnailImage} />
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            )}
+          </View>
+
+          {/* RIGHT COLUMN: DETAILS */}
+          <View style={[styles.detailsSection, IS_DESKTOP && styles.desktopDetailsSection]}>
+            <View style={styles.brandBadge}>
+              <Text style={styles.brandText}>BREWSTER HOME FASHIONS</Text>
+            </View>
+
+            <Text style={styles.title}>{wallpaper.name}</Text>
+
+            <View style={styles.skuContainer}>
+              <Text style={styles.skuLabel}>Item #</Text>
+              <Text style={styles.skuValue}>{wallpaper.publicSku || wallpaper.id}</Text>
+            </View>
+
+            <Text style={styles.price}>${wallpaper.price.toFixed(2)} / rollo</Text>
+
+            <View style={styles.divider} />
+
+            <Text style={styles.sectionHeader}>Descripción</Text>
+            <Text style={styles.description}>
+              {wallpaper.description || "Un diseño exclusivo que transforma cualquier espacio. Fabricado con materiales de alta calidad para asegurar durabilidad y un acabado premium."}
+            </Text>
+
+            <View style={styles.specsContainer}>
+              <View style={styles.specItem}>
+                <Ruler size={20} color={Colors.light.textSecondary} />
+                <View>
+                  <Text style={styles.specLabel}>Dimensiones</Text>
+                  <Text style={styles.specValue}>53cm x 10m</Text>
+                </View>
+              </View>
+              <View style={styles.specItem}>
+                <ShieldCheck size={20} color={Colors.light.textSecondary} />
+                <View>
+                  <Text style={styles.specLabel}>Calidad</Text>
+                  <Text style={styles.specValue}>Lavable Premium</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+
+            {/* Calculator Teaser */}
+            <TouchableOpacity style={styles.calculatorRow}>
+              <Info size={20} color={Colors.light.accent} />
+              <Text style={styles.calculatorText}>¿Cuánto necesito? Calcular rollos</Text>
+            </TouchableOpacity>
+
+            {/* Actions */}
+            <View style={styles.actionContainer}>
+              <View style={styles.quantityControl}>
+                <TouchableOpacity
+                  onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                  style={styles.qtyBtn}
+                >
+                  <Minus size={18} color={Colors.light.text} />
+                </TouchableOpacity>
+                <Text style={styles.qtyText}>{quantity}</Text>
+                <TouchableOpacity
+                  onPress={() => setQuantity(quantity + 1)}
+                  style={styles.qtyBtn}
+                >
+                  <Plus size={18} color={Colors.light.text} />
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={styles.addToCartBtn}
+                onPress={() => addToCart(wallpaper, quantity)}
+              >
+                <Text style={styles.addToCartText}>AGREGAR AL CARRITO</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.shippingInfo}>
+              <Truck size={16} color={Colors.light.success} />
+              <Text style={styles.shippingText}>Envío Gratis en pedidos mayores a $2000</Text>
+            </View>
+
+          </View>
         </View>
       </ScrollView>
+    </View>
+  );
+}
 
-      <View style={styles.bottomActions}>
-        <TouchableOpacity
-          style={styles.tryButton}
-          onPress={handleGoToCamera}
-        >
-          <Text style={styles.tryButtonText}>Probar en mi Pared</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[
-            styles.addToCartButton,
-            !wallpaper.inStock && styles.addToCartButtonDisabled,
-            isAlreadyInCart && styles.addToCartButtonInCart,
-          ]}
-          onPress={handleAddToCart}
-          disabled={!wallpaper.inStock}
-        >
-          <ShoppingCart size={20} color={Colors.light.background} />
-          <Text style={styles.addToCartButtonText}>
-            {!wallpaper.inStock 
-              ? 'Agotado' 
-              : isAlreadyInCart 
-                ? 'Agregar Más' 
-                : 'Agregar al Carrito'
-            }
-          </Text>
-        </TouchableOpacity>
-      </View>
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: Colors.light.background,
+  },
+  center: {
+    flex: 1, justifyContent: 'center', alignItems: 'center'
+  },
+  scrollContent: {
+    paddingBottom: 40,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  iconButton: {
+    padding: 8,
+  },
+  brandLogo: {
+    fontFamily: 'Lato_700Bold',
+    fontSize: 20,
+    letterSpacing: 2,
+    color: Colors.light.primary,
+  },
 
-      <Modal
-        visible={showMeasurementModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowMeasurementModal(false)}
+  contentWrapper: {
+    flexDirection: 'column',
+  },
+  desktopLayout: {
+    flexDirection: 'row',
+    paddingHorizontal: 40,
+    paddingTop: 20,
+    maxWidth: 1400,
+    alignSelf: 'center',
+    gap: 60,
+  },
+
+  // Images
+  imageSection: {
+    width: '100%',
+  },
+  desktopImageSection: {
+    width: '55%',
+  },
+  mainImageWrapper: {
+    width: '100%',
+    aspectRatio: 1,
+    position: 'relative',
+    overflow: 'hidden',
+    backgroundColor: Colors.light.backgroundSecondary,
+  },
+  mainImage: {
+    width: '100%',
+    height: '100%',
+  },
+  magnifier: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.5)',
+    pointerEvents: 'none',
+    transform: [{ translateX: -100 }, { translateY: -100 }], // Center on cursor
+    backgroundColor: 'white',
+    // Background image props set inline
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  zoomHint: {
+    position: 'absolute',
+    bottom: 10, right: 10,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingHorizontal: 12, paddingVertical: 6,
+    borderRadius: 20,
+  },
+  zoomHintText: { color: 'white', fontSize: 12 },
+
+  thumbnailList: {
+    marginTop: 16,
+    paddingHorizontal: IS_DESKTOP ? 0 : 20,
+  },
+  thumbnailItem: {
+    width: 80, height: 80,
+    marginRight: 10,
+    borderWidth: 1, borderColor: Colors.light.border,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  thumbnailActive: {
+    borderColor: Colors.light.primary,
+    borderWidth: 2,
+  },
+  thumbnailImage: { width: '100%', height: '100%' },
+
+  // Details
+  detailsSection: {
+    padding: 24,
+  },
+  desktopDetailsSection: {
+    width: '45%',
+    paddingTop: 0,
+  },
+  brandBadge: {
+    marginBottom: 10,
+  },
+  brandText: {
+    fontSize: 12,
+    fontFamily: 'Lato_700Bold',
+    color: Colors.light.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  title: {
+    fontSize: 32,
+    fontFamily: 'PlayfairDisplay_600SemiBold',
+    color: Colors.light.text,
+    marginBottom: 8,
+    lineHeight: 40,
+  },
+  skuContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    gap: 5,
+  },
+  skuLabel: { fontSize: 14, color: Colors.light.textSecondary },
+  skuValue: { fontSize: 14, color: Colors.light.textSecondary, fontWeight: 'bold' },
+
+  price: {
+    fontSize: 28,
+    fontFamily: 'Lato_700Bold',
+    color: Colors.light.primary,
+    marginBottom: 24,
+  },
+
+  divider: { height: 1, backgroundColor: Colors.light.border, marginVertical: 24 },
+
+  sectionHeader: {
+    fontSize: 18,
+    fontFamily: 'PlayfairDisplay_600SemiBold',
+    marginBottom: 12,
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: Colors.light.textSecondary,
+    marginBottom: 24,
+    fontFamily: 'Lato_400Regular',
+  },
+
+  specsContainer: {
+    flexDirection: 'row',
+    gap: 24,
+  },
+  specItem: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'center',
+  },
+  specLabel: { fontSize: 12, color: Colors.light.textSecondary, textTransform: 'uppercase' },
+  specValue: { fontSize: 16, fontWeight: '600', color: Colors.light.text },
+
+  calculatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 24,
+    padding: 12,
+    backgroundColor: Colors.light.backgroundSecondary,
+    borderRadius: 8,
+  },
+  calculatorText: {
+    color: Colors.light.primary,
+    fontWeight: '600',
+  },
+
+  // Actions
+  actionContainer: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 20,
+  },
+  quantityControl: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    borderRadius: 4,
+    height: 50,
+  },
+  qtyBtn: {
+    width: 40, height: '100%',
+    justifyContent: 'center', alignItems: 'center',
+  },
+  qtyText: {
+    width: 30, textAlign: 'center',
+    fontSize: 16, fontWeight: 'bold',
+  },
+  addToCartBtn: {
+    flex: 1,
+    backgroundColor: Colors.light.primary,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    shadowColor: Colors.light.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  addToCartText: {
+    color: 'white',
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
+
+  shippingInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+  },
+  shippingText: {
+    fontSize: 12,
+    color: Colors.light.success,
+    fontWeight: '500',
+  },
+});
+removable: wallpaper.specifications?.removable !== undefined ? wallpaper.specifications.removable : true,
+  textured: wallpaper.specifications?.textured !== undefined ? wallpaper.specifications.textured : false,
+  };
+
+const rollsNeeded = Math.ceil(wallArea / safeDimensions.coverage);
+const totalPrice = safePrice * rollsNeeded;
+const isAlreadyInCart = isInCart(wallpaper.id);
+
+const handleAddToCart = () => {
+  if (!wallpaper.inStock) {
+    if (Platform.OS !== 'web') {
+      Alert.alert('Producto Agotado', 'Este papel tapiz no está disponible actualmente.');
+    }
+    return;
+  }
+
+  if (purchaseType === 'measurement' && (!wallWidth || !wallHeight)) {
+    if (Platform.OS !== 'web') {
+      Alert.alert('Medidas Requeridas', 'Por favor ingresa las medidas de tu pared.');
+    }
+    return;
+  }
+
+  const finalRollsNeeded = purchaseType === 'roll' ? rollQuantity : rollsNeeded;
+  const finalWallArea = purchaseType === 'roll' ? rollQuantity * safeDimensions.coverage : wallArea;
+
+  addToCart(wallpaper, finalRollsNeeded, finalWallArea, purchaseType);
+  if (Platform.OS !== 'web') {
+    const message = purchaseType === 'roll'
+      ? `${rollQuantity} rollo${rollQuantity > 1 ? 's' : ''} de "${wallpaper.name}" agregado${rollQuantity > 1 ? 's' : ''} al carrito.`
+      : `${finalRollsNeeded} rollo${finalRollsNeeded > 1 ? 's' : ''} de "${wallpaper.name}" para ${wallArea.toFixed(1)}m² agregado${finalRollsNeeded > 1 ? 's' : ''} al carrito.`;
+
+    Alert.alert(
+      'Agregado al Carrito',
+      message,
+      [
+        { text: 'Continuar Comprando', style: 'cancel' },
+        { text: 'Ver Carrito', onPress: () => router.push('/(tabs)/cart') },
+      ]
+    );
+  }
+};
+
+const handleGoToCamera = () => {
+  console.log('=== NAVIGATING TO CAMERA ===');
+  console.log('Wallpaper ID:', wallpaper.id);
+  console.log('Wallpaper name:', wallpaper.name);
+  router.push({
+    pathname: '/(tabs)/camera',
+    params: {
+      wallpaperId: wallpaper.id,
+      source: 'wallpaper-detail'
+    }
+  });
+};
+
+const handleSaveToFavorites = () => {
+  setShowSaveProjectModal(true);
+};
+
+const handleSaveProject = async () => {
+  if (saveMode === 'new') {
+    if (!projectName.trim()) {
+      if (Platform.OS !== 'web') {
+        Alert.alert('Nombre Requerido', 'Por favor ingresa un nombre para tu proyecto.');
+      }
+      return;
+    }
+
+    const savedProject = await addToFavorites(
+      projectName.trim(),
+      roomType,
+      wallpaper,
+      undefined,
+      projectNotes.trim() || undefined
+    );
+
+    if (savedProject) {
+      setShowSaveProjectModal(false);
+      setProjectName('');
+      setRoomType('sala');
+      setProjectNotes('');
+      setSaveMode('existing');
+      setSelectedExistingProjectId('');
+
+      if (Platform.OS !== 'web') {
+        Alert.alert(
+          'Proyecto Guardado',
+          `"${savedProject.name}" ha sido guardado en tus favoritos.`,
+          [
+            { text: 'Continuar', style: 'cancel' },
+            { text: 'Ver Favoritos', onPress: () => router.push('/favorites') },
+          ]
+        );
+      }
+    }
+  } else {
+    if (!selectedExistingProjectId) {
+      if (Platform.OS !== 'web') {
+        Alert.alert('Proyecto Requerido', 'Por favor selecciona un proyecto.');
+      }
+      return;
+    }
+
+    const success = await addWallpaperToProject(selectedExistingProjectId, wallpaper);
+
+    if (success) {
+      const project = favoriteProjects.find(p => p.id === selectedExistingProjectId);
+      setShowSaveProjectModal(false);
+      setSelectedExistingProjectId('');
+      setSaveMode('existing');
+
+      if (Platform.OS !== 'web') {
+        Alert.alert(
+          'Papel Agregado',
+          `El papel tapiz ha sido agregado a "${project?.name}".`,
+          [
+            { text: 'Continuar', style: 'cancel' },
+            { text: 'Ver Favoritos', onPress: () => router.push('/favorites') },
+          ]
+        );
+      }
+    }
+  }
+};
+
+return (
+  <View style={[styles.container, { paddingTop: insets.top }]}>
+    <Stack.Screen
+      options={{
+        headerShown: false,
+      }}
+    />
+
+    <View style={styles.header}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => router.back()}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Medidas de tu Pared</Text>
-              <TouchableOpacity
-                style={styles.modalCloseButton}
-                onPress={() => setShowMeasurementModal(false)}
-              >
-                <X size={24} color={Colors.light.textSecondary} />
-              </TouchableOpacity>
-            </View>
-            
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Ancho (metros)</Text>
-              <TextInput
-                style={styles.input}
-                value={wallWidth}
-                onChangeText={setWallWidth}
-                placeholder="Ej: 3.5"
-                keyboardType="decimal-pad"
-                placeholderTextColor={Colors.light.textSecondary}
-              />
-            </View>
-            
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Alto (metros)</Text>
-              <TextInput
-                style={styles.input}
-                value={wallHeight}
-                onChangeText={setWallHeight}
-                placeholder="Ej: 2.4"
-                keyboardType="decimal-pad"
-                placeholderTextColor={Colors.light.textSecondary}
-              />
-            </View>
-            
-            {wallWidth && wallHeight && (
-              <View style={styles.modalCalculation}>
-                <Text style={styles.modalCalculationText}>
-                  Área total: {wallArea.toFixed(1)}m²
-                </Text>
-                <Text style={styles.modalCalculationText}>
-                  Rollos necesarios: {rollsNeeded}
-                </Text>
+        <ArrowLeft size={24} color={Colors.light.text} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.favoriteButton}
+        onPress={handleSaveToFavorites}
+      >
+        <Heart
+          size={24}
+          color={Colors.light.text}
+          fill={'transparent'}
+        />
+      </TouchableOpacity>
+    </View>
+
+    <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <View style={styles.imageContainer}>
+        {wallpaper.imageUrls && wallpaper.imageUrls.length > 0 ? (
+          <>
+            <FlatList
+              data={wallpaper.imageUrls}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={(event) => {
+                const index = Math.round(event.nativeEvent.contentOffset.x / screenWidth);
+                setCurrentImageIndex(index);
+              }}
+              renderItem={({ item }) => (
+                <Image source={{ uri: item }} style={[styles.wallpaperImage, { width: screenWidth }]} />
+              )}
+              keyExtractor={(item, index) => `${item}-${index}`}
+            />
+
+            {wallpaper.imageUrls.length > 1 && (
+              <View style={styles.imageIndicators}>
+                {wallpaper.imageUrls.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.indicator,
+                      currentImageIndex === index && styles.indicatorActive
+                    ]}
+                  />
+                ))}
               </View>
             )}
-            
+          </>
+        ) : (
+          <Image source={{ uri: wallpaper.imageUrl }} style={styles.wallpaperImage} />
+        )}
+
+        {!wallpaper.inStock && (
+          <View style={styles.outOfStockOverlay}>
+            <View style={styles.outOfStockBadge}>
+              <XCircle size={20} color={Colors.light.background} />
+              <Text style={styles.outOfStockText}>Agotado</Text>
+            </View>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.detailsContainer}>
+        <View style={styles.titleSection}>
+          <Text style={styles.wallpaperName}>{wallpaper.name}</Text>
+          <Text style={styles.wallpaperCategory}>{wallpaper.category} • {wallpaper.style}</Text>
+
+
+        </View>
+
+        <View style={styles.priceSection}>
+          <Text style={styles.priceLabel}>Precio por rollo</Text>
+          <Text style={styles.price}>${safePrice.toFixed(2)}</Text>
+        </View>
+
+        <View style={styles.descriptionSection}>
+          <Text style={styles.sectionTitle}>Descripción</Text>
+          <Text style={styles.description}>{wallpaper.description}</Text>
+        </View>
+
+        {safeColors.length > 0 && (
+          <View style={styles.colorsSection}>
+            <Text style={styles.sectionTitle}>Colores</Text>
+            <View style={styles.colorsList}>
+              {safeColors.map((color: string) => (
+                <View key={color} style={styles.colorChip}>
+                  <Palette size={14} color={Colors.light.primary} />
+                  <Text style={styles.colorText}>{color}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
+        <View style={styles.specificationsSection}>
+          <Text style={styles.sectionTitle}>Especificaciones</Text>
+
+          <View style={styles.specRow}>
+            <View style={styles.specItem}>
+              <Ruler size={16} color={Colors.light.primary} />
+              <Text style={styles.specLabel}>Dimensiones</Text>
+            </View>
+            <Text style={styles.specValue}>
+              {safeDimensions.width}m × {safeDimensions.height}m
+            </Text>
+          </View>
+
+          <View style={styles.specRow}>
+            <View style={styles.specItem}>
+              <Package size={16} color={Colors.light.primary} />
+              <Text style={styles.specLabel}>Cobertura</Text>
+            </View>
+            <Text style={styles.specValue}>{safeDimensions.coverage}m² por rollo</Text>
+          </View>
+
+          <View style={styles.specRow}>
+            <View style={styles.specItem}>
+              <Info size={16} color={Colors.light.primary} />
+              <Text style={styles.specLabel}>Material</Text>
+            </View>
+            <Text style={styles.specValue}>{safeSpecifications.material}</Text>
+          </View>
+
+          <View style={styles.featuresGrid}>
+            <View style={styles.featureItem}>
+              {safeSpecifications.washable ? (
+                <CheckCircle size={16} color={Colors.light.success} />
+              ) : (
+                <XCircle size={16} color={Colors.light.error} />
+              )}
+              <Text style={styles.featureText}>Lavable</Text>
+            </View>
+
+            <View style={styles.featureItem}>
+              {safeSpecifications.removable ? (
+                <CheckCircle size={16} color={Colors.light.success} />
+              ) : (
+                <XCircle size={16} color={Colors.light.error} />
+              )}
+              <Text style={styles.featureText}>Removible</Text>
+            </View>
+
+            <View style={styles.featureItem}>
+              {safeSpecifications.textured ? (
+                <CheckCircle size={16} color={Colors.light.success} />
+              ) : (
+                <XCircle size={16} color={Colors.light.error} />
+              )}
+              <Text style={styles.featureText}>Texturizado</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.purchaseTypeSection}>
+          <Text style={styles.sectionTitle}>Tipo de Compra</Text>
+
+          <View style={styles.purchaseOptions}>
             <TouchableOpacity
-              style={styles.modalSaveButton}
-              onPress={() => setShowMeasurementModal(false)}
+              style={[
+                styles.purchaseOption,
+                purchaseType === 'roll' && styles.purchaseOptionSelected
+              ]}
+              onPress={() => setPurchaseType('roll')}
             >
-              <Text style={styles.modalSaveButtonText}>Guardar Medidas</Text>
+              <Package size={20} color={purchaseType === 'roll' ? Colors.light.primary : Colors.light.textSecondary} />
+              <Text style={[
+                styles.purchaseOptionText,
+                purchaseType === 'roll' && styles.purchaseOptionTextSelected
+              ]}>Por Rollo</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.purchaseOption,
+                purchaseType === 'measurement' && styles.purchaseOptionSelected
+              ]}
+              onPress={() => setPurchaseType('measurement')}
+            >
+              <Ruler size={20} color={purchaseType === 'measurement' ? Colors.light.primary : Colors.light.textSecondary} />
+              <Text style={[
+                styles.purchaseOptionText,
+                purchaseType === 'measurement' && styles.purchaseOptionTextSelected
+              ]}>Por Medida</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
 
-      <Modal
-        visible={showSaveProjectModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowSaveProjectModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Agregar a Favoritos</Text>
+        {purchaseType === 'roll' ? (
+          <View style={styles.rollSection}>
+            <Text style={styles.sectionTitle}>Cantidad de Rollos</Text>
+            <View style={styles.rollQuantityContainer}>
               <TouchableOpacity
-                style={styles.modalCloseButton}
-                onPress={() => setShowSaveProjectModal(false)}
+                style={styles.quantityButton}
+                onPress={() => setRollQuantity(Math.max(1, rollQuantity - 1))}
               >
-                <X size={24} color={Colors.light.textSecondary} />
+                <Text style={styles.quantityButtonText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.rollQuantity}>{rollQuantity}</Text>
+              <TouchableOpacity
+                style={styles.quantityButton}
+                onPress={() => setRollQuantity(rollQuantity + 1)}
+              >
+                <Text style={styles.quantityButtonText}>+</Text>
               </TouchableOpacity>
             </View>
-            
-            <View style={styles.saveModeContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.saveModeButton,
-                  saveMode === 'existing' && styles.saveModeButtonSelected,
-                ]}
-                onPress={() => setSaveMode('existing')}
-              >
-                <Text
-                  style={[
-                    styles.saveModeButtonText,
-                    saveMode === 'existing' && styles.saveModeButtonTextSelected,
-                  ]}
-                >
-                  Proyecto Existente
-                </Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity
-                style={[
-                  styles.saveModeButton,
-                  saveMode === 'new' && styles.saveModeButtonSelected,
-                ]}
-                onPress={() => setSaveMode('new')}
-              >
-                <Text
-                  style={[
-                    styles.saveModeButtonText,
-                    saveMode === 'new' && styles.saveModeButtonTextSelected,
-                  ]}
-                >
-                  Nuevo Proyecto
-                </Text>
-              </TouchableOpacity>
-            </View>
-            
-            {saveMode === 'existing' ? (
-              <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Selecciona un Proyecto</Text>
-                {favoriteProjects.length === 0 ? (
-                  <View style={styles.emptyProjectsContainer}>
-                    <Text style={styles.emptyProjectsText}>
-                      No tienes proyectos guardados. Crea uno nuevo.
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.createFirstProjectButton}
-                      onPress={() => setSaveMode('new')}
-                    >
-                      <Text style={styles.createFirstProjectButtonText}>Crear Proyecto</Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <ScrollView style={styles.projectsList} showsVerticalScrollIndicator={false}>
-                    {favoriteProjects.map((project) => (
-                      <TouchableOpacity
-                        key={project.id}
-                        style={[
-                          styles.projectItem,
-                          selectedExistingProjectId === project.id && styles.projectItemSelected,
-                        ]}
-                        onPress={() => setSelectedExistingProjectId(project.id)}
-                      >
-                        <View style={styles.projectItemContent}>
-                          <Text style={styles.projectItemName}>{project.name}</Text>
-                          <Text style={styles.projectItemRoom}>{project.roomType}</Text>
-                          <Text style={styles.projectItemWallpaper}>
-                            {project.wallpapers.length} papel{project.wallpapers.length !== 1 ? 'es' : ''} guardado{project.wallpapers.length !== 1 ? 's' : ''}
-                          </Text>
-                        </View>
-                        {selectedExistingProjectId === project.id && (
-                          <CheckCircle size={20} color={Colors.light.primary} />
-                        )}
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                )}
-              </View>
-            ) : (
-              <>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>Nombre del Proyecto</Text>
-                  <TextInput
-                    style={styles.input}
-                    value={projectName}
-                    onChangeText={setProjectName}
-                    placeholder="Ej: Sala Principal"
-                    placeholderTextColor={Colors.light.textSecondary}
-                  />
-                </View>
-                
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>Tipo de Habitación</Text>
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.roomTypeContainer}
-                  >
-                    {['sala', 'dormitorio', 'cocina', 'baño', 'comedor', 'oficina'].map((room) => (
-                      <TouchableOpacity
-                        key={room}
-                        style={[
-                          styles.roomTypeChip,
-                          roomType === room && styles.roomTypeChipSelected,
-                        ]}
-                        onPress={() => setRoomType(room)}
-                      >
-                        <Text
-                          style={[
-                            styles.roomTypeText,
-                            roomType === room && styles.roomTypeTextSelected,
-                          ]}
-                        >
-                          {room.charAt(0).toUpperCase() + room.slice(1)}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </View>
-                
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>Notas (Opcional)</Text>
-                  <TextInput
-                    style={[styles.input, styles.textArea]}
-                    value={projectNotes}
-                    onChangeText={setProjectNotes}
-                    placeholder="Agrega notas sobre tu proyecto..."
-                    placeholderTextColor={Colors.light.textSecondary}
-                    multiline
-                    numberOfLines={3}
-                  />
-                </View>
-              </>
-            )}
-            
+            <Text style={styles.rollInfo}>
+              {rollQuantity} rollo{rollQuantity > 1 ? 's' : ''} • {(rollQuantity * safeDimensions.coverage).toFixed(1)}m² de cobertura
+            </Text>
+            <Text style={styles.totalPrice}>Total: ${(safePrice * rollQuantity).toFixed(2)}</Text>
+          </View>
+        ) : (
+          <View style={styles.measurementSection}>
+            <Text style={styles.sectionTitle}>Medidas de tu Pared</Text>
+
             <TouchableOpacity
-              style={styles.modalSaveButton}
-              onPress={handleSaveProject}
+              style={styles.measurementButton}
+              onPress={() => setShowMeasurementModal(true)}
             >
-              <Text style={styles.modalSaveButtonText}>
-                {saveMode === 'new' ? 'Crear Proyecto' : 'Agregar a Proyecto'}
+              <Calculator size={20} color={Colors.light.primary} />
+              <Text style={styles.measurementButtonText}>
+                {wallWidth && wallHeight
+                  ? `${wallWidth}m × ${wallHeight}m = ${wallArea.toFixed(1)}m²`
+                  : 'Ingresar Medidas'
+                }
+              </Text>
+            </TouchableOpacity>
+
+            {wallWidth && wallHeight && (
+              <View style={styles.calculatorResults}>
+                <Text style={styles.calculatorDescription}>
+                  Para {wallArea.toFixed(1)}m² necesitas <Text style={styles.highlight}>{rollsNeeded} rollo{rollsNeeded > 1 ? 's' : ''}</Text>
+                </Text>
+                <Text style={styles.totalPrice}>Total: ${totalPrice.toFixed(2)}</Text>
+              </View>
+            )}
+          </View>
+        )}
+      </View>
+    </ScrollView>
+
+    <View style={styles.bottomActions}>
+      <TouchableOpacity
+        style={styles.tryButton}
+        onPress={handleGoToCamera}
+      >
+        <Text style={styles.tryButtonText}>Probar en mi Pared</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[
+          styles.addToCartButton,
+          !wallpaper.inStock && styles.addToCartButtonDisabled,
+          isAlreadyInCart && styles.addToCartButtonInCart,
+        ]}
+        onPress={handleAddToCart}
+        disabled={!wallpaper.inStock}
+      >
+        <ShoppingCart size={20} color={Colors.light.background} />
+        <Text style={styles.addToCartButtonText}>
+          {!wallpaper.inStock
+            ? 'Agotado'
+            : isAlreadyInCart
+              ? 'Agregar Más'
+              : 'Agregar al Carrito'
+          }
+        </Text>
+      </TouchableOpacity>
+    </View>
+
+    <Modal
+      visible={showMeasurementModal}
+      transparent
+      animationType="slide"
+      onRequestClose={() => setShowMeasurementModal(false)}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Medidas de tu Pared</Text>
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setShowMeasurementModal(false)}
+            >
+              <X size={24} color={Colors.light.textSecondary} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Ancho (metros)</Text>
+            <TextInput
+              style={styles.input}
+              value={wallWidth}
+              onChangeText={setWallWidth}
+              placeholder="Ej: 3.5"
+              keyboardType="decimal-pad"
+              placeholderTextColor={Colors.light.textSecondary}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Alto (metros)</Text>
+            <TextInput
+              style={styles.input}
+              value={wallHeight}
+              onChangeText={setWallHeight}
+              placeholder="Ej: 2.4"
+              keyboardType="decimal-pad"
+              placeholderTextColor={Colors.light.textSecondary}
+            />
+          </View>
+
+          {wallWidth && wallHeight && (
+            <View style={styles.modalCalculation}>
+              <Text style={styles.modalCalculationText}>
+                Área total: {wallArea.toFixed(1)}m²
+              </Text>
+              <Text style={styles.modalCalculationText}>
+                Rollos necesarios: {rollsNeeded}
+              </Text>
+            </View>
+          )}
+
+          <TouchableOpacity
+            style={styles.modalSaveButton}
+            onPress={() => setShowMeasurementModal(false)}
+          >
+            <Text style={styles.modalSaveButtonText}>Guardar Medidas</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+
+    <Modal
+      visible={showSaveProjectModal}
+      transparent
+      animationType="slide"
+      onRequestClose={() => setShowSaveProjectModal(false)}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Agregar a Favoritos</Text>
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setShowSaveProjectModal(false)}
+            >
+              <X size={24} color={Colors.light.textSecondary} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.saveModeContainer}>
+            <TouchableOpacity
+              style={[
+                styles.saveModeButton,
+                saveMode === 'existing' && styles.saveModeButtonSelected,
+              ]}
+              onPress={() => setSaveMode('existing')}
+            >
+              <Text
+                style={[
+                  styles.saveModeButtonText,
+                  saveMode === 'existing' && styles.saveModeButtonTextSelected,
+                ]}
+              >
+                Proyecto Existente
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.saveModeButton,
+                saveMode === 'new' && styles.saveModeButtonSelected,
+              ]}
+              onPress={() => setSaveMode('new')}
+            >
+              <Text
+                style={[
+                  styles.saveModeButtonText,
+                  saveMode === 'new' && styles.saveModeButtonTextSelected,
+                ]}
+              >
+                Nuevo Proyecto
               </Text>
             </TouchableOpacity>
           </View>
+
+          {saveMode === 'existing' ? (
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Selecciona un Proyecto</Text>
+              {favoriteProjects.length === 0 ? (
+                <View style={styles.emptyProjectsContainer}>
+                  <Text style={styles.emptyProjectsText}>
+                    No tienes proyectos guardados. Crea uno nuevo.
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.createFirstProjectButton}
+                    onPress={() => setSaveMode('new')}
+                  >
+                    <Text style={styles.createFirstProjectButtonText}>Crear Proyecto</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <ScrollView style={styles.projectsList} showsVerticalScrollIndicator={false}>
+                  {favoriteProjects.map((project) => (
+                    <TouchableOpacity
+                      key={project.id}
+                      style={[
+                        styles.projectItem,
+                        selectedExistingProjectId === project.id && styles.projectItemSelected,
+                      ]}
+                      onPress={() => setSelectedExistingProjectId(project.id)}
+                    >
+                      <View style={styles.projectItemContent}>
+                        <Text style={styles.projectItemName}>{project.name}</Text>
+                        <Text style={styles.projectItemRoom}>{project.roomType}</Text>
+                        <Text style={styles.projectItemWallpaper}>
+                          {project.wallpapers.length} papel{project.wallpapers.length !== 1 ? 'es' : ''} guardado{project.wallpapers.length !== 1 ? 's' : ''}
+                        </Text>
+                      </View>
+                      {selectedExistingProjectId === project.id && (
+                        <CheckCircle size={20} color={Colors.light.primary} />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
+            </View>
+          ) : (
+            <>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Nombre del Proyecto</Text>
+                <TextInput
+                  style={styles.input}
+                  value={projectName}
+                  onChangeText={setProjectName}
+                  placeholder="Ej: Sala Principal"
+                  placeholderTextColor={Colors.light.textSecondary}
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Tipo de Habitación</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={styles.roomTypeContainer}
+                >
+                  {['sala', 'dormitorio', 'cocina', 'baño', 'comedor', 'oficina'].map((room) => (
+                    <TouchableOpacity
+                      key={room}
+                      style={[
+                        styles.roomTypeChip,
+                        roomType === room && styles.roomTypeChipSelected,
+                      ]}
+                      onPress={() => setRoomType(room)}
+                    >
+                      <Text
+                        style={[
+                          styles.roomTypeText,
+                          roomType === room && styles.roomTypeTextSelected,
+                        ]}
+                      >
+                        {room.charAt(0).toUpperCase() + room.slice(1)}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Notas (Opcional)</Text>
+                <TextInput
+                  style={[styles.input, styles.textArea]}
+                  value={projectNotes}
+                  onChangeText={setProjectNotes}
+                  placeholder="Agrega notas sobre tu proyecto..."
+                  placeholderTextColor={Colors.light.textSecondary}
+                  multiline
+                  numberOfLines={3}
+                />
+              </View>
+            </>
+          )}
+
+          <TouchableOpacity
+            style={styles.modalSaveButton}
+            onPress={handleSaveProject}
+          >
+            <Text style={styles.modalSaveButtonText}>
+              {saveMode === 'new' ? 'Crear Proyecto' : 'Agregar a Proyecto'}
+            </Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
-    </View>
-  );
+      </View>
+    </Modal>
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
