@@ -4,56 +4,50 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  Image,
   ImageBackground,
   FlatList,
   RefreshControl,
   useWindowDimensions,
+  StatusBar,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  Platform
 } from 'react-native';
-import { RefreshCw } from 'lucide-react-native';
+import { ShoppingBag, Search, Menu } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useHistory } from '@/contexts/HistoryContext';
 import { router } from 'expo-router';
 import { WallpaperCard } from '@/components/WallpaperCard';
-import { Wallpaper } from '@/constants/wallpapers';
 import { SearchBar } from '@/components/SearchBar';
+import { BlurView } from 'expo-blur';
+import { useFonts, PlayfairDisplay_400Regular, PlayfairDisplay_600SemiBold, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
+import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function HomeScreen() {
-  // ... (imports and hooks)
-
-
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const { wallpapers, refetchWallpapers } = useWallpapers();
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const { recentItems } = useHistory();
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const numColumns = useMemo(() => {
-    if (width >= 1200) return 4;
-    if (width >= 768) return 3;
-    return 2;
-  }, [width]);
+  let [fontsLoaded] = useFonts({
+    PlayfairDisplay_400Regular,
+    PlayfairDisplay_600SemiBold,
+    PlayfairDisplay_700Bold,
+    Lato_400Regular,
+    Lato_700Bold,
+  });
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      router.push({
-        pathname: '/catalog',
-        params: { search: searchQuery }
-      });
-    }
-  };
+  const numColumns = useMemo(() => (width >= 1200 ? 4 : width >= 768 ? 3 : 2), [width]);
 
-  const handleWallpaperPress = (wallpaper: Wallpaper) => {
-    router.push(`/wallpaper/${wallpaper.id}`);
-  };
-
-  const homeWallpapers = useMemo(() => {
-    const featured = wallpapers.filter(w => w.showInHome && w.inStock).slice(0, 6);
-    return featured;
-  }, [wallpapers]);
+  // Take first 12 items for "New Arrivals"
+  const featuredWallpapers = useMemo(() => wallpapers.filter(w => w.showInHome).slice(0, 12), [wallpapers]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -61,68 +55,96 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      router.push({ pathname: '/catalog', params: { search: searchQuery } });
+    }
+  };
+
+  if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: '#FFF' }} />;
+
   return (
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={handleRefresh}
-          tintColor={Colors.light.primary}
-        />
-      }
-    >
-      <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=800&fit=crop&auto=format&q=80' }}
-        style={[styles.hero, { paddingTop: insets.top + 20 }]}
-        imageStyle={styles.heroImage}
-      >
-        <View style={styles.heroOverlay} />
-        <View style={styles.heroContent}>
-          <Image
-            source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/sre9ivu48wqqxw9hgy49l' }}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-          <Text style={styles.heroTitle}>Tu espacio, tu estilo</Text>
-          <Text style={styles.heroSubtitle}>
-            Papel tapiz premium listo para instalar. Compra por habitación o explora nuestras colecciones
-          </Text>
+    <View style={styles.mainContainer}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
 
-          <SearchBar
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onSubmit={handleSearch}
-            placeholder="Busca: geométrico, beige, mármol..."
-          />
+      {/* PROFESSIONAL HEADER */}
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+        <TouchableOpacity>
+          <Menu color="#000" size={24} />
+        </TouchableOpacity>
+
+        <Text style={styles.brandTitle}>VIZZARO</Text>
+
+        <View style={styles.headerIcons}>
+          <TouchableOpacity style={styles.iconBtn}><Search color="#000" size={24} /></TouchableOpacity>
+          <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('/cart')}><ShoppingBag color="#000" size={24} /></TouchableOpacity>
         </View>
-      </ImageBackground>
+      </View>
 
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Papel Tapiz Destacado</Text>
-          <View style={styles.headerActions}>
-            <TouchableOpacity
-              onPress={handleRefresh}
-              style={styles.refreshButton}
-              disabled={refreshing}
-            >
-              <RefreshCw
-                size={20}
-                color={Colors.light.primary}
-                style={refreshing ? styles.refreshIconSpinning : undefined}
-              />
-            </TouchableOpacity>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor={Colors.light.accent} />}
+      >
+
+        {/* CAROUSEL HERO */}
+        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.carousel}>
+          <ImageBackground
+            source={{ uri: 'https://images.unsplash.com/photo-1615529328331-f8e94aa06ea4?q=80&w=1200' }}
+            style={[styles.heroSlide, { width: SCREEN_WIDTH }]}
+          >
+            <View style={styles.heroOverlay}>
+              <Text style={styles.heroTitle}>Vizzaro Custom Wallpaper</Text>
+              <Text style={styles.heroSubtitle}>Transform your space with exclusive designs.</Text>
+              <TouchableOpacity style={styles.heroButton} onPress={() => router.push('/catalog')}>
+                <Text style={styles.heroButtonText}>SHOP NOW</Text>
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+
+          {/* Slide 2 */}
+          <ImageBackground
+            source={{ uri: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200' }}
+            style={[styles.heroSlide, { width: SCREEN_WIDTH }]}
+          >
+            <View style={styles.heroOverlay}>
+              <Text style={styles.heroTitle}>New Tropical Collection</Text>
+              <Text style={styles.heroSubtitle}>Bring nature indoors.</Text>
+              <TouchableOpacity style={styles.heroButton} onPress={() => router.push('/catalog')}>
+                <Text style={styles.heroButtonText}>EXPLORE</Text>
+              </TouchableOpacity>
+            </View>
+          </ImageBackground>
+        </ScrollView>
+
+        {/* FEATURED COLLECTIONS (Features) */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Featured Collections</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.collectionList}>
+            {['Floral', 'Geometric', 'Texture', 'Luxury'].map((cat, i) => (
+              <TouchableOpacity key={i} style={styles.collectionCard} onPress={() => router.push('/catalog')}>
+                <Image
+                  source={{ uri: wallpapers[i]?.imageUrl || 'https://via.placeholder.com/300' }}
+                  style={styles.collectionImage}
+                />
+                <Text style={styles.collectionTitle}>{cat}</Text>
+                <Text style={styles.collectionSubtitle}>VIEW COLLECTION</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* LATEST ARRIVALS */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>New Arrivals</Text>
             <TouchableOpacity onPress={() => router.push('/catalog')}>
-              <Text style={styles.seeAll}>Ver todo</Text>
+              <Text style={styles.seeAll}>Shop All</Text>
             </TouchableOpacity>
           </View>
-        </View>
 
-        {homeWallpapers.length > 0 ? (
           <FlatList
-            data={homeWallpapers}
+            data={featuredWallpapers}
             numColumns={numColumns}
             key={numColumns}
             scrollEnabled={false}
@@ -130,169 +152,84 @@ export default function HomeScreen() {
             contentContainerStyle={styles.gridContainer}
             columnWrapperStyle={styles.gridRow}
             renderItem={({ item }) => (
-              <WallpaperCard
-                item={item}
-                onPress={handleWallpaperPress}
-                width={`${100 / numColumns - 2}%`}
-              />
+              <View style={{ flex: 1, maxWidth: `${100 / numColumns}%` }}>
+                <WallpaperCard item={item} onPress={(w) => router.push(`/wallpaper/${w.id}`)} width="94%" />
+              </View>
             )}
           />
-        ) : (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>
-              No hay papel tapiz destacado.
-            </Text>
-            <Text style={styles.emptyStateSubtext}>
-              Marca algunos productos como {`"`}Mostrar en home{`"`} desde el panel de administración.
-            </Text>
+        </View>
+
+        {/* RECENTLY VIEWED (Cookies) */}
+        {recentItems.length > 0 && (
+          <View style={[styles.section, styles.historySection]}>
+            <Text style={styles.sectionTitle}>Recently Viewed</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.historyList}>
+              {recentItems.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.historyItem}
+                  onPress={() => router.push(`/wallpaper/${item.id}`)}
+                >
+                  <Image source={{ uri: item.imageUrl }} style={styles.historyImage} />
+                  <Text style={styles.historyName} numberOfLines={1}>{item.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         )}
-      </View>
 
-      <View style={{ height: 40 }} />
-    </ScrollView>
+        {/* FOOTER */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>© 2026 Vizzaro Wallcoverings. All rights reserved.</Text>
+          <Text style={styles.footerLink}>Privacy Policy • Terms of Service</Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
+  mainContainer: { flex: 1, backgroundColor: '#FFF' },
+  header: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 20, paddingBottom: 15, backgroundColor: '#FFF',
+    borderBottomWidth: 1, borderBottomColor: '#F0F0F0'
   },
-  hero: {
-    width: '100%',
-    minHeight: 500,
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  heroImage: {
-    opacity: 0.9,
-  },
-  heroOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(26, 58, 29, 0.6)',
-  },
-  logo: {
-    width: 280,
-    height: 120,
-    marginBottom: 20,
-  },
-  heroContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1,
-  },
-  heroTitle: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: Colors.light.background,
-    textAlign: 'center',
-    marginBottom: 16,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 4,
-  },
-  heroSubtitle: {
-    fontSize: 18,
-    color: Colors.light.background,
-    textAlign: 'center',
-    marginBottom: 32,
-    paddingHorizontal: 20,
-    lineHeight: 26,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
+  brandTitle: { fontFamily: 'PlayfairDisplay_700Bold', fontSize: 24, letterSpacing: 2, color: '#000' },
+  headerIcons: { flexDirection: 'row', gap: 15 },
+  iconBtn: { padding: 4 },
 
-  section: {
-    paddingVertical: 32,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: Colors.light.text,
-  },
-  seeAll: {
-    fontSize: 16,
-    color: Colors.light.primary,
-    fontWeight: '600',
-  },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  refreshButton: {
-    padding: 4,
-  },
-  refreshIconSpinning: {
-    opacity: 0.5,
-  },
-  gridContainer: {
-    paddingHorizontal: 20,
-  },
-  gridRow: {
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  gridCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: Colors.light.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  gridImageContainer: {
-    width: '100%',
-    aspectRatio: 1,
-    backgroundColor: Colors.light.border,
-  },
-  gridImage: {
-    width: '100%',
-    height: '100%',
-  },
-  gridInfo: {
-    padding: 12,
-    gap: 4,
-  },
-  gridName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.text,
-    lineHeight: 18,
-  },
-  gridPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.light.primary,
-  },
-  emptyState: {
-    paddingHorizontal: 40,
-    paddingVertical: 60,
-    alignItems: 'center',
-    gap: 12,
-  },
-  emptyStateText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: Colors.light.text,
-    textAlign: 'center',
-  },
-  emptyStateSubtext: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
+  container: { flex: 1 },
+
+  carousel: { height: 500 },
+  heroSlide: { height: 500, justifyContent: 'center', alignItems: 'center' },
+  heroOverlay: { backgroundColor: 'rgba(0,0,0,0.3)', padding: 20, alignItems: 'center', width: '100%', height: '100%', justifyContent: 'center' },
+  heroTitle: { fontFamily: 'PlayfairDisplay_700Bold', fontSize: 42, color: '#FFF', textAlign: 'center', marginBottom: 10, textShadowColor: 'rgba(0,0,0,0.5)', textShadowRadius: 10 },
+  heroSubtitle: { fontFamily: 'Lato_400Regular', fontSize: 18, color: '#F0F0F0', textAlign: 'center', marginBottom: 25 },
+  heroButton: { borderWidth: 2, borderColor: '#FFF', paddingHorizontal: 30, paddingVertical: 12 },
+  heroButtonText: { color: '#FFF', fontSize: 14, fontWeight: 'bold', letterSpacing: 2 },
+
+  section: { paddingVertical: 40, paddingHorizontal: 20 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20 },
+  sectionTitle: { fontFamily: 'PlayfairDisplay_600SemiBold', fontSize: 28, color: '#111', marginBottom: 20, textAlign: 'center' },
+  seeAll: { fontFamily: 'Lato_700Bold', fontSize: 14, color: Colors.light.primary, textDecorationLine: 'underline' },
+
+  collectionList: { gap: 20, paddingHorizontal: 10 },
+  collectionCard: { alignItems: 'center', marginRight: 20 },
+  collectionImage: { width: 250, height: 350, marginBottom: 15 },
+  collectionTitle: { fontFamily: 'PlayfairDisplay_400Regular', fontSize: 22, color: '#111', marginBottom: 5 },
+  collectionSubtitle: { fontFamily: 'Lato_700Bold', fontSize: 12, color: '#666', letterSpacing: 1 },
+
+  gridContainer: {},
+  gridRow: { gap: 0, justifyContent: 'flex-start' },
+
+  historySection: { backgroundColor: '#F9F9F9' },
+  historyList: { gap: 15 },
+  historyItem: { width: 120, marginRight: 15 },
+  historyImage: { width: 120, height: 120, borderRadius: 4, marginBottom: 8 },
+  historyName: { fontSize: 12, fontFamily: 'Lato_400Regular', color: '#333' },
+
+  footer: { padding: 40, backgroundColor: '#111', alignItems: 'center' },
+  footerText: { color: '#888', fontSize: 12, marginBottom: 10 },
+  footerLink: { color: '#666', fontSize: 12 }
 });
