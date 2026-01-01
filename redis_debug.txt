@@ -1,0 +1,12 @@
+[dotenv@17.2.3] injecting env (13) from .env -- tip: ???? prevent building .env in docker: https://dotenvx.com/prebuild
+--- ENV DEBUG ---
+KV_REST_API_URL exists: true
+KV_REST_API_URL length: 40
+KV_REST_API_URL start: https://to
+KV_REST_API_URL end: upstash.io
+Full Value (Safe): https://together-possum-26043.upstash.io
+Raw Value: https://together-possum-26043.upstash.io
+KV_REST_API_TOKEN exists: true
+REDIS_URL exists: true
+REDIS_URL Safe: rediss://***@together-possum-26043.upstash.io:6379
+REDIS_URL Raw: rediss://default:AWW7AAIncDJjNzlmMWQ1ZThlZjY0MDBlOWE1YzU5NTZmODI0NWYxZnAyMjYwNDM@together-possum-26043.upstash.io:6379

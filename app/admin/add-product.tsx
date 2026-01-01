@@ -28,6 +28,7 @@ import {
   Home,
 } from 'lucide-react-native';
 import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as XLSX from 'xlsx';
@@ -75,6 +76,7 @@ export default function AddProductScreen() {
   const [imageUrlInput, setImageUrlInput] = useState<string>('');
   const [colorInput, setColorInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
   const [showBulkModal, setShowBulkModal] = useState<boolean>(false);
   const [bulkUrls, setBulkUrls] = useState<string>('');
   const [showExcelModal, setShowExcelModal] = useState<boolean>(false);
@@ -110,6 +112,85 @@ export default function AddProductScreen() {
 
   const updateForm = (field: keyof ProductForm, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  // --- Image Upload Logic ---
+
+  const pickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+        base64: true,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        await uploadImage(asset);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', 'No se pudo seleccionar la imagen');
+    }
+  };
+
+  const uploadImage = async (asset: ImagePicker.ImagePickerAsset) => {
+    try {
+      setUploading(true);
+
+      const filename = asset.fileName || 'upload.jpg';
+      let body: any;
+
+      if (Platform.OS === 'web') {
+        const response = await fetch(asset.uri);
+        const blob = await response.blob();
+        body = blob;
+      } else {
+        // For native, we need to send binary data. 
+        // Vercel Blob 'put' expects body. 
+        // Our API endpoint expects body content.
+        // Sending base64 as body if API handles it, or use FileSystem to read as string.
+        // Simplified approach: Send base64 and handle in API or assume Web usage for Admin.
+        // Given current context, let's assume web admin predominantly or basic fetch.
+        // Actually, on generic fetch in RN, passing 'uri' to body doesn't work like web.
+        // We need to read file.
+        const base64 = await FileSystem.readAsStringAsync(asset.uri, { encoding: 'base64' });
+        body = base64; // This puts base64 string as body. API needs to handle.
+        // Wait, 'put' expects the file content. 
+        // If we send base64 string, the file will be that text.
+        // We'd need to decode on server. 
+        // Let's stick to Web support primarily for this task as it's the requested path 
+        // and usually admin panels are web-based.
+        Alert.alert('Aviso', 'La subida de archivos está optimizada para Web. En móvil puede requerir ajustes.');
+        return;
+      }
+
+      const uploadRes = await fetch(`/api/upload?filename=${filename}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: body
+      });
+
+      if (uploadRes.ok) {
+        const data = await uploadRes.json();
+        // data.url is the new blob url
+        if (data.url) {
+          setImageUrlInput(data.url);
+        }
+      } else {
+        throw new Error('Upload failed');
+      }
+
+    } catch (error) {
+      console.error('Upload error:', error);
+      Alert.alert('Error', 'Error al subir la imagen');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const addImageUrl = () => {
@@ -677,6 +758,7 @@ export default function AddProductScreen() {
             </View>
 
             {/* Input para agregar URL de imagen */}
+            {/* Input para agregar URL de imagen o subir archivo */}
             <View style={styles.urlInputContainer}>
               <TextInput
                 style={[styles.textInput, { flex: 1 }]}
@@ -686,11 +768,25 @@ export default function AddProductScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
               />
+
+              <TouchableOpacity
+                style={[styles.addUrlButton, uploading && { opacity: 0.5, backgroundColor: Colors.light.tabIconDefault }]}
+                onPress={pickImage}
+                disabled={uploading}
+              >
+                {uploading ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <Upload size={20} color="#FFFFFF" />
+                )}
+              </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.addUrlButton}
                 onPress={addImageUrl}
+                disabled={!imageUrlInput.trim()}
               >
-                <LinkIcon size={20} color="#FFFFFF" />
+                <Plus size={20} color="#FFFFFF" />
               </TouchableOpacity>
             </View>
 

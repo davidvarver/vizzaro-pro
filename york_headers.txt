@@ -1,0 +1,14 @@
+[dotenv@17.2.3] injecting env (13) from .env -- tip: ??????  enable debug logging with { debug: true }
+Downloading /general_inventory/York_Inventory.csv...
+
+--- YORK CSV COLUMNS ---
+Item Number
+Quantity available
+Back order date
+
+--- YORK SAMPLE ROW ---
+{
+  'Item Number': '5011',
+  'Quantity available': '50',
+  'Back order date': ''
+}

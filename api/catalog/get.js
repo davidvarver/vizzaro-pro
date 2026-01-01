@@ -27,28 +27,28 @@ export default async function handler(req, res) {
   res.setHeader('Expires', '0');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'GET') {
     return res.status(405).json({ success: false, error: 'Method not allowed', allowedMethods: ['GET', 'OPTIONS'] });
   }
 
   try {
     console.log('[Catalog GET] Fetching catalog from KV...');
-    
+
     const kvUrl = process.env.KV_REST_API_URL;
     const kvToken = process.env.KV_REST_API_TOKEN;
-    
+
     console.log('[Catalog GET] KV URL configured:', !!kvUrl);
     console.log('[Catalog GET] KV Token configured:', !!kvToken);
-    
+
     let catalog;
-    
+
     const kvConfigured = kvUrl && kvUrl !== 'your_vercel_kv_url' && kvToken && kvToken !== 'your_vercel_kv_token';
-    
+
     if (!kvConfigured) {
       console.warn('[Catalog GET] KV not configured, using default catalog');
       catalog = initialWallpapers;
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
           const kvData = await kvResponse.json();
           console.log('[Catalog GET] KV response:', kvData);
           const rawResult = kvData.result;
-          
+
           try {
             if (rawResult && typeof rawResult === 'string') {
               catalog = JSON.parse(rawResult);
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
             console.error('[Catalog GET] Error parsing KV data:', parseError);
             catalog = null;
           }
-          
+
           if (catalog && !Array.isArray(catalog)) {
             console.warn('[Catalog GET] Catalog is not an array, resetting');
             catalog = null;
@@ -89,7 +89,7 @@ export default async function handler(req, res) {
           if (catalog && Array.isArray(catalog)) {
             catalog = catalog.map(item => {
               if (!item || typeof item !== 'object') return null;
-              
+
               return {
                 ...item,
                 price: typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0,
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
               };
             }).filter(item => item !== null && item.id && item.name);
           }
-          
+
           console.log('[Catalog GET] KV fetch successful, catalog exists:', !!catalog);
           console.log('[Catalog GET] Catalog items count:', Array.isArray(catalog) ? catalog.length : 0);
         } else {
@@ -129,11 +129,11 @@ export default async function handler(req, res) {
         console.error('[Catalog GET] KV error, using fallback:', kvError);
         catalog = null;
       }
-      
+
       if (!catalog || !Array.isArray(catalog) || catalog.length === 0) {
         console.log('[Catalog GET] No catalog found or empty, initializing with default data');
         catalog = initialWallpapers;
-        
+
         try {
           console.log('[Catalog GET] Saving default catalog to KV...');
           const saveResponse = await fetch(`${kvUrl}/set/wallpapers_catalog`, {
@@ -144,7 +144,7 @@ export default async function handler(req, res) {
             },
             body: JSON.stringify(catalog),
           });
-          
+
           if (saveResponse.ok) {
             console.log('[Catalog GET] Default catalog saved to KV');
           } else {
@@ -157,16 +157,21 @@ export default async function handler(req, res) {
     }
 
     console.log('[Catalog GET] Returning catalog with', Array.isArray(catalog) ? catalog.length : 0, 'items');
-    
-    return res.status(200).json({ 
-      success: true, 
+
+    return res.status(200).json({
+      success: true,
       catalog,
       timestamp: Date.now(),
-      usingKV: kvConfigured
+      usingKV: kvConfigured,
+      debug_info: {
+        kv_url_prefix: kvUrl ? kvUrl.substring(0, 15) + '...' : 'undefined',
+        kv_token_prefix: kvToken ? kvToken.substring(0, 5) + '...' : 'undefined',
+        raw_item_count: catalog ? catalog.length : 0
+      }
     });
   } catch (error) {
     console.error('[Catalog GET] Error fetching catalog:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       success: false,
       error: 'Error al obtener el catálogo',
       details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined

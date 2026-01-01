@@ -1,0 +1,9 @@
+[dotenv@17.2.3] injecting env (13) from .env -- tip: ??????  enable debug logging with { debug: true }
+--- ENV DEBUG ---
+KV_REST_API_URL exists: true
+KV_REST_API_URL length: 40
+KV_REST_API_URL start: https://to
+KV_REST_API_URL end: upstash.io
+Full Value (Safe): https://together-possum-26043.upstash.io
+Raw Value: https://together-possum-26043.upstash.io
+KV_REST_API_TOKEN exists: true

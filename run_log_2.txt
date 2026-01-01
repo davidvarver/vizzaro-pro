@@ -1,0 +1,642 @@
+node.exe : FAIL __te
+sts__/stores/cartSto
+re.test.ts
+En C:\Program Files\
+nodejs\npx.ps1: 29 
+Car?cter: 3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (FAIL   
+  __tests__/stor    
+es/cartStore.te    
+st.ts:String) [    
+], RemoteExcept    
+ion
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+  ??? Test suite 
+failed to run
+
+    Jest 
+encountered an 
+unexpected token
+
+    Jest failed to 
+parse a file. This 
+happens e.g. when 
+your code or its 
+dependencies use 
+non-standard 
+JavaScript syntax, 
+or when Jest is not 
+configured to 
+support such syntax.
+
+    Out of the box 
+Jest supports 
+Babel, which will 
+be used to 
+transform your 
+files into valid JS 
+based on your Babel 
+configuration.
+
+    By default 
+"node_modules" 
+folder is ignored 
+by transformers.
+
+    Here's what you 
+can do:
+     ??? If you are 
+trying to use 
+ECMAScript Modules, 
+see https://jestjs.i
+o/docs/ecmascript-mo
+dules for how to 
+enable it.
+     ??? If you are 
+trying to use 
+TypeScript, see http
+s://jestjs.io/docs/g
+etting-started#using
+-typescript
+     ??? To have 
+some of your 
+"node_modules" 
+files transformed, 
+you can specify a 
+custom "transformIgn
+orePatterns" in 
+your config.
+     ??? If you 
+need a custom 
+transformation 
+specify a 
+"transform" option 
+in your config.
+     ??? If you 
+simply want to mock 
+your non-JS modules 
+(e.g. binary 
+assets) you can 
+stub them out with 
+the 
+"moduleNameMapper" 
+config option.
+
+    You'll find 
+more details and 
+examples of these 
+config options in 
+the docs:
+    https://jestjs.i
+o/docs/configuration
+    For information 
+about custom 
+transformations, 
+see:
+    https://jestjs.i
+o/docs/code-transfor
+mation
+
+    Details:
+
+    SyntaxError: C:\
+Users\david\Download
+s\vizaro pro\-vizzar
+o-wallpaper\__tests_
+_\stores\cartStore.t
+est.ts: 
+Unterminated 
+regular expression. 
+(10:33)
+
+    [0m [90m  8 
+|[39m [90m// 
+Helper component to 
+expose the hook 
+inside the 
+provider[39m
+     [90m  9 
+|[39m 
+[36mconst[39m [33
+mHookWrapper[39m 
+[33m=[39m ({ 
+children 
+}[33m:[39m { 
+children[33m:[39m 
+[33mReact[39m[33m
+.[39m[33mReactNode
+[39m }) 
+[33m=>[39m (
+    [31m[1m>[22m
+[39m[90m 10 |[39m 
+    [33m<[39m[33m
+CartProvider[39m[3
+3m>[39m{ children 
+} [33m<[39m[33m/
+[39m[33mCartProvide
+r[39m[33m>[39m
+     [90m    
+|[39m              
+                    
+[31m[1m^[22m[39m
+     [90m 11 
+|[39m )[33m;[39m
+     [90m 12 |[39m
+     [90m 13 
+|[39m 
+[36mconst[39m [33
+mTestComponent[39m 
+[33m=[39m () 
+[33m=>[39m {[0m
+
+      at 
+constructor (node_mo
+dules/@babel/parser/
+src/parse-error.ts:9
+5:45)
+      at TypeScriptP
+arserMixin.toParseEr
+ror [as raise] (node
+_modules/@babel/pars
+er/src/tokenizer/ind
+ex.ts:1497:19)
+      at TypeScriptP
+arserMixin.raise 
+[as readRegexp] (nod
+e_modules/@babel/par
+ser/src/tokenizer/in
+dex.ts:1082:20)
+      at TypeScriptP
+arserMixin.readRegex
+p [as 
+parseExprAtom] (node
+_modules/@babel/pars
+er/src/parser/expres
+sion.ts:1108:14)
+      at TypeScriptP
+arserMixin.parseExpr
+Atom [as parseExprSu
+bscripts] (node_modu
+les/@babel/parser/sr
+c/parser/expression.
+ts:714:23)
+      at TypeScriptP
+arserMixin.parseExpr
+Subscripts [as 
+parseUpdate] (node_m
+odules/@babel/parser
+/src/parser/expressi
+on.ts:693:21)
+      at TypeScriptP
+arserMixin.parseUpda
+te (node_modules/@ba
+bel/parser/src/parse
+r/expression.ts:655:
+23)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnary (node_modules
+/@babel/parser/src/p
+lugins/typescript/in
+dex.ts:3699:20)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnary [as parseMayb
+eUnaryOrPrivate] (no
+de_modules/@babel/pa
+rser/src/parser/expr
+ession.ts:389:14)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnaryOrPrivate (nod
+e_modules/@babel/par
+ser/src/parser/expre
+ssion.ts:569:12)
+      at TypeScriptP
+arserMixin.parseExpr
+OpBaseRightExpr [as 
+parseExprOpRightExpr
+] (node_modules/@bab
+el/parser/src/parser
+/expression.ts:554:2
+1)
+      at TypeScriptP
+arserMixin.parseExpr
+OpRightExpr (node_mo
+dules/@babel/parser/
+src/parser/expressio
+n.ts:485:27)
+      at TypeScriptP
+arserMixin.parseExpr
+Op (node_modules/@ba
+bel/parser/src/plugi
+ns/typescript/index.
+ts:2770:20)
+      at TypeScriptP
+arserMixin.parseExpr
+Op [as 
+parseExprOps] (node_
+modules/@babel/parse
+r/src/parser/express
+ion.ts:407:17)
+      at TypeScriptP
+arserMixin.parseExpr
+Ops [as parseMaybeCo
+nditional] (node_mod
+ules/@babel/parser/s
+rc/parser/expression
+.ts:356:23)
+      at TypeScriptP
+arserMixin.parseMayb
+eConditional (node_m
+odules/@babel/parser
+/src/parser/expressi
+on.ts:298:21)
+      at 
+parseMaybeAssign (no
+de_modules/@babel/pa
+rser/src/plugins/typ
+escript/index.ts:358
+6:28)
+      at TypeScriptP
+arserMixin.fn [as 
+tryParse] (node_modu
+les/@babel/parser/sr
+c/parser/util.ts:174
+:20)
+      at TypeScriptP
+arserMixin.tryParse 
+[as 
+parseMaybeAssign] (n
+ode_modules/@babel/p
+arser/src/plugins/ty
+pescript/index.ts:35
+83:26)
+      at 
+parseMaybeAssign (no
+de_modules/@babel/pa
+rser/src/parser/expr
+ession.ts:252:12)
+      at TypeScriptP
+arserMixin.callback 
+[as allowInAnd] (nod
+e_modules/@babel/par
+ser/src/parser/expre
+ssion.ts:3117:12)
+      at TypeScriptP
+arserMixin.allowInAn
+d [as parseMaybeAssi
+gnAllowIn] (node_mod
+ules/@babel/parser/s
+rc/parser/expression
+.ts:251:17)
+      at TypeScriptP
+arserMixin.parseMayb
+eAssignAllowIn [as p
+arseParenAndDistingu
+ishExpression] (node
+_modules/@babel/pars
+er/src/parser/expres
+sion.ts:1771:16)
+      at TypeScriptP
+arserMixin.parsePare
+nAndDistinguishExpre
+ssion [as 
+parseExprAtom] (node
+_modules/@babel/pars
+er/src/parser/expres
+sion.ts:1131:21)
+      at TypeScriptP
+arserMixin.parseExpr
+Atom [as parseExprSu
+bscripts] (node_modu
+les/@babel/parser/sr
+c/parser/expression.
+ts:714:23)
+      at TypeScriptP
+arserMixin.parseExpr
+Subscripts [as 
+parseUpdate] (node_m
+odules/@babel/parser
+/src/parser/expressi
+on.ts:693:21)
+      at TypeScriptP
+arserMixin.parseUpda
+te (node_modules/@ba
+bel/parser/src/parse
+r/expression.ts:655:
+23)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnary (node_modules
+/@babel/parser/src/p
+lugins/typescript/in
+dex.ts:3699:20)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnary [as parseMayb
+eUnaryOrPrivate] (no
+de_modules/@babel/pa
+rser/src/parser/expr
+ession.ts:389:14)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnaryOrPrivate [as 
+parseExprOps] (node_
+modules/@babel/parse
+r/src/parser/express
+ion.ts:401:23)
+      at TypeScriptP
+arserMixin.parseExpr
+Ops [as parseMaybeCo
+nditional] (node_mod
+ules/@babel/parser/s
+rc/parser/expression
+.ts:356:23)
+      at TypeScriptP
+arserMixin.parseMayb
+eConditional (node_m
+odules/@babel/parser
+/src/parser/expressi
+on.ts:298:21)
+      at TypeScriptP
+arserMixin.parseMayb
+eAssign (node_module
+s/@babel/parser/src/
+plugins/typescript/i
+ndex.ts:3571:22)
+      at TypeScriptP
+arserMixin.parseMayb
+eAssign [as 
+parseFunctionBody] (
+node_modules/@babel/
+parser/src/parser/ex
+pression.ts:2543:14)
+      at TypeScriptP
+arserMixin.parseFunc
+tionBody [as parseAr
+rowExpression] (node
+_modules/@babel/pars
+er/src/parser/expres
+sion.ts:2498:10)
+      at TypeScriptP
+arserMixin.parseArro
+wExpression [as pars
+eParenAndDistinguish
+Expression] (node_mo
+dules/@babel/parser/
+src/parser/expressio
+n.ts:1794:12)
+      at TypeScriptP
+arserMixin.parsePare
+nAndDistinguishExpre
+ssion [as 
+parseExprAtom] (node
+_modules/@babel/pars
+er/src/parser/expres
+sion.ts:1131:21)
+      at TypeScriptP
+arserMixin.parseExpr
+Atom [as parseExprSu
+bscripts] (node_modu
+les/@babel/parser/sr
+c/parser/expression.
+ts:714:23)
+      at TypeScriptP
+arserMixin.parseExpr
+Subscripts [as 
+parseUpdate] (node_m
+odules/@babel/parser
+/src/parser/expressi
+on.ts:693:21)
+      at TypeScriptP
+arserMixin.parseUpda
+te (node_modules/@ba
+bel/parser/src/parse
+r/expression.ts:655:
+23)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnary (node_modules
+/@babel/parser/src/p
+lugins/typescript/in
+dex.ts:3699:20)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnary [as parseMayb
+eUnaryOrPrivate] (no
+de_modules/@babel/pa
+rser/src/parser/expr
+ession.ts:389:14)
+      at TypeScriptP
+arserMixin.parseMayb
+eUnaryOrPrivate [as 
+parseExprOps] (node_
+modules/@babel/parse
+r/src/parser/express
+ion.ts:401:23)
+      at TypeScriptP
+arserMixin.parseExpr
+Ops [as parseMaybeCo
+nditional] (node_mod
+ules/@babel/parser/s
+rc/parser/expression
+.ts:356:23)
+      at TypeScriptP
+arserMixin.parseMayb
+eConditional (node_m
+odules/@babel/parser
+/src/parser/expressi
+on.ts:298:21)
+      at TypeScriptP
+arserMixin.parseMayb
+eAssign (node_module
+s/@babel/parser/src/
+plugins/typescript/i
+ndex.ts:3571:22)
+      at 
+parseMaybeAssign (no
+de_modules/@babel/pa
+rser/src/parser/expr
+ession.ts:252:12)
+      at TypeScriptP
+arserMixin.callback 
+[as allowInAnd] (nod
+e_modules/@babel/par
+ser/src/parser/expre
+ssion.ts:3112:16)
+      at TypeScriptP
+arserMixin.allowInAn
+d [as parseMaybeAssi
+gnAllowIn] (node_mod
+ules/@babel/parser/s
+rc/parser/expression
+.ts:251:17)
+      at TypeScriptP
+arserMixin.parseMayb
+eAssignAllowIn [as 
+parseVar] (node_modu
+les/@babel/parser/sr
+c/parser/statement.t
+s:1563:18)
+      at TypeScriptP
+arserMixin.parseVar 
+(node_modules/@babel
+/parser/src/parser/s
+tatement.ts:1227:10)
+      at TypeScriptP
+arserMixin.parseVarS
+tatement (node_modul
+es/@babel/parser/src
+/plugins/typescript/
+index.ts:2971:33)
+      at TypeScriptP
+arserMixin.parseVarS
+tatement (node_modul
+es/@babel/parser/src
+/parser/statement.ts
+:566:21)
+      at TypeScriptP
+arserMixin.parseStat
+ementContent (node_m
+odules/@babel/parser
+/src/plugins/typescr
+ipt/index.ts:3020:20
+)
+      at TypeScriptP
+arserMixin.parseStat
+ementContent [as 
+parseStatementLike] 
+(node_modules/@babel
+/parser/src/parser/s
+tatement.ts:437:17)
+      at TypeScriptP
+arserMixin.parseStat
+ementLike [as 
+parseModuleItem] (no
+de_modules/@babel/pa
+rser/src/parser/stat
+ement.ts:374:17)
+      at TypeScriptP
+arserMixin.parseModu
+leItem [as parseBloc
+kOrModuleBlockBody] 
+(node_modules/@babel
+/parser/src/parser/s
+tatement.ts:1419:16)
+      at TypeScriptP
+arserMixin.parseBloc
+kOrModuleBlockBody 
+[as parseBlockBody] 
+(node_modules/@babel
+/parser/src/parser/s
+tatement.ts:1393:10)
+      at TypeScriptP
+arserMixin.parseBloc
+kBody [as 
+parseProgram] (node_
+modules/@babel/parse
+r/src/parser/stateme
+nt.ts:225:10)
+      at TypeScriptP
+arserMixin.parseProg
+ram [as 
+parseTopLevel] (node
+_modules/@babel/pars
+er/src/parser/statem
+ent.ts:203:25)
+      at TypeScriptP
+arserMixin.parseTopL
+evel (node_modules/@
+babel/parser/src/par
+ser/index.ts:90:10)
+      at TypeScriptP
+arserMixin.parse (no
+de_modules/@babel/pa
+rser/src/plugins/typ
+escript/index.ts:415
+6:20)
+      at parse (node
+_modules/@babel/pars
+er/src/index.ts:66:3
+8)
+      at parser (nod
+e_modules/@babel/cor
+e/src/parser/index.t
+s:28:19)
+          at 
+parser.next 
+(<anonymous>)
+      at 
+normalizeFile (node_
+modules/@babel/core/
+src/transformation/n
+ormalize-file.ts:50:
+24)
+          at 
+normalizeFile.next 
+(<anonymous>)
+      at run (node_m
+odules/@babel/core/s
+rc/transformation/in
+dex.ts:40:36)
+          at 
+run.next 
+(<anonymous>)
+      at transform (
+node_modules/@babel/
+core/src/transform.t
+s:29:20)
+          at 
+transform.next 
+(<anonymous>)
+      at 
+evaluateSync (node_m
+odules/gensync/index
+.js:251:28)
+      at sync (node_
+modules/gensync/inde
+x.js:89:14)
+      at fn (node_mo
+dules/@babel/core/sr
+c/errors/rewrite-sta
+ck-trace.ts:99:14)
+      at 
+transformSync (node_
+modules/@babel/core/
+src/transform.ts:66:
+52)
+      at ScriptTrans
+former.transformSour
+ce (node_modules/@je
+st/transform/build/S
+criptTransformer.js:
+545:31)
+      at ScriptTrans
+former._transformAnd
+BuildScript (node_mo
+dules/@jest/transfor
+m/build/ScriptTransf
+ormer.js:674:40)
+      at ScriptTrans
+former.transform (no
+de_modules/@jest/tra
+nsform/build/ScriptT
+ransformer.js:726:19
+)
+
+Test Suites: 1 
+failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        4.343 s
+Ran all test suites.

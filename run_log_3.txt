@@ -1,0 +1,188 @@
+node.exe : FAIL __te
+sts__/stores/cartSto
+re.test.tsx
+En C:\Program Files\
+nodejs\npx.ps1: 29 
+Car?cter: 3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (FAIL   
+  __tests__/stor    
+es/cartStore.te    
+st.tsx:String)     
+[], RemoteExcep    
+tion
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+  ??? Test suite 
+failed to run
+
+    Jest 
+encountered an 
+unexpected token
+
+    Jest failed to 
+parse a file. This 
+happens e.g. when 
+your code or its 
+dependencies use 
+non-standard 
+JavaScript syntax, 
+or when Jest is not 
+configured to 
+support such syntax.
+
+    Out of the box 
+Jest supports 
+Babel, which will 
+be used to 
+transform your 
+files into valid JS 
+based on your Babel 
+configuration.
+
+    By default 
+"node_modules" 
+folder is ignored 
+by transformers.
+
+    Here's what you 
+can do:
+     ??? If you are 
+trying to use 
+ECMAScript Modules, 
+see https://jestjs.i
+o/docs/ecmascript-mo
+dules for how to 
+enable it.
+     ??? If you are 
+trying to use 
+TypeScript, see http
+s://jestjs.io/docs/g
+etting-started#using
+-typescript
+     ??? To have 
+some of your 
+"node_modules" 
+files transformed, 
+you can specify a 
+custom "transformIgn
+orePatterns" in 
+your config.
+     ??? If you 
+need a custom 
+transformation 
+specify a 
+"transform" option 
+in your config.
+     ??? If you 
+simply want to mock 
+your non-JS modules 
+(e.g. binary 
+assets) you can 
+stub them out with 
+the 
+"moduleNameMapper" 
+config option.
+
+    You'll find 
+more details and 
+examples of these 
+config options in 
+the docs:
+    https://jestjs.i
+o/docs/configuration
+    For information 
+about custom 
+transformations, 
+see:
+    https://jestjs.i
+o/docs/code-transfor
+mation
+
+    Details:
+
+    C:\Users\david\D
+ownloads\vizaro pro\
+-vizzaro-wallpaper\n
+ode_modules\@nkzw\cr
+eate-context-hook\li
+b\index.js:2
+    import { 
+createContext, 
+useContext } from 
+"react";
+    ^^^^^^
+
+    SyntaxError: 
+Cannot use import 
+statement outside a 
+module
+
+    [0m [90m 1 
+|[39m 
+[36mimport[39m { 
+useState[33m,[39m 
+useEffect[33m,[39m
+ useCallback[33m,[
+39m useMemo } 
+[36mfrom[39m [32m
+'react'[39m[33m;[
+39m
+     [90m 2 |[39m 
+[36mimport[39m [3
+3mAsyncStorage[39m 
+[36mfrom[39m [32m
+'@react-native-async
+-storage/async-stora
+ge'[39m[33m;[39m
+    [31m[1m>[22m
+[39m[90m 3 |[39m 
+[36mimport[39m 
+createContextHook 
+[36mfrom[39m [32m
+'@nkzw/create-contex
+t-hook'[39m[33m;[
+39m
+     [90m   |[39m 
+[31m[1m^[22m[39m
+     [90m 4 |[39m 
+[36mimport[39m { 
+[33mWallpaper[39m 
+} [36mfrom[39m [3
+2m'@/constants/wallp
+apers'[39m[33m;[3
+9m
+     [90m 5 |[39m
+     [90m 6 |[39m 
+[36mexport[39m 
+[36minterface[39m 
+[33mCartItem[39m 
+{[0m
+
+      at Runtime.cre
+ateScriptFromCode (n
+ode_modules/jest-run
+time/build/index.js:
+1505:14)
+      at 
+Object.require (cont
+exts/CartContext.tsx
+:3:1)
+      at 
+Object.require (__te
+sts__/stores/cartSto
+re.test.tsx:5:1)
+
+Test Suites: 1 
+failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        2.826 s
+Ran all test suites.

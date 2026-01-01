@@ -1,0 +1,449 @@
+node.exe : PASS __te
+sts__/stores/cartSto
+re.test.tsx
+En C:\Program Files\
+nodejs\npx.ps1: 29 
+Car?cter: 3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (PASS   
+  __tests__/stor    
+es/cartStore.te    
+st.tsx:String)     
+[], RemoteExcep    
+tion
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+  ??? Cart store 
+adds and removes 
+items correctly 
+(930 ms)
+
+  console.log
+    [WallpapersContext] Loading catalog... (forceRefresh: false )
+
+      at log (contexts/WallpapersContext.tsx:16:15)
+
+  console.log
+    [WallpapersContext] No API URL configured, using local storage mode
+
+      at log (contexts/WallpapersContext.tsx:69:17)
+
+  console.log
+    [WallpapersContext] Loading from AsyncStorage...
+
+      at log (contexts/WallpapersContext.tsx:73:17)
+
+  console.log
+    [WallpapersContext] Using default wallpapers: 9 items
+
+      at log (contexts/WallpapersContext.tsx:83:15)
+
+  console.log
+    [AuthContext] Logging in... test@example.com
+
+      at log (contexts/AuthContext.tsx:280:15)
+
+  console.log
+    [AuthContext] Base URL: https://www.vizzarowallpaper.com
+
+      at log (contexts/AuthContext.tsx:284:17)
+
+  console.log
+    [AuthContext] Attempting login via API: https://www.vizzarowallpaper.com/api/users/login
+
+      at log (contexts/AuthContext.tsx:286:17)
+
+  console.log
+    [AuthContext] Response status: 200
+
+      at log (contexts/AuthContext.tsx:295:17)
+
+  console.log
+    [AuthContext] Response headers: application/json
+
+      at log (contexts/AuthContext.tsx:296:17)
+
+  console.log
+    [AuthContext] User logged in via API: true
+
+      at log (contexts/AuthContext.tsx:310:19)
+
+  console.log
+    [AuthContext] Logging out...
+
+      at log (contexts/AuthContext.tsx:347:15)
+
+  console.log
+    [AuthContext] Removing keys: [ '@auth_token', '@auth_user' ]
+
+      at log (contexts/AuthContext.tsx:348:15)
+
+FAIL __tests__/store
+s/wallpaperStore.tes
+t.tsx
+  ?? Wallpaper 
+store fetches and 
+displays wallpapers 
+(859 ms)
+
+  ??? Wallpaper 
+store fetches and 
+displays wallpapers
+
+    expect(jest.fn()
+).toHaveBeenCalled()
+
+    Expected number 
+of calls: >= 1
+    Received number 
+of calls:    0
+
+    [0m [90m 50 
+|[39m
+     [90m 51 
+|[39m     [90m// 
+Verify fetch 
+called[39m
+    [31m[1m>[22m
+[39m[90m 52 |[39m 
+    expect(global[3
+3m.[39mfetch)[33m.
+[39mtoHaveBeenCalle
+d()[33m;[39m
+     [90m    
+|[39m              
+            
+[31m[1m^[22m[39m
+     [90m 53 |[39m
+     [90m 54 
+|[39m     [90m// 
+Verify data[39m
+     [90m 55 
+|[39m     expect(ge
+tByTestId([32m'coun
+t'[39m)[33m.[39mp
+rops[33m.[39mchild
+ren)[33m.[39mtoBe(
+[35m2[39m)[33m;[
+39m[0m
+
+      at Object.toHa
+veBeenCalled (__test
+s__/stores/wallpaper
+Store.test.tsx:52:26
+)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+  console.error
+    [AuthContext] ??? Error during logout: TypeError: _asyncStorage.default.multiRemove is not a function
+        at multiRemove (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\contexts\AuthContext.tsx:350:26)
+        at Generator.next (<anonymous>)
+        at asyncGeneratorStep (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:17)
+        at _next (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:17:9)
+        at C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:22:7
+        at new Promise (<anonymous>)
+        at C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:14:12
+        at apply (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\contexts\AuthContext.tsx:345:15)
+        at handler (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@testing-library\react-native\src\fire-event.ts:137:19)
+        at callback (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@testing-library\react-native\src\act.ts:31:24)
+        at Object.<anonymous>.process.env.NODE_ENV.exports.act (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\react\cjs\react.development.js:814:22)
+        at actImplementation (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@testing-library\react-native\src\act.ts:30:25)
+        at fireEvent (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@testing-library\react-native\src\fire-event.ts:136:11)
+        at Function.fireEvent [as press] (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@testing-library\react-native\src\fire-event.ts:144:3)
+        at press (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\__tests__\stores\authStore.test.tsx:84:19)
+        at Generator.next (<anonymous>)
+        at asyncGeneratorStep (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:17)
+        at _next (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:17:9)
+        at C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:22:7
+        at new Promise (<anonymous>)
+        at C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:14:12
+        at callback (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@testing-library\react-native\src\act.ts:31:24)
+        at Object.<anonymous>.process.env.NODE_ENV.exports.act (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\react\cjs\react.development.js:814:22)
+        at actImplementation (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@testing-library\react-native\src\act.ts:30:25)
+        at Object.<anonymous> (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\__tests__\stores\authStore.test.tsx:83:14)
+        at Generator.next (<anonymous>)
+        at asyncGeneratorStep (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:17)
+        at _next (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:17:9)
+
+    [0m [90m 360 |[39m       console[33m.[39mlog([32m'[AuthContext] ??? Logout successful'[39m)[33m;[39m
+     [90m 361 |[39m     } [36mcatch[39m (error) {
+    [31m[1m>[22m[39m[90m 362 |[39m       console[33m.[39merror([32m'[AuthContext] ??? Error during logout:'[39m[33m,[39m error)[33m;[39m
+     [90m     |[39m               [31m[1m^[22m[39m
+     [90m 363 |[39m       [36mthrow[39m error[33m;[39m
+     [90m 364 |[39m     }
+     [90m 365 |[39m   }[33m;[39m[0m
+
+      at error (contexts/AuthContext.tsx:362:15)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at apply (contexts/AuthContext.tsx:345:15)
+      at handler (node_modules/@testing-library/react-native/src/fire-event.ts:137:19)
+      at callback (node_modules/@testing-library/react-native/src/act.ts:31:24)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:814:22)
+      at actImplementation (node_modules/@testing-library/react-native/src/act.ts:30:25)
+      at fireEvent (node_modules/@testing-library/react-native/src/fire-event.ts:136:11)
+      at Function.fireEvent [as press] (node_modules/@testing-library/react-native/src/fire-event.ts:144:3)
+      at press (__tests__/stores/authStore.test.tsx:84:19)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:22:7
+      at node_modules/@babel/runtime/helpers/asyncToGenerator.js:14:12
+      at callback (node_modules/@testing-library/react-native/src/act.ts:31:24)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:814:22)
+      at actImplementation (node_modules/@testing-library/react-native/src/act.ts:30:25)
+      at Object.<anonymous> (__tests__/stores/authStore.test.tsx:83:14)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+FAIL __tests__/store
+s/authStore.test.tsx
+  ?? Auth store 
+handles login and 
+logout (896 ms)
+
+  ??? Auth store 
+handles login and 
+logout
+
+    TypeError: _asyn
+cStorage.default.mul
+tiRemove is not a 
+function
+
+    [0m [90m 348 
+|[39m       console
+[33m.[39mlog([32m
+'[AuthContext] 
+Removing keys:'[39m
+[33m,[39m [[33mAU
+TH_TOKEN_KEY[39m[3
+3m,[39m [33mAUTH_U
+SER_KEY[39m])[33m;
+[39m
+     [90m 349 
+|[39m       
+    [31m[1m>[22m
+[39m[90m 350 
+|[39m       
+[36mawait[39m [33
+mAsyncStorage[39m[
+33m.[39mmultiRemove
+([[33mAUTH_TOKEN_KE
+Y[39m[33m,[39m [
+33mAUTH_USER_KEY[39
+m])[33m;[39m
+     [90m     
+|[39m              
+            
+[31m[1m^[22m[39m
+     [90m 351 
+|[39m       
+     [90m 352 
+|[39m       console
+[33m.[39mlog([32m
+'[AuthContext] Keys 
+removed, updating st
+ate...'[39m)[33m;
+[39m
+     [90m 353 
+|[39m       
+setAuthState({[0m
+
+      at 
+multiRemove (context
+s/AuthContext.tsx:35
+0:26)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+      at node_module
+s/@babel/runtime/hel
+pers/asyncToGenerato
+r.js:22:7
+      at node_module
+s/@babel/runtime/hel
+pers/asyncToGenerato
+r.js:14:12
+      at apply (cont
+exts/AuthContext.tsx
+:345:15)
+      at handler (no
+de_modules/@testing-
+library/react-native
+/src/fire-event.ts:1
+37:19)
+      at callback (n
+ode_modules/@testing
+-library/react-nativ
+e/src/act.ts:31:24)
+      at Object.<ano
+nymous>.process.env.
+NODE_ENV.exports.act
+ (node_modules/react
+/cjs/react.developme
+nt.js:814:22)
+      at 
+actImplementation (n
+ode_modules/@testing
+-library/react-nativ
+e/src/act.ts:30:25)
+      at fireEvent (
+node_modules/@testin
+g-library/react-nati
+ve/src/fire-event.ts
+:136:11)
+      at 
+Function.fireEvent 
+[as press] (node_mod
+ules/@testing-librar
+y/react-native/src/f
+ire-event.ts:144:3)
+      at press (__te
+sts__/stores/authSto
+re.test.tsx:84:19)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+      at node_module
+s/@babel/runtime/hel
+pers/asyncToGenerato
+r.js:22:7
+      at node_module
+s/@babel/runtime/hel
+pers/asyncToGenerato
+r.js:14:12
+      at callback (n
+ode_modules/@testing
+-library/react-nativ
+e/src/act.ts:31:24)
+      at Object.<ano
+nymous>.process.env.
+NODE_ENV.exports.act
+ (node_modules/react
+/cjs/react.developme
+nt.js:814:22)
+      at 
+actImplementation (n
+ode_modules/@testing
+-library/react-nativ
+e/src/act.ts:30:25)
+      at 
+Object.<anonymous> (
+__tests__/stores/aut
+hStore.test.tsx:83:1
+4)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+  ??? Auth store 
+handles login and 
+logout
+
+    expect(received)
+.toBe(expected) // 
+Object.is equality
+
+    Expected: 
+"Guest"
+    Received: 
+"Authenticated"
+
+    [0m [90m 86 
+|[39m
+     [90m 87 
+|[39m     [90m// 
+Verify logged 
+out[39m
+    [31m[1m>[22m
+[39m[90m 88 |[39m 
+    expect(getByTest
+Id([32m'auth-status
+'[39m)[33m.[39mpr
+ops[33m.[39mchildr
+en)[33m.[39mtoBe(
+[32m'Guest'[39m)[3
+3m;[39m
+     [90m    
+|[39m              
+                    
+                    
+ 
+[31m[1m^[22m[39m
+     [90m 89 
+|[39m     expect(ge
+tByTestId([32m'user
+-email'[39m)[33m.
+[39mprops[33m.[39m
+children)[33m.[39m
+toBe([32m'No User'
+[39m)[33m;[39m
+     [90m 90 
+|[39m })[33m;[39m
+     [90m 91 
+|[39m[0m
+
+      at 
+Object.toBe (__tests
+__/stores/authStore.
+test.tsx:88:55)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+Test Suites: 2 
+failed, 1 passed, 3 
+total
+Tests:       2 
+failed, 1 passed, 3 
+total
+Snapshots:   0 total
+Time:        4.406 
+s, estimated 5 s
+Ran all test suites.

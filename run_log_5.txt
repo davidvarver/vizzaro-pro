@@ -1,0 +1,115 @@
+node.exe : FAIL __te
+sts__/stores/cartSto
+re.test.tsx
+En C:\Program Files\
+nodejs\npx.ps1: 29 
+Car?cter: 3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (FAIL   
+  __tests__/stor    
+es/cartStore.te    
+st.tsx:String)     
+[], RemoteExcep    
+tion
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+  ?? Cart store 
+adds and removes 
+items correctly 
+(845 ms)
+
+  ??? Cart store 
+adds and removes 
+items correctly
+
+    TypeError: getBy
+TestId(...).props.on
+Press is not a 
+function
+
+    [0m [90m 49 
+|[39m     [90m// 
+Add an item[39m
+     [90m 50 
+|[39m     act(() 
+[33m=>[39m {
+    [31m[1m>[22m
+[39m[90m 51 |[39m 
+        getByTestId(
+[32m'add'[39m)[33
+m.[39mprops[33m.[
+39monPress()[33m;[
+39m
+     [90m    
+|[39m              
+                    
+[31m[1m^[22m[39m
+     [90m 52 
+|[39m     
+})[33m;[39m
+     [90m 53 
+|[39m     expect(ge
+tByTestId([32m'coun
+t'[39m)[33m.[39mp
+rops[33m.[39mchild
+ren)[33m.[39mtoBe(
+[35m1[39m)[33m;[
+39m
+     [90m 54 
+|[39m     expect(ge
+tByTestId([32m'tota
+l'[39m)[33m.[39mp
+rops[33m.[39mchild
+ren)[33m.[39mtoBe(
+[35m10[39m)[33m;
+[39m[0m
+
+      at onPress (__
+tests__/stores/cartS
+tore.test.tsx:51:34)
+      at callback (n
+ode_modules/@testing
+-library/react-nativ
+e/src/act.ts:31:24)
+      at Object.<ano
+nymous>.process.env.
+NODE_ENV.exports.act
+ (node_modules/react
+/cjs/react.developme
+nt.js:814:22)
+      at 
+actImplementation (n
+ode_modules/@testing
+-library/react-nativ
+e/src/act.ts:30:25)
+      at 
+Object.<anonymous> (
+__tests__/stores/car
+tStore.test.tsx:50:8
+)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+Test Suites: 1 
+failed, 1 total
+Tests:       1 
+failed, 1 total
+Snapshots:   0 total
+Time:        3.577 
+s, estimated 13 s
+Ran all test suites.

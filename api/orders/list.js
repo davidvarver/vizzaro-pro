@@ -33,15 +33,7 @@ export default async function handler(req, res) {
             return res.status(200).json({ success: true, orders: [] });
         }
 
-        // 2. Batch get Order Details (MGET)
-        // Construct keys: "order:id1", "order:id2"
-        const command = ['MGET', ...orderIds.map(id => `order:${id}`)];
 
-        const mgetResponse = await fetch(`${KV_REST_API_URL}/pipeline`, {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${KV_REST_API_TOKEN}` },
-            body: JSON.stringify([command])
-        });
 
         // Note: Vercel KV REST 'pipeline' or just 'mget' endpoint specific format?
         // Using simple command endpoint for MGET might be safer if pipeline syntax varies.

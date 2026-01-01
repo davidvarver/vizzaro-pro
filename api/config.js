@@ -36,6 +36,7 @@ module.exports = {
     // Database (Vercel KV / Upstash Redis)
     KV_REST_API_URL: getEnvVar('KV_REST_API_URL', null),
     KV_REST_API_TOKEN: getEnvVar('KV_REST_API_TOKEN', null),
+    BLOB_READ_WRITE_TOKEN: getEnvVar('BLOB_READ_WRITE_TOKEN', null),
     DATABASE_URL: getEnvVar('DATABASE_URL', null), // Optional for now if using Supabase directly via SDK
     NODE_ENV: process.env.NODE_ENV || 'development',
     isProduction: process.env.NODE_ENV === 'production',

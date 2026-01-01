@@ -1,0 +1,37 @@
+[dotenv@17.2.3] injecting env (13) from .env -- tip: ???? encrypt with Dotenvx: https://dotenvx.com
+Fetching wallpapers_catalog...
+Found 5 items.
+--- FIRST ITEM RAW JSON ---
+{
+  "id": "FPS6279",
+  "name": "Marble Grey Stone Quick Drying Mat ",
+  "description": "Sleek and simple, this quick-drying stone mat is perfect for any bathroom. A classic grey marble effect is printed over an absorbant, white stone mat. Marble Grey Stone Quick Drying Mat contains 1 mat that measures 24-in x 16-in. ",
+  "price": 23.99,
+  "category": "Modern",
+  "style": "Modern",
+  "colors": [
+    "Greys"
+  ],
+  "dimensions": {
+    "width": 0.41,
+    "height": 0.61,
+    "coverage": "0.25",
+    "weight": 4.9
+  },
+  "specifications": {
+    "material": "Plant Fibre",
+    "washable": true,
+    "removable": true,
+    "textured": false
+  },
+  "imageUrl": "https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/FPS6279.jpg",
+  "imageUrls": [
+    "https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/FPS6279.jpg"
+  ],
+  "inStock": true,
+  "rating": 0,
+  "reviews": 0,
+  "showInHome": false,
+  "brand": "FloorPops",
+  "origin": "China"
+}

@@ -1,0 +1,322 @@
+node.exe : FAIL __te
+sts__/stores/cartSto
+re.test.ts
+En C:\Program Files\
+nodejs\npx.ps1: 29 
+Car?cter: 3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (FAIL   
+  __tests__/stor    
+es/cartStore.te    
+st.ts:String) [    
+], RemoteExcept    
+ion
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+  ??? Test suite 
+failed to run
+
+    Cannot find 
+module 'react-native
+-reanimated/plugin'
+    Require stack:
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@babel
+\core\lib\config\fil
+es\plugins.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@babel
+\core\lib\config\fil
+es\index.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@babel
+\core\lib\index.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\babel-
+jest\build\loadBabel
+Config.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\babel-
+jest\build\index.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\jest-u
+til\build\requireOrI
+mportModule.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\jest-u
+til\build\index.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@jest\
+core\build\FailedTes
+tsInteractiveMode.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@jest\
+core\build\plugins\F
+ailedTestsInteractiv
+e.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@jest\
+core\build\watch.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@jest\
+core\build\cli\index
+.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\@jest\
+core\build\index.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\jest-c
+li\build\run.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\jest-c
+li\build\index.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\jest-c
+li\bin\jest.js
+    - C:\Users\david
+\Downloads\vizaro pr
+o\-vizzaro-wallpaper
+\node_modules\jest\b
+in\jest.js
+
+    Make sure that 
+all the Babel 
+plugins and presets 
+you are using
+    are defined as 
+dependencies or 
+devDependencies in 
+your package.json
+    file. It's 
+possible that the 
+missing plugin is 
+loaded by a preset
+    you are using 
+that forgot to add 
+the plugin to its 
+dependencies: you
+    can workaround 
+this problem by 
+explicitly adding 
+the missing package
+    to your 
+top-level 
+package.json.
+
+      at 
+tryRequireResolve (n
+ode_modules/@babel/c
+ore/lib/config/files
+/plugins.js:127:11)
+      at resolveStan
+dardizedNameForRequi
+re (node_modules/@ba
+bel/core/lib/config/
+files/plugins.js:161
+:19)
+      at resolveStan
+dardizedName (node_m
+odules/@babel/core/l
+ib/config/files/plug
+ins.js:182:12)
+      at loadPlugin 
+(node_modules/@babel
+/core/lib/config/fil
+es/plugins.js:55:7)
+          at 
+loadPlugin.next 
+(<anonymous>)
+      at 
+createDescriptor (no
+de_modules/@babel/co
+re/lib/config/config
+-descriptors.js:140:
+16)
+          at createD
+escriptor.next 
+(<anonymous>)
+      at 
+evaluateSync (node_m
+odules/gensync/index
+.js:251:28)
+      at node_module
+s/gensync/index.js:3
+1:34
+          at 
+Array.map 
+(<anonymous>)
+      at 
+Function.sync (node_
+modules/gensync/inde
+x.js:31:22)
+      at 
+Function.all (node_m
+odules/gensync/index
+.js:210:24)
+      at 
+createDescriptors (n
+ode_modules/@babel/c
+ore/lib/config/confi
+g-descriptors.js:102
+:41)
+          at createD
+escriptors.next 
+(<anonymous>)
+      at createPlugi
+nDescriptors (node_m
+odules/@babel/core/l
+ib/config/config-des
+criptors.js:99:17)
+          at createP
+luginDescriptors.nex
+t (<anonymous>)
+      at node_module
+s/@babel/core/lib/ge
+nsync-utils/function
+al.js:22:27
+      at 
+mergeChainOpts (node
+_modules/@babel/core
+/lib/config/config-c
+hain.js:349:34)
+          at 
+mergeChainOpts.next 
+(<anonymous>)
+      at 
+chainWalker (node_mo
+dules/@babel/core/li
+b/config/config-chai
+n.js:316:14)
+          at 
+chainWalker.next 
+(<anonymous>)
+      at 
+loadFileChain (node_
+modules/@babel/core/
+lib/config/config-ch
+ain.js:191:24)
+          at 
+loadFileChain.next 
+(<anonymous>)
+      at 
+buildRootChain (node
+_modules/@babel/core
+/lib/config/config-c
+hain.js:77:27)
+          at 
+buildRootChain.next 
+(<anonymous>)
+      at loadPrivate
+PartialConfig (node_
+modules/@babel/core/
+lib/config/partial.j
+s:72:62)
+          at loadPri
+vatePartialConfig.ne
+xt (<anonymous>)
+      at 
+loadPartialConfig (n
+ode_modules/@babel/c
+ore/lib/config/parti
+al.js:115:25)
+          at loadPar
+tialConfig.next 
+(<anonymous>)
+      at 
+evaluateSync (node_m
+odules/gensync/index
+.js:251:28)
+      at sync (node_
+modules/gensync/inde
+x.js:89:14)
+      at stopHiding 
+- secret - don't 
+use this - v1 (node_
+modules/@babel/core/
+lib/errors/rewrite-s
+tack-trace.js:47:12)
+      at loadPartial
+ConfigSync (node_mod
+ules/@babel/core/lib
+/config/index.js:37:
+84)
+      at 
+loadPartialConfig (n
+ode_modules/@babel/c
+ore/lib/config/index
+.js:46:14)
+      at ScriptTrans
+former._getCacheKey 
+(node_modules/@jest/
+transform/build/Scri
+ptTransformer.js:228
+:41)
+      at ScriptTrans
+former._getFileCache
+Path (node_modules/@
+jest/transform/build
+/ScriptTransformer.j
+s:289:27)
+      at ScriptTrans
+former.transformSour
+ce (node_modules/@je
+st/transform/build/S
+criptTransformer.js:
+525:32)
+      at 
+revertHook.exts (nod
+e_modules/@jest/tran
+sform/build/ScriptTr
+ansformer.js:776:18)
+      at 
+Module._compile (nod
+e_modules/pirates/li
+b/index.js:124:29)
+      at 
+Object.newLoader (no
+de_modules/pirates/l
+ib/index.js:134:7)
+
+Test Suites: 1 
+failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        0.077 s
+Ran all test suites.

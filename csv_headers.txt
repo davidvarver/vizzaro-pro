@@ -1,0 +1,22 @@
+[dotenv@17.2.3] injecting env (13) from .env -- tip: ???? add observability to secrets: https://dotenvx.com/ops
+Downloading CSV header...
+
+--- DETECTED COLUMNS ---
+Book Number
+Book Name
+Pattern Number
+Page Number
+Number of units
+Discontinued pattern
+Back order date
+
+--- SAMPLE ROW ---
+{
+  'Book Number': '5027',
+  'Book Name': 'Fablon Adhesive Film',
+  'Pattern Number': 'FAB10136',
+  'Page Number': '',
+  'Number of units': '0',
+  'Discontinued pattern': 'Y',
+  'Back order date': ''
+}

@@ -1,0 +1,630 @@
+node.exe : PASS __te
+sts__/api/ordersList
+.test.ts
+En C:\Program Files\
+nodejs\npx.ps1: 29 
+Car?cter: 3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (PASS   
+  __tests__/api/    
+ordersList.test    
+.ts:String) [],     
+RemoteExceptio    n
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+PASS __tests__/compo
+nents/WallpaperCard.
+test.tsx
+PASS __tests__/store
+s/cartStore.test.tsx
+PASS __tests__/store
+s/authStore.test.tsx
+  ??? Console
+
+    console.log
+      [AuthContext] 
+Logging in... 
+test@example.com
+
+      at log (contex
+ts/AuthContext.tsx:2
+80:15)
+
+    console.log
+      [AuthContext] 
+Base URL: 
+https://mock-api.com
+
+      at log (contex
+ts/AuthContext.tsx:2
+84:17)
+
+    console.log
+      [AuthContext] 
+Attempting login 
+via API: https://moc
+k-api.com/api/users/
+login
+
+      at log (contex
+ts/AuthContext.tsx:2
+86:17)
+
+    console.log
+      [AuthContext] 
+Response status: 200
+
+      at log (contex
+ts/AuthContext.tsx:2
+95:17)
+
+    console.log
+      [AuthContext] 
+Response headers: 
+application/json
+
+      at log (contex
+ts/AuthContext.tsx:2
+96:17)
+
+    console.log
+      [AuthContext] 
+User logged in via 
+API: true
+
+      at log (contex
+ts/AuthContext.tsx:3
+10:19)
+
+    console.log
+      [AuthContext] 
+Logging out...
+
+      at log (contex
+ts/AuthContext.tsx:3
+47:15)
+
+    console.log
+      [AuthContext] 
+Removing keys: [ 
+'@auth_token', 
+'@auth_user' ]
+
+      at log (contex
+ts/AuthContext.tsx:3
+48:15)
+
+    console.log
+      [AuthContext] 
+Keys removed, 
+updating state...
+
+      at log (contex
+ts/AuthContext.tsx:3
+52:15)
+
+    console.log
+      [AuthContext] 
+??? Logout 
+successful
+
+      at log (contex
+ts/AuthContext.tsx:3
+60:15)
+
+PASS __tests__/store
+s/wallpaperStore.tes
+t.tsx
+  ??? Console
+
+    console.log
+      
+[WallpapersContext] 
+Loading catalog... 
+(forceRefresh: 
+false )
+
+      at log (contex
+ts/WallpapersContext
+.tsx:16:15)
+
+    console.log
+      
+[WallpapersContext] 
+Attempting to load 
+from API: https://mo
+ck-api.com/api/catal
+og/get
+
+      at log (contex
+ts/WallpapersContext
+.tsx:22:19)
+
+    console.log
+      
+[WallpapersContext] 
+Loaded from API: 2 
+items
+
+      at log (contex
+ts/WallpapersContext
+.tsx:41:21)
+
+    console.log
+      
+[WallpapersContext] 
+API timestamp: 123
+
+      at log (contex
+ts/WallpapersContext
+.tsx:42:21)
+
+    console.log
+      
+[WallpapersContext] 
+Valid items after 
+filtering: 2
+
+      at log (contex
+ts/WallpapersContext
+.tsx:48:23)
+
+    console.log
+      
+[WallpapersContext] 
+Manual refetch 
+requested
+
+      at log (contex
+ts/WallpapersContext
+.tsx:287:13)
+
+    console.log
+      
+[WallpapersContext] 
+Loading catalog... 
+(forceRefresh: true 
+)
+
+      at log (contex
+ts/WallpapersContext
+.tsx:16:15)
+
+    console.log
+      
+[WallpapersContext] 
+Attempting to load 
+from API: https://mo
+ck-api.com/api/catal
+og/get
+
+      at log (contex
+ts/WallpapersContext
+.tsx:22:19)
+
+    console.log
+      
+[WallpapersContext] 
+Loaded from API: 2 
+items
+
+      at log (contex
+ts/WallpapersContext
+.tsx:41:21)
+
+    console.log
+      
+[WallpapersContext] 
+API timestamp: 123
+
+      at log (contex
+ts/WallpapersContext
+.tsx:42:21)
+
+    console.log
+      
+[WallpapersContext] 
+Valid items after 
+filtering: 2
+
+      at log (contex
+ts/WallpapersContext
+.tsx:48:23)
+
+    console.error
+      An update to 
+null inside a test 
+was not wrapped in 
+act(...).
+      
+      When testing, 
+code that causes 
+React state updates 
+should be wrapped 
+into act(...):
+      
+      act(() => {
+        /* fire 
+events that update 
+state */
+      });
+      /* assert on 
+the output */
+      
+      This ensures 
+that you're testing 
+the behavior the 
+user would see in 
+the browser. Learn 
+more at https://reac
+t.dev/link/wrap-test
+s-with-act
+
+    [0m [90m 49 
+|[39m              
+ 
+     [90m 50 
+|[39m              
+ [36mif[39m (valid
+Catalog[33m.[39mle
+ngth [33m>[39m 
+[35m0[39m) {
+    [31m[1m>[22m
+[39m[90m 51 |[39m 
+                setW
+allpapers(validCatal
+og)[33m;[39m
+     [90m    
+|[39m              
+   
+[31m[1m^[22m[39m
+     [90m 52 
+|[39m              
+   [36mawait[39m 
+[33mAsyncStorage[39
+m[33m.[39msetItem(
+[33mSTORAGE_KEY[39
+m[33m,[39m [33mJS
+ON[39m[33m.[39mst
+ringify(validCatalog
+))[33m;[39m
+     [90m 53 
+|[39m              
+   [36mawait[39m 
+[33mAsyncStorage[39
+m[33m.[39msetItem(
+[33mSTORAGE_KEY[39
+m [33m+[39m [32m'
+_timestamp'[39m[33
+m,[39m data[33m.[
+39mtimestamp[33m?[
+39m[33m.[39mtoStri
+ng() [33m||[39m [
+33mDate[39m[33m.[
+39mnow()[33m.[39mt
+oString())[33m;[39
+m
+     [90m 54 
+|[39m              
+   setIsLoading([36
+mfalse[39m)[33m;[
+39m[0m
+
+      at node_module
+s/react-test-rendere
+r/cjs/react-test-ren
+derer.development.js
+:14402:19
+      at 
+runWithFiberInDEV (n
+ode_modules/react-te
+st-renderer/cjs/reac
+t-test-renderer.deve
+lopment.js:2315:13)
+      at warnIfUpdat
+esNotWrappedWithActD
+EV (node_modules/rea
+ct-test-renderer/cjs
+/react-test-renderer
+.development.js:1440
+1:9)
+      at scheduleUpd
+ateOnFiber (node_mod
+ules/react-test-rend
+erer/cjs/react-test-
+renderer.development
+.js:12086:9)
+      at dispatchSet
+StateInternal (node_
+modules/react-test-r
+enderer/cjs/react-te
+st-renderer.developm
+ent.js:6208:13)
+      at 
+dispatchSetState (no
+de_modules/react-tes
+t-renderer/cjs/react
+-test-renderer.devel
+opment.js:6165:7)
+      at 
+setWallpapers (conte
+xts/WallpapersContex
+t.tsx:51:17)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+    console.error
+      An update to 
+null inside a test 
+was not wrapped in 
+act(...).
+      
+      When testing, 
+code that causes 
+React state updates 
+should be wrapped 
+into act(...):
+      
+      act(() => {
+        /* fire 
+events that update 
+state */
+      });
+      /* assert on 
+the output */
+      
+      This ensures 
+that you're testing 
+the behavior the 
+user would see in 
+the browser. Learn 
+more at https://reac
+t.dev/link/wrap-test
+s-with-act
+
+    [0m [90m 52 
+|[39m              
+   [36mawait[39m 
+[33mAsyncStorage[39
+m[33m.[39msetItem(
+[33mSTORAGE_KEY[39
+m[33m,[39m [33mJS
+ON[39m[33m.[39mst
+ringify(validCatalog
+))[33m;[39m
+     [90m 53 
+|[39m              
+   [36mawait[39m 
+[33mAsyncStorage[39
+m[33m.[39msetItem(
+[33mSTORAGE_KEY[39
+m [33m+[39m [32m'
+_timestamp'[39m[33
+m,[39m data[33m.[
+39mtimestamp[33m?[
+39m[33m.[39mtoStri
+ng() [33m||[39m [
+33mDate[39m[33m.[
+39mnow()[33m.[39mt
+oString())[33m;[39
+m
+    [31m[1m>[22m
+[39m[90m 54 |[39m 
+                setI
+sLoading([36mfalse
+[39m)[33m;[39m
+     [90m    
+|[39m              
+   
+[31m[1m^[22m[39m
+     [90m 55 
+|[39m              
+   [36mreturn[39m
+[33m;[39m
+     [90m 56 
+|[39m              
+ } [36melse[39m {
+     [90m 57 
+|[39m              
+   console[33m.[39
+mwarn([32m'[Wallpap
+ersContext] No 
+valid items in 
+catalog, using defau
+lts'[39m)[33m;[39
+m[0m
+
+      at node_module
+s/react-test-rendere
+r/cjs/react-test-ren
+derer.development.js
+:14402:19
+      at 
+runWithFiberInDEV (n
+ode_modules/react-te
+st-renderer/cjs/reac
+t-test-renderer.deve
+lopment.js:2315:13)
+      at warnIfUpdat
+esNotWrappedWithActD
+EV (node_modules/rea
+ct-test-renderer/cjs
+/react-test-renderer
+.development.js:1440
+1:9)
+      at scheduleUpd
+ateOnFiber (node_mod
+ules/react-test-rend
+erer/cjs/react-test-
+renderer.development
+.js:12086:9)
+      at dispatchSet
+StateInternal (node_
+modules/react-test-r
+enderer/cjs/react-te
+st-renderer.developm
+ent.js:6208:13)
+      at 
+dispatchSetState (no
+de_modules/react-tes
+t-renderer/cjs/react
+-test-renderer.devel
+opment.js:6165:7)
+      at 
+setIsLoading (contex
+ts/WallpapersContext
+.tsx:54:17)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+    console.error
+      An update to 
+null inside a test 
+was not wrapped in 
+act(...).
+      
+      When testing, 
+code that causes 
+React state updates 
+should be wrapped 
+into act(...):
+      
+      act(() => {
+        /* fire 
+events that update 
+state */
+      });
+      /* assert on 
+the output */
+      
+      This ensures 
+that you're testing 
+the behavior the 
+user would see in 
+the browser. Learn 
+more at https://reac
+t.dev/link/wrap-test
+s-with-act
+
+    [0m [90m 90 
+|[39m       setWall
+papers(defaultWallpa
+pers)[33m;[39m
+     [90m 91 
+|[39m     } 
+[36mfinally[39m {
+    [31m[1m>[22m
+[39m[90m 92 |[39m 
+      setIsLoading(
+[36mfalse[39m)[33m
+;[39m
+     [90m    
+|[39m       
+[31m[1m^[22m[39m
+     [90m 93 
+|[39m     }
+     [90m 94 
+|[39m   
+}[33m,[39m 
+[])[33m;[39m
+     [90m 95 
+|[39m[0m
+
+      at node_module
+s/react-test-rendere
+r/cjs/react-test-ren
+derer.development.js
+:14402:19
+      at 
+runWithFiberInDEV (n
+ode_modules/react-te
+st-renderer/cjs/reac
+t-test-renderer.deve
+lopment.js:2315:13)
+      at warnIfUpdat
+esNotWrappedWithActD
+EV (node_modules/rea
+ct-test-renderer/cjs
+/react-test-renderer
+.development.js:1440
+1:9)
+      at scheduleUpd
+ateOnFiber (node_mod
+ules/react-test-rend
+erer/cjs/react-test-
+renderer.development
+.js:12086:9)
+      at dispatchSet
+StateInternal (node_
+modules/react-test-r
+enderer/cjs/react-te
+st-renderer.developm
+ent.js:6208:13)
+      at 
+dispatchSetState (no
+de_modules/react-tes
+t-renderer/cjs/react
+-test-renderer.devel
+opment.js:6165:7)
+      at 
+setIsLoading (contex
+ts/WallpapersContext
+.tsx:92:7)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+------------------------|---------|----------|---------|---------|--------------------------------------------------------------------------------
+File                    | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                                                              
+------------------------|---------|----------|---------|---------|--------------------------------------------------------------------------------
+All files               |   37.71 |    29.78 |   46.57 |   37.92 |                                                                                
+ api/orders             |   78.78 |    68.18 |     100 |   85.71 |                                                                                
+  list.js               |   78.78 |    68.18 |     100 |   85.71 | 20,61,72-73                                                                    
+ components             |     100 |      100 |     100 |     100 |                                                                                
+  WallpaperCard.tsx     |     100 |      100 |     100 |     100 |                                                                                
+ constants              |      36 |        0 |       0 |    37.5 |                                                                                
+  colors.ts             |     100 |      100 |     100 |     100 |                                                                                
+  wallpapers.ts         |      20 |        0 |       0 |   21.05 | 283-309                                                                        
+ contexts               |   33.83 |       25 |   44.82 |   33.85 |                                                                                
+  AuthContext.tsx       |   32.25 |    22.85 |      40 |   32.89 | 38-46,53,57-87,114-116,133-134,145-177,185-250,255-274,300-302,325-341,362-363 
+  CartContext.tsx       |   66.07 |    53.84 |   58.33 |   67.34 | 25,33-36,60-61,86-100,117,121                                                  
+  WallpapersContext.tsx |   25.65 |    21.91 |   31.57 |    25.8 | 57-90,97-192,201-219,224-235,240-251,256-265,270-278,283,293-340               
+------------------------|---------|----------|---------|---------|--------------------------------------------------------------------------------
+
+Test Suites: 5 
+passed, 5 total
+Tests:       9 
+passed, 9 total
+Snapshots:   0 total
+Time:        5.138 s
+Ran all test suites.

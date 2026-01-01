@@ -1,0 +1,232 @@
+node.exe : PASS __te
+sts__/stores/cartSto
+re.test.tsx
+En C:\Program Files\
+nodejs\npx.ps1: 29 
+Car?cter: 3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo  
+            : NotS  
+  pecified: (PASS   
+  __tests__/stor    
+es/cartStore.te    
+st.tsx:String)     
+[], RemoteExcep    
+tion
+    + FullyQualifie 
+   dErrorId : Nati  
+  veCommandError
+ 
+  ??? Cart store 
+adds and removes 
+items correctly 
+(985 ms)
+
+  console.log
+    [WallpapersContext] Loading catalog... (forceRefresh: false )
+
+      at log (contexts/WallpapersContext.tsx:16:15)
+
+  console.log
+    [WallpapersContext] No API URL configured, using local storage mode
+
+      at log (contexts/WallpapersContext.tsx:69:17)
+
+  console.log
+    [WallpapersContext] Loading from AsyncStorage...
+
+      at log (contexts/WallpapersContext.tsx:73:17)
+
+  console.log
+    [AuthContext] Logging in... test@example.com
+
+      at log (contexts/AuthContext.tsx:280:15)
+
+  console.log
+    [WallpapersContext] Using default wallpapers: 9 items
+
+      at log (contexts/WallpapersContext.tsx:83:15)
+
+  console.log
+    [AuthContext] Base URL: https://www.vizzarowallpaper.com
+
+      at log (contexts/AuthContext.tsx:284:17)
+
+  console.log
+    [AuthContext] Attempting login via API: https://www.vizzarowallpaper.com/api/users/login
+
+      at log (contexts/AuthContext.tsx:286:17)
+
+  console.log
+    [AuthContext] Response status: undefined
+
+      at log (contexts/AuthContext.tsx:295:17)
+
+  console.error
+    [AuthContext] API login error: TypeError: Cannot read properties of undefined (reading 'get')
+        at get (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\contexts\AuthContext.tsx:296:73)
+        at Generator.next (<anonymous>)
+        at asyncGeneratorStep (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:3:17)
+        at _next (C:\Users\david\Downloads\vizaro pro\-vizzaro-wallpaper\node_modules\@babel\runtime\helpers\asyncToGenerator.js:17:9)
+
+    [0m [90m 332 |[39m         }
+     [90m 333 |[39m       } [36mcatch[39m (apiError) {
+    [31m[1m>[22m[39m[90m 334 |[39m         console[33m.[39merror([32m'[AuthContext] API login error:'[39m[33m,[39m apiError)[33m;[39m
+     [90m     |[39m                 [31m[1m^[22m[39m
+     [90m 335 |[39m         [36mconst[39m errorMessage [33m=[39m apiError [36minstanceof[39m [33mError[39m [33m?[39m apiError[33m.[39mmessage [33m:[39m [32m'Error desconocido'[39m[33m;[39m
+     [90m 336 |[39m         [36mreturn[39m { success[33m:[39m [36mfalse[39m[33m,[39m error[33m:[39m [32m`Error al conectar con el servidor: ${errorMessage}`[39m }[33m;[39m
+     [90m 337 |[39m       }[0m
+
+      at error (contexts/AuthContext.tsx:334:17)
+      at asyncGeneratorStep (node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+      at _next (node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)
+
+FAIL __tests__/store
+s/wallpaperStore.tes
+t.tsx
+  ?? Wallpaper 
+store fetches and 
+displays wallpapers 
+(813 ms)
+
+  ??? Wallpaper 
+store fetches and 
+displays wallpapers
+
+    expect(jest.fn()
+).toHaveBeenCalled()
+
+    Expected number 
+of calls: >= 1
+    Received number 
+of calls:    0
+
+    [0m [90m 47 
+|[39m
+     [90m 48 
+|[39m     [90m// 
+Verify fetch 
+called[39m
+    [31m[1m>[22m
+[39m[90m 49 |[39m 
+    expect(global[3
+3m.[39mfetch)[33m.
+[39mtoHaveBeenCalle
+d()[33m;[39m
+     [90m    
+|[39m              
+            
+[31m[1m^[22m[39m
+     [90m 50 |[39m
+     [90m 51 
+|[39m     [90m// 
+Verify data[39m
+     [90m 52 
+|[39m     expect(ge
+tByTestId([32m'coun
+t'[39m)[33m.[39mp
+rops[33m.[39mchild
+ren)[33m.[39mtoBe(
+[35m2[39m)[33m;[
+39m[0m
+
+      at Object.toHa
+veBeenCalled (__test
+s__/stores/wallpaper
+Store.test.tsx:49:26
+)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+FAIL __tests__/store
+s/authStore.test.tsx
+  ?? Auth store 
+handles login and 
+logout (1880 ms)
+
+  ??? Auth store 
+handles login and 
+logout
+
+    expect(received)
+.toBe(expected) // 
+Object.is equality
+
+    Expected: 
+"Authenticated"
+    Received: 
+"Guest"
+
+    [0m [90m 68 
+|[39m
+     [90m 69 
+|[39m     [90m// 
+Verify logged in 
+state[39m
+    [31m[1m>[22m
+[39m[90m 70 |[39m 
+    [36mawait[39m 
+waitFor(() 
+[33m=>[39m {
+     [90m    
+|[39m              
+    
+[31m[1m^[22m[39m
+     [90m 71 
+|[39m         expec
+t(getByTestId([32m'
+auth-status'[39m)[
+33m.[39mprops[33m.
+[39mchildren)[33m.
+[39mtoBe([32m'Auth
+enticated'[39m)[33
+m;[39m
+     [90m 72 
+|[39m     
+})[33m;[39m
+     [90m 73 
+|[39m     expect(ge
+tByTestId([32m'user
+-email'[39m)[33m.
+[39mprops[33m.[39m
+children)[33m.[39m
+toBe([32m'test@exam
+ple.com'[39m)[33m;
+[39m[0m
+
+      at 
+Object.<anonymous> (
+__tests__/stores/aut
+hStore.test.tsx:70:1
+8)
+      at 
+asyncGeneratorStep (
+node_modules/@babel/
+runtime/helpers/asyn
+cToGenerator.js:3:17
+)
+      at _next (node
+_modules/@babel/runt
+ime/helpers/asyncToG
+enerator.js:17:9)
+
+Test Suites: 2 
+failed, 1 passed, 3 
+total
+Tests:       2 
+failed, 1 passed, 3 
+total
+Snapshots:   0 total
+Time:        5.6 s
+Ran all test suites.

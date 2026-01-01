@@ -1,0 +1,5 @@
+[dotenv@17.2.3] injecting env (13) from .env -- tip: ???? prevent committing .env to code: https://dotenvx.com/precommit
+Listing /New Products/All Data...
+Found 2 items.
+[-] All_NewProduct_Data.xlsx 	 (132060)
+[-] Thumbs.db 	 (22016)

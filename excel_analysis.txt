@@ -1,0 +1,53 @@
+[dotenv@17.2.3] injecting env (13) from .env -- tip: ???? sync secrets across teammates & machines: https://dotenvx.com/ops
+Downloading /New Products/All Data/All_NewProduct_Data.xlsx...
+Parsing Excel...
+
+--- EXCEL HEADERS ---
+Master Group, Pattern, Name, Brand, Sub/License Brand, Product Type, Product Sub-Type, Age Group, MSRP, Stock Price, Drop Ship Price, Barcode, Description, Product Length, Product Width, Product Depth, # of Sheets, Weight, Case Pack, Package Length, Package Width, Package Height, # of Pieces, Repeat, Match, Assembled Length, Assembled Width, Assembled Height, Material, Bullet Point 1, Bullet Point 2, Bullet Point 3, Bullet Point 4, Bullet Point 5, Bullet Point 6, Bullet Point 7, Bullet Point 8, Bullet Point 9, Effect, Color Family, Style, Pattern, Theme, Country of Origin, HTS Code
+
+--- SAMPLE ROW ---
+[
+  'Current Peel & Stick',
+  'FPS6279',
+  'Marble Grey Stone Quick Drying Mat ',
+  'FloorPops',
+  'FloorPops',
+  'Flooring',
+  'Stone Bath Mats',
+  'Adult',
+  23.99,
+  10.99,
+  14.39,
+  '091212860834',
+  'Sleek and simple, this quick-drying stone mat is perfect for any bathroom. A classic grey marble effect is printed over an absorbant, white stone mat. Marble Grey Stone Quick Drying Mat contains 1 mat that measures 24-in x 16-in. ',
+  24,
+  16,
+  0.25,
+  1,
+  4.9,
+  2,
+  25,
+  17,
+  2,
+  1,
+  <2 empty items>,
+  24,
+  16,
+  0.25,
+  'Plant Fibre',
+  'White and grey marble stone bath mat',
+  'Quick dry surface: dry to the touch in 60 seconds',
+  'Moppable and easy to clean',
+  'Do not bleach',
+  'Diatomaceous Earth is a soft sedimentary rock that is absorbant and antimicrobial by nature',
+  'Comes with a non-slip mat',
+  'Mat measures 24-in x 16-in',
+  'Designed for interior use only',
+  <2 empty items>,
+  'Greys',
+  'Modern',
+  'Stone',
+  'Graphics',
+  'China',
+  '6901.00.0000'
+]

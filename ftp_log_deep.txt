@@ -1,0 +1,55 @@
+Connecting to ftpimages.brewsterhomefashions.com...
+Connected!
+Listing root directory...
+
+--- ROOT DIRECTORY ---
+[d] $3823A78BB2734B74BA0C3D729F76D827 	 (0 B)
+[-] .DS_Store 	 (6 KB)
+[d] aspnet_client 	 (0 B)
+[-] desktop.ini 	 (48 B)
+[d] DIY Products 	 (0 B)
+[d] general_inventory 	 (0 B)
+[-] key.php 	 (0 B)
+[d] New Price Inserts (2022) 	 (0 B)
+[d] New Products 	 (0 B)
+[-] sync.ffs_db 	 (1.15 MB)
+[-] Terms of Use - Please Read Before Using.docx 	 (18.95 KB)
+[-] Thumbs.db 	 (142 KB)
+[d] WallpaperBooks 	 (0 B)
+[-] web.config 	 (500 B)
+[-] ~$rms of Use - Please Read Before Using.docx 	 (162 B)
+
+--- Listing /WallpaperBooks (First 20 items) ---
+[-] .DS_Store 	 (20 KB)
+[d] 1 All Wallpaper Images 	 (0 B)
+[d] A-Street Select - 4021 	 (0 B)
+[d] Advantage Bath - 2814 	 (0 B)
+[d] Advantage Beyond Textures - 4015 	 (0 B)
+[d] Advantage Concrete - 4096 	 (0 B)
+[d] Advantage Cuba - 4044 	 (0 B)
+[d] Advantage Curio - 4157 	 (0 B)
+[d] Advantage Deluxe - 2835 	 (0 B)
+[d] Advantage Fusion - 4125 	 (0 B)
+[d] Advantage Geo & Textures - 4020 	 (0 B)
+[d] Advantage Geo - 2809 	 (0 B)
+[d] Advantage Grasscloth Portfolio - 4018 	 (0 B)
+[d] Advantage Kitchen & Bath 2 - 4168 	 (0 B)
+[d] Advantage Kitchen - 2813 	 (0 B)
+[d] Advantage Metallic - 2834 	 (0 B)
+[d] Advantage Nature - 2811 	 (0 B)
+[d] Advantage Neutral Black White - 2773 	 (0 B)
+[d] Advantage Passport - 4041 	 (0 B)
+[d] Advantage Perfect Plains - 4144 	 (0 B)
+
+--- Listing /general_inventory (First 20 items) ---
+[d] $82B520818B6A4134A47B5F2B463F51F8 	 (0 B)
+[-] BHF_inventory.csv 	 (1.2 MB)
+[-] ODList-8-05-20.xls 	 (93.5 KB)
+[d] orders 	 (0 B)
+[d] tracking 	 (0 B)
+[-] York_Inventory.csv 	 (84.26 KB)
+
+--- Listing /New Products (First 20 items) ---
+[-] .DS_Store 	 (8 KB)
+[d] All Data 	 (0 B)
+[d] All Images 	 (0 B)
