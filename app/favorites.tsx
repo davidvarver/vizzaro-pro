@@ -76,6 +76,10 @@ export default function FavoritesScreen() {
             <WallpaperCard
               item={item}
               onPress={() => router.push(`/wallpaper/${item.id}`)}
+              onVisualize={() => router.push({
+                pathname: '/(tabs)/camera',
+                params: { wallpaperId: item.id }
+              })}
               width="100%"
             />
           </View>

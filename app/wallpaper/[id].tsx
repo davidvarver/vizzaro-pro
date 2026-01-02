@@ -24,6 +24,7 @@ import {
   Info,
   ShoppingCart,
   Heart,
+  Camera,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
@@ -267,6 +268,18 @@ export default function WallpaperDetailsScreen() {
               </View>
             )}
 
+            {/* Visualizer Button */}
+            <TouchableOpacity
+              style={styles.visualizerButton}
+              onPress={() => router.push({
+                pathname: '/(tabs)/camera',
+                params: { wallpaperId: wallpaper.id }
+              })}
+            >
+              <Camera size={20} color={Colors.light.primary} />
+              <Text style={styles.visualizerButtonText}>PROBAR EN MI PARED</Text>
+            </TouchableOpacity>
+
             <View style={styles.divider} />
 
             <Text style={styles.sectionHeader}>Descripción</Text>
@@ -490,6 +503,26 @@ const styles = StyleSheet.create({
   variantItem: { width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: '#EEE', overflow: 'hidden', marginRight: 10 },
   variantSelected: { borderWidth: 2, borderColor: Colors.light.primary },
   variantImage: { width: '100%', height: '100%' },
+
+  visualizerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    backgroundColor: Colors.light.backgroundSecondary,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.light.primary,
+    marginBottom: 20,
+  },
+  visualizerButtonText: {
+    color: Colors.light.primary,
+    fontWeight: '700',
+    fontSize: 14,
+    letterSpacing: 1,
+  },
 
   addToCartContainer: { gap: 15 },
 

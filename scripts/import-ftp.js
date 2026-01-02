@@ -24,7 +24,7 @@ const FTP_CONFIG = {
 };
 
 const EXCEL_FILE = 'All_NewProduct_Data.xlsx';
-const IMPORT_LIMIT = 150; // Modified: Run import for 150 items
+const IMPORT_LIMIT = 5000; // Modified: Run import for ALL items (5000 safe limit)
 const IMAGE_DIR = '/New Products/All Images';
 
 function cleanPrice(priceStr) {
@@ -140,129 +140,183 @@ async function main() {
 
         console.log(`🚀 Starting import (Limit: ${limit === Infinity ? 'Unlimited' : limit})...`);
 
+        // Helper to ensure connection
+        async function ensureConnection() {
+            try {
+                const type = await sftp.list('/'); // Simple check
+            } catch (e) {
+                console.log('   ⚠️ Connection lost. Reconnecting...');
+                await sftp.end();
+                await sftp.connect(FTP_CONFIG);
+                console.log('   ✅ Reconnected.');
+            }
+        }
+
         for (const row of validRows) {
             if (processed >= limit) break;
 
-            const pattern = row['Pattern'];
-            // Check if Main Image exists
-            const imagePath = `${IMAGE_DIR}/${pattern}.jpg`;
-            const imageExists = await sftp.exists(imagePath);
+            try {
+                // Ensure connection is alive before starting an item
+                // await ensureConnection(); // Checking every item might be slow, let's catch errors instead
 
-            // Check if Room Scene exists (Common suffix: _Room)
-            const roomPath = `${IMAGE_DIR}/${pattern}_Room.jpg`;
-            const roomExists = await sftp.exists(roomPath);
+                const pattern = row['Pattern'];
 
-            // 4. Download and Upload Images
-            let imageUrl = '';
-            let imageUrls = [];
+                // Add Reconnection Retry Wrapper
+                let retries = 3;
+                let imageExists = false;
+                let roomExists = false;
 
-            // Upload Main Image
-            if (imageExists) {
-                console.log(`   📸 Found image: ${imagePath}.`);
-                let imgBuffer = await sftp.get(imagePath);
+                while (retries > 0) {
+                    try {
+                        const imagePath = `${IMAGE_DIR}/${pattern}.jpg`;
+                        imageExists = await sftp.exists(imagePath);
+                        const roomPath = `${IMAGE_DIR}/${pattern}_Room.jpg`;
+                        roomExists = await sftp.exists(roomPath);
+                        break; // Success
+                    } catch (err) {
+                        console.log(`   ⚠️ SFTP Error checking ${pattern}: ${err.message}. Retrying...`);
+                        retries--;
+                        if (retries === 0) throw err;
+                        await sftp.end(); // Close
+                        await new Promise(r => setTimeout(r, 5000)); // Wait
+                        await sftp.connect(FTP_CONFIG); // Reconnect
+                    }
+                }
 
-                // Only watermark main image usually, or both. Let's watermark main.
-                imgBuffer = await addWatermark(imgBuffer);
+                // 4. Download and Upload Images
+                let imageUrl = '';
+                let imageUrls = [];
 
-                const blob = await put(`products/${pattern}.jpg`, imgBuffer, {
-                    access: 'public',
-                    token: process.env.BLOB_READ_WRITE_TOKEN,
-                    addRandomSuffix: false,
-                    allowOverwrite: true
-                });
-                imageUrl = blob.url;
-                imageUrls.push(imageUrl);
-                console.log(`      Uploaded Main: ${blob.url}`);
-            }
+                // Upload Main Image
+                if (imageExists) {
+                    // Check if we already have it in blob? (Optional optimization, skip for now to ensure update)
 
-            // Upload Room Scene
-            if (roomExists) {
-                console.log(`   🏠 Found Room Scene: ${roomPath}.`);
-                let roomBuffer = await sftp.get(roomPath);
-                // Optional: Watermark room scene too
-                // roomBuffer = await addWatermark(roomBuffer);
+                    let imgBuffer;
+                    try {
+                        imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
+                    } catch (err) {
+                        // Attempt one reconnect for download
+                        console.log('   ⚠️ Download failed. Reconnecting...');
+                        await sftp.end();
+                        await sftp.connect(FTP_CONFIG);
+                        imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
+                    }
 
-                const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, {
-                    access: 'public',
-                    token: process.env.BLOB_READ_WRITE_TOKEN,
-                    addRandomSuffix: false,
-                    allowOverwrite: true
-                });
-                imageUrls.push(blobRoom.url);
-                console.log(`      Uploaded Room: ${blobRoom.url}`);
-            }
+                    // Watermark
+                    imgBuffer = await addWatermark(imgBuffer);
 
-            if (!imageUrl) {
-                console.log(`   ⚠️ Main image not found for ${pattern}`);
-            }
+                    const blob = await put(`products/${pattern}.jpg`, imgBuffer, {
+                        access: 'public',
+                        token: process.env.BLOB_READ_WRITE_TOKEN,
+                        addRandomSuffix: false,
+                        allowOverwrite: true
+                    });
+                    imageUrl = blob.url;
+                    imageUrls.push(imageUrl);
+                    console.log(`      Uploaded Main: ${blob.url}`);
+                }
 
-            // 5. Build Product Object with Smart Category
-            const widthMeters = inchToMeter(row['Product Width']);
-            const lengthMeters = inchToMeter(row['Product Length']);
-            const coverage = (widthMeters && lengthMeters) ? (widthMeters * lengthMeters).toFixed(2) : '0';
+                // Upload Room Scene
+                if (roomExists) {
+                    let roomBuffer;
+                    try {
+                        roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
+                    } catch (err) {
+                        // Reconnect handled in main catch slightly, but granular is better
+                        await sftp.end();
+                        await sftp.connect(FTP_CONFIG);
+                        roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
+                    }
 
-            const smartCategory = determineCategory(row);
-            // Hide if no image? For now keep it but maybe flag it.
+                    const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, {
+                        access: 'public',
+                        token: process.env.BLOB_READ_WRITE_TOKEN,
+                        addRandomSuffix: false,
+                        allowOverwrite: true
+                    });
+                    imageUrls.push(blobRoom.url);
+                    console.log(`      Uploaded Room: ${blobRoom.url}`);
+                }
 
-            const product = {
-                id: pattern,
-                name: row['Name'] || 'Untitled Wallpaper',
-                description: row['Description'] || '',
-                price: cleanPrice(row['MSRP']),
+                if (!imageUrl) {
+                    console.log(`   ⚠️ Main image not found for ${pattern}`);
+                }
 
-                // USE SMART CATEGORY
-                category: smartCategory, // Used for 'Floral', 'Geometric' buttons
-                style: row['Style'] || 'General', // Keep original style just in case
+                // 5. Build Product Object with Smart Category
+                const widthMeters = inchToMeter(row['Product Width']);
+                const lengthMeters = inchToMeter(row['Product Length']);
+                const coverage = (widthMeters && lengthMeters) ? (widthMeters * lengthMeters).toFixed(2) : '0';
 
-                colors: row['Color Family'] ? [row['Color Family']] : [],
+                const smartCategory = determineCategory(row);
 
-                dimensions: {
-                    width: widthMeters,
-                    height: lengthMeters,
-                    coverage: coverage,
-                    weight: parseFloat(row['Weight'] || 0),
-                },
-                specifications: {
-                    material: row['Material'] || 'Unknown',
-                    washable: true,
-                    removable: true,
-                    textured: false,
-                },
-                imageUrl: imageUrl || '',
-                imageUrls: imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []),
-                inStock: true,
-                rating: 0,
-                reviews: 0,
-                showInHome: true,
-                brand: row['Brand'],
-                origin: row['Country of Origin'],
+                const product = {
+                    id: pattern,
+                    name: row['Name'] || 'Untitled Wallpaper',
+                    description: row['Description'] || '',
+                    price: cleanPrice(row['MSRP']),
+                    category: smartCategory,
+                    style: row['Style'] || 'General',
+                    colors: row['Color Family'] ? [row['Color Family']] : [],
+                    dimensions: {
+                        width: widthMeters,
+                        height: lengthMeters,
+                        coverage: coverage,
+                        weight: parseFloat(row['Weight'] || 0),
+                    },
+                    specifications: {
+                        material: row['Material'] || 'Unknown',
+                        washable: true,
+                        removable: true,
+                        textured: false,
+                    },
+                    imageUrl: imageUrl || '',
+                    imageUrls: imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []),
+                    inStock: true,
+                    rating: 0,
+                    reviews: 0,
+                    showInHome: true,
+                    brand: row['Brand'],
+                    origin: row['Country of Origin'],
+                    publicSku: `VIZ-${pattern}`
+                };
 
-                // Useful for admin to know real origin
-                publicSku: `VIZ-${pattern}`
-            };
-
-            // Add to list, replacing old if exists
-            if (catalogMap.has(product.id)) {
+                // Add to map and list
                 catalogMap.set(product.id, product);
+                importedProducts.push(product);
+                displayItems.push(`   + [${processed}] ${product.name} (${product.id})`);
+
+                processed++;
+
+                // INCREMENTAL SAVE (Batch of 50)
+                if (processed % 50 === 0) {
+                    console.log(`💾 Batch Save: Updating catalog with ${importedProducts.length} items so far...`);
+                    // We save the WHOLE accumulation, not just the batch, to ensure integrity if we stop
+                    // Ideally we'd merge with existing, but here we are building `importedProducts` as the new master list?
+                    // Wait, if we crash and restart, `importedProducts` starts empty.
+                    // So we should MERGE `importedProducts` into `existingCatalog` (or `catalogMap`) and save THAT.
+                    const currentFullList = Array.from(catalogMap.values());
+                    await kv.set('wallpapers_catalog', currentFullList);
+                    console.log(`   ✅ Saved ${currentFullList.length} items to KV.`);
+                }
+
+            } catch (loopErr) {
+                console.error(`❌ Error processing row ${row['Pattern']}:`, loopErr.message);
+                // Try to reconnect once more to ensure next loop has a chance
+                try { await sftp.end(); await sftp.connect(FTP_CONFIG); } catch (e) { }
             }
         }
 
         console.log(`✨ Import completed! Processed ${processed} items.`);
         console.log(`📝 Summary:`);
-        console.log(displayItems.join('\n'));
+        // console.log(displayItems.join('\n')); // Too verbose
 
-        // 7. Update Catalog Index (The "All Products" list for frontend)
-        // Previously we merged. User asked to "overwrite" sample data.
-        // So we will overwrite with the products we just imported.
-        // NOTE: If IMPORT_LIMIT is small, we get small catalog. If Infinity, we get full.
-
-        console.log(`📚 Updating Main Catalog Index (Overwrite Mode)...`);
-        await kv.set('wallpapers_catalog', importedProducts);
-
-        console.log(`✅ Catalog updated with ${importedProducts.length} items.`);
+        console.log(`📚 Final Update of Main Catalog Index...`);
+        const finalCatalog = Array.from(catalogMap.values());
+        await kv.set('wallpapers_catalog', finalCatalog);
+        console.log(`✅ Catalog updated with ${finalCatalog.length} items.`);
 
     } catch (err) {
-        console.error('❌ Import failed:', err);
+        console.error('❌ Import failed fatal:', err);
     } finally {
         sftp.end();
     }

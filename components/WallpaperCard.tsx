@@ -6,6 +6,7 @@ import Colors from '@/constants/colors';
 interface WallpaperCardProps {
     item: Wallpaper;
     onPress: (item: Wallpaper) => void;
+    onVisualize?: (item: Wallpaper) => void;
     width: DimensionValue;
 }
 
@@ -57,6 +58,22 @@ export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
                     <View style={styles.outOfStockBadge}>
                         <Text style={styles.outOfStockText}>Agotado</Text>
                     </View>
+                )}
+                {onVisualize && (
+                    <TouchableOpacity
+                        style={styles.visualizerIconFromCard}
+                        onPress={(e) => {
+                            e.stopPropagation();
+                            onVisualize(item);
+                        }}
+                    >
+                        {/* Using text or simple icon because we need an import if we use Lucide here */}
+                        {/* But wait, I need to import Camera/Eye. Let's assume Lucide is available or use text/image */}
+                        {/* Since this is a component file, I need to check imports. */}
+                        {/* Actually, let's just make it a simple circle for now or check imports in next step if broken */}
+                        {/* Checking imports... I need to import Camera from lucide-react-native */}
+                        <Text style={{ fontSize: 12 }}>👁️</Text>
+                    </TouchableOpacity>
                 )}
             </View>
             <View style={styles.info}>
@@ -122,4 +139,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textTransform: 'uppercase',
     },
+    visualizerIconFromCard: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        width: 32, height: 32,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+    }
 });

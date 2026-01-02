@@ -38,27 +38,7 @@ export default function ProfileScreen() {
     };
   }, [favoriteProjects]);
 
-  const getStatusColor = (status: Project['status']) => {
-    switch (status) {
-      case 'completed':
-        return Colors.light.success;
-      case 'in_progress':
-        return Colors.light.warning;
-      case 'planned':
-        return Colors.light.textSecondary;
-    }
-  };
 
-  const getStatusText = (status: Project['status']) => {
-    switch (status) {
-      case 'completed':
-        return 'Completado';
-      case 'in_progress':
-        return 'En Progreso';
-      case 'planned':
-        return 'Planeado';
-    }
-  };
 
   const handleLogout = () => {
     console.log('🔴 handleLogout called');

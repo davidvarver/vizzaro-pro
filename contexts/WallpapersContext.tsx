@@ -11,6 +11,7 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
   const [wallpapers, setWallpapers] = useState<Wallpaper[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [visualizerImage, setVisualizerImage] = useState<string | null>(null);
 
   const loadWallpapers = useCallback(async (forceRefresh = false) => {
     try {
@@ -370,5 +371,7 @@ export const [WallpapersProvider, useWallpapers] = createContextHook(() => {
     getWallpaperById,
     refetchWallpapers,
     resetCatalog,
-  }), [wallpapers, isLoading, error, updateWallpaper, addWallpaper, addMultipleWallpapers, replaceAllWallpapers, deleteWallpaper, getWallpaperById, refetchWallpapers, resetCatalog]);
+    visualizerImage,
+    setVisualizerImage
+  }), [wallpapers, isLoading, error, visualizerImage, updateWallpaper, addWallpaper, addMultipleWallpapers, replaceAllWallpapers, deleteWallpaper, getWallpaperById, refetchWallpapers, resetCatalog]);
 });
