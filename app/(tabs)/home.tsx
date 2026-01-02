@@ -44,8 +44,26 @@ export default function HomeScreen() {
 
   const numColumns = useMemo(() => (width >= 1200 ? 5 : width >= 768 ? 3 : 2), [width]);
 
-  // Take first 12 items for "New Arrivals"
-  const featuredWallpapers = useMemo(() => wallpapers.filter(w => w.showInHome).slice(0, 12), [wallpapers]);
+  // Take first 12 items for "New Arrivals", deduplicating variants (same name diff color)
+  const featuredWallpapers = useMemo(() => {
+    const visible = wallpapers.filter(w => w.showInHome);
+    const uniqueMap = new Map();
+
+    visible.forEach(w => {
+      // Create a "base name" by stripping common color words to group variants
+      // E.g. "Dream Garden Off White" -> "Dream Garden"
+      const baseName = w.name
+        .replace(/\b(Off White|Teal|Dark Brown|Grey|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream)\b/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!uniqueMap.has(baseName)) {
+        uniqueMap.set(baseName, w);
+      }
+    });
+
+    return Array.from(uniqueMap.values()).slice(0, 12);
+  }, [wallpapers]);
 
   const handleRefresh = async () => {
     setRefreshing(true);

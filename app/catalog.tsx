@@ -94,6 +94,21 @@ export default function CatalogScreen() {
 
       return true;
     });
+
+    // Deduplicate Variants
+    const uniqueMap = new Map();
+    filtered.forEach(w => {
+      const baseName = w.name
+        .replace(/\b(Off White|Teal|Dark Brown|Grey|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream)\b/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      if (!uniqueMap.has(baseName)) {
+        uniqueMap.set(baseName, w);
+      }
+    });
+
+    return Array.from(uniqueMap.values());
   }, [wallpapers, activeStyle, activeCategory, activeColors, params.search]);
 
   const toggleColor = (color: string) => {
