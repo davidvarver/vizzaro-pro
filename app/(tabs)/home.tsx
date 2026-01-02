@@ -25,6 +25,7 @@ import { WallpaperCard } from '@/components/WallpaperCard';
 import { useFonts, PlayfairDisplay_400Regular, PlayfairDisplay_600SemiBold, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { getBaseName } from '@/utils/product';
+import { wallpapers as defaultWallpapers } from '@/constants/wallpapers';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -143,11 +144,29 @@ export default function HomeScreen() {
                   }
                 }}
               >
-                <Image
-                  // Fallback images if wallpaper[i] fails or doesn't match
-                  source={{ uri: wallpapers.find(w => w.category === cat || (cat === 'Lujo' && w.style === 'Luxury'))?.imageUrl || 'https://via.placeholder.com/300' }}
-                  style={styles.collectionImage}
-                />
+                import {wallpapers as defaultWallpapers} from '@/constants/wallpapers'; // Import at top
+
+                // ... inside component ...
+
+                <TouchableOpacity
+                  key={i}
+                  style={styles.collectionCard}
+                  onPress={() => {
+                    if (cat === 'Lujo') {
+                      router.push({ pathname: '/catalog', params: { style: 'Luxury' } });
+                    } else {
+                      router.push({ pathname: '/catalog', params: { category: cat } });
+                    }
+                  }}
+                >
+                  <Image
+                    // Use CONSTANT data for these images to ensure they never fail even if API/Context is loading or empty
+                    source={{ uri: defaultWallpapers.find(w => w.category === cat || (cat === 'Lujo' && w.style === 'Luxury'))?.imageUrl || 'https://via.placeholder.com/300' }}
+                    style={styles.collectionImage}
+                  />
+                  <Text style={styles.collectionTitle}>{cat}</Text>
+                  <Text style={styles.collectionSubtitle}>VER COLECCIÓN</Text>
+                </TouchableOpacity>
                 <Text style={styles.collectionTitle}>{cat}</Text>
                 <Text style={styles.collectionSubtitle}>VER COLECCIÓN</Text>
               </TouchableOpacity>
