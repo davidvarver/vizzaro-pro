@@ -266,5 +266,10 @@ const styles = StyleSheet.create({
 
   footer: { padding: 40, backgroundColor: '#111', alignItems: 'center' },
   footerText: { color: '#888', fontSize: 12, marginBottom: 10 },
-  footerLink: { color: '#666', fontSize: 12 }
+  footerLink: { color: '#666', fontSize: 12 },
+  logo: {
+    width: 120,
+    height: 32,
+    alignSelf: 'center',
+  },
 });
