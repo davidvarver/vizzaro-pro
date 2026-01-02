@@ -10,7 +10,7 @@ interface WallpaperCardProps {
     width: DimensionValue;
 }
 
-export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
+export const WallpaperCard = ({ item, onPress, onVisualize, width }: WallpaperCardProps) => {
     const scaleAnim = useRef(new Animated.Value(1)).current;
 
     // Web-specific hover handling
