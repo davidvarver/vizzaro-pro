@@ -25,15 +25,6 @@ import { getBaseName } from '@/utils/product';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// Extend colors for filtering
-const AVAILABLE_COLORS = [
-  'Beige', 'Gris', 'Azul', 'Verde', 'Negro', 'Blanco', 'Dorado', 'Rosa', 'Rojo'
-];
-
-const AVAILABLE_STYLES = [
-  'Floral', 'Geométrico', 'Textura', 'Lujo', 'Moderno', 'Clásico', 'Vintage'
-];
-
 export default function CatalogScreen() {
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ style?: string; category?: string; search?: string }>();
@@ -66,6 +57,25 @@ export default function CatalogScreen() {
     Lato_400Regular,
     Lato_700Bold
   });
+
+  // Dynamic Filters derived from actual data
+  const availableStyles = useMemo(() => {
+    const styles = new Set<string>();
+    wallpapers.forEach(w => {
+      if (w.style) styles.add(w.style.trim());
+    });
+    return Array.from(styles).sort();
+  }, [wallpapers]);
+
+  const availableColors = useMemo(() => {
+    const colors = new Set<string>();
+    wallpapers.forEach(w => {
+      if (w.colors && Array.isArray(w.colors)) {
+        w.colors.forEach(c => colors.add(c.trim()));
+      }
+    });
+    return Array.from(colors).sort();
+  }, [wallpapers]);
 
   const numColumns = useMemo(() => (SCREEN_WIDTH >= 1024 ? 4 : SCREEN_WIDTH >= 768 ? 3 : 2), []);
 
@@ -241,41 +251,49 @@ export default function CatalogScreen() {
             {/* CATEGORY (New Section if needed) */}
 
             {/* STYLES */}
-            <Text style={styles.filterSectionTitle}>Estilo</Text>
-            <View style={styles.filterWrap}>
-              {AVAILABLE_STYLES.map(s => (
-                <TouchableOpacity
-                  key={s}
-                  style={[styles.filterOption, activeStyle === s && styles.filterOptionActive]}
-                  onPress={() => setActiveStyle(s === activeStyle ? null : s)}
-                >
-                  <Text style={[styles.filterOptionText, activeStyle === s && styles.filterTextActive]}>{s}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {availableStyles.length > 0 && (
+              <>
+                <Text style={styles.filterSectionTitle}>Estilo</Text>
+                <View style={styles.filterWrap}>
+                  {availableStyles.map(s => (
+                    <TouchableOpacity
+                      key={s}
+                      style={[styles.filterOption, activeStyle === s && styles.filterOptionActive]}
+                      onPress={() => setActiveStyle(s === activeStyle ? null : s)}
+                    >
+                      <Text style={[styles.filterOptionText, activeStyle === s && styles.filterTextActive]}>{s}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </>
+            )}
 
             {/* COLORS */}
-            <Text style={styles.filterSectionTitle}>Color</Text>
-            <View style={styles.filterWrap}>
-              {AVAILABLE_COLORS.map(c => (
-                <TouchableOpacity
-                  key={c}
-                  style={[
-                    styles.colorOption,
-                    activeColors.includes(c) && styles.colorOptionActive
-                  ]}
-                  onPress={() => toggleColor(c)}
-                >
-                  <View style={[styles.colorCircle, { backgroundColor: getColorHex(c) }]} />
-                  <Text style={styles.colorName}>{c}</Text>
-                  {activeColors.includes(c) && (
-                    <View style={styles.checkIcon}>
-                      <Check size={12} color="#FFF" />
-                    </View>
-                  )}
-                </TouchableOpacity>
-              ))}
-            </View>
+            {availableColors.length > 0 && (
+              <>
+                <Text style={styles.filterSectionTitle}>Color</Text>
+                <View style={styles.filterWrap}>
+                  {availableColors.map(c => (
+                    <TouchableOpacity
+                      key={c}
+                      style={[
+                        styles.colorOption,
+                        activeColors.includes(c) && styles.colorOptionActive
+                      ]}
+                      onPress={() => toggleColor(c)}
+                    >
+                      <View style={[styles.colorCircle, { backgroundColor: getColorHex(c) }]} />
+                      <Text style={styles.colorName}>{c}</Text>
+                      {activeColors.includes(c) && (
+                        <View style={styles.checkIcon}>
+                          <Check size={12} color="#FFF" />
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </>
+            )}
           </ScrollView>
 
           <View style={styles.modalFooter}>

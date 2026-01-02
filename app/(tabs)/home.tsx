@@ -132,27 +132,35 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Featured Collections</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.collectionList}>
-            {['Floral', 'Geométrico', 'Textura', 'Lujo'].map((cat, i) => (
-              <TouchableOpacity
-                key={i}
-                style={styles.collectionCard}
-                onPress={() => {
-                  if (cat === 'Lujo') {
-                    router.push({ pathname: '/catalog', params: { style: 'Luxury' } });
-                  } else {
-                    router.push({ pathname: '/catalog', params: { category: cat } });
-                  }
-                }}
-              >
-                <Image
-                  // Use CONSTANT data for these images to ensure they never fail even if API/Context is loading or empty
-                  source={{ uri: defaultWallpapers.find(w => w.category === cat || (cat === 'Lujo' && w.style === 'Luxury'))?.imageUrl || 'https://via.placeholder.com/300' }}
-                  style={styles.collectionImage}
-                />
-                <Text style={styles.collectionTitle}>{cat}</Text>
-                <Text style={styles.collectionSubtitle}>VER COLECCIÓN</Text>
-              </TouchableOpacity>
-            ))}
+            {/* Dynamic Collections based on available data */}
+            {(() => {
+              // Get unique categories or styles from data
+              const uniqueCategories = Array.from(new Set(wallpapers.map(w => w.category).filter(Boolean))).slice(0, 5);
+
+              // If no dynamic data, fallback to safe defaults ONLY if we have no papers at all
+              const categoriesToShow = uniqueCategories.length > 0 ? uniqueCategories : ['Floral', 'Geométrico', 'Textura', 'Tropical'];
+
+              return categoriesToShow.map((cat, i) => {
+                // Find a representative image for this category
+                const repParams = uniqueCategories.length > 0 ? { category: cat } : { category: cat };
+                const coverImage = wallpapers.find(w => w.category === cat)?.imageUrl || defaultWallpapers.find(w => w.category === cat)?.imageUrl || 'https://via.placeholder.com/300';
+
+                return (
+                  <TouchableOpacity
+                    key={cat}
+                    style={styles.collectionCard}
+                    onPress={() => router.push({ pathname: '/catalog', params: { category: cat } })}
+                  >
+                    <Image
+                      source={{ uri: coverImage }}
+                      style={styles.collectionImage}
+                    />
+                    <Text style={styles.collectionTitle}>{cat}</Text>
+                    <Text style={styles.collectionSubtitle}>VER COLECCIÓN</Text>
+                  </TouchableOpacity>
+                );
+              });
+            })()}
           </ScrollView>
         </View>
 
