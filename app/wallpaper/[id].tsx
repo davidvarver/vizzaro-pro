@@ -12,6 +12,7 @@ import {
   Animated,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
+import { useFavorites } from '@/contexts/FavoritesContext';
 import {
   ArrowLeft,
   Share2,
@@ -22,6 +23,7 @@ import {
   Ruler,
   Info,
   ShoppingCart,
+  Heart,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
@@ -40,6 +42,7 @@ export default function WallpaperDetailsScreen() {
   const { getWallpaperById, wallpapers } = useWallpapers(); // Get all wallpapers to find variants
   const { addToCart, cartItems } = useCart();
   const { addToHistory } = useHistory();
+  const { favoriteProjects, addToFavorites, removeFromFavorites, addWallpaperToProject, removeWallpaperFromProject } = useFavorites();
 
   const wallpaper = getWallpaperById(id || '');
   const [quantity, setQuantity] = useState(1);
@@ -47,15 +50,46 @@ export default function WallpaperDetailsScreen() {
 
   // ...
 
-  // Find variants: Same base name, different ID
+  // Find variants: Same base name (include current one to show in list)
   const variants = React.useMemo(() => {
     if (!wallpaper) return [];
     const currentBase = getBaseName(wallpaper.name);
-    return wallpapers.filter(w =>
-      getBaseName(w.name) === currentBase &&
-      w.id !== wallpaper.id
-    );
+    return wallpapers.filter(w => getBaseName(w.name) === currentBase);
   }, [wallpaper, wallpapers]);
+
+  // Favorites Logic (Simple "General" list)
+  const defaultProjectName = "Mis Favoritos";
+  const favoritesProject = favoriteProjects.find(p => p.name === defaultProjectName);
+  const isFavorite = favoritesProject?.wallpapers.some(w => w.id === wallpaper?.id);
+
+  const toggleFavorite = async () => {
+    if (!wallpaper) return;
+
+    if (isFavorite && favoritesProject) {
+      // Remove from existing project
+      if (favoritesProject.wallpapers.length === 1) {
+        // If it's the last one, maybe remove the project? Or just empty it. Context says "Cannot remove last wallpaper" logic might be there?
+        // Actually context says: if updatedWallpapers.length === 0, it returns.
+        // Let's safe guard.
+        await removeFromFavorites(favoritesProject.id); // Remove entire project if empty? Or just leave it.
+        // The context method `removeWallpaperFromProject` prevents removing the last one?
+        // "Cannot remove last wallpaper from project" log.
+        // Better to just delete the project if it's the only one, or use a context method that allows empty.
+        // Let's assume for now we use the context as is. If strict, I might need to make a new project.
+        // Actually, if I can't remove the last one, I'll delete the project.
+        await removeFromFavorites(favoritesProject.id);
+      } else {
+        await removeWallpaperFromProject(favoritesProject.id, wallpaper.id);
+      }
+    } else {
+      if (favoritesProject) {
+        await addWallpaperToProject(favoritesProject.id, wallpaper);
+      } else {
+        // Create new "Mis Favoritos" project
+        await addToFavorites(defaultProjectName, 'General', wallpaper);
+      }
+    }
+  };
 
   // Zoom State
   const [zoomStyle, setZoomStyle] = useState({ opacity: 0, x: 0, y: 0 });
@@ -108,6 +142,14 @@ export default function WallpaperDetailsScreen() {
           </TouchableOpacity>
           <Text style={styles.brandLogo}>VIZZARO</Text>
           <View style={styles.headerActions}>
+            <TouchableOpacity onPress={toggleFavorite} style={styles.iconButton}>
+              <Heart
+                color={isFavorite ? Colors.light.primary : Colors.light.text}
+                fill={isFavorite ? Colors.light.primary : 'transparent'}
+                size={24}
+              />
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.iconButton}
               onPress={() => router.push('/(tabs)/cart')}
@@ -208,8 +250,15 @@ export default function WallpaperDetailsScreen() {
                   {variants.map(variant => (
                     <TouchableOpacity
                       key={variant.id}
-                      style={styles.variantItem}
-                      onPress={() => router.push(`/wallpaper/${variant.id}`)}
+                      style={[
+                        styles.variantItem,
+                        variant.id === wallpaper.id && styles.variantSelected
+                      ]}
+                      onPress={() => {
+                        if (variant.id !== wallpaper.id) {
+                          router.push(`/wallpaper/${variant.id}`);
+                        }
+                      }}
                     >
                       <Image source={{ uri: variant.imageUrl }} style={styles.variantImage} />
                     </TouchableOpacity>
