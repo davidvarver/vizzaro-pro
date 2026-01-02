@@ -83,6 +83,10 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.mainContainer}>
+      <SeoHead
+        title="Luxury Wallpaper Store New Jersey | Home Decor"
+        description="Discover premium wallpapers in New Jersey. Exclusive designs, fast shipping to NJ & NY. Transform your home with Vizzaro Wallpaper."
+      />
       <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
 
       {/* PROFESSIONAL HEADER */}
@@ -168,7 +172,7 @@ export default function HomeScreen() {
                       style={styles.collectionImage}
                     />
                     <Text style={styles.collectionTitle}>{cat}</Text>
-                    <Text style={styles.collectionSubtitle}>VER COLECCIÓN</Text>
+                    <Text style={styles.collectionSubtitle}>VIEW COLLECTION</Text>
                   </TouchableOpacity>
                 );
               });

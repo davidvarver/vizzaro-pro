@@ -154,8 +154,8 @@ export default function CatalogScreen() {
   return (
     <View style={styles.container}>
       <SeoHead
-        title="Catálogo Completo - Papel Tapiz y Murales"
-        description="Explora nuestra colección completa de papel tapiz. Filtra por color, estilo y diseño. Encuentra el estilo perfecto para tu hogar u oficina."
+        title="Full Catalog - Wallpaper & Murals NJ"
+        description="Explore our complete wallpaper collection in New Jersey. Filter by color, style, and design. Find the perfect style for your home or office in NJ."
       />
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar barStyle="dark-content" />
@@ -175,7 +175,7 @@ export default function CatalogScreen() {
             <Search color="#666" size={20} style={styles.searchIcon} />
             <TextInput
               style={styles.searchInput}
-              placeholder="Buscar por nombre o SKU..."
+              placeholder="Search by name or SKU..."
               value={params.search as string} // Just display param or local state? Better local state synced with URL?
               // Actually, let's use a local state for input to avoid jumpy URL updates
               onChangeText={(text) => router.setParams({ search: text })}
@@ -237,9 +237,9 @@ export default function CatalogScreen() {
         )}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>No se encontraron resultados.</Text>
+            <Text style={styles.emptyText}>No results found.</Text>
             <TouchableOpacity onPress={clearFilters}>
-              <Text style={styles.emptyAction}>Limpiar filtros</Text>
+              <Text style={styles.emptyAction}>Clear filters</Text>
             </TouchableOpacity>
           </View>
         }
@@ -249,7 +249,7 @@ export default function CatalogScreen() {
       <Modal visible={showFilters} animationType="slide" presentationStyle="pageSheet">
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Filtros</Text>
+            <Text style={styles.modalTitle}>Filters</Text>
             <TouchableOpacity onPress={() => setShowFilters(false)}>
               <X color="#000" size={24} />
             </TouchableOpacity>
@@ -262,7 +262,7 @@ export default function CatalogScreen() {
             {/* STYLES */}
             {availableStyles.length > 0 && (
               <>
-                <Text style={styles.filterSectionTitle}>Estilo</Text>
+                <Text style={styles.filterSectionTitle}>Style</Text>
                 <View style={styles.filterWrap}>
                   {availableStyles.map(s => (
                     <TouchableOpacity
@@ -307,7 +307,7 @@ export default function CatalogScreen() {
 
           <View style={styles.modalFooter}>
             <TouchableOpacity style={styles.applyBtn} onPress={() => setShowFilters(false)}>
-              <Text style={styles.applyText}>Ver Resultados ({filteredWallpapers.length})</Text>
+              <Text style={styles.applyText}>View Results ({filteredWallpapers.length})</Text>
             </TouchableOpacity>
           </View>
         </View>

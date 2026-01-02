@@ -16,7 +16,7 @@ interface SeoHeadProps {
     };
 }
 
-const SITE_NAME = 'Vizzaro Wallpaper';
+const SITE_NAME = 'Vizzaro Wallpaper NJ';
 const DOMAIN = process.env.EXPO_PUBLIC_DOMAIN || 'https://vizzaro-pro.vercel.app';
 
 export const SeoHead: React.FC<SeoHeadProps> = ({
