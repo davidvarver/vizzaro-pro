@@ -41,6 +41,7 @@ function RootLayoutNav() {
 }
 
 import { HistoryProvider } from '@/contexts/HistoryContext';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 
 // ... items
 
@@ -63,6 +64,7 @@ export default function RootLayout() {
                       <GestureHandlerRootView style={styles.container}>
                         <StatusBar style="dark" />
                         <RootLayoutNav />
+                        <WhatsAppButton />
                       </GestureHandlerRootView>
                     </HistoryProvider>
                   </CartProvider>
