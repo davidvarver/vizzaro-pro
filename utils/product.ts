@@ -22,7 +22,7 @@ export const getBaseName = (name: string): string => {
 
     // Remove Product Types (Suffixes)
     // "Peel & Stick Wallpaper", "Wall Mural", "Wallpaper", "Removable"
-    const typeRegex = /\b(Peel & Stick Wallpaper|Peel and Stick|Wall Mural|Wallpaper|Removable|Stick)\b/gi;
+    const typeRegex = /\b(Peel & Stick Wallpaper|Peel and Stick|Wall Mural|Wallpaper|Removable|Stick|Peel)\b/gi;
     clean = clean.replace(typeRegex, '').replace(/\s+/g, ' ').trim();
 
     return clean;
