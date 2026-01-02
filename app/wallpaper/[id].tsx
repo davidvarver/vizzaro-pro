@@ -43,11 +43,16 @@ export default function WallpaperDetailsScreen() {
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
 
-  // Find variants: Same name, different ID
+  import { getBaseName } from '@/utils/product';
+
+  // ...
+
+  // Find variants: Same base name, different ID
   const variants = React.useMemo(() => {
     if (!wallpaper) return [];
+    const currentBase = getBaseName(wallpaper.name);
     return wallpapers.filter(w =>
-      w.name.toLowerCase().trim() === wallpaper.name.toLowerCase().trim() &&
+      getBaseName(w.name) === currentBase &&
       w.id !== wallpaper.id
     );
   }, [wallpaper, wallpapers]);
