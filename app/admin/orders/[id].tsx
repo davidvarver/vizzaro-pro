@@ -4,7 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAdmin } from '../../../contexts/AdminContext';
 import { useOrders } from '../../../contexts/OrdersContext'; // Added this
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, CreditCard, Truck, User } from 'lucide-react-native';
+import { ArrowLeft, CreditCard, Truck, User, CheckCircle } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 
 export default function OrderDetails() {
@@ -59,6 +59,16 @@ export default function OrderDetails() {
             console.error('Fetch details error:', error);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status?.toLowerCase()) {
+            case 'paid': return '#10B981';
+            case 'shipped': return '#3B82F6';
+            case 'delivered': return '#111827';
+            case 'pending': return '#F59E0B';
+            default: return '#6B7280';
         }
     };
 
@@ -138,13 +148,22 @@ export default function OrderDetails() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Estado</Text>
                     <View style={styles.statusContainer}>
-                        <View style={[styles.statusBadge, { backgroundColor: '#E5E7EB' }]}>
-                            <Text style={styles.statusText}>{order.status ? order.status.toUpperCase() : 'PENDING'}</Text>
+                        <View style={[styles.statusBadge, { backgroundColor: getStatusColor(order.status) + '20' }]}>
+                            <Text style={[styles.statusText, { color: getStatusColor(order.status) }]}>
+                                {order.status ? order.status.toUpperCase() : 'PENDING'}
+                            </Text>
                         </View>
+                        {/* Show PAID badge if status implies payment */}
+                        {(order.status === 'paid' || order.status === 'shipped' || order.status === 'delivered') && (
+                            <View style={[styles.statusBadge, { backgroundColor: '#DCFCE7', marginLeft: 8 }]}>
+                                <Text style={[styles.statusText, { color: '#166534' }]}>PAID</Text>
+                            </View>
+                        )}
                     </View>
 
                     <View style={styles.actions}>
-                        {order.status !== 'paid' && (
+                        {/* Show Mark Paid only if NOT paid/shipped/delivered */}
+                        {['pending', 'confirmed', 'preparing'].includes(order.status || 'pending') && (
                             <TouchableOpacity
                                 style={[styles.actionButton, { backgroundColor: '#10B981' }]}
                                 onPress={() => updateStatus('paid')}
@@ -155,6 +174,7 @@ export default function OrderDetails() {
                             </TouchableOpacity>
                         )}
 
+                        {/* Show Mark Shipped if Paid (or if we want to allow skipping, but safe bet is Paid) */}
                         {order.status === 'paid' && (
                             <TouchableOpacity
                                 style={[styles.actionButton, { backgroundColor: '#3B82F6' }]}
@@ -163,6 +183,17 @@ export default function OrderDetails() {
                             >
                                 <Truck color="#fff" size={20} />
                                 <Text style={styles.actionText}>Marcar Enviado</Text>
+                            </TouchableOpacity>
+                        )}
+
+                        {order.status === 'shipped' && (
+                            <TouchableOpacity
+                                style={[styles.actionButton, { backgroundColor: '#111827' }]}
+                                onPress={() => updateStatus('delivered')}
+                                disabled={isUpdating}
+                            >
+                                <CheckCircle color="#fff" size={20} />
+                                <Text style={styles.actionText}>Marcar Entregado</Text>
                             </TouchableOpacity>
                         )}
                     </View>

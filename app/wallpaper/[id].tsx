@@ -195,6 +195,24 @@ export default function WallpaperDetailsScreen() {
 
             <Text style={styles.price}>${wallpaper.price.toFixed(2)} / rollo</Text>
 
+            {/* Variants (Other Colors) */}
+            {variants.length > 0 && (
+              <View style={styles.variantsContainer}>
+                <Text style={styles.variantTitle}>Otros Colores:</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.variantList}>
+                  {variants.map(variant => (
+                    <TouchableOpacity
+                      key={variant.id}
+                      style={styles.variantItem}
+                      onPress={() => router.push(`/wallpaper/${variant.id}`)}
+                    >
+                      <Image source={{ uri: variant.imageUrl }} style={styles.variantImage} />
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+
             <View style={styles.divider} />
 
             <Text style={styles.sectionHeader}>Descripción</Text>
@@ -412,7 +430,10 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 18, fontFamily: 'PlayfairDisplay_600SemiBold', marginBottom: 15, color: '#111' },
 
   // Variants
-  variantItem: { width: 60, height: 60, borderRadius: 30, borderWidth: 1, borderColor: '#EEE', overflow: 'hidden' },
+  variantsContainer: { marginBottom: 20 },
+  variantTitle: { fontSize: 14, color: Colors.light.textSecondary, marginBottom: 10, textTransform: 'uppercase' },
+  variantList: { flexDirection: 'row', gap: 10 },
+  variantItem: { width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: '#EEE', overflow: 'hidden', marginRight: 10 },
   variantSelected: { borderWidth: 2, borderColor: Colors.light.primary },
   variantImage: { width: '100%', height: '100%' },
 
