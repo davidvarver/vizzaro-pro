@@ -72,14 +72,17 @@ export default function CatalogScreen() {
   const filteredWallpapers = useMemo(() => {
     // 1. Filter first
     const filtered = wallpapers.filter(w => {
+      // Helper to normalize strings (remove accents, lowercase)
+      const normalize = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
       // Filter by Style
       if (activeStyle) {
-        if (!w.style?.toLowerCase().includes(activeStyle.toLowerCase())) return false;
+        if (!w.style || !normalize(w.style).includes(normalize(activeStyle))) return false;
       }
 
       // Filter by Category
       if (activeCategory) {
-        if (!w.category?.toLowerCase().includes(activeCategory.toLowerCase())) return false;
+        if (!w.category || !normalize(w.category).includes(normalize(activeCategory))) return false;
       }
 
       // Filter by Color

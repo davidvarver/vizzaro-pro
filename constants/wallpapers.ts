@@ -33,11 +33,10 @@ export const wallpapers: Wallpaper[] = [
     name: 'Papel Tapiz Floral Elegante',
     description: 'Diseño floral clásico con toques dorados sobre fondo crema',
     price: 45.99,
-    imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop&auto=format&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop', // Floral Wallpaper Texture
     imageUrls: [
-      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop&auto=format&q=80',
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&auto=format&q=80',
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&auto=format&q=80'
+      'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop'
     ],
     category: 'Floral',
     style: 'Clásico',
@@ -62,10 +61,10 @@ export const wallpapers: Wallpaper[] = [
     name: 'Diseño Geométrico Moderno',
     description: 'Patrones geométricos contemporáneos en tonos neutros',
     price: 52.99,
-    imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400&h=400&fit=crop&auto=format&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop', // Geometric Pattern
     imageUrls: [
-      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400&h=400&fit=crop&auto=format&q=80',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&auto=format&q=80'
+      'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop'
     ],
     category: 'Geométrico',
     style: 'Moderno',
@@ -90,9 +89,9 @@ export const wallpapers: Wallpaper[] = [
     name: 'Textura Minimalista',
     description: 'Textura sutil y elegante para espacios modernos',
     price: 38.99,
-    imageUrl: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=400&h=400&fit=crop&auto=format&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1596253406322-2623d24959db?q=80&w=800&auto=format&fit=crop', // Minimal Texture
     imageUrls: [
-      'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=400&h=400&fit=crop&auto=format&q=80'
+      'https://images.unsplash.com/photo-1596253406322-2623d24959db?q=80&w=800&auto=format&fit=crop'
     ],
     category: 'Textura',
     style: 'Minimalista',
@@ -117,10 +116,9 @@ export const wallpapers: Wallpaper[] = [
     name: 'Rayas Verticales Clásicas',
     description: 'Rayas verticales elegantes que agrandan visualmente el espacio',
     price: 41.99,
-    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&auto=format&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1549416872-466d338ddbf6?q=80&w=800&auto=format&fit=crop', // Vertical Stripes
     imageUrls: [
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&auto=format&q=80',
-      'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=400&h=400&fit=crop&auto=format&q=80'
+      'https://images.unsplash.com/photo-1549416872-466d338ddbf6?q=80&w=800&auto=format&fit=crop'
     ],
     category: 'Rayas',
     style: 'Clásico',
