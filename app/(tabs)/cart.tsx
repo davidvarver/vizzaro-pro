@@ -4,11 +4,14 @@ import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Package, Ruler } from 'l
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Colors from '@/constants/colors';
-import { useCart } from '@/contexts/CartContext';
+import { useCartStore } from '@/store/useCartStore';
 
 export default function CartScreen() {
   const insets = useSafeAreaInsets();
-  const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const cartItems = useCartStore((state) => state.cartItems);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const getCartTotal = useCartStore((state) => state.getCartTotal);
   const [deliveryOption, setDeliveryOption] = useState<'delivery'>('delivery');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 

@@ -4,15 +4,20 @@ import { User, Heart, ChevronRight, Package, Shield, LogOut, LogIn } from 'lucid
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Colors from '@/constants/colors';
-import WhatsAppButton from '@/components/WhatsAppButton';
-import { useAuth } from '@/contexts/AuthContext';
-import { useFavorites } from '@/contexts/FavoritesContext';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const { favoriteProjects } = useFavorites();
+
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAdmin = useAuthStore((s) => s.isAdmin);
+  const logout = useAuthStore((s) => s.logout);
+
+  const favoriteProjects = useFavoritesStore((s) => s.favoriteProjects);
 
   const recentProjects = useMemo(() => {
     return favoriteProjects

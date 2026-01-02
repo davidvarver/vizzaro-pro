@@ -27,9 +27,11 @@ Sigue estos pasos para mover tu Dominio (ej. `midominio.com`) y configuración d
 2.  **Conectar al Proyecto Nuevo**:
     *   Ve a Vercel > Proyecto Nuevo (`vizzaro-pro`) > **Settings** > **Environment Variables**.
     *   Asegúrate de tener las siguientes variables (si no, agrégalas):
+        *   `EXPO_PUBLIC_DOMAIN`: `https://www.vizzarowallpaper.com`
         *   `RESEND_API_KEY`: Tu llave de Resend (empieza con `re_`).
-        *   `FROM_EMAIL`: El remitente verificado (ej. `ventas@tudominio.com`).
-            *   *Nota*: Si no tienes esta variable, el sistema intentará usar `onboarding@resend.dev`, que solo funciona para correos de prueba.
+        *   `FROM_EMAIL`: (Opcional) `hello@vizzarowallpaper.com`
+        *   `FROM_EMAIL_AUTH`: `hello@vizzarowallpaper.com`
+        *   `FROM_EMAIL_ORDERS`: `orders@vizzarowallpaper.com`
 
 ## 3. Actualizar el Código (Yo lo haré)
 

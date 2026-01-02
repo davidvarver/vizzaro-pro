@@ -1,0 +1,308 @@
+{
+  "root": [
+    {
+      "type": "d",
+      "name": "$3823A78BB2734B74BA0C3D729F76D827",
+      "size": 0,
+      "modifyTime": 1696113770000,
+      "accessTime": 1696113770000,
+      "rights": {
+        "user": "x",
+        "group": "x",
+        "other": "x"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "d--x--x--x   1 user     group           0 Sep 30  2023 $3823A78BB2734B74BA0C3D729F76D827"
+    },
+    {
+      "type": "-",
+      "name": ".DS_Store",
+      "size": 6148,
+      "modifyTime": 1733863696000,
+      "accessTime": 1733863696000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group        6148 Dec 10  2024 .DS_Store"
+    },
+    {
+      "type": "d",
+      "name": "aspnet_client",
+      "size": 0,
+      "modifyTime": 1696113771000,
+      "accessTime": 1733863690000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 aspnet_client"
+    },
+    {
+      "type": "-",
+      "name": "desktop.ini",
+      "size": 48,
+      "modifyTime": 1597848647000,
+      "accessTime": 1696113766000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group          48 Aug 19  2020 desktop.ini"
+    },
+    {
+      "type": "d",
+      "name": "DIY Products",
+      "size": 0,
+      "modifyTime": 1712073132000,
+      "accessTime": 1712073132000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr  2  2024 DIY Products"
+    },
+    {
+      "type": "d",
+      "name": "general_inventory",
+      "size": 0,
+      "modifyTime": 1752097331000,
+      "accessTime": 1752097331000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul  9 21:42 general_inventory"
+    },
+    {
+      "type": "-",
+      "name": "key.php",
+      "size": 0,
+      "modifyTime": 1681427845000,
+      "accessTime": 1696113766000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group           0 Apr 13  2023 key.php"
+    },
+    {
+      "type": "d",
+      "name": "New Price Inserts (2022)",
+      "size": 0,
+      "modifyTime": 1696114695000,
+      "accessTime": 1696114695000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 New Price Inserts (2022)"
+    },
+    {
+      "type": "d",
+      "name": "New Products",
+      "size": 0,
+      "modifyTime": 1696114698000,
+      "accessTime": 1696114698000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 New Products"
+    },
+    {
+      "type": "-",
+      "name": "sync.ffs_db",
+      "size": 1204954,
+      "modifyTime": 1615318765000,
+      "accessTime": 1696113766000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group     1204954 Mar  9  2021 sync.ffs_db"
+    },
+    {
+      "type": "-",
+      "name": "Terms of Use - Please Read Before Using.docx",
+      "size": 19400,
+      "modifyTime": 1559928727000,
+      "accessTime": 1696113766000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group       19400 Jun  7  2019 Terms of Use - Please Read Before Using.docx"
+    },
+    {
+      "type": "-",
+      "name": "Thumbs.db",
+      "size": 145408,
+      "modifyTime": 1499874649000,
+      "accessTime": 1696113766000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group      145408 Jul 12  2017 Thumbs.db"
+    },
+    {
+      "type": "d",
+      "name": "WallpaperBooks",
+      "size": 0,
+      "modifyTime": 1766071679000,
+      "accessTime": 1766071679000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:27 WallpaperBooks"
+    },
+    {
+      "type": "-",
+      "name": "web.config",
+      "size": 500,
+      "modifyTime": 1611865141000,
+      "accessTime": 1696113766000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group         500 Jan 28  2021 web.config"
+    },
+    {
+      "type": "-",
+      "name": "~$rms of Use - Please Read Before Using.docx",
+      "size": 162,
+      "modifyTime": 1626453321000,
+      "accessTime": 1696113766000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group         162 Jul 16  2021 ~$rms of Use - Please Read Before Using.docx"
+    }
+  ],
+  "newProducts": [
+    {
+      "type": "-",
+      "name": ".DS_Store",
+      "size": 8196,
+      "modifyTime": 1545834032000,
+      "accessTime": 1696114698000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group        8196 Dec 26  2018 .DS_Store"
+    },
+    {
+      "type": "d",
+      "name": "All Data",
+      "size": 0,
+      "modifyTime": 1765820807000,
+      "accessTime": 1765820807000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 15 17:46 All Data"
+    },
+    {
+      "type": "d",
+      "name": "All Images",
+      "size": 0,
+      "modifyTime": 1767376814000,
+      "accessTime": 1767376814000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jan  2 18:00 All Images"
+    }
+  ],
+  "allData": [
+    {
+      "type": "-",
+      "name": "All_NewProduct_Data.xlsx",
+      "size": 132060,
+      "modifyTime": 1765820769000,
+      "accessTime": 1765820770000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group      132060 Dec 15 17:46 All_NewProduct_Data.xlsx"
+    },
+    {
+      "type": "-",
+      "name": "Thumbs.db",
+      "size": 22016,
+      "modifyTime": 1686220223000,
+      "accessTime": 1696114698000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group       22016 Jun  8  2023 Thumbs.db"
+    }
+  ]
+}

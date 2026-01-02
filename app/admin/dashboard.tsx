@@ -19,15 +19,16 @@ import {
   CheckCircle,
   AlertCircle,
 } from 'lucide-react-native';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useOrders } from '@/contexts/OrdersContext';
 import Colors from '@/constants/colors';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminDashboard() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const { user, logout } = useAuth();
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
   const { orders, getOrderStats } = useOrders();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -59,21 +60,21 @@ export default function AdminDashboard() {
     router.push('/admin/collections' as any);
   };
 
-  const StatCard = ({ 
-    title, 
-    value, 
-    icon: Icon, 
-    color, 
-    onPress 
-  }: { 
-    title: string; 
-    value: string | number; 
-    icon: any; 
-    color: string; 
+  const StatCard = ({
+    title,
+    value,
+    icon: Icon,
+    color,
+    onPress
+  }: {
+    title: string;
+    value: string | number;
+    icon: any;
+    color: string;
     onPress?: () => void;
   }) => (
-    <TouchableOpacity 
-      style={[styles.statCard, { borderLeftColor: color }]} 
+    <TouchableOpacity
+      style={[styles.statCard, { borderLeftColor: color }]}
       onPress={onPress}
       disabled={!onPress}
     >
@@ -87,17 +88,17 @@ export default function AdminDashboard() {
     </TouchableOpacity>
   );
 
-  const QuickActionCard = ({ 
-    title, 
-    description, 
-    icon: Icon, 
-    color, 
-    onPress 
-  }: { 
-    title: string; 
-    description: string; 
-    icon: any; 
-    color: string; 
+  const QuickActionCard = ({
+    title,
+    description,
+    icon: Icon,
+    color,
+    onPress
+  }: {
+    title: string;
+    description: string;
+    icon: any;
+    color: string;
     onPress: () => void;
   }) => (
     <TouchableOpacity style={styles.actionCard} onPress={onPress}>
@@ -114,127 +115,127 @@ export default function AdminDashboard() {
   return (
     <AdminGuard>
       <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.welcomeText}>Bienvenido,</Text>
-          <Text style={styles.adminName}>{user?.name}</Text>
-        </View>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <LogOut size={20} color={Colors.light.tabIconDefault} />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView
-        style={styles.content}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Estadísticas Generales</Text>
-          <View style={styles.statsGrid}>
-            <StatCard
-              title="Total Pedidos"
-              value={stats.total}
-              icon={ShoppingCart}
-              color="#3B82F6"
-              onPress={navigateToOrders}
-            />
-            <StatCard
-              title="Pendientes"
-              value={stats.pending}
-              icon={Clock}
-              color="#F59E0B"
-              onPress={navigateToOrders}
-            />
-            <StatCard
-              title="Completados"
-              value={stats.delivered}
-              icon={CheckCircle}
-              color="#10B981"
-              onPress={navigateToOrders}
-            />
-            <StatCard
-              title="Ingresos"
-              value={`${(typeof stats.totalRevenue === 'number' && !isNaN(stats.totalRevenue) ? stats.totalRevenue : 0).toFixed(2)}`}
-              icon={TrendingUp}
-              color="#8B5CF6"
-            />
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.welcomeText}>Bienvenido,</Text>
+            <Text style={styles.adminName}>{user?.name}</Text>
           </View>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <LogOut size={20} color={Colors.light.tabIconDefault} />
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Acciones Rápidas</Text>
-          <View style={styles.actionsGrid}>
-            <QuickActionCard
-              title="Gestionar Pedidos"
-              description="Ver y actualizar pedidos"
-              icon={ShoppingCart}
-              color="#3B82F6"
-              onPress={navigateToOrders}
-            />
-            <QuickActionCard
-              title="Catálogo"
-              description="Administrar productos"
-              icon={Package}
-              color="#10B981"
-              onPress={navigateToCatalog}
-            />
-            <QuickActionCard
-              title="Colecciones"
-              description="Gestionar colecciones destacadas"
-              icon={BarChart3}
-              color="#8B5CF6"
-              onPress={navigateToCollections}
-            />
+        <ScrollView
+          style={styles.content}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Estadísticas Generales</Text>
+            <View style={styles.statsGrid}>
+              <StatCard
+                title="Total Pedidos"
+                value={stats.total}
+                icon={ShoppingCart}
+                color="#3B82F6"
+                onPress={navigateToOrders}
+              />
+              <StatCard
+                title="Pendientes"
+                value={stats.pending}
+                icon={Clock}
+                color="#F59E0B"
+                onPress={navigateToOrders}
+              />
+              <StatCard
+                title="Completados"
+                value={stats.delivered}
+                icon={CheckCircle}
+                color="#10B981"
+                onPress={navigateToOrders}
+              />
+              <StatCard
+                title="Ingresos"
+                value={`${(typeof stats.totalRevenue === 'number' && !isNaN(stats.totalRevenue) ? stats.totalRevenue : 0).toFixed(2)}`}
+                icon={TrendingUp}
+                color="#8B5CF6"
+              />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Pedidos Recientes</Text>
-          {orders.slice(0, 3).map((order) => (
-            <View key={order.id} style={styles.orderCard}>
-              <View style={styles.orderHeader}>
-                <Text style={styles.orderCustomer}>{order.customerName}</Text>
-                <View style={[
-                  styles.statusBadge,
-                  styles.statusBadgeBackground,
-                  { backgroundColor: getStatusColor(order.status) + '20' }
-                ]}>
-                  <Text style={[
-                    styles.statusText,
-                    { color: getStatusColor(order.status) }
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Acciones Rápidas</Text>
+            <View style={styles.actionsGrid}>
+              <QuickActionCard
+                title="Gestionar Pedidos"
+                description="Ver y actualizar pedidos"
+                icon={ShoppingCart}
+                color="#3B82F6"
+                onPress={navigateToOrders}
+              />
+              <QuickActionCard
+                title="Catálogo"
+                description="Administrar productos"
+                icon={Package}
+                color="#10B981"
+                onPress={navigateToCatalog}
+              />
+              <QuickActionCard
+                title="Colecciones"
+                description="Gestionar colecciones destacadas"
+                icon={BarChart3}
+                color="#8B5CF6"
+                onPress={navigateToCollections}
+              />
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Pedidos Recientes</Text>
+            {orders.slice(0, 3).map((order) => (
+              <View key={order.id} style={styles.orderCard}>
+                <View style={styles.orderHeader}>
+                  <Text style={styles.orderCustomer}>{order.customerName}</Text>
+                  <View style={[
+                    styles.statusBadge,
+                    styles.statusBadgeBackground,
+                    { backgroundColor: getStatusColor(order.status) + '20' }
                   ]}>
-                    {getStatusText(order.status)}
-                  </Text>
+                    <Text style={[
+                      styles.statusText,
+                      { color: getStatusColor(order.status) }
+                    ]}>
+                      {getStatusText(order.status)}
+                    </Text>
+                  </View>
                 </View>
+                <Text style={styles.orderTotal}>
+                  ${(typeof order.total === 'number' && !isNaN(order.total) ? order.total : 0).toFixed(2)}
+                </Text>
+                <Text style={styles.orderDate}>
+                  {new Date(order.createdAt).toLocaleDateString()}
+                </Text>
               </View>
-              <Text style={styles.orderTotal}>
-                ${(typeof order.total === 'number' && !isNaN(order.total) ? order.total : 0).toFixed(2)}
-              </Text>
-              <Text style={styles.orderDate}>
-                {new Date(order.createdAt).toLocaleDateString()}
-              </Text>
-            </View>
-          ))}
-          
-          {orders.length === 0 && (
-            <View style={styles.emptyState}>
-              <AlertCircle size={48} color={Colors.light.tabIconDefault} />
-              <Text style={styles.emptyStateText}>No hay pedidos aún</Text>
-            </View>
-          )}
-        </View>
+            ))}
 
-        <View style={styles.whatsappSection}>
-          <WhatsAppButton
-            message="Hola, soy el administrador de la tienda de papel tapiz"
-            style="secondary"
-            size="large"
-          />
-        </View>
-      </ScrollView>
+            {orders.length === 0 && (
+              <View style={styles.emptyState}>
+                <AlertCircle size={48} color={Colors.light.tabIconDefault} />
+                <Text style={styles.emptyStateText}>No hay pedidos aún</Text>
+              </View>
+            )}
+          </View>
+
+          <View style={styles.whatsappSection}>
+            <WhatsAppButton
+              message="Hola, soy el administrador de la tienda de papel tapiz"
+              style="secondary"
+              size="large"
+            />
+          </View>
+        </ScrollView>
       </View>
     </AdminGuard>
   );

@@ -16,7 +16,7 @@ import { useLocalSearchParams, router, Stack } from 'expo-router';
 import { ArrowLeft, Filter, X, Check, Search } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { WallpaperCard } from '@/components/WallpaperCard';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useFonts, PlayfairDisplay_600SemiBold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
@@ -29,7 +29,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 export default function CatalogScreen() {
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ style?: string; category?: string; search?: string }>();
-  const { wallpapers } = useWallpapers();
+  const wallpapers = useWallpapersStore((s) => s.wallpapers);
 
   // Local State
   const [activeStyle, setActiveStyle] = useState<string | null>(null);

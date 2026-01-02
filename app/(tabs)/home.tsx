@@ -18,8 +18,8 @@ import {
 import { ShoppingBag, Search, Menu } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useHistory } from '@/contexts/HistoryContext';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useHistoryStore } from '@/store/useHistoryStore';
 import { router } from 'expo-router';
 import { WallpaperCard } from '@/components/WallpaperCard';
 import { useFonts, PlayfairDisplay_400Regular, PlayfairDisplay_600SemiBold, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
@@ -28,16 +28,17 @@ import { getBaseName } from '@/utils/product';
 import { wallpapers as defaultWallpapers } from '@/constants/wallpapers';
 
 import { SeoHead } from '@/components/SeoHead';
-import { useCollections } from '@/contexts/CollectionsContext';
+import { useCollectionsStore } from '@/store/useCollectionsStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const { wallpapers, refetchWallpapers } = useWallpapers();
-  const { recentItems } = useHistory();
-  const { collections } = useCollections(); // Added this line based on the diff
+  const wallpapers = useWallpapersStore((s) => s.wallpapers);
+  const refetchWallpapers = useWallpapersStore((s) => s.refetchWallpapers);
+  const recentItems = useHistoryStore((s) => s.recentItems);
+  const collections = useCollectionsStore((s) => s.collections);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   // Prepare featured projects SEO image (using the first one if available)

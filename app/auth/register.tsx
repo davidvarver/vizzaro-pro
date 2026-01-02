@@ -14,12 +14,12 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Mail, Lock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function RegisterScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { register } = useAuth();
+  const register = useAuthStore((state) => state.register);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

@@ -14,8 +14,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Plus, Edit2, Trash2, Save, X, ChevronDown } from 'lucide-react-native';
-import { useCollections, Collection } from '@/contexts/CollectionsContext';
-import { useWallpapers } from '@/contexts/WallpapersContext';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useCollectionsStore, Collection } from '@/store/useCollectionsStore';
 import { getCategoriesFromWallpapers } from '@/constants/wallpapers';
 import Colors from '@/constants/colors';
 import AdminGuard from '@/components/AdminGuard';
@@ -25,8 +25,13 @@ export default function AdminCollections() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [showCategoryPicker, setShowCategoryPicker] = useState<boolean>(false);
-  const { collections, addCollection, updateCollection, deleteCollection } = useCollections();
-  const { wallpapers } = useWallpapers();
+
+  const collections = useCollectionsStore((s) => s.collections);
+  const addCollection = useCollectionsStore((s) => s.addCollection);
+  const updateCollection = useCollectionsStore((s) => s.updateCollection);
+  const deleteCollection = useCollectionsStore((s) => s.deleteCollection);
+
+  const wallpapers = useWallpapersStore((s) => s.wallpapers);
   const router = useRouter();
   const insets = useSafeAreaInsets();
 

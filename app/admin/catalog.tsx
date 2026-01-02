@@ -24,18 +24,24 @@ import {
   RotateCcw,
 } from 'lucide-react-native';
 import { Wallpaper } from '@/constants/wallpapers';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import Colors from '@/constants/colors';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
 import AdminGuard from '@/components/AdminGuard';
 
 export default function AdminCatalogScreen() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const { wallpapers: catalogItems, updateWallpaper, deleteWallpaper, isLoading, error: contextError, refetchWallpapers, resetCatalog } = useWallpapers();
-  const { token } = useAuth();
+  const catalogItems = useWallpapersStore((s) => s.wallpapers);
+  const updateWallpaper = useWallpapersStore((s) => s.updateWallpaper);
+  const deleteWallpaper = useWallpapersStore((s) => s.deleteWallpaper);
+  const isLoading = useWallpapersStore((s) => s.isLoading);
+  const contextError = useWallpapersStore((s) => s.error);
+  const refetchWallpapers = useWallpapersStore((s) => s.refetchWallpapers);
+  const resetCatalog = useWallpapersStore((s) => s.resetCatalog);
+  const token = useAuthStore((s) => s.token);
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -530,6 +536,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.light.text,
     marginBottom: 2,
+  },
+  productSku: {
+    fontSize: 10,
+    color: Colors.light.tabIconDefault,
+    marginBottom: 4,
   },
   productPrice: {
     fontSize: 15,

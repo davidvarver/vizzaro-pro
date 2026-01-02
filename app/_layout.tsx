@@ -7,13 +7,7 @@ import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
-import { CartProvider } from "@/contexts/CartContext";
-import { OrdersProvider } from "@/contexts/OrdersContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { WallpapersProvider } from "@/contexts/WallpapersContext";
-import { FavoritesProvider } from "@/contexts/FavoritesContext";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { CollectionsProvider } from "@/contexts/CollectionsContext";
 import { initSentry } from "../sentry.config";
 
 SplashScreen.preventAutoHideAsync();
@@ -40,39 +34,39 @@ function RootLayoutNav() {
   );
 }
 
-import { HistoryProvider } from '@/contexts/HistoryContext';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 
 // ... items
+
+import { useAuthStore } from '@/store/useAuthStore';
+import { useCartStore } from '@/store/useCartStore';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { useCollectionsStore } from '@/store/useCollectionsStore';
+import { useHistoryStore } from '@/store/useHistoryStore';
+
 
 export default function RootLayout() {
   useEffect(() => {
     initSentry();
     SplashScreen.hideAsync();
+    // Initialize Auth, Cart, Wallpapers & Favorites
+    useAuthStore.getState().initialize();
+    useCartStore.getState().initialize();
+    useWallpapersStore.getState().initialize();
+    useFavoritesStore.getState().initialize();
+    useCollectionsStore.getState().initialize();
+    useHistoryStore.getState().initialize();
   }, []);
 
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <WallpapersProvider>
-            <CollectionsProvider>
-              <FavoritesProvider>
-                <OrdersProvider>
-                  <CartProvider>
-                    <HistoryProvider>
-                      <GestureHandlerRootView style={styles.container}>
-                        <StatusBar style="dark" />
-                        <RootLayoutNav />
-                        <WhatsAppButton />
-                      </GestureHandlerRootView>
-                    </HistoryProvider>
-                  </CartProvider>
-                </OrdersProvider>
-              </FavoritesProvider>
-            </CollectionsProvider>
-          </WallpapersProvider>
-        </AuthProvider>
+        <GestureHandlerRootView style={styles.container}>
+          <StatusBar style="dark" />
+          <RootLayoutNav />
+          <WhatsAppButton />
+        </GestureHandlerRootView>
       </QueryClientProvider>
     </ErrorBoundary>
   );

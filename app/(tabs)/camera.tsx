@@ -7,9 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Camera, FlipHorizontal, Circle, ArrowLeft, ImageIcon, Repeat } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useFavorites } from '@/contexts/FavoritesContext';
-import { useCart } from '@/contexts/CartContext';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { useCartStore } from '@/store/useCartStore';
 
 
 export default function CameraScreen() {
@@ -20,12 +20,17 @@ export default function CameraScreen() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isCameraReady, setIsCameraReady] = useState<boolean>(false);
-  const { getWallpaperById, wallpapers, visualizerImage, setVisualizerImage } = useWallpapers();
+
+  const getWallpaperById = useWallpapersStore((s) => s.getWallpaperById);
+  const wallpapers = useWallpapersStore((s) => s.wallpapers);
+  const visualizerImage = useWallpapersStore((s) => s.visualizerImage);
+  const setVisualizerImage = useWallpapersStore((s) => s.setVisualizerImage);
+
   const [uploadedImage, setUploadedImage] = useState<string | null>(visualizerImage); // Init from context
   const [showLowLightWarning, setShowLowLightWarning] = useState<boolean>(false);
   const cameraRef = useRef<CameraView>(null);
-  const { getProjectById } = useFavorites();
-  const { cartItems } = useCart();
+  const getProjectById = useFavoritesStore((s) => s.getProjectById);
+  const cartItems = useCartStore((s) => s.cartItems);
 
   console.log('=== CAMERA SCREEN MOUNTED ===');
   console.log('Wallpaper ID from params:', wallpaperId);

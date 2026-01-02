@@ -161,6 +161,12 @@ async function main() {
 
                 const pattern = row['Pattern'];
 
+                // OPTIMIZATION: Skip if already exists
+                if (catalogMap.has(pattern)) {
+                    // console.log(`   ⏭️ Skipping ${pattern} (Already exists)`);
+                    continue;
+                }
+
                 // Add Reconnection Retry Wrapper
                 let retries = 3;
                 let imageExists = false;

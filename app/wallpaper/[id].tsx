@@ -12,7 +12,7 @@ import {
   Animated,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
-import { useFavorites } from '@/contexts/FavoritesContext';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
 import {
   ArrowLeft,
   Share2,
@@ -28,9 +28,9 @@ import {
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useCart } from '@/contexts/CartContext';
-import { useHistory } from '@/contexts/HistoryContext';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useCartStore } from '@/store/useCartStore';
+import { useHistoryStore } from '@/store/useHistoryStore';
 import { SeoHead } from '@/components/SeoHead';
 
 import { getBaseName } from '@/utils/product';
@@ -41,10 +41,17 @@ const IS_DESKTOP = SCREEN_WIDTH >= 1024;
 export default function WallpaperDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
-  const { getWallpaperById, wallpapers } = useWallpapers(); // Get all wallpapers to find variants
-  const { addToCart, cartItems } = useCart();
-  const { addToHistory } = useHistory();
-  const { favoriteProjects, addToFavorites, removeFromFavorites, addWallpaperToProject, removeWallpaperFromProject } = useFavorites();
+  const getWallpaperById = useWallpapersStore((s) => s.getWallpaperById);
+  const wallpapers = useWallpapersStore((s) => s.wallpapers); // Get all wallpapers to find variants
+  const addToCart = useCartStore((s) => s.addToCart);
+  const cartItems = useCartStore((s) => s.cartItems);
+  const addToHistory = useHistoryStore((s) => s.addToHistory);
+
+  const favoriteProjects = useFavoritesStore((s) => s.favoriteProjects);
+  const addToFavorites = useFavoritesStore((s) => s.addToFavorites);
+  const removeFromFavorites = useFavoritesStore((s) => s.removeFromFavorites);
+  const addWallpaperToProject = useFavoritesStore((s) => s.addWallpaperToProject);
+  const removeWallpaperFromProject = useFavoritesStore((s) => s.removeWallpaperFromProject);
 
   const wallpaper = getWallpaperById(id || '');
   const [quantity, setQuantity] = useState(1);

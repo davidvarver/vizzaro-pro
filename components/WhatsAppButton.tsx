@@ -4,9 +4,18 @@ import { MessageCircle } from 'lucide-react-native';
 
 const PHONE_NUMBER = '+17326646800';
 
-export const WhatsAppButton = () => {
+interface WhatsAppButtonProps {
+  message?: string;
+  style?: 'primary' | 'secondary';
+  size?: 'small' | 'medium' | 'large';
+}
+
+export const WhatsAppButton = ({
+  message = 'Hello, I am interested in Vizzaro wallpapers.',
+  style = 'primary',
+  size = 'medium'
+}: WhatsAppButtonProps) => {
   const handlePress = async () => {
-    const message = 'Hello, I am interested in Vizzaro wallpapers.';
     const url = `https://wa.me/${PHONE_NUMBER.replace('+', '')}?text=${encodeURIComponent(message)}`;
 
     try {
@@ -16,16 +25,27 @@ export const WhatsAppButton = () => {
     }
   };
 
+  const getButtonSize = () => {
+    switch (size) {
+      case 'small': return 40;
+      case 'large': return 70;
+      default: return 60;
+    }
+  };
+
+  const buttonSize = getButtonSize();
+  const iconSize = size === 'small' ? 20 : size === 'large' ? 36 : 32;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style === 'secondary' ? styles.secondaryContainer : null]}>
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, { width: buttonSize, height: buttonSize, borderRadius: buttonSize / 2 }]}
         onPress={handlePress}
         activeOpacity={0.8}
         accessibilityLabel="Contactar por WhatsApp"
         accessibilityRole="button"
       >
-        <MessageCircle color="white" size={32} fill="white" />
+        <MessageCircle color="white" size={iconSize} fill="white" />
       </TouchableOpacity>
     </View>
   );
@@ -53,5 +73,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
     elevation: 8,
+  },
+  secondaryContainer: {
+    position: 'relative',
+    bottom: 0,
+    right: 0,
+    marginTop: 10,
   },
 });

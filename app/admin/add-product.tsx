@@ -33,9 +33,9 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as XLSX from 'xlsx';
 import Colors from '@/constants/colors';
-import WhatsAppButton from '@/components/WhatsAppButton';
-import { useWallpapers } from '@/contexts/WallpapersContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { Wallpaper } from '@/constants/wallpapers';
 import AdminGuard from '@/components/AdminGuard';
 
@@ -56,8 +56,10 @@ interface ProductForm {
 }
 
 export default function AddProductScreen() {
-  const { addWallpaper, addMultipleWallpapers, replaceAllWallpapers } = useWallpapers();
-  const { token } = useAuth();
+  const addWallpaper = useWallpapersStore((s) => s.addWallpaper);
+  const addMultipleWallpapers = useWallpapersStore((s) => s.addMultipleWallpapers);
+  const replaceAllWallpapers = useWallpapersStore((s) => s.replaceAllWallpapers);
+  const token = useAuthStore((s) => s.token);
   const [form, setForm] = useState<ProductForm>({
     name: '',
     description: '',
@@ -1776,11 +1778,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 16,
   },
-  noImagesHint: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-    marginTop: 8,
-  },
+
   urlPreviewContainer: {
     marginTop: 8,
     marginBottom: 16,

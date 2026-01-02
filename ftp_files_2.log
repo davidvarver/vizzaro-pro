@@ -1,0 +1,5318 @@
+{
+  "generalInventory": [
+    {
+      "type": "d",
+      "name": "$82B520818B6A4134A47B5F2B463F51F8",
+      "size": 0,
+      "modifyTime": 1696114507000,
+      "accessTime": 1696114507000,
+      "rights": {
+        "user": "x",
+        "group": "x",
+        "other": "x"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "d--x--x--x   1 user     group           0 Sep 30  2023 $82B520818B6A4134A47B5F2B463F51F8"
+    },
+    {
+      "type": "-",
+      "name": "BHF_inventory.csv",
+      "size": 1260844,
+      "modifyTime": 1767350035000,
+      "accessTime": 1767350039000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group     1260844 Jan  2 10:33 BHF_inventory.csv"
+    },
+    {
+      "type": "-",
+      "name": "ODList-8-05-20.xls",
+      "size": 95744,
+      "modifyTime": 1596648862000,
+      "accessTime": 1696114503000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group       95744 Aug  5  2020 ODList-8-05-20.xls"
+    },
+    {
+      "type": "d",
+      "name": "orders",
+      "size": 0,
+      "modifyTime": 1648674846000,
+      "accessTime": 1696114508000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 30  2022 orders"
+    },
+    {
+      "type": "d",
+      "name": "tracking",
+      "size": 0,
+      "modifyTime": 1648674857000,
+      "accessTime": 1696114508000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 30  2022 tracking"
+    },
+    {
+      "type": "-",
+      "name": "York_Inventory.csv",
+      "size": 86224,
+      "modifyTime": 1767327546000,
+      "accessTime": 1767327546000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group       86224 Jan  2 04:19 York_Inventory.csv"
+    }
+  ],
+  "wallpaperBooks": [
+    {
+      "type": "-",
+      "name": ".DS_Store",
+      "size": 20484,
+      "modifyTime": 1696957205000,
+      "accessTime": 1696957205000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group       20484 Oct 10  2023 .DS_Store"
+    },
+    {
+      "type": "d",
+      "name": "1 All Wallpaper Images",
+      "size": 0,
+      "modifyTime": 1766074854000,
+      "accessTime": 1766076856000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 16:20 1 All Wallpaper Images"
+    },
+    {
+      "type": "d",
+      "name": "A-Street Select - 4021",
+      "size": 0,
+      "modifyTime": 1761271663000,
+      "accessTime": 1761271663000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 24 02:07 A-Street Select - 4021"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Bath - 2814",
+      "size": 0,
+      "modifyTime": 1766071745000,
+      "accessTime": 1766071745000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:29 Advantage Bath - 2814"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Beyond Textures - 4015",
+      "size": 0,
+      "modifyTime": 1766071794000,
+      "accessTime": 1766071794000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:29 Advantage Beyond Textures - 4015"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Concrete - 4096",
+      "size": 0,
+      "modifyTime": 1766072483000,
+      "accessTime": 1766072483000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:41 Advantage Concrete - 4096"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Cuba - 4044",
+      "size": 0,
+      "modifyTime": 1766072540000,
+      "accessTime": 1766072540000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:42 Advantage Cuba - 4044"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Curio - 4157",
+      "size": 0,
+      "modifyTime": 1766072583000,
+      "accessTime": 1766072583000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:43 Advantage Curio - 4157"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Deluxe - 2835",
+      "size": 0,
+      "modifyTime": 1766072635000,
+      "accessTime": 1766072635000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:43 Advantage Deluxe - 2835"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Fusion - 4125",
+      "size": 0,
+      "modifyTime": 1766072868000,
+      "accessTime": 1766072868000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 15:47 Advantage Fusion - 4125"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Geo & Textures - 4020",
+      "size": 0,
+      "modifyTime": 1721747051000,
+      "accessTime": 1721747051000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 23  2024 Advantage Geo & Textures - 4020"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Geo - 2809",
+      "size": 0,
+      "modifyTime": 1766076770000,
+      "accessTime": 1766076770000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 16:52 Advantage Geo - 2809"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Grasscloth Portfolio - 4018",
+      "size": 0,
+      "modifyTime": 1742312482000,
+      "accessTime": 1742312483000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 18  2025 Advantage Grasscloth Portfolio - 4018"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Kitchen & Bath 2 - 4168",
+      "size": 0,
+      "modifyTime": 1750186581000,
+      "accessTime": 1750186581000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 17  2025 Advantage Kitchen & Bath 2 - 4168"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Kitchen - 2813",
+      "size": 0,
+      "modifyTime": 1696116524000,
+      "accessTime": 1696116524000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Kitchen - 2813"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Metallic - 2834",
+      "size": 0,
+      "modifyTime": 1696116529000,
+      "accessTime": 1696116529000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Metallic - 2834"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Nature - 2811",
+      "size": 0,
+      "modifyTime": 1696116535000,
+      "accessTime": 1696116535000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Nature - 2811"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Neutral Black White - 2773",
+      "size": 0,
+      "modifyTime": 1696116541000,
+      "accessTime": 1696116541000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Neutral Black White - 2773"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Passport - 4041",
+      "size": 0,
+      "modifyTime": 1737833903000,
+      "accessTime": 1737833903000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jan 25  2025 Advantage Passport - 4041"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Perfect Plains - 4144",
+      "size": 0,
+      "modifyTime": 1730134859000,
+      "accessTime": 1730134859000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 28  2024 Advantage Perfect Plains - 4144"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Radiance - 4025",
+      "size": 0,
+      "modifyTime": 1696116552000,
+      "accessTime": 1696116552000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Radiance - 4025"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Shades of Grey - 2836",
+      "size": 0,
+      "modifyTime": 1701365732000,
+      "accessTime": 1701365732000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 30  2023 Advantage Shades of Grey - 2836"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Splash - 2980",
+      "size": 0,
+      "modifyTime": 1696116562000,
+      "accessTime": 1696116562000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Splash - 2980"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Stones and Woods - 2774",
+      "size": 0,
+      "modifyTime": 1696116574000,
+      "accessTime": 1696116574000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Stones and Woods - 2774"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Surfaces - 2812",
+      "size": 0,
+      "modifyTime": 1696116577000,
+      "accessTime": 1696116577000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Surfaces - 2812"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Titanium - 4082",
+      "size": 0,
+      "modifyTime": 1696116585000,
+      "accessTime": 1696116585000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Titanium - 4082"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Tradition - 2810",
+      "size": 0,
+      "modifyTime": 1706213212000,
+      "accessTime": 1706213212000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jan 25  2024 Advantage Tradition - 2810"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Westbury Forest - 4164",
+      "size": 0,
+      "modifyTime": 1723115482000,
+      "accessTime": 1723115482000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Aug  8  2024 Advantage Westbury Forest - 4164"
+    },
+    {
+      "type": "d",
+      "name": "Advantage Windsong - 4035",
+      "size": 0,
+      "modifyTime": 1696116597000,
+      "accessTime": 1696116597000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Advantage Windsong - 4035"
+    },
+    {
+      "type": "d",
+      "name": "Advantage World of Imagination - 4203",
+      "size": 0,
+      "modifyTime": 1764699121000,
+      "accessTime": 1764699121000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  2 18:12 Advantage World of Imagination - 4203"
+    },
+    {
+      "type": "d",
+      "name": "Aelfie - 4115",
+      "size": 0,
+      "modifyTime": 1696116610000,
+      "accessTime": 1696116610000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Aelfie - 4115"
+    },
+    {
+      "type": "d",
+      "name": "Alchemy - 2908",
+      "size": 0,
+      "modifyTime": 1700063040000,
+      "accessTime": 1700063041000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Alchemy - 2908"
+    },
+    {
+      "type": "d",
+      "name": "Alja Horvat - 4107",
+      "size": 0,
+      "modifyTime": 1696116620000,
+      "accessTime": 1696116620000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Alja Horvat - 4107"
+    },
+    {
+      "type": "d",
+      "name": "Ami - 2657",
+      "size": 0,
+      "modifyTime": 1700063055000,
+      "accessTime": 1700063055000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Ami - 2657"
+    },
+    {
+      "type": "d",
+      "name": "Anaglypta XII - 2740",
+      "size": 0,
+      "modifyTime": 1750446242000,
+      "accessTime": 1750446242000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 20  2025 Anaglypta XII - 2740"
+    },
+    {
+      "type": "d",
+      "name": "Annelie - 2999",
+      "size": 0,
+      "modifyTime": 1732211839000,
+      "accessTime": 1732211839000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Annelie - 2999"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Artifacts - F54",
+      "size": 0,
+      "modifyTime": 1765211736000,
+      "accessTime": 1765211736000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:35 Antonina Vella Artifacts - F54"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Boho Luxe - E38",
+      "size": 0,
+      "modifyTime": 1764873728000,
+      "accessTime": 1764873728000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:42 Antonina Vella Boho Luxe - E38"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Dazzling Dimensions II - E37",
+      "size": 0,
+      "modifyTime": 1764873579000,
+      "accessTime": 1764873579000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:39 Antonina Vella Dazzling Dimensions II - E37"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Deco - D12",
+      "size": 0,
+      "modifyTime": 1764870477000,
+      "accessTime": 1764870477000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:47 Antonina Vella Deco - D12"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Jardin - K11",
+      "size": 0,
+      "modifyTime": 1765221738000,
+      "accessTime": 1765221738000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 19:22 Antonina Vella Jardin - K11"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Layered Luxe - F91",
+      "size": 0,
+      "modifyTime": 1765220254000,
+      "accessTime": 1765220254000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:57 Antonina Vella Layered Luxe - F91"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Modern Metals - C37",
+      "size": 0,
+      "modifyTime": 1764870184000,
+      "accessTime": 1764870184000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:43 Antonina Vella Modern Metals - C37"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Modern Metals II - E89",
+      "size": 0,
+      "modifyTime": 1764876806000,
+      "accessTime": 1764876806000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:33 Antonina Vella Modern Metals II - E89"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Natural Opalescence - C67",
+      "size": 0,
+      "modifyTime": 1764870440000,
+      "accessTime": 1764870440000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:47 Antonina Vella Natural Opalescence - C67"
+    },
+    {
+      "type": "d",
+      "name": "Antonina Vella Opulent Accents - K15",
+      "size": 0,
+      "modifyTime": 1765222117000,
+      "accessTime": 1765222117000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 19:28 Antonina Vella Opulent Accents - K15"
+    },
+    {
+      "type": "d",
+      "name": "Architecture - 2896",
+      "size": 0,
+      "modifyTime": 1700063090000,
+      "accessTime": 1700063090000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Architecture - 2896"
+    },
+    {
+      "type": "d",
+      "name": "Archive Collection - 4069",
+      "size": 0,
+      "modifyTime": 1700063106000,
+      "accessTime": 1700063106000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Archive Collection - 4069"
+    },
+    {
+      "type": "d",
+      "name": "Arm of Casso - 4123",
+      "size": 0,
+      "modifyTime": 1696116659000,
+      "accessTime": 1696116659000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Arm of Casso - 4123"
+    },
+    {
+      "type": "d",
+      "name": "Arthouse - 4189",
+      "size": 0,
+      "modifyTime": 1765975975000,
+      "accessTime": 1765975975000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 17 12:52 Arthouse - 4189"
+    },
+    {
+      "type": "d",
+      "name": "Artisan Digest - E36",
+      "size": 0,
+      "modifyTime": 1764873481000,
+      "accessTime": 1764873481000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:38 Artisan Digest - E36"
+    },
+    {
+      "type": "d",
+      "name": "Artisan Studio - F68",
+      "size": 0,
+      "modifyTime": 1765218420000,
+      "accessTime": 1765218420000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:27 Artisan Studio - F68"
+    },
+    {
+      "type": "d",
+      "name": "Artistic Abstracts - F16",
+      "size": 0,
+      "modifyTime": 1765208243000,
+      "accessTime": 1765208243000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 15:37 Artistic Abstracts - F16"
+    },
+    {
+      "type": "d",
+      "name": "AS Creation - 4022",
+      "size": 0,
+      "modifyTime": 1743425430000,
+      "accessTime": 1743425430000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 31  2025 AS Creation - 4022"
+    },
+    {
+      "type": "d",
+      "name": "Aura - 4046",
+      "size": 0,
+      "modifyTime": 1730134961000,
+      "accessTime": 1730134961000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 28  2024 Aura - 4046"
+    },
+    {
+      "type": "d",
+      "name": "Aviva Stanoff PSWP - F42",
+      "size": 0,
+      "modifyTime": 1765210744000,
+      "accessTime": 1765210744000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:19 Aviva Stanoff PSWP - F42"
+    },
+    {
+      "type": "d",
+      "name": "Azmaara - 2671",
+      "size": 0,
+      "modifyTime": 1714059455000,
+      "accessTime": 1714059455000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr 25  2024 Azmaara - 2671"
+    },
+    {
+      "type": "d",
+      "name": "Bath Bath Bath IV - 2532",
+      "size": 0,
+      "modifyTime": 1700063975000,
+      "accessTime": 1700063975000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Bath Bath Bath IV - 2532"
+    },
+    {
+      "type": "d",
+      "name": "Beacon House Home - 2614",
+      "size": 0,
+      "modifyTime": 1714060947000,
+      "accessTime": 1714060947000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr 25  2024 Beacon House Home - 2614"
+    },
+    {
+      "type": "d",
+      "name": "Belgravia Decor - 4194",
+      "size": 0,
+      "modifyTime": 1743610941000,
+      "accessTime": 1743610941000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr  2  2025 Belgravia Decor - 4194"
+    },
+    {
+      "type": "d",
+      "name": "Bellissimo VI - 2768",
+      "size": 0,
+      "modifyTime": 1700063986000,
+      "accessTime": 1700063987000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Bellissimo VI - 2768"
+    },
+    {
+      "type": "d",
+      "name": "Birch & Sparrow -3118",
+      "size": 0,
+      "modifyTime": 1734637346000,
+      "accessTime": 1734637346000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 19  2024 Birch & Sparrow -3118"
+    },
+    {
+      "type": "d",
+      "name": "Black & Light - 2670",
+      "size": 0,
+      "modifyTime": 1700064059000,
+      "accessTime": 1700064059000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Black & Light - 2670"
+    },
+    {
+      "type": "d",
+      "name": "Black & White Resource Library - E40",
+      "size": 0,
+      "modifyTime": 1764874056000,
+      "accessTime": 1764874056000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:47 Black & White Resource Library - E40"
+    },
+    {
+      "type": "d",
+      "name": "Black Pepper Paperie - 4055",
+      "size": 0,
+      "modifyTime": 1696116702000,
+      "accessTime": 1696116702000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Black Pepper Paperie - 4055"
+    },
+    {
+      "type": "d",
+      "name": "Blooms - F01",
+      "size": 0,
+      "modifyTime": 1764877245000,
+      "accessTime": 1764877410000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:40 Blooms - F01"
+    },
+    {
+      "type": "d",
+      "name": "Blue Heron - 4071",
+      "size": 0,
+      "modifyTime": 1749659196000,
+      "accessTime": 1749659196000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 11  2025 Blue Heron - 4071"
+    },
+    {
+      "type": "d",
+      "name": "Bluebell - 2903",
+      "size": 0,
+      "modifyTime": 1700064071000,
+      "accessTime": 1700064072000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Bluebell - 2903"
+    },
+    {
+      "type": "d",
+      "name": "Bold - 2995",
+      "size": 0,
+      "modifyTime": 1747848345000,
+      "accessTime": 1747848346000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Bold - 2995"
+    },
+    {
+      "type": "d",
+      "name": "Borders - 3007",
+      "size": 0,
+      "modifyTime": 1696116727000,
+      "accessTime": 1696116727000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Borders - 3007"
+    },
+    {
+      "type": "d",
+      "name": "Botanica - 4143",
+      "size": 0,
+      "modifyTime": 1756830655000,
+      "accessTime": 1756830655000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep  2 16:30 Botanica - 4143"
+    },
+    {
+      "type": "d",
+      "name": "Brewster Essentials - 2734",
+      "size": 0,
+      "modifyTime": 1700064105000,
+      "accessTime": 1700064105000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Brewster Essentials - 2734"
+    },
+    {
+      "type": "d",
+      "name": "Brewster Kids - 2886",
+      "size": 0,
+      "modifyTime": 1700064127000,
+      "accessTime": 1700064127000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Brewster Kids - 2886"
+    },
+    {
+      "type": "d",
+      "name": "Briony - 4111",
+      "size": 0,
+      "modifyTime": 1732212069000,
+      "accessTime": 1732212069000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Briony - 4111"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson After 8 - E61",
+      "size": 0,
+      "modifyTime": 1764874206000,
+      "accessTime": 1764874206000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:50 Candice Olson After 8 - E61"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson Botanical Dreams - D24",
+      "size": 0,
+      "modifyTime": 1764870906000,
+      "accessTime": 1764870906000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:55 Candice Olson Botanical Dreams - D24"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson Casual Elegance - F05",
+      "size": 0,
+      "modifyTime": 1764877858000,
+      "accessTime": 1764877858000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:50 Candice Olson Casual Elegance - F05"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson Decadence II - F70",
+      "size": 0,
+      "modifyTime": 1765218645000,
+      "accessTime": 1765218645000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:30 Candice Olson Decadence II - F70"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson Modern Artisan II - D83",
+      "size": 0,
+      "modifyTime": 1764872058000,
+      "accessTime": 1764872058000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:14 Candice Olson Modern Artisan II - D83"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson Modern Nature II - E24",
+      "size": 0,
+      "modifyTime": 1764872852000,
+      "accessTime": 1764872852000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:27 Candice Olson Modern Nature II - E24"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson Natural Discovery - F41",
+      "size": 0,
+      "modifyTime": 1765210549000,
+      "accessTime": 1765210549000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:15 Candice Olson Natural Discovery - F41"
+    },
+    {
+      "type": "d",
+      "name": "Candice Olson Natural Splendor - B85",
+      "size": 0,
+      "modifyTime": 1764869886000,
+      "accessTime": 1764869886000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:38 Candice Olson Natural Splendor - B85"
+    },
+    {
+      "type": "d",
+      "name": "Canton Road - 2732",
+      "size": 0,
+      "modifyTime": 1742987473000,
+      "accessTime": 1742987473000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 26  2025 Canton Road - 2732"
+    },
+    {
+      "type": "d",
+      "name": "Carol Benson-Cobb Signature - E71",
+      "size": 0,
+      "modifyTime": 1764875480000,
+      "accessTime": 1764875480000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:11 Carol Benson-Cobb Signature - E71"
+    },
+    {
+      "type": "d",
+      "name": "Caroline et Bettina - 4087",
+      "size": 0,
+      "modifyTime": 1721240229000,
+      "accessTime": 1721240229000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 17  2024 Caroline et Bettina - 4087"
+    },
+    {
+      "type": "d",
+      "name": "Catalina - 2656",
+      "size": 0,
+      "modifyTime": 1696116759000,
+      "accessTime": 1696116759000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Catalina - 2656"
+    },
+    {
+      "type": "d",
+      "name": "Caviar - F86",
+      "size": 0,
+      "modifyTime": 1765219967000,
+      "accessTime": 1765219967000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:52 Caviar - F86"
+    },
+    {
+      "type": "d",
+      "name": "Celadon - 2793",
+      "size": 0,
+      "modifyTime": 1732193442000,
+      "accessTime": 1732193442000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Celadon - 2793"
+    },
+    {
+      "type": "d",
+      "name": "Chris Loves Julia - 4173",
+      "size": 0,
+      "modifyTime": 1760467351000,
+      "accessTime": 1760467351000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 14 18:42 Chris Loves Julia - 4173"
+    },
+    {
+      "type": "d",
+      "name": "Chris Loves Julia NuWallpaper - 4170",
+      "size": 0,
+      "modifyTime": 1721240611000,
+      "accessTime": 1721240611000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 17  2024 Chris Loves Julia NuWallpaper - 4170"
+    },
+    {
+      "type": "d",
+      "name": "Classic Wovens - E32",
+      "size": 0,
+      "modifyTime": 1764873424000,
+      "accessTime": 1764873424000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:37 Classic Wovens - E32"
+    },
+    {
+      "type": "d",
+      "name": "Club - 2382",
+      "size": 0,
+      "modifyTime": 1696116773000,
+      "accessTime": 1696116773000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Club - 2382"
+    },
+    {
+      "type": "d",
+      "name": "Concept - 4091",
+      "size": 0,
+      "modifyTime": 1732211944000,
+      "accessTime": 1732211944000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Concept - 4091"
+    },
+    {
+      "type": "d",
+      "name": "Conran's Plain Simple Useful - 2889",
+      "size": 0,
+      "modifyTime": 1696116780000,
+      "accessTime": 1696116780000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Conran's Plain Simple Useful - 2889"
+    },
+    {
+      "type": "d",
+      "name": "Cortina IV - 2830",
+      "size": 0,
+      "modifyTime": 1718722719000,
+      "accessTime": 1718722719000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 18  2024 Cortina IV - 2830"
+    },
+    {
+      "type": "d",
+      "name": "Countryside - 3092",
+      "size": 0,
+      "modifyTime": 1766066406000,
+      "accessTime": 1766066406000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 14:00 Countryside - 3092"
+    },
+    {
+      "type": "d",
+      "name": "CWV - 2880",
+      "size": 0,
+      "modifyTime": 1696116799000,
+      "accessTime": 1696116799000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 CWV - 2880"
+    },
+    {
+      "type": "d",
+      "name": "Damask Resource Library - E39",
+      "size": 0,
+      "modifyTime": 1764873895000,
+      "accessTime": 1764873895000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:44 Damask Resource Library - E39"
+    },
+    {
+      "type": "d",
+      "name": "Daydream - F90",
+      "size": 0,
+      "modifyTime": 1765220165000,
+      "accessTime": 1765220165000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:56 Daydream - F90"
+    },
+    {
+      "type": "d",
+      "name": "Daylight - 2973",
+      "size": 0,
+      "modifyTime": 1732211808000,
+      "accessTime": 1732211808000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Daylight - 2973"
+    },
+    {
+      "type": "d",
+      "name": "Della Seta - 2872",
+      "size": 0,
+      "modifyTime": 1696116816000,
+      "accessTime": 1696116816000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Della Seta - 2872"
+    },
+    {
+      "type": "d",
+      "name": "Delphine - 4072",
+      "size": 0,
+      "modifyTime": 1732212046000,
+      "accessTime": 1732212046000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Delphine - 4072"
+    },
+    {
+      "type": "d",
+      "name": "Design Department - 2952",
+      "size": 0,
+      "modifyTime": 1718625755000,
+      "accessTime": 1718625755000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 17  2024 Design Department - 2952"
+    },
+    {
+      "type": "-",
+      "name": "desktop.ini",
+      "size": 402,
+      "modifyTime": 1668794719000,
+      "accessTime": 1696114759000,
+      "rights": {
+        "user": "rw",
+        "group": "rw",
+        "other": "rw"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "-rw-rw-rw-   1 user     group         402 Nov 18  2022 desktop.ini"
+    },
+    {
+      "type": "d",
+      "name": "Dimensional Accents - 4140",
+      "size": 0,
+      "modifyTime": 1736163096000,
+      "accessTime": 1736163097000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jan  6  2025 Dimensional Accents - 4140"
+    },
+    {
+      "type": "d",
+      "name": "Dimensions - 2971",
+      "size": 0,
+      "modifyTime": 1732211403000,
+      "accessTime": 1732211403000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Dimensions - 2971"
+    },
+    {
+      "type": "d",
+      "name": "Disney Kids 4 - D37",
+      "size": 0,
+      "modifyTime": 1764871079000,
+      "accessTime": 1764871079000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:57 Disney Kids 4 - D37"
+    },
+    {
+      "type": "d",
+      "name": "Drew & Jonathan Home Fifth Edition - 4177",
+      "size": 0,
+      "modifyTime": 1761930255000,
+      "accessTime": 1761930255000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 31 17:04 Drew & Jonathan Home Fifth Edition - 4177"
+    },
+    {
+      "type": "d",
+      "name": "Drew & Jonathan Home IV - 4155",
+      "size": 0,
+      "modifyTime": 1763146363000,
+      "accessTime": 1763146363000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 14 18:52 Drew & Jonathan Home IV - 4155"
+    },
+    {
+      "type": "d",
+      "name": "Echo Lake Lodge - 3095",
+      "size": 0,
+      "modifyTime": 1696116871000,
+      "accessTime": 1696116871000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Echo Lake Lodge - 3095"
+    },
+    {
+      "type": "d",
+      "name": "Eclipse - 2716",
+      "size": 0,
+      "modifyTime": 1696116881000,
+      "accessTime": 1696116881000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Eclipse - 2716"
+    },
+    {
+      "type": "d",
+      "name": "Egypt Sherrod - 4139",
+      "size": 0,
+      "modifyTime": 1758713217000,
+      "accessTime": 1758713217000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 24 11:26 Egypt Sherrod - 4139"
+    },
+    {
+      "type": "d",
+      "name": "Eijffinger Web Only - 2989",
+      "size": 0,
+      "modifyTime": 1733924235000,
+      "accessTime": 1733924235000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 11  2024 Eijffinger Web Only - 2989"
+    },
+    {
+      "type": "d",
+      "name": "Empress - 2669",
+      "size": 0,
+      "modifyTime": 1696116895000,
+      "accessTime": 1696116895000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Empress - 2669"
+    },
+    {
+      "type": "d",
+      "name": "Equinox - 2861",
+      "size": 0,
+      "modifyTime": 1696116899000,
+      "accessTime": 1696116899000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Equinox - 2861"
+    },
+    {
+      "type": "d",
+      "name": "Erin Gates - 4063",
+      "size": 0,
+      "modifyTime": 1760981530000,
+      "accessTime": 1760981530000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 20 17:32 Erin Gates - 4063"
+    },
+    {
+      "type": "d",
+      "name": "Essence - 2735",
+      "size": 0,
+      "modifyTime": 1696116909000,
+      "accessTime": 1696116909000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Essence - 2735"
+    },
+    {
+      "type": "d",
+      "name": "Evolve - 2683",
+      "size": 0,
+      "modifyTime": 1696116912000,
+      "accessTime": 1696116912000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Evolve - 2683"
+    },
+    {
+      "type": "d",
+      "name": "Fable - 4060",
+      "size": 0,
+      "modifyTime": 1732212115000,
+      "accessTime": 1732212115000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Fable - 4060"
+    },
+    {
+      "type": "d",
+      "name": "Farmhouse - 3115",
+      "size": 0,
+      "modifyTime": 1723836821000,
+      "accessTime": 1723836821000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Aug 16  2024 Farmhouse - 3115"
+    },
+    {
+      "type": "d",
+      "name": "Fibers - 2829",
+      "size": 0,
+      "modifyTime": 1753980907000,
+      "accessTime": 1753980907000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 31 16:55 Fibers - 2829"
+    },
+    {
+      "type": "d",
+      "name": "Flora & Fauna - 3122",
+      "size": 0,
+      "modifyTime": 1696116946000,
+      "accessTime": 1696116946000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Flora & Fauna - 3122"
+    },
+    {
+      "type": "d",
+      "name": "Folklore - 2821",
+      "size": 0,
+      "modifyTime": 1698848548000,
+      "accessTime": 1698848548000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov  1  2023 Folklore - 2821"
+    },
+    {
+      "type": "d",
+      "name": "For Your Bath III - 2704",
+      "size": 0,
+      "modifyTime": 1696116957000,
+      "accessTime": 1696116957000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 For Your Bath III - 2704"
+    },
+    {
+      "type": "d",
+      "name": "Formations - F53",
+      "size": 0,
+      "modifyTime": 1765211730000,
+      "accessTime": 1765211730000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:35 Formations - F53"
+    },
+    {
+      "type": "d",
+      "name": "Fresh Start Kitchen & Bath - 2904",
+      "size": 0,
+      "modifyTime": 1767027249000,
+      "accessTime": 1767027249000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 29 16:54 Fresh Start Kitchen & Bath - 2904"
+    },
+    {
+      "type": "d",
+      "name": "Geometrie - 2697",
+      "size": 0,
+      "modifyTime": 1696116980000,
+      "accessTime": 1696116980000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Geometrie - 2697"
+    },
+    {
+      "type": "d",
+      "name": "Geonature - 2715",
+      "size": 0,
+      "modifyTime": 1747847632000,
+      "accessTime": 1747847632000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Geonature - 2715"
+    },
+    {
+      "type": "d",
+      "name": "Georgia - 4074",
+      "size": 0,
+      "modifyTime": 1722354112000,
+      "accessTime": 1722354112000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 30  2024 Georgia - 4074"
+    },
+    {
+      "type": "d",
+      "name": "GeoTex - 2765",
+      "size": 0,
+      "modifyTime": 1746119643000,
+      "accessTime": 1746119643000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May  1  2025 GeoTex - 2765"
+    },
+    {
+      "type": "d",
+      "name": "Glasshouse",
+      "size": 0,
+      "modifyTime": 1697025098000,
+      "accessTime": 1697025098000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 11  2023 Glasshouse"
+    },
+    {
+      "type": "d",
+      "name": "Glenyse Thompson",
+      "size": 0,
+      "modifyTime": 1696116996000,
+      "accessTime": 1696116996000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Glenyse Thompson"
+    },
+    {
+      "type": "d",
+      "name": "Grandmillenial - E29",
+      "size": 0,
+      "modifyTime": 1764872976000,
+      "accessTime": 1764872976000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:29 Grandmillenial - E29"
+    },
+    {
+      "type": "d",
+      "name": "Graphic World",
+      "size": 0,
+      "modifyTime": 1714575708000,
+      "accessTime": 1714575708000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May  1  2024 Graphic World"
+    },
+    {
+      "type": "d",
+      "name": "Grasscloth Resource Library - D86",
+      "size": 0,
+      "modifyTime": 1764872397000,
+      "accessTime": 1764872397000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:19 Grasscloth Resource Library - D86"
+    },
+    {
+      "type": "d",
+      "name": "Greenhouse - E69",
+      "size": 0,
+      "modifyTime": 1764874958000,
+      "accessTime": 1764874958000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:02 Greenhouse - E69"
+    },
+    {
+      "type": "d",
+      "name": "Grey Resource - 2976",
+      "size": 0,
+      "modifyTime": 1755286368000,
+      "accessTime": 1755286368000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Aug 15 19:32 Grey Resource - 2976"
+    },
+    {
+      "type": "d",
+      "name": "Haberdashery - 4147",
+      "size": 0,
+      "modifyTime": 1762272364000,
+      "accessTime": 1762272364000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov  4 16:06 Haberdashery - 4147"
+    },
+    {
+      "type": "d",
+      "name": "Habitat - 2782",
+      "size": 0,
+      "modifyTime": 1729084117000,
+      "accessTime": 1729084117000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 16  2024 Habitat - 2782"
+    },
+    {
+      "type": "d",
+      "name": "Hannah - 4066",
+      "size": 0,
+      "modifyTime": 1732212139000,
+      "accessTime": 1732212139000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Hannah - 4066"
+    },
+    {
+      "type": "d",
+      "name": "Happy - 4081",
+      "size": 0,
+      "modifyTime": 1732211897000,
+      "accessTime": 1732211897000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Happy - 4081"
+    },
+    {
+      "type": "d",
+      "name": "Harmony - 4146",
+      "size": 0,
+      "modifyTime": 1719494662000,
+      "accessTime": 1719494667000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 27  2024 Harmony - 4146"
+    },
+    {
+      "type": "d",
+      "name": "Hidden Treasures - 4153",
+      "size": 0,
+      "modifyTime": 1742900045000,
+      "accessTime": 1742900045000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 25  2025 Hidden Treasures - 4153"
+    },
+    {
+      "type": "d",
+      "name": "Hidden Treasures 2 - 4171",
+      "size": 0,
+      "modifyTime": 1742918796000,
+      "accessTime": 1742918796000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 25  2025 Hidden Treasures 2 - 4171"
+    },
+    {
+      "type": "d",
+      "name": "Hide & Seek - 3093",
+      "size": 0,
+      "modifyTime": 1696117037000,
+      "accessTime": 1696117037000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Hide & Seek - 3093"
+    },
+    {
+      "type": "d",
+      "name": "Homestead - 3123",
+      "size": 0,
+      "modifyTime": 1766066510000,
+      "accessTime": 1766066510000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 14:01 Homestead - 3123"
+    },
+    {
+      "type": "d",
+      "name": "Hoopla Walls",
+      "size": 0,
+      "modifyTime": 1761931589000,
+      "accessTime": 1761931589000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 31 17:26 Hoopla Walls"
+    },
+    {
+      "type": "d",
+      "name": "IBC Beige & Neutrals - E77",
+      "size": 0,
+      "modifyTime": 1764875805000,
+      "accessTime": 1764875805000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:16 IBC Beige & Neutrals - E77"
+    },
+    {
+      "type": "d",
+      "name": "IBC Black & White III - E82",
+      "size": 0,
+      "modifyTime": 1764876284000,
+      "accessTime": 1764876284000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:24 IBC Black & White III - E82"
+    },
+    {
+      "type": "d",
+      "name": "IBC Blues II - E79",
+      "size": 0,
+      "modifyTime": 1764876001000,
+      "accessTime": 1764876001000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:20 IBC Blues II - E79"
+    },
+    {
+      "type": "d",
+      "name": "IBC Earthy Tones - E80",
+      "size": 0,
+      "modifyTime": 1764876105000,
+      "accessTime": 1764876105000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:21 IBC Earthy Tones - E80"
+    },
+    {
+      "type": "d",
+      "name": "IBC Grasscloth II - E78",
+      "size": 0,
+      "modifyTime": 1764875910000,
+      "accessTime": 1764875910000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:18 IBC Grasscloth II - E78"
+    },
+    {
+      "type": "d",
+      "name": "IBC Shimmering Finishes - E81",
+      "size": 0,
+      "modifyTime": 1764876205000,
+      "accessTime": 1764876205000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:23 IBC Shimmering Finishes - E81"
+    },
+    {
+      "type": "d",
+      "name": "Ibiza - 2454",
+      "size": 0,
+      "modifyTime": 1696117046000,
+      "accessTime": 1696117046000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Ibiza - 2454"
+    },
+    {
+      "type": "d",
+      "name": "Imprint - 2949",
+      "size": 0,
+      "modifyTime": 1696117049000,
+      "accessTime": 1696117049000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Imprint - 2949"
+    },
+    {
+      "type": "d",
+      "name": "In Bloom - 2827",
+      "size": 0,
+      "modifyTime": 1696117055000,
+      "accessTime": 1696117055000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 In Bloom - 2827"
+    },
+    {
+      "type": "d",
+      "name": "Ingrid - 4080",
+      "size": 0,
+      "modifyTime": 1732212159000,
+      "accessTime": 1732212159000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Ingrid - 4080"
+    },
+    {
+      "type": "d",
+      "name": "Inlay - 2988",
+      "size": 0,
+      "modifyTime": 1719494649000,
+      "accessTime": 1719494649000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 27  2024 Inlay - 2988"
+    },
+    {
+      "type": "d",
+      "name": "Italian Silk - 4058",
+      "size": 0,
+      "modifyTime": 1732211444000,
+      "accessTime": 1732211446000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Italian Silk - 4058"
+    },
+    {
+      "type": "d",
+      "name": "Jade Grasscloth - 2622",
+      "size": 0,
+      "modifyTime": 1718992724000,
+      "accessTime": 1718992724000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 21  2024 Jade Grasscloth - 2622"
+    },
+    {
+      "type": "d",
+      "name": "Jen Hewett",
+      "size": 0,
+      "modifyTime": 1696117089000,
+      "accessTime": 1696117089000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Jen Hewett"
+    },
+    {
+      "type": "d",
+      "name": "Jiangsu Grasscloth - 2039",
+      "size": 0,
+      "modifyTime": 1728669048000,
+      "accessTime": 1728669048000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 11  2024 Jiangsu Grasscloth - 2039"
+    },
+    {
+      "type": "d",
+      "name": "Karen Revis",
+      "size": 0,
+      "modifyTime": 1696117097000,
+      "accessTime": 1696117097000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Karen Revis"
+    },
+    {
+      "type": "d",
+      "name": "Katie Hunt",
+      "size": 0,
+      "modifyTime": 1696117098000,
+      "accessTime": 1696117098000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Katie Hunt"
+    },
+    {
+      "type": "d",
+      "name": "Kindred - 3119",
+      "size": 0,
+      "modifyTime": 1766066472000,
+      "accessTime": 1766066472000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 18 14:01 Kindred - 3119"
+    },
+    {
+      "type": "d",
+      "name": "Kinfolk - 3125",
+      "size": 0,
+      "modifyTime": 1732549867000,
+      "accessTime": 1732549867000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 25  2024 Kinfolk - 3125"
+    },
+    {
+      "type": "d",
+      "name": "Kismet - 1014",
+      "size": 0,
+      "modifyTime": 1696117116000,
+      "accessTime": 1696117116000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Kismet - 1014"
+    },
+    {
+      "type": "d",
+      "name": "Kitchen & Bath - 4191",
+      "size": 0,
+      "modifyTime": 1766529430000,
+      "accessTime": 1766529430000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 23 22:37 Kitchen & Bath - 4191"
+    },
+    {
+      "type": "d",
+      "name": "Kitchen & Bath Essentials - 2766",
+      "size": 0,
+      "modifyTime": 1696117122000,
+      "accessTime": 1696117122000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Kitchen & Bath Essentials - 2766"
+    },
+    {
+      "type": "d",
+      "name": "Kitchen & Bath Resources II",
+      "size": 0,
+      "modifyTime": 1696117132000,
+      "accessTime": 1696117132000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Kitchen & Bath Resources II"
+    },
+    {
+      "type": "d",
+      "name": "Kitchen, Bed, & Bath IV - 2686",
+      "size": 0,
+      "modifyTime": 1696117138000,
+      "accessTime": 1696117138000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Kitchen, Bed, & Bath IV - 2686"
+    },
+    {
+      "type": "d",
+      "name": "Komar Colours",
+      "size": 0,
+      "modifyTime": 1696117147000,
+      "accessTime": 1696117147000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Komar Colours"
+    },
+    {
+      "type": "d",
+      "name": "KT Merz",
+      "size": 0,
+      "modifyTime": 1696117157000,
+      "accessTime": 1696117157000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 KT Merz"
+    },
+    {
+      "type": "d",
+      "name": "Leah Duncan",
+      "size": 0,
+      "modifyTime": 1696117159000,
+      "accessTime": 1696117159000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Leah Duncan"
+    },
+    {
+      "type": "d",
+      "name": "Lele Sadoughi",
+      "size": 0,
+      "modifyTime": 1696117161000,
+      "accessTime": 1696117161000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Lele Sadoughi"
+    },
+    {
+      "type": "d",
+      "name": "Lemieux et Cie Signature - F18",
+      "size": 0,
+      "modifyTime": 1765209050000,
+      "accessTime": 1765209050000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 15:50 Lemieux et Cie Signature - F18"
+    },
+    {
+      "type": "d",
+      "name": "Lili Whitt Whitt",
+      "size": 0,
+      "modifyTime": 1759165011000,
+      "accessTime": 1759165011000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 29 16:56 Lili Whitt Whitt"
+    },
+    {
+      "type": "d",
+      "name": "Lina - 2932",
+      "size": 0,
+      "modifyTime": 1702998591000,
+      "accessTime": 1702998591000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 19  2023 Lina - 2932"
+    },
+    {
+      "type": "d",
+      "name": "Lino - 2818",
+      "size": 0,
+      "modifyTime": 1696117168000,
+      "accessTime": 1696117168000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Lino - 2818"
+    },
+    {
+      "type": "d",
+      "name": "Loom - 2972",
+      "size": 0,
+      "modifyTime": 1742393199000,
+      "accessTime": 1742393200000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 19  2025 Loom - 2972"
+    },
+    {
+      "type": "d",
+      "name": "Lounge Luxe - 2825",
+      "size": 0,
+      "modifyTime": 1696117185000,
+      "accessTime": 1696117185000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Lounge Luxe - 2825"
+    },
+    {
+      "type": "d",
+      "name": "LoveShackFancy",
+      "size": 0,
+      "modifyTime": 1765221297000,
+      "accessTime": 1765221297000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 19:14 LoveShackFancy"
+    },
+    {
+      "type": "d",
+      "name": "LoveShackFancy NuWallpaper",
+      "size": 0,
+      "modifyTime": 1765221296000,
+      "accessTime": 1765221296000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 19:14 LoveShackFancy NuWallpaper"
+    },
+    {
+      "type": "d",
+      "name": "Lumina - 4105",
+      "size": 0,
+      "modifyTime": 1700139797000,
+      "accessTime": 1700139797000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 16  2023 Lumina - 4105"
+    },
+    {
+      "type": "d",
+      "name": "Lustre - 4019",
+      "size": 0,
+      "modifyTime": 1732211380000,
+      "accessTime": 1732211380000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Lustre - 4019"
+    },
+    {
+      "type": "d",
+      "name": "Magnolia Home - B65",
+      "size": 0,
+      "modifyTime": 1764869695000,
+      "accessTime": 1764869695000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:34 Magnolia Home - B65"
+    },
+    {
+      "type": "d",
+      "name": "Magnolia Home 2 - C17",
+      "size": 0,
+      "modifyTime": 1764869961000,
+      "accessTime": 1764869961000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:39 Magnolia Home 2 - C17"
+    },
+    {
+      "type": "d",
+      "name": "Magnolia Home 4 - F14",
+      "size": 0,
+      "modifyTime": 1765208059000,
+      "accessTime": 1765208059000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 15:34 Magnolia Home 4 - F14"
+    },
+    {
+      "type": "d",
+      "name": "Magnolia Home Artful Prints & Patterns - C59",
+      "size": 0,
+      "modifyTime": 1764870217000,
+      "accessTime": 1764870217000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:43 Magnolia Home Artful Prints & Patterns - C59"
+    },
+    {
+      "type": "d",
+      "name": "Magnolia Home High Performance - F94",
+      "size": 0,
+      "modifyTime": 1765221465000,
+      "accessTime": 1765221465000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 19:17 Magnolia Home High Performance - F94"
+    },
+    {
+      "type": "d",
+      "name": "Manhattan Club - 3114",
+      "size": 0,
+      "modifyTime": 1696117222000,
+      "accessTime": 1696117222000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Manhattan Club - 3114"
+    },
+    {
+      "type": "d",
+      "name": "Marburg",
+      "size": 0,
+      "modifyTime": 1696117228000,
+      "accessTime": 1696117228000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Marburg"
+    },
+    {
+      "type": "d",
+      "name": "Marimekko",
+      "size": 0,
+      "modifyTime": 1696117233000,
+      "accessTime": 1696117233000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Marimekko"
+    },
+    {
+      "type": "d",
+      "name": "Mediterranean - E65",
+      "size": 0,
+      "modifyTime": 1767025413000,
+      "accessTime": 1767025413000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 29 16:23 Mediterranean - E65"
+    },
+    {
+      "type": "d",
+      "name": "Medley",
+      "size": 0,
+      "modifyTime": 1760527380000,
+      "accessTime": 1760527380000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 15 11:23 Medley"
+    },
+    {
+      "type": "d",
+      "name": "Megan Carter NuWallpaper",
+      "size": 0,
+      "modifyTime": 1739219996000,
+      "accessTime": 1739219996000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Feb 10  2025 Megan Carter NuWallpaper"
+    },
+    {
+      "type": "d",
+      "name": "Midbec",
+      "size": 0,
+      "modifyTime": 1700077928000,
+      "accessTime": 1700077928000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Midbec"
+    },
+    {
+      "type": "d",
+      "name": "Middleton - 4120",
+      "size": 0,
+      "modifyTime": 1703793211000,
+      "accessTime": 1703793211000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 28  2023 Middleton - 4120"
+    },
+    {
+      "type": "d",
+      "name": "Mirabelle - 2702",
+      "size": 0,
+      "modifyTime": 1696117289000,
+      "accessTime": 1696117289000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Mirabelle - 2702"
+    },
+    {
+      "type": "d",
+      "name": "Missoni Home 4 - E99",
+      "size": 0,
+      "modifyTime": 1764877056000,
+      "accessTime": 1764877056000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:37 Missoni Home 4 - E99"
+    },
+    {
+      "type": "d",
+      "name": "Missoni Home 5 - F73",
+      "size": 0,
+      "modifyTime": 1765219133000,
+      "accessTime": 1765219133000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:38 Missoni Home 5 - F73"
+    },
+    {
+      "type": "d",
+      "name": "Missoni PSWP - F87",
+      "size": 0,
+      "modifyTime": 1765220114000,
+      "accessTime": 1765220114000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:55 Missoni PSWP - F87"
+    },
+    {
+      "type": "d",
+      "name": "Mistral - 2764",
+      "size": 0,
+      "modifyTime": 1730134964000,
+      "accessTime": 1730134964000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 28  2024 Mistral - 2764"
+    },
+    {
+      "type": "d",
+      "name": "Montecito - F56",
+      "size": 0,
+      "modifyTime": 1765217818000,
+      "accessTime": 1765217818000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:16 Montecito - F56"
+    },
+    {
+      "type": "d",
+      "name": "Moonlight - 2763",
+      "size": 0,
+      "modifyTime": 1696117304000,
+      "accessTime": 1696117304000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Moonlight - 2763"
+    },
+    {
+      "type": "d",
+      "name": "Mural Resource Library - D23",
+      "size": 0,
+      "modifyTime": 1764870841000,
+      "accessTime": 1764870841000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:54 Mural Resource Library - D23"
+    },
+    {
+      "type": "d",
+      "name": "Museum - 4033",
+      "size": 0,
+      "modifyTime": 1747847259000,
+      "accessTime": 1747847259000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Museum - 4033"
+    },
+    {
+      "type": "d",
+      "name": "Mylos - 4121",
+      "size": 0,
+      "modifyTime": 1744224790000,
+      "accessTime": 1744224791000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr  9  2025 Mylos - 4121"
+    },
+    {
+      "type": "d",
+      "name": "Nabela Noor Home",
+      "size": 0,
+      "modifyTime": 1759324464000,
+      "accessTime": 1759324464000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct  1 13:14 Nabela Noor Home"
+    },
+    {
+      "type": "d",
+      "name": "Natural Digest - E88",
+      "size": 0,
+      "modifyTime": 1764876391000,
+      "accessTime": 1764876391000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:26 Natural Digest - E88"
+    },
+    {
+      "type": "d",
+      "name": "Natural Palette Resource - F93",
+      "size": 0,
+      "modifyTime": 1765220979000,
+      "accessTime": 1765220979000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 19:09 Natural Palette Resource - F93"
+    },
+    {
+      "type": "d",
+      "name": "New Origins - F06",
+      "size": 0,
+      "modifyTime": 1764878093000,
+      "accessTime": 1764878093000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:54 New Origins - F06"
+    },
+    {
+      "type": "d",
+      "name": "Newport - 2977",
+      "size": 0,
+      "modifyTime": 1700064233000,
+      "accessTime": 1700064233000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Newport - 2977"
+    },
+    {
+      "type": "d",
+      "name": "Nikki Chu Premium Peel + Stick - F99",
+      "size": 0,
+      "modifyTime": 1765221695000,
+      "accessTime": 1765221695000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 19:21 Nikki Chu Premium Peel + Stick - F99"
+    },
+    {
+      "type": "d",
+      "name": "NuWallpaper",
+      "size": 0,
+      "modifyTime": 1759326883000,
+      "accessTime": 1759326883000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct  1 13:54 NuWallpaper"
+    },
+    {
+      "type": "d",
+      "name": "Oak & Moss - 4169",
+      "size": 0,
+      "modifyTime": 1761930324000,
+      "accessTime": 1761930324000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 31 17:05 Oak & Moss - 4169"
+    },
+    {
+      "type": "d",
+      "name": "Origin Murals",
+      "size": 0,
+      "modifyTime": 1746808048000,
+      "accessTime": 1746808049000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May  9  2025 Origin Murals"
+    },
+    {
+      "type": "d",
+      "name": "Oxford - 2604",
+      "size": 0,
+      "modifyTime": 1696117384000,
+      "accessTime": 1696117384000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Oxford - 2604"
+    },
+    {
+      "type": "d",
+      "name": "P+S Mirth Studios - F29",
+      "size": 0,
+      "modifyTime": 1765210031000,
+      "accessTime": 1765210031000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:07 P+S Mirth Studios - F29"
+    },
+    {
+      "type": "d",
+      "name": "P+S Natural Grasscloth - F66",
+      "size": 0,
+      "modifyTime": 1765218388000,
+      "accessTime": 1765218388000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:26 P+S Natural Grasscloth - F66"
+    },
+    {
+      "type": "d",
+      "name": "P+S Rifle Paper 3 - F27",
+      "size": 0,
+      "modifyTime": 1765209693000,
+      "accessTime": 1765209693000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:01 P+S Rifle Paper 3 - F27"
+    },
+    {
+      "type": "d",
+      "name": "Pacifica - 2969",
+      "size": 0,
+      "modifyTime": 1696117384000,
+      "accessTime": 1696117384000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Pacifica - 2969"
+    },
+    {
+      "type": "d",
+      "name": "Paintable Solutions IV - 2523",
+      "size": 0,
+      "modifyTime": 1696117392000,
+      "accessTime": 1696117392000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Paintable Solutions IV - 2523"
+    },
+    {
+      "type": "d",
+      "name": "Paintable Solutions V - 2780",
+      "size": 0,
+      "modifyTime": 1696117394000,
+      "accessTime": 1696117394000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Paintable Solutions V - 2780"
+    },
+    {
+      "type": "d",
+      "name": "PaintWorks - 4000",
+      "size": 0,
+      "modifyTime": 1749214116000,
+      "accessTime": 1749214116000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun  6  2025 PaintWorks - 4000"
+    },
+    {
+      "type": "d",
+      "name": "Palm Springs - 2754",
+      "size": 0,
+      "modifyTime": 1736425005000,
+      "accessTime": 1736425005000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jan  9  2025 Palm Springs - 2754"
+    },
+    {
+      "type": "d",
+      "name": "Perennial - 2901",
+      "size": 0,
+      "modifyTime": 1712083086000,
+      "accessTime": 1712083086000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr  2  2024 Perennial - 2901"
+    },
+    {
+      "type": "d",
+      "name": "Piazza",
+      "size": 0,
+      "modifyTime": 1696117412000,
+      "accessTime": 1696117412000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Piazza"
+    },
+    {
+      "type": "d",
+      "name": "Pip & Lo",
+      "size": 0,
+      "modifyTime": 1696117416000,
+      "accessTime": 1696117416000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Pip & Lo"
+    },
+    {
+      "type": "d",
+      "name": "Pip III - 2676",
+      "size": 0,
+      "modifyTime": 1754052969000,
+      "accessTime": 1754052969000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Aug  1 12:56 Pip III - 2676"
+    },
+    {
+      "type": "d",
+      "name": "Pip Studio - 2806",
+      "size": 0,
+      "modifyTime": 1696117424000,
+      "accessTime": 1696117424000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Pip Studio - 2806"
+    },
+    {
+      "type": "d",
+      "name": "Pip Studio V - 4028",
+      "size": 0,
+      "modifyTime": 1700064317000,
+      "accessTime": 1700064317000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 15  2023 Pip Studio V - 4028"
+    },
+    {
+      "type": "d",
+      "name": "Polished - 2927",
+      "size": 0,
+      "modifyTime": 1696117432000,
+      "accessTime": 1696117432000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Polished - 2927"
+    },
+    {
+      "type": "d",
+      "name": "Portofino - 4193",
+      "size": 0,
+      "modifyTime": 1765211809000,
+      "accessTime": 1765211810000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:36 Portofino - 4193"
+    },
+    {
+      "type": "d",
+      "name": "Posy - 4037",
+      "size": 0,
+      "modifyTime": 1732212093000,
+      "accessTime": 1732212093000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Posy - 4037"
+    },
+    {
+      "type": "d",
+      "name": "PrintFresh",
+      "size": 0,
+      "modifyTime": 1696117450000,
+      "accessTime": 1696117450000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 PrintFresh"
+    },
+    {
+      "type": "d",
+      "name": "PrintWorks - 4148",
+      "size": 0,
+      "modifyTime": 1744810643000,
+      "accessTime": 1744810643000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr 16  2025 PrintWorks - 4148"
+    },
+    {
+      "type": "d",
+      "name": "Rachel Zoe",
+      "size": 0,
+      "modifyTime": 1707932651000,
+      "accessTime": 1707932651000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Feb 14  2024 Rachel Zoe"
+    },
+    {
+      "type": "d",
+      "name": "Rasch",
+      "size": 0,
+      "modifyTime": 1752496635000,
+      "accessTime": 1752496635000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 14 12:37 Rasch"
+    },
+    {
+      "type": "d",
+      "name": "Reclaimed - 2701",
+      "size": 0,
+      "modifyTime": 1747847016000,
+      "accessTime": 1747847016000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Reclaimed - 2701"
+    },
+    {
+      "type": "d",
+      "name": "Resource - 2756",
+      "size": 0,
+      "modifyTime": 1747847802000,
+      "accessTime": 1747847802000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Resource - 2756"
+    },
+    {
+      "type": "d",
+      "name": "Restored - 2540",
+      "size": 0,
+      "modifyTime": 1696117491000,
+      "accessTime": 1696117491000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Restored - 2540"
+    },
+    {
+      "type": "d",
+      "name": "Revival - 2970",
+      "size": 0,
+      "modifyTime": 1732211632000,
+      "accessTime": 1732211632000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Revival - 2970"
+    },
+    {
+      "type": "d",
+      "name": "Rice - 2713",
+      "size": 0,
+      "modifyTime": 1747848008000,
+      "accessTime": 1747848008000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Rice - 2713"
+    },
+    {
+      "type": "d",
+      "name": "Rifle Paper 3rd Edition - F28",
+      "size": 0,
+      "modifyTime": 1765209757000,
+      "accessTime": 1765209757000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:02 Rifle Paper 3rd Edition - F28"
+    },
+    {
+      "type": "d",
+      "name": "Rifle Paper Co - D13",
+      "size": 0,
+      "modifyTime": 1764870598000,
+      "accessTime": 1764870598000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:49 Rifle Paper Co - D13"
+    },
+    {
+      "type": "d",
+      "name": "Rifle Paper Co 2 - E63",
+      "size": 0,
+      "modifyTime": 1764874347000,
+      "accessTime": 1764874347000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:52 Rifle Paper Co 2 - E63"
+    },
+    {
+      "type": "d",
+      "name": "Rifle Paper Co P&S 4th Edition - F84",
+      "size": 0,
+      "modifyTime": 1765219499000,
+      "accessTime": 1765219499000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:44 Rifle Paper Co P&S 4th Edition - F84"
+    },
+    {
+      "type": "d",
+      "name": "Rifle Paper Co P&S 5th Edition - F85",
+      "size": 0,
+      "modifyTime": 1765217745000,
+      "accessTime": 1765217745000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:15 Rifle Paper Co P&S 5th Edition - F85"
+    },
+    {
+      "type": "d",
+      "name": "Riva - 2909",
+      "size": 0,
+      "modifyTime": 1696117508000,
+      "accessTime": 1696117508000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Riva - 2909"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding 24 Karat - D81",
+      "size": 0,
+      "modifyTime": 1764871732000,
+      "accessTime": 1764871732000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:08 Ronald Redding 24 Karat - D81"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Arts & Crafts - E64",
+      "size": 0,
+      "modifyTime": 1764874560000,
+      "accessTime": 1764874560000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:56 Ronald Redding Arts & Crafts - E64"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Astoria - F57",
+      "size": 0,
+      "modifyTime": 1765218018000,
+      "accessTime": 1765218018000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:20 Ronald Redding Astoria - F57"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Classics - F48",
+      "size": 0,
+      "modifyTime": 1765207857000,
+      "accessTime": 1765207857000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 15:30 Ronald Redding Classics - F48"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Designer Sisals 100 Hues - F47",
+      "size": 0,
+      "modifyTime": 1765210793000,
+      "accessTime": 1765210793000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:19 Ronald Redding Designer Sisals 100 Hues - F47"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Grasscloth & Natural Resource - F19",
+      "size": 0,
+      "modifyTime": 1765209206000,
+      "accessTime": 1765209206000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 15:53 Ronald Redding Grasscloth & Natural Resource - F19"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Grasscloth Resource - B23",
+      "size": 0,
+      "modifyTime": 1764869638000,
+      "accessTime": 1764869638000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:33 Ronald Redding Grasscloth Resource - B23"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Industrial Interiors III - F04",
+      "size": 0,
+      "modifyTime": 1764877602000,
+      "accessTime": 1764877602000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 19:46 Ronald Redding Industrial Interiors III - F04"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Tea Garden Second Edition - F58",
+      "size": 0,
+      "modifyTime": 1765218191000,
+      "accessTime": 1765218191000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:23 Ronald Redding Tea Garden Second Edition - F58"
+    },
+    {
+      "type": "d",
+      "name": "Ronald Redding Traveler - D77",
+      "size": 0,
+      "modifyTime": 1764871568000,
+      "accessTime": 1764871568000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:06 Ronald Redding Traveler - D77"
+    },
+    {
+      "type": "d",
+      "name": "RuPaul",
+      "size": 0,
+      "modifyTime": 1707933652000,
+      "accessTime": 1707933652000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Feb 14  2024 RuPaul"
+    },
+    {
+      "type": "d",
+      "name": "Sage Hill - 3112",
+      "size": 0,
+      "modifyTime": 1696117514000,
+      "accessTime": 1696117514000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Sage Hill - 3112"
+    },
+    {
+      "type": "d",
+      "name": "Sandudd",
+      "size": 0,
+      "modifyTime": 1696117522000,
+      "accessTime": 1696117522000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Sandudd"
+    },
+    {
+      "type": "d",
+      "name": "Sanibel - 3120",
+      "size": 0,
+      "modifyTime": 1756894004000,
+      "accessTime": 1756894004000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep  3 10:06 Sanibel - 3120"
+    },
+    {
+      "type": "d",
+      "name": "Sarah+Ruby",
+      "size": 0,
+      "modifyTime": 1696117532000,
+      "accessTime": 1696117532000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Sarah+Ruby"
+    },
+    {
+      "type": "d",
+      "name": "Savanna - 4201",
+      "size": 0,
+      "modifyTime": 1765470695000,
+      "accessTime": 1765470695000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 11 16:31 Savanna - 4201"
+    },
+    {
+      "type": "d",
+      "name": "Savor",
+      "size": 0,
+      "modifyTime": 1696117534000,
+      "accessTime": 1696117534000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Savor"
+    },
+    {
+      "type": "d",
+      "name": "Scalamandre",
+      "size": 0,
+      "modifyTime": 1696117537000,
+      "accessTime": 1696117537000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Scalamandre"
+    },
+    {
+      "type": "d",
+      "name": "Scandinavian Designers II - 2784",
+      "size": 0,
+      "modifyTime": 1696117547000,
+      "accessTime": 1696117547000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Scandinavian Designers II - 2784"
+    },
+    {
+      "type": "d",
+      "name": "Scott Living - 2964",
+      "size": 0,
+      "modifyTime": 1753187557000,
+      "accessTime": 1753187557000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 22 12:32 Scott Living - 2964"
+    },
+    {
+      "type": "d",
+      "name": "Scott Living II - 2975",
+      "size": 0,
+      "modifyTime": 1753187576000,
+      "accessTime": 1753187576000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 22 12:32 Scott Living II - 2975"
+    },
+    {
+      "type": "d",
+      "name": "Scott Living III - 4034",
+      "size": 0,
+      "modifyTime": 1758206245000,
+      "accessTime": 1758206245000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 18 14:37 Scott Living III - 4034"
+    },
+    {
+      "type": "d",
+      "name": "Scott Living NuWallpaper",
+      "size": 0,
+      "modifyTime": 1754640010000,
+      "accessTime": 1754640010000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Aug  8 08:00 Scott Living NuWallpaper"
+    },
+    {
+      "type": "d",
+      "name": "Sea Salt - 4172",
+      "size": 0,
+      "modifyTime": 1759155482000,
+      "accessTime": 1759155482000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 29 14:18 Sea Salt - 4172"
+    },
+    {
+      "type": "d",
+      "name": "Seaside Living - 3113",
+      "size": 0,
+      "modifyTime": 1696117575000,
+      "accessTime": 1696117575000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Seaside Living - 3113"
+    },
+    {
+      "type": "d",
+      "name": "Selvaggia - 2871",
+      "size": 0,
+      "modifyTime": 1696117575000,
+      "accessTime": 1696117575000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Selvaggia - 2871"
+    },
+    {
+      "type": "d",
+      "name": "Seychelles - 4014",
+      "size": 0,
+      "modifyTime": 1732212012000,
+      "accessTime": 1732212012000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Seychelles - 4014"
+    },
+    {
+      "type": "d",
+      "name": "Shangri La - 2355",
+      "size": 0,
+      "modifyTime": 1718992905000,
+      "accessTime": 1718992905000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 21  2024 Shangri La - 2355"
+    },
+    {
+      "type": "d",
+      "name": "Signature by Sarah Richardson - 2785",
+      "size": 0,
+      "modifyTime": 1696117594000,
+      "accessTime": 1696117594000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Signature by Sarah Richardson - 2785"
+    },
+    {
+      "type": "d",
+      "name": "Signature Textures - D82",
+      "size": 0,
+      "modifyTime": 1764871922000,
+      "accessTime": 1764871922000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:12 Signature Textures - D82"
+    },
+    {
+      "type": "d",
+      "name": "Signature Textures 3 - F81",
+      "size": 0,
+      "modifyTime": 1765219292000,
+      "accessTime": 1765219292000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:41 Signature Textures 3 - F81"
+    },
+    {
+      "type": "d",
+      "name": "Signature Textures Resource Library 2 - F37",
+      "size": 0,
+      "modifyTime": 1765210293000,
+      "accessTime": 1765210293000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:11 Signature Textures Resource Library 2 - F37"
+    },
+    {
+      "type": "d",
+      "name": "Simple Space II - 2535",
+      "size": 0,
+      "modifyTime": 1696117605000,
+      "accessTime": 1696117605000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Simple Space II - 2535"
+    },
+    {
+      "type": "d",
+      "name": "Simply Candice PSWP - F77",
+      "size": 0,
+      "modifyTime": 1765219243000,
+      "accessTime": 1765219243000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:40 Simply Candice PSWP - F77"
+    },
+    {
+      "type": "d",
+      "name": "Simply Farmhouse - D73",
+      "size": 0,
+      "modifyTime": 1764871341000,
+      "accessTime": 1764871341000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:02 Simply Farmhouse - D73"
+    },
+    {
+      "type": "d",
+      "name": "Siroc - 2783",
+      "size": 0,
+      "modifyTime": 1747848077000,
+      "accessTime": 1747848078000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Siroc - 2783"
+    },
+    {
+      "type": "d",
+      "name": "Sirpi",
+      "size": 0,
+      "modifyTime": 1696117609000,
+      "accessTime": 1696117609000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Sirpi"
+    },
+    {
+      "type": "d",
+      "name": "Skin - 4027",
+      "size": 0,
+      "modifyTime": 1747847938000,
+      "accessTime": 1747847939000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Skin - 4027"
+    },
+    {
+      "type": "d",
+      "name": "Society Social",
+      "size": 0,
+      "modifyTime": 1717498562000,
+      "accessTime": 1717498562000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun  4  2024 Society Social"
+    },
+    {
+      "type": "d",
+      "name": "Solace - 4141",
+      "size": 0,
+      "modifyTime": 1718138106000,
+      "accessTime": 1718138106000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jun 11  2024 Solace - 4141"
+    },
+    {
+      "type": "d",
+      "name": "Solstice - 2744",
+      "size": 0,
+      "modifyTime": 1696117625000,
+      "accessTime": 1696117625000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Solstice - 2744"
+    },
+    {
+      "type": "d",
+      "name": "Sparkle - 2542",
+      "size": 0,
+      "modifyTime": 1696117628000,
+      "accessTime": 1696117628000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Sparkle - 2542"
+    },
+    {
+      "type": "d",
+      "name": "Spring - 2948",
+      "size": 0,
+      "modifyTime": 1696117628000,
+      "accessTime": 1696117628000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Spring - 2948"
+    },
+    {
+      "type": "d",
+      "name": "Springhill - 4202",
+      "size": 0,
+      "modifyTime": 1765307158000,
+      "accessTime": 1765307158000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  9 19:05 Springhill - 4202"
+    },
+    {
+      "type": "d",
+      "name": "Stacy Garcia Moderne - D74",
+      "size": 0,
+      "modifyTime": 1764871490000,
+      "accessTime": 1764871490000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:04 Stacy Garcia Moderne - D74"
+    },
+    {
+      "type": "d",
+      "name": "Super Value Program",
+      "size": 0,
+      "modifyTime": 1744993777000,
+      "accessTime": 1744993777000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Apr 18  2025 Super Value Program"
+    },
+    {
+      "type": "d",
+      "name": "Symetrie - 2625",
+      "size": 0,
+      "modifyTime": 1696117737000,
+      "accessTime": 1696117737000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Symetrie - 2625"
+    },
+    {
+      "type": "d",
+      "name": "Techniques & Finishes III - 2767",
+      "size": 0,
+      "modifyTime": 1696117744000,
+      "accessTime": 1696117744000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Techniques & Finishes III - 2767"
+    },
+    {
+      "type": "d",
+      "name": "Terra - 2930",
+      "size": 0,
+      "modifyTime": 1747848265000,
+      "accessTime": 1747848265000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 Terra - 2930"
+    },
+    {
+      "type": "d",
+      "name": "Terrace - 4122",
+      "size": 0,
+      "modifyTime": 1730134800000,
+      "accessTime": 1730134800000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Oct 28  2024 Terrace - 4122"
+    },
+    {
+      "type": "d",
+      "name": "Textural Essentials - 2959",
+      "size": 0,
+      "modifyTime": 1696117762000,
+      "accessTime": 1696117762000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Textural Essentials - 2959"
+    },
+    {
+      "type": "d",
+      "name": "Texturall III - 2741",
+      "size": 0,
+      "modifyTime": 1696117767000,
+      "accessTime": 1696117767000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Texturall III - 2741"
+    },
+    {
+      "type": "d",
+      "name": "Texture Trends II - 2718",
+      "size": 0,
+      "modifyTime": 1696117771000,
+      "accessTime": 1696117771000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Texture Trends II - 2718"
+    },
+    {
+      "type": "d",
+      "name": "Textures & Weaves - 2758",
+      "size": 0,
+      "modifyTime": 1696117777000,
+      "accessTime": 1696117777000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Textures & Weaves - 2758"
+    },
+    {
+      "type": "d",
+      "name": "Textures & Wovens Resource - 4207",
+      "size": 0,
+      "modifyTime": 1765975764000,
+      "accessTime": 1765975765000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 17 12:49 Textures & Wovens Resource - 4207"
+    },
+    {
+      "type": "d",
+      "name": "The Cottage - 3100",
+      "size": 0,
+      "modifyTime": 1747848402000,
+      "accessTime": 1747848402000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 May 21  2025 The Cottage - 3100"
+    },
+    {
+      "type": "d",
+      "name": "The Vineyard - 3117",
+      "size": 0,
+      "modifyTime": 1696117785000,
+      "accessTime": 1696117785000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 The Vineyard - 3117"
+    },
+    {
+      "type": "d",
+      "name": "Theory - 2902",
+      "size": 0,
+      "modifyTime": 1696117791000,
+      "accessTime": 1696117791000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Theory - 2902"
+    },
+    {
+      "type": "d",
+      "name": "Thoreau - 3124",
+      "size": 0,
+      "modifyTime": 1732211920000,
+      "accessTime": 1732211920000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Thoreau - 3124"
+    },
+    {
+      "type": "d",
+      "name": "Toile Resource Library - F17",
+      "size": 0,
+      "modifyTime": 1765208551000,
+      "accessTime": 1765208551000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 15:42 Toile Resource Library - F17"
+    },
+    {
+      "type": "d",
+      "name": "Trilogy - 2922",
+      "size": 0,
+      "modifyTime": 1696117805000,
+      "accessTime": 1696117805000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Trilogy - 2922"
+    },
+    {
+      "type": "d",
+      "name": "Tropics Resource Library - E23",
+      "size": 0,
+      "modifyTime": 1764872535000,
+      "accessTime": 1764872535000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:22 Tropics Resource Library - E23"
+    },
+    {
+      "type": "d",
+      "name": "Twine - 2923",
+      "size": 0,
+      "modifyTime": 1742393228000,
+      "accessTime": 1742393229000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Mar 19  2025 Twine - 2923"
+    },
+    {
+      "type": "d",
+      "name": "Twist",
+      "size": 0,
+      "modifyTime": 1696117825000,
+      "accessTime": 1696117825000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Twist"
+    },
+    {
+      "type": "d",
+      "name": "Urban Digest - F36",
+      "size": 0,
+      "modifyTime": 1765210091000,
+      "accessTime": 1765210091000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 16:08 Urban Digest - F36"
+    },
+    {
+      "type": "d",
+      "name": "Urban Oasis - D85",
+      "size": 0,
+      "modifyTime": 1764872229000,
+      "accessTime": 1764872229000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:17 Urban Oasis - D85"
+    },
+    {
+      "type": "d",
+      "name": "Venue - 2675",
+      "size": 0,
+      "modifyTime": 1696117829000,
+      "accessTime": 1696117829000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Venue - 2675"
+    },
+    {
+      "type": "d",
+      "name": "Vera Bradley",
+      "size": 0,
+      "modifyTime": 1696117832000,
+      "accessTime": 1696117832000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Vera Bradley"
+    },
+    {
+      "type": "d",
+      "name": "Via Della Seta",
+      "size": 0,
+      "modifyTime": 1696117835000,
+      "accessTime": 1696117835000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Via Della Seta"
+    },
+    {
+      "type": "d",
+      "name": "Vintage Florals - E45",
+      "size": 0,
+      "modifyTime": 1764874164000,
+      "accessTime": 1764874164000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:49 Vintage Florals - E45"
+    },
+    {
+      "type": "d",
+      "name": "Vista - 2838",
+      "size": 0,
+      "modifyTime": 1696117838000,
+      "accessTime": 1696117838000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Vista - 2838"
+    },
+    {
+      "type": "d",
+      "name": "Wall Vision",
+      "size": 0,
+      "modifyTime": 1696117841000,
+      "accessTime": 1696117841000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Wall Vision"
+    },
+    {
+      "type": "d",
+      "name": "Warner Basics V - 2910",
+      "size": 0,
+      "modifyTime": 1696117847000,
+      "accessTime": 1696117847000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Warner Basics V - 2910"
+    },
+    {
+      "type": "d",
+      "name": "Warner Grasscloth Resource - 2807",
+      "size": 0,
+      "modifyTime": 1696117851000,
+      "accessTime": 1696117851000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Warner Grasscloth Resource - 2807"
+    },
+    {
+      "type": "d",
+      "name": "Warner Grasscloth Resource 2",
+      "size": 0,
+      "modifyTime": 1753977605000,
+      "accessTime": 1753977605000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 31 16:00 Warner Grasscloth Resource 2"
+    },
+    {
+      "type": "d",
+      "name": "Warner Infinity - 4181",
+      "size": 0,
+      "modifyTime": 1753977464000,
+      "accessTime": 1753977464000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 31 15:57 Warner Infinity - 4181"
+    },
+    {
+      "type": "d",
+      "name": "Warner Modern Expressions - 4178",
+      "size": 0,
+      "modifyTime": 1753977258000,
+      "accessTime": 1753977258000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jul 31 15:54 Warner Modern Expressions - 4178"
+    },
+    {
+      "type": "d",
+      "name": "Warner Textures IX Main Street - 2921",
+      "size": 0,
+      "modifyTime": 1696117855000,
+      "accessTime": 1696117855000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Warner Textures IX Main Street - 2921"
+    },
+    {
+      "type": "d",
+      "name": "Warner Textures V - 3097",
+      "size": 0,
+      "modifyTime": 1696117858000,
+      "accessTime": 1696117858000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Warner Textures V - 3097"
+    },
+    {
+      "type": "d",
+      "name": "Warner Textures X - 2945",
+      "size": 0,
+      "modifyTime": 1696117861000,
+      "accessTime": 1696117861000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Warner Textures X - 2945"
+    },
+    {
+      "type": "d",
+      "name": "Warner XI Naturals - 2984",
+      "size": 0,
+      "modifyTime": 1733328784000,
+      "accessTime": 1733328784000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4  2024 Warner XI Naturals - 2984"
+    },
+    {
+      "type": "d",
+      "name": "Waters Edge Resource Library - E30",
+      "size": 0,
+      "modifyTime": 1764873131000,
+      "accessTime": 1764873131000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 18:32 Waters Edge Resource Library - E30"
+    },
+    {
+      "type": "d",
+      "name": "Waverly",
+      "size": 0,
+      "modifyTime": 1759164556000,
+      "accessTime": 1759164556000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 29 16:49 Waverly"
+    },
+    {
+      "type": "d",
+      "name": "Web",
+      "size": 0,
+      "modifyTime": 1764869617000,
+      "accessTime": 1764869617000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  4 17:33 Web"
+    },
+    {
+      "type": "d",
+      "name": "Well Suited Accordion Deck - V62",
+      "size": 0,
+      "modifyTime": 1724930493000,
+      "accessTime": 1765222270000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Aug 29  2024 Well Suited Accordion Deck - V62"
+    },
+    {
+      "type": "d",
+      "name": "Whimsy - 4135",
+      "size": 0,
+      "modifyTime": 1726584782000,
+      "accessTime": 1726584782000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 17  2024 Whimsy - 4135"
+    },
+    {
+      "type": "d",
+      "name": "Whisper - 2629",
+      "size": 0,
+      "modifyTime": 1733924038000,
+      "accessTime": 1733924038000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 11  2024 Whisper - 2629"
+    },
+    {
+      "type": "d",
+      "name": "Wild - 4092",
+      "size": 0,
+      "modifyTime": 1732211985000,
+      "accessTime": 1732211985000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Nov 21  2024 Wild - 4092"
+    },
+    {
+      "type": "d",
+      "name": "Wildflower - 4134",
+      "size": 0,
+      "modifyTime": 1725889819000,
+      "accessTime": 1725889819000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep  9  2024 Wildflower - 4134"
+    },
+    {
+      "type": "d",
+      "name": "Wonderland - 2714",
+      "size": 0,
+      "modifyTime": 1696117879000,
+      "accessTime": 1696117879000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Wonderland - 2714"
+    },
+    {
+      "type": "d",
+      "name": "Woodnote - F71",
+      "size": 0,
+      "modifyTime": 1765218917000,
+      "accessTime": 1765218917000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec  8 18:35 Woodnote - F71"
+    },
+    {
+      "type": "d",
+      "name": "Yasmin - 2641",
+      "size": 0,
+      "modifyTime": 1696117881000,
+      "accessTime": 1696117881000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Sep 30  2023 Yasmin - 2641"
+    },
+    {
+      "type": "d",
+      "name": "Yellowstone - 4142",
+      "size": 0,
+      "modifyTime": 1739805915000,
+      "accessTime": 1739805915000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Feb 17  2025 Yellowstone - 4142"
+    },
+    {
+      "type": "d",
+      "name": "Zen Grasscloth - 2693",
+      "size": 0,
+      "modifyTime": 1767025920000,
+      "accessTime": 1767025920000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 29 16:32 Zen Grasscloth - 2693"
+    },
+    {
+      "type": "d",
+      "name": "Zio and Sons",
+      "size": 0,
+      "modifyTime": 1767025648000,
+      "accessTime": 1767025648000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 29 16:27 Zio and Sons"
+    }
+  ],
+  "diyProducts": [
+    {
+      "type": "-",
+      "name": ".DS_Store",
+      "size": 10244,
+      "modifyTime": 1698686363000,
+      "accessTime": 1698686363000,
+      "rights": {
+        "user": "",
+        "group": "",
+        "other": ""
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "----------   1 user     group       10244 Oct 30  2023 .DS_Store"
+    },
+    {
+      "type": "d",
+      "name": "All Data",
+      "size": 0,
+      "modifyTime": 1767028856000,
+      "accessTime": 1767028856000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Dec 29 17:20 All Data"
+    },
+    {
+      "type": "d",
+      "name": "All Images",
+      "size": 0,
+      "modifyTime": 1767376849000,
+      "accessTime": 1767376849000,
+      "rights": {
+        "user": "rwx",
+        "group": "rwx",
+        "other": "rwx"
+      },
+      "owner": 0,
+      "group": 0,
+      "longname": "drwxrwxrwx   1 user     group           0 Jan  2 18:00 All Images"
+    }
+  ]
+}

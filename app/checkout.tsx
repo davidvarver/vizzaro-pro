@@ -24,7 +24,7 @@ import {
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useCart } from '@/contexts/CartContext';
+import { useCartStore } from '@/store/useCartStore';
 import { useOrders } from '@/contexts/OrdersContext';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_600SemiBold } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
@@ -33,7 +33,9 @@ type PaymentMethod = 'zelle' | 'credit_card';
 
 export default function CheckoutScreen() {
   const insets = useSafeAreaInsets();
-  const { cartItems, getCartTotal, clearCart: contextClearCart } = useCart();
+  const cartItems = useCartStore((s) => s.cartItems);
+  const getCartTotal = useCartStore((s) => s.getCartTotal);
+  const contextClearCart = useCartStore((s) => s.clearCart);
 
   const items = cartItems || [];
   const { createOrder } = useOrders();

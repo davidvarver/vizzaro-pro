@@ -12,12 +12,13 @@ import { Stack, useRouter } from 'expo-router';
 import { ChevronLeft, Package, Calendar, MapPin, CreditCard } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useOrders } from '@/contexts/OrdersContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function OrderHistoryScreen() {
   const router = useRouter();
   const { orders, isLoading } = useOrders();
-  const { user, isAuthenticated } = useAuth();
+  const user = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const userOrders = useMemo(() => {
     if (!isAuthenticated || !user?.email) {
@@ -209,10 +210,10 @@ export default function OrderHistoryScreen() {
                     <CreditCard size={16} color={Colors.light.textSecondary} />
                     <Text style={styles.orderDetailText}>
                       {order.paymentMethod === 'zelle' ? 'Zelle' : 'Tarjeta de Crédito'}
-                      {order.paymentMethod === 'zelle' && order.zelleReference && (
+                      {order.paymentMethod === 'zelle' && order.paymentReference && (
                         <Text style={styles.referenceText}>
                           {' '}
-                          - Ref: {order.zelleReference}
+                          - Ref: {order.paymentReference}
                         </Text>
                       )}
                     </Text>

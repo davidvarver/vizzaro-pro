@@ -12,7 +12,7 @@ import { useRouter } from 'expo-router';
 import { ArrowLeft, Heart } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useFavorites } from '@/contexts/FavoritesContext';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { WallpaperCard } from '@/components/WallpaperCard';
 import { useFonts, PlayfairDisplay_600SemiBold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
@@ -22,7 +22,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 export default function FavoritesScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { favoriteProjects } = useFavorites();
+  const favoriteProjects = useFavoritesStore((s) => s.favoriteProjects);
 
   let [fontsLoaded] = useFonts({
     PlayfairDisplay_600SemiBold,
@@ -34,14 +34,18 @@ export default function FavoritesScreen() {
   const numColumns = useMemo(() => (SCREEN_WIDTH >= 1024 ? 4 : SCREEN_WIDTH >= 768 ? 3 : 2), []);
 
   const favoriteWallpapers = useMemo(() => {
+    if (!favoriteProjects) return [];
+
     const uniqueMap = new Map();
     // Flatten all wallpapers from all projects
     favoriteProjects.forEach(p => {
-      p.wallpapers.forEach(w => {
-        if (!uniqueMap.has(w.id)) {
-          uniqueMap.set(w.id, w);
-        }
-      });
+      if (p.wallpapers) {
+        p.wallpapers.forEach(w => {
+          if (!uniqueMap.has(w.id)) {
+            uniqueMap.set(w.id, w);
+          }
+        });
+      }
     });
     return Array.from(uniqueMap.values());
   }, [favoriteProjects]);
