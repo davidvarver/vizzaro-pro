@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "DecorWall Visualizer",
-    "slug": "decorwall-visualizer",
+    "name": "Vizzaro Wallpaper",
+    "slug": "vizzaro-wallpaper",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "vizzaro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -44,6 +44,8 @@
       ]
     },
     "web": {
+      "bundler": "metro",
+      "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
