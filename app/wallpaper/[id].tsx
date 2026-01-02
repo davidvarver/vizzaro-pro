@@ -31,6 +31,7 @@ import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
 import { useCart } from '@/contexts/CartContext';
 import { useHistory } from '@/contexts/HistoryContext';
+import { SeoHead } from '@/components/SeoHead';
 
 import { getBaseName } from '@/utils/product';
 
@@ -132,8 +133,26 @@ export default function WallpaperDetailsScreen() {
     setZoomStyle(prev => ({ ...prev, opacity: 0 }));
   };
 
+
+
+  // ... (inside component)
+
+  const activeImageUrl = images[activeImage] || wallpaper.imageUrl;
+
   return (
     <View style={styles.mainContainer}>
+      <SeoHead
+        title={`${wallpaper.name} - Papel Tapiz Premium`}
+        description={wallpaper.description ? wallpaper.description.substring(0, 160) : `Compra ${wallpaper.name} - Papel Tapiz de alta calidad. Precio: $${wallpaper.price}. Envío Gratis.`}
+        image={activeImageUrl}
+        type="product"
+        productData={{
+          price: wallpaper.price,
+          currency: 'MXN',
+          availability: 'InStock',
+          brand: 'Vizzaro'
+        }}
+      />
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
         {/* Header Navigation */}

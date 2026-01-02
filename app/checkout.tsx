@@ -161,7 +161,7 @@ export default function CheckoutScreen() {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Full Name</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errorMessage && !customerInfo.name && styles.inputError]}
                 placeholder="John Doe"
                 value={customerInfo.name}
                 onChangeText={(t) => setCustomerInfo({ ...customerInfo, name: t })}
@@ -172,7 +172,7 @@ export default function CheckoutScreen() {
               <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
                 <Text style={styles.label}>Email</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, errorMessage && !customerInfo.email && styles.inputError]}
                   placeholder="john@example.com"
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -183,7 +183,7 @@ export default function CheckoutScreen() {
               <View style={[styles.inputGroup, { flex: 1 }]}>
                 <Text style={styles.label}>Phone</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, errorMessage && !customerInfo.phone && styles.inputError]}
                   placeholder="(555) 123-4567"
                   keyboardType="phone-pad"
                   value={customerInfo.phone}
@@ -195,7 +195,7 @@ export default function CheckoutScreen() {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Address</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, errorMessage && !customerInfo.address && styles.inputError]}
                 placeholder="123 Main St, Apt 4B"
                 value={customerInfo.address}
                 onChangeText={(t) => setCustomerInfo({ ...customerInfo, address: t })}
@@ -206,7 +206,7 @@ export default function CheckoutScreen() {
               <View style={[styles.inputGroup, { flex: 2, marginRight: 10 }]}>
                 <Text style={styles.label}>City</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, errorMessage && !customerInfo.city && styles.inputError]}
                   placeholder="New York"
                   value={customerInfo.city}
                   onChangeText={(t) => setCustomerInfo({ ...customerInfo, city: t })}
@@ -215,7 +215,7 @@ export default function CheckoutScreen() {
               <View style={[styles.inputGroup, { flex: 1 }]}>
                 <Text style={styles.label}>ZIP</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, errorMessage && !customerInfo.zip && styles.inputError]}
                   placeholder="10001"
                   keyboardType="numeric"
                   value={customerInfo.zip}
@@ -325,6 +325,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12, paddingHorizontal: 15,
     fontFamily: 'Lato_400Regular', fontSize: 16, color: '#000',
     backgroundColor: '#FFF'
+  },
+  inputError: {
+    borderColor: Colors.light.error,
+    borderWidth: 1.5,
+    backgroundColor: '#FFF0F0'
   },
   row: { flexDirection: 'row', marginBottom: 15 },
 

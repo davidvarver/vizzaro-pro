@@ -22,6 +22,7 @@ import { Wallpaper } from '@/constants/wallpapers';
 import { useFonts, PlayfairDisplay_600SemiBold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { getBaseName } from '@/utils/product';
+import { SeoHead } from '@/components/SeoHead';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -146,8 +147,16 @@ export default function CatalogScreen() {
 
   if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: '#FFF' }} />;
 
+
+
+  //... (before return)
+
   return (
     <View style={styles.container}>
+      <SeoHead
+        title="Catálogo Completo - Papel Tapiz y Murales"
+        description="Explora nuestra colección completa de papel tapiz. Filtra por color, estilo y diseño. Encuentra el estilo perfecto para tu hogar u oficina."
+      />
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar barStyle="dark-content" />
 

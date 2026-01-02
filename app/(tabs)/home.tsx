@@ -27,6 +27,9 @@ import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { getBaseName } from '@/utils/product';
 import { wallpapers as defaultWallpapers } from '@/constants/wallpapers';
 
+import { SeoHead } from '@/components/SeoHead';
+import { useCollections } from '@/contexts/CollectionsContext';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function HomeScreen() {
@@ -34,7 +37,11 @@ export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const { wallpapers, refetchWallpapers } = useWallpapers();
   const { recentItems } = useHistory();
+  const { collections } = useCollections(); // Added this line based on the diff
   const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  // Prepare featured projects SEO image (using the first one if available)
+  const ogImage = collections.length > 0 ? collections[0].image : undefined; // Added this line based on the diff
 
   let [fontsLoaded] = useFonts({
     PlayfairDisplay_400Regular,

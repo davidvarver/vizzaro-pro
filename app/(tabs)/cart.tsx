@@ -9,7 +9,7 @@ import { useCart } from '@/contexts/CartContext';
 export default function CartScreen() {
   const insets = useSafeAreaInsets();
   const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
-  const [deliveryOption, setDeliveryOption] = useState<'pickup' | 'delivery'>('pickup');
+  const [deliveryOption, setDeliveryOption] = useState<'delivery'>('delivery');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const subtotal = getCartTotal();
@@ -93,33 +93,18 @@ export default function CartScreen() {
           <View style={styles.deliverySection}>
             <Text style={styles.sectionTitle}>Opciones de Entrega</Text>
 
-            <TouchableOpacity
+            <View
               style={[
                 styles.deliveryOption,
-                deliveryOption === 'pickup' && styles.deliveryOptionSelected
+                styles.deliveryOptionSelected
               ]}
-              onPress={() => setDeliveryOption('pickup')}
-            >
-              <View style={styles.deliveryOptionContent}>
-                <Text style={styles.deliveryOptionTitle}>Recoger en Tienda</Text>
-                <Text style={styles.deliveryOptionSubtitle}>Gratis • Listo en 2 horas</Text>
-              </View>
-              <Text style={styles.deliveryPrice}>$0.00</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.deliveryOption,
-                deliveryOption === 'delivery' && styles.deliveryOptionSelected
-              ]}
-              onPress={() => setDeliveryOption('delivery')}
             >
               <View style={styles.deliveryOptionContent}>
                 <Text style={styles.deliveryOptionTitle}>Entrega a Domicilio</Text>
-                <Text style={styles.deliveryOptionSubtitle}>1-2 días hábiles</Text>
+                <Text style={styles.deliveryOptionSubtitle}>Envíos a todo el país</Text>
               </View>
               <Text style={styles.deliveryPrice}>$15.00</Text>
-            </TouchableOpacity>
+            </View>
           </View>
 
 
