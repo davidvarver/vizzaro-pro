@@ -6,7 +6,7 @@ const PHONE_NUMBER = '+17326646800';
 
 export const WhatsAppButton = () => {
   const handlePress = async () => {
-    const message = 'Hola, estoy interesado en los wallpapers de Vizzaro.';
+    const message = 'Hello, I am interested in Vizzaro wallpapers.';
     const url = `https://wa.me/${PHONE_NUMBER.replace('+', '')}?text=${encodeURIComponent(message)}`;
 
     try {

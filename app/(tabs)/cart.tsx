@@ -20,15 +20,15 @@ export default function CartScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <ShoppingCart size={28} color={Colors.light.primary} />
-        <Text style={styles.headerTitle}>Mi Carrito</Text>
+        <Text style={styles.headerTitle}>My Cart</Text>
       </View>
 
       {cartItems.length === 0 ? (
         <View style={styles.emptyContainer}>
           <ShoppingCart size={64} color={Colors.light.textSecondary} />
-          <Text style={styles.emptyTitle}>Tu carrito está vacío</Text>
+          <Text style={styles.emptyTitle}>Your cart is empty</Text>
           <Text style={styles.emptyText}>
-            Explora nuestro catálogo y encuentra el papel tapiz perfecto para tu hogar
+            Browse our catalog to find the perfect wallpaper for your home
           </Text>
         </View>
       ) : (
@@ -48,12 +48,12 @@ export default function CartScreen() {
                       <Ruler size={14} color={Colors.light.primary} />
                     )}
                     <Text style={styles.purchaseTypeText}>
-                      {item.purchaseType === 'roll' ? 'Por Rollo' : 'Por Medida'}
+                      {item.purchaseType === 'roll' ? 'By Roll' : 'Custom Size'}
                     </Text>
                   </View>
 
                   <Text style={styles.itemDetails}>
-                    {item.rollsNeeded} rollo{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)}m²
+                    {item.rollsNeeded} roll{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)}m²
                   </Text>
                   <Text style={styles.itemPrice}>
                     ${item.wallpaper.price.toFixed(2)} × {item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}
@@ -91,7 +91,7 @@ export default function CartScreen() {
           </View>
 
           <View style={styles.deliverySection}>
-            <Text style={styles.sectionTitle}>Opciones de Entrega</Text>
+            <Text style={styles.sectionTitle}>Delivery Options</Text>
 
             <View
               style={[
@@ -100,8 +100,8 @@ export default function CartScreen() {
               ]}
             >
               <View style={styles.deliveryOptionContent}>
-                <Text style={styles.deliveryOptionTitle}>Entrega a Domicilio</Text>
-                <Text style={styles.deliveryOptionSubtitle}>Envíos a todo el país</Text>
+                <Text style={styles.deliveryOptionTitle}>Home Delivery</Text>
+                <Text style={styles.deliveryOptionSubtitle}>Shipping nationwide</Text>
               </View>
               <Text style={styles.deliveryPrice}>$15.00</Text>
             </View>
@@ -112,7 +112,7 @@ export default function CartScreen() {
           // ... (inside return, before Checkout button)
 
           <View style={styles.summarySection}>
-            <Text style={styles.sectionTitle}>Resumen del Pedido</Text>
+            <Text style={styles.sectionTitle}>Order Summary</Text>
 
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Subtotal</Text>
@@ -120,7 +120,7 @@ export default function CartScreen() {
             </View>
 
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Entrega</Text>
+              <Text style={styles.summaryLabel}>Delivery</Text>
               <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
             </View>
 
@@ -141,10 +141,10 @@ export default function CartScreen() {
               </TouchableOpacity>
               <View style={styles.termsTextContainer}>
                 <Text style={styles.termsText}>
-                  He leído y acepto los <Text style={styles.linkText} onPress={() => router.push('/terms-of-sale')}>Términos y Condiciones</Text>.
+                  I have read and agree to the <Text style={styles.linkText} onPress={() => router.push('/terms-of-sale')}>Terms and Conditions</Text>.
                 </Text>
                 <Text style={styles.termsSubtext}>
-                  Entiendo que no hay devoluciones en productos personalizados.
+                  I understand there are no returns on custom products.
                 </Text>
               </View>
             </View>
@@ -161,7 +161,7 @@ export default function CartScreen() {
           >
             <CreditCard size={20} color={acceptedTerms ? Colors.light.background : Colors.light.textSecondary} />
             <Text style={[styles.checkoutButtonText, !acceptedTerms && styles.checkoutButtonTextDisabled]}>
-              Proceder al Pago • ${total.toFixed(2)}
+              Proceed to Checkout • ${total.toFixed(2)}
             </Text>
           </TouchableOpacity>
         </View>

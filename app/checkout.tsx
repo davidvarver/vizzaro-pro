@@ -72,22 +72,22 @@ export default function CheckoutScreen() {
     setErrorMessage('');
 
     if (items.length === 0) {
-      Alert.alert('Carrito Vacío', 'Agrega productos antes de pagar.');
+      Alert.alert('Empty Cart', 'Please add items before checkout.');
       router.back();
       return;
     }
 
     if (!customerInfo.name || !customerInfo.email || !customerInfo.phone || !customerInfo.address) {
-      const errorMsg = 'Por favor completa todos los datos de envío.';
+      const errorMsg = 'Please complete all shipping details.';
       setErrorMessage(errorMsg);
-      if (Platform.OS !== 'web') Alert.alert('Faltan Datos', errorMsg);
+      if (Platform.OS !== 'web') Alert.alert('Missing Details', errorMsg);
       return;
     }
 
     if (paymentMethod === 'zelle' && !zelleReference.trim()) {
-      const errorMsg = 'Ingresa el número de confirmación de Zelle.';
+      const errorMsg = 'Please enter the Zelle confirmation number.';
       setErrorMessage(errorMsg);
-      if (Platform.OS !== 'web') Alert.alert('Falta Referencia', errorMsg);
+      if (Platform.OS !== 'web') Alert.alert('Missing Reference', errorMsg);
       return;
     }
 
@@ -115,19 +115,19 @@ export default function CheckoutScreen() {
       // Success handling
       if (Platform.OS === 'web') {
         // Web doesn't handle Alert in the same way, sometimes better to just route
-        if (window.confirm('¡Pedido Confirmado! Gracias por tu compra.\n\nPresiona OK para volver al inicio.')) {
+        if (window.confirm('Order Confirmed! Thank you for your purchase.\n\nPress OK to return home.')) {
           router.push('/');
         } else {
           router.push('/');
         }
       } else {
-        Alert.alert('¡Pedido Confirmado!', 'Gracias por tu compra.', [
+        Alert.alert('Order Confirmed!', 'Thank you for your purchase.', [
           { text: 'OK', onPress: () => router.push('/') }
         ]);
       }
     } catch (error) {
       console.error("Order error:", error);
-      setErrorMessage('Error al procesar el pedido. Intenta nuevamente.');
+      setErrorMessage('Error processing order. Please try again.');
     } finally {
       setIsProcessing(false);
     }
