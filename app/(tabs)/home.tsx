@@ -24,6 +24,7 @@ import { router } from 'expo-router';
 import { WallpaperCard } from '@/components/WallpaperCard';
 import { useFonts, PlayfairDisplay_400Regular, PlayfairDisplay_600SemiBold, PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
+import { getBaseName } from '@/utils/product';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -50,13 +51,8 @@ export default function HomeScreen() {
     const uniqueMap = new Map();
 
     visible.forEach(w => {
-      // Create a "base name" by stripping common color words to group variants
-      // E.g. "Dream Garden Off White" -> "Dream Garden"
-      const baseName = w.name
-        .replace(/\b(Off White|Teal|Dark Brown|Grey|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream)\b/gi, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-
+      // Use shared utility for robust grouping
+      const baseName = getBaseName(w.name);
       if (!uniqueMap.has(baseName)) {
         uniqueMap.set(baseName, w);
       }

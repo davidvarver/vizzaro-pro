@@ -21,6 +21,7 @@ import { WallpaperCard } from '@/components/WallpaperCard';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useFonts, PlayfairDisplay_600SemiBold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
+import { getBaseName } from '@/utils/product';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -100,14 +101,7 @@ export default function CatalogScreen() {
     // Deduplicate Variants
     const uniqueMap = new Map();
     filtered.forEach(w => {
-      const baseNameRaw = w.name
-        .replace(/\b(Off White|Teal|Dark Brown|Grey|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream)\b/gi, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-      // Explicit fix for Dream Garden to ensure perfect grouping
-      const baseName = baseNameRaw.includes('Dream Garden') ? 'Dream Garden Peel & Stick Wallpaper' : baseNameRaw;
-
+      const baseName = getBaseName(w.name);
       if (!uniqueMap.has(baseName)) {
         uniqueMap.set(baseName, w);
       }

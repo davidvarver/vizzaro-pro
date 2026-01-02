@@ -29,6 +29,8 @@ import { useWallpapers } from '@/contexts/WallpapersContext';
 import { useCart } from '@/contexts/CartContext';
 import { useHistory } from '@/contexts/HistoryContext';
 
+import { getBaseName } from '@/utils/product';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IS_DESKTOP = SCREEN_WIDTH >= 1024;
 
@@ -42,8 +44,6 @@ export default function WallpaperDetailsScreen() {
   const wallpaper = getWallpaperById(id || '');
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
-
-  import { getBaseName } from '@/utils/product';
 
   // ...
 
