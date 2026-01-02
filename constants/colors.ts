@@ -1,5 +1,5 @@
 // Premium Palette
-const primary = "#1C1C1C"; // Deep Charcoal (Luxury Black)
+const primary = "#701c45"; // Vizzaro Plum (Brand Color)
 const secondary = "#F8F5F2"; // Off-White / Cream (Soft Background)
 const accent = "#D4AF37"; // Metallic Gold (Elegant Details)
 const gold = "#C5A028";

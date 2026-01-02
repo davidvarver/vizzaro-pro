@@ -84,7 +84,12 @@ export default function HomeScreen() {
           <Menu color="#000" size={24} />
         </TouchableOpacity>
 
-        <Text style={styles.brandTitle}>VIZZARO</Text>
+        {/* <Text style={styles.brandTitle}>VIZZARO</Text> */}
+        <Image
+          source={require('@/assets/images/vizzaro-logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
 
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.iconBtn} onPress={() => router.push('/catalog')}><Search color="#000" size={24} /></TouchableOpacity>
