@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const KV_REST_API_URL = process.env.KV_REST_API_URL;
 const KV_REST_API_TOKEN = process.env.KV_REST_API_TOKEN;
-const DOMAIN = 'https://vizzaro-pro.vercel.app';
+const DOMAIN = process.env.EXPO_PUBLIC_DOMAIN || 'https://vizzaro-pro.vercel.app';
 
 if (!KV_REST_API_URL || !KV_REST_API_TOKEN) {
     console.error('❌ Missing KV credentials in .env');
