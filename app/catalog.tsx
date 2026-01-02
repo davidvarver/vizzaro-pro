@@ -9,10 +9,11 @@ import {
   StatusBar,
   Dimensions,
   Platform,
-  Modal
+  Modal,
+  TextInput
 } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
-import { ArrowLeft, Filter, X, Check } from 'lucide-react-native';
+import { ArrowLeft, Filter, X, Check, Search } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapers } from '@/contexts/WallpapersContext';
@@ -60,19 +61,16 @@ export default function CatalogScreen() {
   const numColumns = useMemo(() => (SCREEN_WIDTH >= 1024 ? 4 : SCREEN_WIDTH >= 768 ? 3 : 2), []);
 
   const filteredWallpapers = useMemo(() => {
-    return wallpapers.filter(w => {
-      // Filter by Style (Optional)
+    // 1. Filter first
+    const filtered = wallpapers.filter(w => {
+      // Filter by Style
       if (activeStyle) {
-        const wStyle = w.style?.toLowerCase() || '';
-        const filterStyle = activeStyle.toLowerCase();
-        if (!wStyle.includes(filterStyle)) return false;
+        if (!w.style?.toLowerCase().includes(activeStyle.toLowerCase())) return false;
       }
 
-      // Filter by Category (Optional)
+      // Filter by Category
       if (activeCategory) {
-        const wCat = w.category?.toLowerCase() || '';
-        const filterCat = activeCategory.toLowerCase();
-        if (!wCat.includes(filterCat)) return false;
+        if (!w.category?.toLowerCase().includes(activeCategory.toLowerCase())) return false;
       }
 
       // Filter by Color
@@ -84,10 +82,14 @@ export default function CatalogScreen() {
         if (!hasColor) return false;
       }
 
-      // Filter by Search
+      // Filter by Search (Name or SKU)
       if (params.search) {
         const search = params.search.toLowerCase();
-        if (!w.name.toLowerCase().includes(search) && !w.id.toLowerCase().includes(search)) {
+        const matchName = w.name.toLowerCase().includes(search);
+        const matchId = w.id.toLowerCase().includes(search);
+        const matchSku = w.publicSku?.toLowerCase().includes(search);
+
+        if (!matchName && !matchId && !matchSku) {
           return false;
         }
       }
@@ -98,10 +100,13 @@ export default function CatalogScreen() {
     // Deduplicate Variants
     const uniqueMap = new Map();
     filtered.forEach(w => {
-      const baseName = w.name
+      const baseNameRaw = w.name
         .replace(/\b(Off White|Teal|Dark Brown|Grey|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream)\b/gi, '')
         .replace(/\s+/g, ' ')
         .trim();
+
+      // Explicit fix for Dream Garden to ensure perfect grouping
+      const baseName = baseNameRaw.includes('Dream Garden') ? 'Dream Garden Peel & Stick Wallpaper' : baseNameRaw;
 
       if (!uniqueMap.has(baseName)) {
         uniqueMap.set(baseName, w);
@@ -135,20 +140,30 @@ export default function CatalogScreen() {
       <View style={[styles.header, { paddingTop: insets.top }]}>
         <View style={styles.headerTop}>
           <TouchableOpacity
-            onPress={() => {
-              // Safe navigation fallback
-              if (router.canGoBack()) {
-                router.back();
-              } else {
-                router.replace('/(tabs)/home');
-              }
-            }}
+            onPress={() => router.canGoBack() ? router.back() : router.replace('/(tabs)/home')}
             style={styles.backBtn}
-            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
           >
             <ArrowLeft color="#000" size={24} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Catálogo</Text>
+
+          {/* SEARCH INPUT */}
+          <View style={styles.searchContainer}>
+            <Search color="#666" size={20} style={styles.searchIcon} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Buscar por nombre o SKU..."
+              value={params.search as string} // Just display param or local state? Better local state synced with URL?
+              // Actually, let's use a local state for input to avoid jumpy URL updates
+              onChangeText={(text) => router.setParams({ search: text })}
+            // Note: Updating params on every keystroke might be slow. Debounce is better but keep it simple for now.
+            />
+            {params.search ? (
+              <TouchableOpacity onPress={() => router.setParams({ search: '' })}>
+                <X color="#666" size={18} />
+              </TouchableOpacity>
+            ) : null}
+          </View>
+
           <TouchableOpacity onPress={() => setShowFilters(true)} style={styles.filterBtn}>
             <Filter color="#000" size={24} />
           </TouchableOpacity>
@@ -321,6 +336,24 @@ const styles = StyleSheet.create({
   colorName: { fontSize: 12, fontFamily: 'Lato_400Regular' },
   checkIcon: { position: 'absolute', top: 5, right: 5, backgroundColor: Colors.light.primary, borderRadius: 10, padding: 2 },
 
+  searchContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+    marginHorizontal: 12, // Space between Back and Filter
+    paddingHorizontal: 10,
+    height: 40,
+  },
+  searchIcon: { marginRight: 8 },
+  searchInput: {
+    flex: 1,
+    fontFamily: 'Lato_400Regular',
+    fontSize: 14,
+    color: '#000',
+    height: '100%',
+  },
   modalFooter: { padding: 20, borderTopWidth: 1, borderTopColor: '#EEE' },
   applyBtn: { backgroundColor: Colors.light.primary, padding: 16, alignItems: 'center', borderRadius: 8 },
   applyText: { color: '#FFF', fontFamily: 'Lato_700Bold', fontSize: 16 }

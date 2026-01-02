@@ -1,5 +1,6 @@
 export interface Wallpaper {
   id: string;
+  publicSku?: string; // Added for search/display
   name: string;
   description: string;
   price: number;
