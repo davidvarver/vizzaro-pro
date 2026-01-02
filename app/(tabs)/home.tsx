@@ -135,14 +135,21 @@ export default function HomeScreen() {
               <TouchableOpacity
                 key={i}
                 style={styles.collectionCard}
-                onPress={() => router.push({ pathname: '/catalog', params: { category: cat } })}
+                onPress={() => {
+                  if (cat === 'Lujo') {
+                    router.push({ pathname: '/catalog', params: { style: 'Luxury' } });
+                  } else {
+                    router.push({ pathname: '/catalog', params: { category: cat } });
+                  }
+                }}
               >
                 <Image
-                  source={{ uri: wallpapers[i]?.imageUrl || 'https://via.placeholder.com/300' }}
+                  // Fallback images if wallpaper[i] fails or doesn't match
+                  source={{ uri: wallpapers.find(w => w.category === cat || (cat === 'Lujo' && w.style === 'Luxury'))?.imageUrl || 'https://via.placeholder.com/300' }}
                   style={styles.collectionImage}
                 />
                 <Text style={styles.collectionTitle}>{cat}</Text>
-                <Text style={styles.collectionSubtitle}>VIEW COLLECTION</Text>
+                <Text style={styles.collectionSubtitle}>VER COLECCIÓN</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>

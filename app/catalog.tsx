@@ -46,9 +46,17 @@ export default function CatalogScreen() {
   const [showFilters, setShowFilters] = useState(false);
 
   // Sync params with state on load
+  // Sync params with state on load (and clear others to ensure results)
   useEffect(() => {
-    if (params.style) setActiveStyle(params.style);
-    if (params.category) setActiveCategory(params.category);
+    if (params.style) {
+      setActiveStyle(params.style);
+      setActiveCategory(null); // Clear category if style is properly requested
+      setActiveColors([]);
+    } else if (params.category) {
+      setActiveCategory(params.category);
+      setActiveStyle(null); // Clear style if category is requested
+      setActiveColors([]);
+    }
   }, [params.style, params.category]);
 
   // Load Fonts
