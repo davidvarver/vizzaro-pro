@@ -171,7 +171,7 @@ export default function OrderDetails() {
                 {/* Customer Info */}
                 <View style={styles.section}>
                     <View style={styles.sectionHeader}>
-                        <User size={20} color={Colors.primary} />
+                        <User size={20} color={Colors.light.primary} />
                         <Text style={styles.sectionTitle}>Cliente</Text>
                     </View>
                     <View style={styles.infoRow}>
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     refText: { fontSize: 16, fontFamily: 'monospace', color: '#111', backgroundColor: '#F3F4F6', padding: 8, borderRadius: 4 },
     errorText: { fontSize: 16, color: '#666', marginBottom: 20 },
     retryBtn: { padding: 10, backgroundColor: '#000', borderRadius: 6 },
-    retryBtn: { padding: 10, backgroundColor: '#000', borderRadius: 6 },
+
     retryText: { color: '#FFF' },
     sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 },
     infoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, borderBottomWidth: 1, borderBottomColor: '#f0f0f0', paddingBottom: 8 },
