@@ -10,6 +10,7 @@ export default function CartScreen() {
   const insets = useSafeAreaInsets();
   const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
   const [deliveryOption, setDeliveryOption] = useState<'pickup' | 'delivery'>('pickup');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const subtotal = getCartTotal();
   const deliveryFee = deliveryOption === 'delivery' ? 15.00 : 0;
@@ -36,10 +37,10 @@ export default function CartScreen() {
             {cartItems.map((item) => (
               <View key={item.id} style={styles.cartItem}>
                 <Image source={{ uri: item.wallpaper.imageUrl }} style={styles.itemImage} />
-                
+
                 <View style={styles.itemInfo}>
                   <Text style={styles.itemName}>{item.wallpaper.name}</Text>
-                  
+
                   <View style={styles.purchaseTypeIndicator}>
                     {item.purchaseType === 'roll' ? (
                       <Package size={14} color={Colors.light.primary} />
@@ -50,7 +51,7 @@ export default function CartScreen() {
                       {item.purchaseType === 'roll' ? 'Por Rollo' : 'Por Medida'}
                     </Text>
                   </View>
-                  
+
                   <Text style={styles.itemDetails}>
                     {item.rollsNeeded} rollo{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)}m²
                   </Text>
@@ -58,7 +59,7 @@ export default function CartScreen() {
                     ${item.wallpaper.price.toFixed(2)} × {item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}
                   </Text>
                 </View>
-                
+
                 <View style={styles.itemControls}>
                   <View style={styles.quantityContainer}>
                     <TouchableOpacity
@@ -77,7 +78,7 @@ export default function CartScreen() {
                       <Plus size={16} color={Colors.light.primary} />
                     </TouchableOpacity>
                   </View>
-                  
+
                   <TouchableOpacity
                     style={styles.removeButton}
                     onPress={() => removeFromCart(item.id)}
@@ -91,7 +92,7 @@ export default function CartScreen() {
 
           <View style={styles.deliverySection}>
             <Text style={styles.sectionTitle}>Opciones de Entrega</Text>
-            
+
             <TouchableOpacity
               style={[
                 styles.deliveryOption,
@@ -121,22 +122,46 @@ export default function CartScreen() {
             </TouchableOpacity>
           </View>
 
+          const [acceptedTerms, setAcceptedTerms] = useState(false);
+
+          // ... (inside return, before Checkout button)
+
           <View style={styles.summarySection}>
             <Text style={styles.sectionTitle}>Resumen del Pedido</Text>
-            
+
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Subtotal</Text>
               <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
             </View>
-            
+
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Entrega</Text>
               <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
             </View>
-            
+
             <View style={[styles.summaryRow, styles.totalRow]}>
               <Text style={styles.totalLabel}>Total</Text>
               <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
+            </View>
+
+            {/* Terms and Conditions Checkbox */}
+            <View style={styles.termsContainer}>
+              <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={() => setAcceptedTerms(!acceptedTerms)}
+              >
+                <View style={[styles.checkbox, acceptedTerms && styles.checkboxChecked]}>
+                  {acceptedTerms && <View style={styles.checkboxInner} />}
+                </View>
+              </TouchableOpacity>
+              <View style={styles.termsTextContainer}>
+                <Text style={styles.termsText}>
+                  He leído y acepto los <Text style={styles.linkText} onPress={() => router.push('/terms-of-sale')}>Términos y Condiciones</Text>.
+                </Text>
+                <Text style={styles.termsSubtext}>
+                  Entiendo que no hay devoluciones en productos personalizados.
+                </Text>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -144,12 +169,13 @@ export default function CartScreen() {
 
       {cartItems.length > 0 && (
         <View style={styles.checkoutContainer}>
-          <TouchableOpacity 
-            style={styles.checkoutButton}
+          <TouchableOpacity
+            style={[styles.checkoutButton, !acceptedTerms && styles.checkoutButtonDisabled]}
+            disabled={!acceptedTerms}
             onPress={() => router.push('/checkout')}
           >
-            <CreditCard size={20} color={Colors.light.background} />
-            <Text style={styles.checkoutButtonText}>
+            <CreditCard size={20} color={acceptedTerms ? Colors.light.background : Colors.light.textSecondary} />
+            <Text style={[styles.checkoutButtonText, !acceptedTerms && styles.checkoutButtonTextDisabled]}>
               Proceder al Pago • ${total.toFixed(2)}
             </Text>
           </TouchableOpacity>
@@ -376,5 +402,59 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.light.primary,
     fontWeight: '600',
+  },
+  termsContainer: {
+    marginTop: 24,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+    backgroundColor: Colors.light.backgroundSecondary,
+    padding: 12,
+    borderRadius: 8,
+  },
+  checkboxContainer: {
+    paddingTop: 2,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: Colors.light.primary,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: Colors.light.primary,
+  },
+  checkboxInner: {
+    width: 10,
+    height: 10,
+    backgroundColor: Colors.light.background,
+    borderRadius: 2,
+  },
+  termsTextContainer: {
+    flex: 1,
+  },
+  termsText: {
+    fontSize: 14,
+    color: Colors.light.text,
+    lineHeight: 20,
+  },
+  linkText: {
+    color: Colors.light.primary,
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+  },
+  termsSubtext: {
+    fontSize: 12,
+    color: Colors.light.error, // Red for warning
+    marginTop: 4,
+  },
+  checkoutButtonDisabled: {
+    backgroundColor: Colors.light.border,
+  },
+  checkoutButtonTextDisabled: {
+    color: Colors.light.textSecondary,
   },
 });
