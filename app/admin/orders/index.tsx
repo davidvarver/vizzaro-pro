@@ -8,10 +8,8 @@ import { ArrowLeft, Package, Clock, CheckCircle } from 'lucide-react-native';
 
 interface Order {
     id: string;
-    customerInfo: {
-        name: string;
-        email: string;
-    };
+    customerName: string;
+    customerEmail: string;
     total: number;
     status: string;
     createdAt: string;
@@ -63,7 +61,7 @@ export default function AdminOrdersList() {
                 </View>
 
                 <View style={styles.cardContent}>
-                    <Text style={styles.customerName}>{item.customerInfo.name}</Text>
+                    <Text style={styles.customerName}>{item.customerName || 'N/A'}</Text>
                     <Text style={styles.date}>{new Date(item.createdAt).toLocaleDateString()}</Text>
                 </View>
 

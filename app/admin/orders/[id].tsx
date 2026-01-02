@@ -4,7 +4,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAdmin } from '../../../contexts/AdminContext';
 import { useOrders } from '../../../contexts/OrdersContext'; // Added this
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, CreditCard, Truck } from 'lucide-react-native';
+import { ArrowLeft, CreditCard, Truck, User } from 'lucide-react-native';
+import Colors from '@/constants/colors';
 
 export default function OrderDetails() {
     const { id } = useLocalSearchParams();
@@ -168,23 +169,28 @@ export default function OrderDetails() {
                 </View>
 
                 {/* Customer Info */}
-                {order.customerInfo && (
-                    <View style={styles.section}>
+                <View style={styles.section}>
+                    <View style={styles.sectionHeader}>
+                        <User size={20} color={Colors.primary} />
                         <Text style={styles.sectionTitle}>Cliente</Text>
-                        <Text style={styles.text}>{order.customerInfo.name}</Text>
-                        <Text style={styles.text}>{order.customerInfo.email}</Text>
-                        <Text style={styles.text}>{order.customerInfo.phone}</Text>
                     </View>
-                )}
-
-                {/* Shipping Address */}
-                {order.customerInfo && (
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Dirección de Envío</Text>
-                        <Text style={styles.text}>{order.customerInfo.address}</Text>
-                        <Text style={styles.text}>{order.customerInfo.city}, {order.customerInfo.zip}</Text>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Nombre:</Text>
+                        <Text style={styles.value}>{order.customerName}</Text>
                     </View>
-                )}
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Email:</Text>
+                        <Text style={styles.value}>{order.customerEmail}</Text>
+                    </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Teléfono:</Text>
+                        <Text style={styles.value}>{order.customerPhone}</Text>
+                    </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.label}>Dirección:</Text>
+                        <Text style={styles.value}>{order.customerAddress}</Text>
+                    </View>
+                </View>
 
                 {/* Items */}
                 <View style={styles.section}>
@@ -267,5 +273,10 @@ const styles = StyleSheet.create({
     refText: { fontSize: 16, fontFamily: 'monospace', color: '#111', backgroundColor: '#F3F4F6', padding: 8, borderRadius: 4 },
     errorText: { fontSize: 16, color: '#666', marginBottom: 20 },
     retryBtn: { padding: 10, backgroundColor: '#000', borderRadius: 6 },
-    retryText: { color: '#FFF' }
+    retryBtn: { padding: 10, backgroundColor: '#000', borderRadius: 6 },
+    retryText: { color: '#FFF' },
+    sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 16 },
+    infoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, borderBottomWidth: 1, borderBottomColor: '#f0f0f0', paddingBottom: 8 },
+    label: { color: '#666', fontSize: 14 },
+    value: { color: '#111', fontWeight: '500', fontSize: 14, flex: 1, textAlign: 'right' }
 });
