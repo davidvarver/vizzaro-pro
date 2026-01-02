@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuthStore } from '@/store/useAuthStore';
 import Colors from '@/constants/colors';
 
 interface AdminGuardProps {
@@ -9,7 +9,9 @@ interface AdminGuardProps {
 }
 
 export default function AdminGuard({ children }: AdminGuardProps) {
-  const { isAuthenticated, isAdmin, isLoading } = useAuth();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAdmin = useAuthStore((s) => s.isAdmin);
+  const isLoading = useAuthStore((s) => s.isLoading);
   const router = useRouter();
 
   useEffect(() => {
