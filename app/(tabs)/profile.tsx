@@ -1,21 +1,12 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { User, Heart, Clock, ChevronRight, Package, Shield, LogOut, LogIn } from 'lucide-react-native';
+import { User, Heart, ChevronRight, Package, Shield, LogOut, LogIn } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Colors from '@/constants/colors';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFavorites } from '@/contexts/FavoritesContext';
-
-
-interface Project {
-  id: string;
-  name: string;
-  wallpaper: string;
-  date: string;
-  status: 'completed' | 'in_progress' | 'planned';
-}
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -36,11 +27,14 @@ export default function ProfileScreen() {
       }));
   }, [favoriteProjects]);
 
+
   const stats = useMemo(() => {
+    // Determine how many unique wallpapers are favorited
+    const uniqueWallpapers = new Set();
+    favoriteProjects.forEach(p => p.wallpapers.forEach(w => uniqueWallpapers.add(w.id)));
+
     return {
-      totalProjects: favoriteProjects.length,
-      totalFavorites: favoriteProjects.length,
-      pendingProjects: 0,
+      totalFavorites: uniqueWallpapers.size,
     };
   }, [favoriteProjects]);
 
@@ -128,56 +122,23 @@ export default function ProfileScreen() {
           )}
         </View>
 
+        {/* Simplified Stats - Only Favorites */}
         {isAuthenticated && (
           <View style={styles.statsContainer}>
             <View style={styles.statCard}>
-              <Package size={24} color={Colors.light.primary} />
-              <Text style={styles.statNumber}>{stats.totalProjects}</Text>
-              <Text style={styles.statLabel}>Proyectos</Text>
-            </View>
-            <View style={styles.statCard}>
               <Heart size={24} color={Colors.light.error} />
               <Text style={styles.statNumber}>{stats.totalFavorites}</Text>
-              <Text style={styles.statLabel}>Favoritos</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Clock size={24} color={Colors.light.warning} />
-              <Text style={styles.statNumber}>{stats.pendingProjects}</Text>
-              <Text style={styles.statLabel}>Pendientes</Text>
+              <Text style={styles.statLabel}>Favoritos Guardados</Text>
             </View>
           </View>
         )}
 
-        {isAuthenticated && recentProjects.length > 0 && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Proyectos Recientes</Text>
-            {recentProjects.map((project) => (
-              <TouchableOpacity 
-                key={project.id} 
-                style={styles.projectCard}
-                onPress={() => router.push(`/project-comparison/${project.id}` as any)}
-              >
-                <View style={styles.projectInfo}>
-                  <Text style={styles.projectName}>{project.name}</Text>
-                  <Text style={styles.projectWallpaper}>{project.wallpaper}</Text>
-                  <Text style={styles.projectDate}>{project.date}</Text>
-                </View>
-                <View style={styles.projectStatus}>
-                  <View style={[styles.statusDot, { backgroundColor: getStatusColor(project.status) }]} />
-                  <Text style={[styles.statusText, { color: getStatusColor(project.status) }]}>
-                    {getStatusText(project.status)}
-                  </Text>
-                  <ChevronRight size={16} color={Colors.light.textSecondary} />
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
+        {/* Removed Recent Projects Section */}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Configuración</Text>
-          
-          <TouchableOpacity 
+          <Text style={styles.sectionTitle}>Mi Cuenta</Text>
+
+          <TouchableOpacity
             style={styles.menuItem}
             onPress={() => router.push('/favorites' as any)}
           >
@@ -189,7 +150,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           {isAuthenticated && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/order-history' as any)}
             >
@@ -202,7 +163,7 @@ export default function ProfileScreen() {
           )}
 
           {isAdmin && (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/admin/dashboard' as any)}
             >
@@ -215,7 +176,7 @@ export default function ProfileScreen() {
           )}
 
           {isAuthenticated ? (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={handleLogout}
             >
@@ -226,7 +187,7 @@ export default function ProfileScreen() {
               <ChevronRight size={16} color={Colors.light.error} />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.menuItem}
               onPress={() => router.push('/auth/login' as any)}
             >
