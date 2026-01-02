@@ -6,22 +6,24 @@ export const getBaseName = (name: string): string => {
     if (name.includes('Dream Garden')) return 'Dream Garden Peel & Stick Wallpaper';
     if (name.includes('Retro Esme')) return 'Retro Esme Peel & Stick Wallpaper';
 
-    // 2. Generic Regex to strip colors and "Peel & Stick Wallpaper" suffix
-    // List includes common colors and modifiers (Put multi-word ones like "Black & White" first!)
-    const colorRegex = /\b(Black & White|Black and White|Off White|Teal|Dark Brown|Grey|Gray|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream|Aqua|Turquoise|Charcoal|Multi|Pastel|Rainbow|Light|Dark|Hot|Deep|Soft|Sage|Olive|Mint|Rose|Mustard|Rust|Taupe|Sand|Ivory|Champagne|Bronze|Copper|Neutral|Multicolor)\b/gi;
+    // 2. Generic Regex to strip colors and suffixes
+    // List includes common colors, modifiers, and product types
+    // MUST sort by length so "Powdered Blue" is matched before "Blue"
+    const colorRegex = /\b(Black & White|Black and White|Off White|Powdered Blue|Pink Dream|Dream|Powdered|Emerald|Chartreuse|Apricot|Lavender|Lilac|Mauve|Peach|Coral|Salmon|Magenta|Burgundy|Maroon|Crimson|Teal|Dark Brown|Grey|Gray|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream|Aqua|Turquoise|Charcoal|Multi|Pastel|Rainbow|Light|Dark|Hot|Deep|Soft|Sage|Olive|Mint|Rose|Mustard|Rust|Taupe|Sand|Ivory|Champagne|Bronze|Copper|Neutral|Multicolor|Metallic|Matte|Glossy|Neon|Vibrant|Muted|Pale|Bright|Warm|Cool|Earth|Jewel)\b/gi;
 
     // Remove colors
     let clean = name.replace(colorRegex, '');
 
-    // Remove isolated "&" or "and" that might be left over (e.g. from "Blue & Gold" if only Blue matched?)
-    // Actually, "Black & White" is handled above. But "Blue & Green" might leave "&".
-    clean = clean.replace(/\s+(&|and)\s+/gi, ' ');
+    // Remove isolated "&" or "and" or "-" that might be left over
+    clean = clean.replace(/\s+(&|and|-)\s+/gi, ' ');
 
     // Normalize whitespace
     clean = clean.replace(/\s+/g, ' ').trim();
 
-    // Ensure "Peel & Stick Wallpaper" is consistent (it might have been touched if it contained a color word?)
-    // No, "Peel" and "Stick" are not colors. "Wallpaper" is not.
+    // Remove Product Types (Suffixes)
+    // "Peel & Stick Wallpaper", "Wall Mural", "Wallpaper", "Removable"
+    const typeRegex = /\b(Peel & Stick Wallpaper|Peel and Stick|Wall Mural|Wallpaper|Removable|Stick)\b/gi;
+    clean = clean.replace(typeRegex, '').replace(/\s+/g, ' ').trim();
 
     return clean;
 };

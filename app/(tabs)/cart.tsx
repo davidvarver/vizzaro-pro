@@ -122,7 +122,7 @@ export default function CartScreen() {
             </TouchableOpacity>
           </View>
 
-          const [acceptedTerms, setAcceptedTerms] = useState(false);
+
 
           // ... (inside return, before Checkout button)
 
