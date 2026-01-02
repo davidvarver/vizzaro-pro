@@ -21,6 +21,7 @@ import {
   Truck,
   Ruler,
   Info,
+  ShoppingCart,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
@@ -35,7 +36,7 @@ export default function WallpaperDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const { getWallpaperById, wallpapers } = useWallpapers(); // Get all wallpapers to find variants
-  const { addToCart } = useCart();
+  const { addToCart, items: cartItems } = useCart();
   const { addToHistory } = useHistory();
 
   const wallpaper = getWallpaperById(id || '');
@@ -101,9 +102,22 @@ export default function WallpaperDetailsScreen() {
             <ArrowLeft color={Colors.light.text} size={24} />
           </TouchableOpacity>
           <Text style={styles.brandLogo}>VIZZARO</Text>
-          <TouchableOpacity style={styles.iconButton}>
-            <Share2 color={Colors.light.text} size={24} />
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => router.push('/(tabs)/cart')}
+            >
+              <ShoppingCart color={Colors.light.text} size={24} />
+              {cartItems.length > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{cartItems.length}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconButton}>
+              <Share2 color={Colors.light.text} size={24} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={[styles.contentWrapper, IS_DESKTOP && styles.desktopLayout]}>
@@ -495,5 +509,28 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.light.success,
     fontWeight: '500',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  badge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: Colors.light.primary,
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+    borderWidth: 1.5,
+    borderColor: '#fff',
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 });
