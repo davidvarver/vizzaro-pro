@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAdmin } from '../../../contexts/AdminContext';
-import { useOrders } from '../../../contexts/OrdersContext';
+import { useOrdersStore } from '@/store/useOrdersStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Package, Clock, CheckCircle } from 'lucide-react-native';
 
@@ -19,7 +19,7 @@ export default function AdminOrdersList() {
     const router = useRouter();
     const { adminToken } = useAdmin();
     // Use context as source of truth
-    const { orders } = useOrders();
+    const orders = useOrdersStore((s) => s.orders);
     // If refreshOrders doesn't exist in useOrders signature yet, we might need to rely on just orders or ensure context has it.
     // Dashboard just used 'orders'. Let's check if refreshOrders exists or if we should just reload.
     // For now I will assume orders is enough, and maybe add a manual fetch if needed.

@@ -5,12 +5,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { CheckCircle, Home, ShoppingBag, Copy, ArrowRight } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import * as Clipboard from 'expo-clipboard';
-import { useOrders } from '@/contexts/OrdersContext';
+import { useOrdersStore } from '@/store/useOrdersStore';
 
 export default function OrderSuccessScreen() {
     const router = useRouter();
     const { orderId } = useLocalSearchParams();
-    const { orders } = useOrders();
+    const orders = useOrdersStore((s) => s.orders);
     const [order, setOrder] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
@@ -41,7 +41,7 @@ export default function OrderSuccessScreen() {
     if (loading) {
         return (
             <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={Colors.primary} />
+                <ActivityIndicator size="large" color={Colors.light.primary} />
             </View>
         );
     }
@@ -64,7 +64,7 @@ export default function OrderSuccessScreen() {
                     <View style={styles.orderNumberContainer}>
                         <Text style={styles.orderNumber}>#{orderId}</Text>
                         <TouchableOpacity onPress={copyToClipboard} style={styles.copyButton}>
-                            <Copy size={20} color={Colors.primary} />
+                            <Copy size={20} color={Colors.light.primary} />
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.saveNote}>
@@ -101,7 +101,7 @@ export default function OrderSuccessScreen() {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.secondaryButton} onPress={handleContinueShopping}>
-                        <Home size={20} color={Colors.primary} />
+                        <Home size={20} color={Colors.light.primary} />
                         <Text style={styles.secondaryButtonText}>Volver al Inicio</Text>
                     </TouchableOpacity>
                 </View>
@@ -220,14 +220,14 @@ const styles = StyleSheet.create({
         gap: 12,
     },
     primaryButton: {
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.light.primary,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 16,
         borderRadius: 12,
         gap: 8,
-        shadowColor: Colors.primary,
+        shadowColor: Colors.light.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     secondaryButtonText: {
-        color: Colors.primary,
+        color: Colors.light.primary,
         fontSize: 16,
         fontFamily: 'Lato_700Bold',
     },

@@ -25,7 +25,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useCartStore } from '@/store/useCartStore';
-import { useOrders } from '@/contexts/OrdersContext';
+import { useOrdersStore } from '@/store/useOrdersStore';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_600SemiBold } from '@expo-google-fonts/playfair-display';
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 
@@ -38,7 +38,7 @@ export default function CheckoutScreen() {
   const contextClearCart = useCartStore((s) => s.clearCart);
 
   const items = cartItems || [];
-  const { createOrder } = useOrders();
+  const createOrder = useOrdersStore((s) => s.createOrder);
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('zelle');
   const [zelleReference, setZelleReference] = useState<string>('');

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAdmin } from '../../../contexts/AdminContext';
-import { useOrders } from '../../../contexts/OrdersContext'; // Added this
+import { useOrdersStore } from '@/store/useOrdersStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, CreditCard, Truck, User, CheckCircle } from 'lucide-react-native';
 import Colors from '@/constants/colors';
@@ -11,7 +11,7 @@ export default function OrderDetails() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
     const { adminToken } = useAdmin();
-    const { orders } = useOrders(); // Access loaded orders
+    const orders = useOrdersStore((s) => s.orders); // Access loaded orders
 
     const [order, setOrder] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);

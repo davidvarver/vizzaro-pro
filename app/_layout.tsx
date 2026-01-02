@@ -44,6 +44,7 @@ import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { useCollectionsStore } from '@/store/useCollectionsStore';
 import { useHistoryStore } from '@/store/useHistoryStore';
+import { useOrdersStore } from '@/store/useOrdersStore';
 
 
 export default function RootLayout() {
@@ -57,6 +58,7 @@ export default function RootLayout() {
     useFavoritesStore.getState().initialize();
     useCollectionsStore.getState().initialize();
     useHistoryStore.getState().initialize();
+    useOrdersStore.getState().initialize();
   }, []);
 
   return (

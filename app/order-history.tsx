@@ -11,12 +11,13 @@ import {
 import { Stack, useRouter } from 'expo-router';
 import { ChevronLeft, Package, Calendar, MapPin, CreditCard } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { useOrders } from '@/contexts/OrdersContext';
+import { useOrdersStore } from '@/store/useOrdersStore';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function OrderHistoryScreen() {
   const router = useRouter();
-  const { orders, isLoading } = useOrders();
+  const orders = useOrdersStore((s) => s.orders);
+  const isLoading = useOrdersStore((s) => s.isLoading);
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 

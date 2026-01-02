@@ -20,7 +20,7 @@ import {
   AlertCircle,
 } from 'lucide-react-native';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useOrders } from '@/contexts/OrdersContext';
+import { useOrdersStore } from '@/store/useOrdersStore';
 import Colors from '@/constants/colors';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import AdminGuard from '@/components/AdminGuard';
@@ -29,7 +29,8 @@ export default function AdminDashboard() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
-  const { orders, getOrderStats } = useOrders();
+  const orders = useOrdersStore((s) => s.orders);
+  const getOrderStats = useOrdersStore((s) => s.getOrderStats);
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
