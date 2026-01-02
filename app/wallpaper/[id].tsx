@@ -36,7 +36,7 @@ export default function WallpaperDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const { getWallpaperById, wallpapers } = useWallpapers(); // Get all wallpapers to find variants
-  const { addToCart, items: cartItems } = useCart();
+  const { addToCart, cartItems } = useCart();
   const { addToHistory } = useHistory();
 
   const wallpaper = getWallpaperById(id || '');

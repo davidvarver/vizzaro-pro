@@ -97,12 +97,15 @@ export default function CheckoutScreen() {
       const orderData = {
         items,
         total,
-        customer: customerInfo,
-        payment: {
-          method: paymentMethod,
-          reference: paymentMethod === 'zelle' ? zelleReference : 'CC-' + Date.now()
-        },
-        date: new Date().toISOString()
+        // Flat customer properties to match Order interface
+        customerName: customerInfo.name,
+        customerEmail: customerInfo.email,
+        customerPhone: customerInfo.phone,
+        customerAddress: `${customerInfo.address}, ${customerInfo.city} ${customerInfo.zip}`,
+        status: 'pending' as const,
+        deliveryMethod: 'delivery' as const,
+        paymentMethod,
+        paymentReference: paymentMethod === 'zelle' ? zelleReference : `CC-${Date.now()}`,
       };
 
       // Create order
