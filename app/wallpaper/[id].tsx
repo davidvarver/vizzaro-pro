@@ -368,10 +368,7 @@ export default function WallpaperDetailsScreen() {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.shippingInfo}>
-              <Truck size={16} color={Colors.light.success} />
-              <Text style={styles.shippingText}>Free Shipping on orders over $2000</Text>
-            </View>
+
 
           </View>
         </View>
