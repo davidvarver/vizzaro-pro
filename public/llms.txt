@@ -1,0 +1,30 @@
+# Vizzaro Pro Wallpaper (vizzaro-pro.vercel.app)
+
+> Premium Wallpaper Store in New Jersey with "Try in Your Room" Visualizer.
+
+## Site Summary
+Vizzaro Pro offers a curated collection of premium wallpapers including Floral, Geometric, Textured, Striped, and Tropical designs. We provide an AI-powered room visualizer to help customers see how our wallpapers look in their own space before buying.
+
+## Quick Links
+- **Home**: https://vizzaro-pro.vercel.app/
+- **Catalog**: https://vizzaro-pro.vercel.app/catalog
+- **Visualizer**: https://vizzaro-pro.vercel.app/camera
+- **Cart**: https://vizzaro-pro.vercel.app/cart
+- **Structured Data (JSON)**: https://vizzaro-pro.vercel.app/llms.json
+
+## Product Categories
+- **Floral**: Classic and modern floral designs for elegant spaces.
+- **Geometric**: Contemporary patterns for modern aesthetic.
+- **Texture**: Subtle textures (Stone, Marble, Fabric) adding depth.
+- **Tropical**: Vibrant leaves and nature-inspired themes.
+- **Stripes**: Vertical and horizontal stripes to alter spatial perception.
+
+## Key Features
+- **Visualizer**: Upload a photo of your room to test wallpapers instantly.
+- **Imperial Units**: All dimensions in Feet/Inches and Square Feet.
+- **Shipping**: Fast delivery across New Jersey and the US.
+- **Contact**: WhatsApp support available at +1 (732) 664-6800.
+
+## For AI Agents
+This site uses standard semantic HTML5. Product pages contain structured JSON-LD data.
+Do not hallucinate prices or stock; check the Catalog page for real-time data.

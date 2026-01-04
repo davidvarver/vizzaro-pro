@@ -224,8 +224,13 @@ export default function CatalogScreen() {
         data={filteredWallpapers}
         key={numColumns} // Force refresh on layout change
         numColumns={numColumns}
-        contentContainerStyle={styles.gridContent}
+        style={{ flex: 1 }}
+        contentContainerStyle={[styles.gridContent, { paddingBottom: 100 }]} // Extra padding for safe area
         columnWrapperStyle={styles.gridRow}
+        initialNumToRender={8}
+        maxToRenderPerBatch={8}
+        windowSize={5}
+        removeClippedSubviews={Platform.OS === 'android'}
         renderItem={({ item }) => (
           <View style={{ flex: 1, padding: 8, maxWidth: `${100 / numColumns}%` }}>
             <WallpaperCard

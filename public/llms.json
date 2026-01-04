@@ -1,0 +1,41 @@
+{
+    "site": {
+        "name": "Vizzaro Pro Wallpaper",
+        "url": "https://vizzaro-pro.vercel.app",
+        "description": "Premium Wallpaper Store in New Jersey with 'Try in Your Room' Visualizer.",
+        "region": "NJ, USA"
+    },
+    "routes": [
+        {
+            "title": "Home",
+            "url": "https://vizzaro-pro.vercel.app/",
+            "description": "Main landing page with featured collections."
+        },
+        {
+            "title": "Catalog",
+            "url": "https://vizzaro-pro.vercel.app/catalog",
+            "description": "Browse all wallpaper products with filters."
+        },
+        {
+            "title": "Visualizer",
+            "url": "https://vizzaro-pro.vercel.app/camera",
+            "description": "AI tool to visualize wallpaper in your own room."
+        }
+    ],
+    "categories": [
+        "Floral",
+        "Geometric",
+        "Texture",
+        "Tropical",
+        "Stripes"
+    ],
+    "features": [
+        "Imperial Units (Feet/Inches)",
+        "Room Visualizer",
+        "Local NJ Shipping"
+    ],
+    "contact": {
+        "phone": "+1 (732) 664-6800",
+        "method": "WhatsApp"
+    }
+}

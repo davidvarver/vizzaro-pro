@@ -1,4 +1,17 @@
 User-agent: *
 Allow: /
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://vizzaro-pro.vercel.app/sitemap.xml
+Disallow: /admin
+Disallow: /api/admin
+
 Sitemap: https://vizzaro-pro.vercel.app/sitemap.xml
