@@ -26,8 +26,8 @@ export default function ProfileScreen() {
       .map(project => ({
         id: project.id,
         name: project.name,
-        wallpaper: project.wallpapers.length > 0 ? project.wallpapers[0].name : 'Sin papel',
-        date: new Date(project.dateModified).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
+        wallpaper: project.wallpapers.length > 0 ? project.wallpapers[0].name : 'No wallpaper',
+        date: new Date(project.dateModified).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
         status: 'completed' as const,
       }));
   }, [favoriteProjects]);
@@ -48,12 +48,12 @@ export default function ProfileScreen() {
   const handleLogout = () => {
     console.log('🔴 handleLogout called');
     Alert.alert(
-      'Cerrar Sesión',
-      '¿Estás seguro que deseas cerrar sesión?',
+      'Sign Out',
+      'Are you sure you want to sign out?',
       [
-        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Cerrar Sesión',
+          text: 'Sign Out',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -63,7 +63,7 @@ export default function ProfileScreen() {
               router.replace('/auth/login' as any);
             } catch (error) {
               console.error('❌ Error during logout:', error);
-              Alert.alert('Error', 'No se pudo cerrar la sesión. Intenta nuevamente.');
+              Alert.alert('Error', 'Could not sign out. Please try again.');
             }
           },
         },
@@ -79,7 +79,7 @@ export default function ProfileScreen() {
         {isAdmin && (
           <View style={styles.adminBanner}>
             <Shield size={16} color={Colors.light.background} />
-            <Text style={styles.adminBannerText}>Cuenta de Administrador</Text>
+            <Text style={styles.adminBannerText}>Admin Account</Text>
           </View>
         )}
 
@@ -100,8 +100,8 @@ export default function ProfileScreen() {
                 <User size={32} color={Colors.light.textSecondary} />
               </View>
               <View style={styles.profileInfo}>
-                <Text style={styles.userName}>Invitado</Text>
-                <Text style={styles.userEmail}>Inicia sesión para acceder a todas las funciones</Text>
+                <Text style={styles.userName}>Guest</Text>
+                <Text style={styles.userEmail}>Log in to access all features</Text>
               </View>
             </View>
           )}
@@ -113,7 +113,7 @@ export default function ProfileScreen() {
             <View style={styles.statCard}>
               <Heart size={24} color={Colors.light.error} />
               <Text style={styles.statNumber}>{stats.totalFavorites}</Text>
-              <Text style={styles.statLabel}>Favoritos Guardados</Text>
+              <Text style={styles.statLabel}>Saved Favorites</Text>
             </View>
           </View>
         )}
@@ -121,7 +121,7 @@ export default function ProfileScreen() {
         {/* Removed Recent Projects Section */}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Mi Cuenta</Text>
+          <Text style={styles.sectionTitle}>My Account</Text>
 
           <TouchableOpacity
             style={styles.menuItem}
@@ -129,7 +129,7 @@ export default function ProfileScreen() {
           >
             <View style={styles.menuItemLeft}>
               <Heart size={20} color={Colors.light.textSecondary} />
-              <Text style={styles.menuItemText}>Mis Favoritos</Text>
+              <Text style={styles.menuItemText}>My Favorites</Text>
             </View>
             <ChevronRight size={16} color={Colors.light.textSecondary} />
           </TouchableOpacity>
@@ -141,7 +141,7 @@ export default function ProfileScreen() {
             >
               <View style={styles.menuItemLeft}>
                 <Package size={20} color={Colors.light.textSecondary} />
-                <Text style={styles.menuItemText}>Historial de Pedidos</Text>
+                <Text style={styles.menuItemText}>Order History</Text>
               </View>
               <ChevronRight size={16} color={Colors.light.textSecondary} />
             </TouchableOpacity>
@@ -154,7 +154,7 @@ export default function ProfileScreen() {
             >
               <View style={styles.menuItemLeft}>
                 <Shield size={20} color={Colors.light.primary} />
-                <Text style={[styles.menuItemText, { color: Colors.light.primary }]}>Panel de Administración</Text>
+                <Text style={[styles.menuItemText, { color: Colors.light.primary }]}>Admin Dashboard</Text>
               </View>
               <ChevronRight size={16} color={Colors.light.primary} />
             </TouchableOpacity>
@@ -167,7 +167,7 @@ export default function ProfileScreen() {
             >
               <View style={styles.menuItemLeft}>
                 <LogOut size={20} color={Colors.light.error} />
-                <Text style={[styles.menuItemText, { color: Colors.light.error }]}>Cerrar Sesión</Text>
+                <Text style={[styles.menuItemText, { color: Colors.light.error }]}>Sign Out</Text>
               </View>
               <ChevronRight size={16} color={Colors.light.error} />
             </TouchableOpacity>
@@ -178,7 +178,7 @@ export default function ProfileScreen() {
             >
               <View style={styles.menuItemLeft}>
                 <LogIn size={20} color={Colors.light.primary} />
-                <Text style={[styles.menuItemText, { color: Colors.light.primary }]}>Iniciar Sesión</Text>
+                <Text style={[styles.menuItemText, { color: Colors.light.primary }]}>Log In</Text>
               </View>
               <ChevronRight size={16} color={Colors.light.primary} />
             </TouchableOpacity>
@@ -187,13 +187,13 @@ export default function ProfileScreen() {
 
         <View style={styles.section}>
           <View style={styles.contactCard}>
-            <Text style={styles.contactTitle}>¿Necesitas Ayuda?</Text>
+            <Text style={styles.contactTitle}>Need Help?</Text>
             <Text style={styles.contactText}>
-              Nuestro equipo está aquí para ayudarte con cualquier pregunta sobre papel tapiz
+              Our team is here to help you with any wallpaper questions
             </Text>
             <View style={styles.whatsappContainer}>
               <WhatsAppButton
-                message="Hola, necesito ayuda con la selección de papel tapiz para mi hogar"
+                message="Hello, I need help with wallpaper selection for my home"
                 style="secondary"
                 size="medium"
               />

@@ -12,6 +12,7 @@ import {
   Modal,
 } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
+import { m2ToSqFt } from '@/utils/product';
 import {
   ArrowLeft,
   Download,
@@ -55,19 +56,20 @@ export default function WallpaperResultScreen() {
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [showMeasurementModal, setShowMeasurementModal] = useState<boolean>(false);
   const [showWallpaperSelectorModal, setShowWallpaperSelectorModal] = useState<boolean>(false);
-  const [wallLength, setWallLength] = useState<string>('3');
-  const [wallHeight, setWallHeight] = useState<string>('2.5');
+  // Default 10ft x 8ft
+  const [wallLength, setWallLength] = useState<string>('10');
+  const [wallHeight, setWallHeight] = useState<string>('8');
   const viewShotRef = useRef<ViewShot>(null);
 
   const project = projectId ? getProjectById(projectId) : null;
 
   const wallpaper = getWallpaperById(wallpaperId);
 
-  // Calculate wall area from length and height
+  // Calculate wall area from length and height (Feet)
   const calculateWallArea = () => {
     const length = parseFloat(wallLength) || 0;
     const height = parseFloat(wallHeight) || 0;
-    return length * height;
+    return length * height; // Sq Ft
   };
 
   const wallArea = calculateWallArea();
@@ -80,7 +82,8 @@ export default function WallpaperResultScreen() {
     );
   }
 
-  const rollsNeeded = Math.ceil(wallArea / wallpaper.dimensions.coverage);
+  const coverageSqFt = wallpaper.dimensions ? m2ToSqFt(wallpaper.dimensions.coverage) : 57;
+  const rollsNeeded = Math.ceil(wallArea / coverageSqFt);
   const totalPrice = wallpaper.price * rollsNeeded;
   const isAlreadyInCart = isInCart(wallpaper.id);
 
@@ -96,7 +99,7 @@ export default function WallpaperResultScreen() {
     if (Platform.OS !== 'web') {
       Alert.alert(
         'Agregado al Carrito',
-        `${rollsNeeded} rollo${rollsNeeded > 1 ? 's' : ''} de "${wallpaper.name}" agregado${rollsNeeded > 1 ? 's' : ''} al carrito.`,
+        `${rollsNeeded} roll${rollsNeeded > 1 ? 's' : ''} of "${wallpaper.name}" added to cart.`,
         [
           { text: 'Continuar', style: 'cancel' },
           { text: 'Ver Carrito', onPress: () => router.push('/(tabs)/cart') },
@@ -424,7 +427,7 @@ export default function WallpaperResultScreen() {
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Precio por rollo:</Text>
+            <Text style={styles.detailLabel}>Price per roll:</Text>
             <Text style={styles.detailValue}>${wallpaper.price.toFixed(2)}</Text>
           </View>
 
@@ -433,21 +436,21 @@ export default function WallpaperResultScreen() {
             onPress={() => setShowMeasurementModal(true)}
             activeOpacity={0.7}
           >
-            <Text style={styles.detailLabel}>Medidas de la pared:</Text>
+            <Text style={styles.detailLabel}>Wall Dimensions:</Text>
             <View style={styles.measurementValue}>
-              <Text style={styles.detailValue}>{wallLength}m × {wallHeight}m</Text>
+              <Text style={styles.detailValue}>{wallLength}ft × {wallHeight}ft</Text>
               <Edit3 size={16} color={Colors.light.primary} />
             </View>
           </TouchableOpacity>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Área total:</Text>
-            <Text style={styles.detailValue}>{wallArea.toFixed(2)} m²</Text>
+            <Text style={styles.detailLabel}>Total Area:</Text>
+            <Text style={styles.detailValue}>{wallArea.toFixed(2)} sq ft</Text>
           </View>
 
           <View style={styles.detailRow}>
-            <Text style={styles.detailLabel}>Rollos necesarios:</Text>
-            <Text style={styles.detailValue}>{rollsNeeded} rollo{rollsNeeded > 1 ? 's' : ''}</Text>
+            <Text style={styles.detailLabel}>Rolls needed:</Text>
+            <Text style={styles.detailValue}>{rollsNeeded} roll{rollsNeeded > 1 ? 's' : ''}</Text>
           </View>
 
           <View style={styles.detailRow}>
@@ -489,7 +492,7 @@ export default function WallpaperResultScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Medidas de la Pared</Text>
+              <Text style={styles.modalTitle}>Wall Dimensions</Text>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setShowMeasurementModal(false)}
@@ -499,28 +502,28 @@ export default function WallpaperResultScreen() {
             </View>
 
             <Text style={styles.modalDescription}>
-              Ingresa las medidas de tu pared para calcular exactamente cuántos rollos necesitas.
+              Enter your wall dimensions to calculate exactly how many rolls you need.
             </Text>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Largo de la pared (metros)</Text>
+              <Text style={styles.inputLabel}>Wall Length (feet)</Text>
               <TextInput
                 style={styles.input}
                 value={wallLength}
                 onChangeText={setWallLength}
-                placeholder="Ej: 3.5"
+                placeholder="Ex: 10"
                 keyboardType="numeric"
                 placeholderTextColor={Colors.light.textSecondary}
               />
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Alto de la pared (metros)</Text>
+              <Text style={styles.inputLabel}>Wall Height (feet)</Text>
               <TextInput
                 style={styles.input}
                 value={wallHeight}
                 onChangeText={setWallHeight}
-                placeholder="Ej: 2.5"
+                placeholder="Ex: 8"
                 keyboardType="numeric"
                 placeholderTextColor={Colors.light.textSecondary}
               />
@@ -529,7 +532,7 @@ export default function WallpaperResultScreen() {
             <View style={styles.calculationResult}>
               <Calculator size={20} color={Colors.light.primary} />
               <Text style={styles.calculationText}>
-                Área total: {calculateWallArea().toFixed(2)} m²
+                Total Area: {calculateWallArea().toFixed(2)} sq ft
               </Text>
             </View>
 

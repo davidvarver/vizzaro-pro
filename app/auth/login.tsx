@@ -29,12 +29,12 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError('Por favor completa todos los campos');
+      setError('Please complete all fields');
       return;
     }
 
     if (!email.includes('@')) {
-      setError('Por favor ingresa un correo válido');
+      setError('Please enter a valid email');
       return;
     }
 
@@ -52,7 +52,7 @@ export default function LoginScreen() {
         router.replace('/(tabs)/profile' as any);
       }
     } else {
-      setError(result.error || 'Error al iniciar sesión');
+      setError(result.error || 'Error logging in');
     }
   };
 
@@ -74,8 +74,8 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <View style={styles.header}>
-          <Text style={styles.title}>Bienvenido</Text>
-          <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
+          <Text style={styles.title}>Welcome</Text>
+          <Text style={styles.subtitle}>Log in to continue</Text>
         </View>
 
         <View style={styles.form}>
@@ -85,7 +85,7 @@ export default function LoginScreen() {
             </View>
             <TextInput
               style={styles.input}
-              placeholder="Correo electrónico"
+              placeholder="Email"
               placeholderTextColor={Colors.light.textSecondary}
               value={email}
               onChangeText={setEmail}
@@ -101,7 +101,7 @@ export default function LoginScreen() {
             </View>
             <TextInput
               style={styles.input}
-              placeholder="Contraseña"
+              placeholder="Password"
               placeholderTextColor={Colors.light.textSecondary}
               value={password}
               onChangeText={setPassword}
@@ -135,7 +135,7 @@ export default function LoginScreen() {
             {isLoading ? (
               <ActivityIndicator color={Colors.light.background} />
             ) : (
-              <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+              <Text style={styles.loginButtonText}>Log In</Text>
             )}
           </TouchableOpacity>
 
@@ -150,7 +150,7 @@ export default function LoginScreen() {
             onPress={() => router.push('/auth/register' as any)}
           >
             <Text style={styles.registerButtonText}>
-              ¿No tienes cuenta? <Text style={styles.registerButtonTextBold}>Regístrate</Text>
+              Don't have an account? <Text style={styles.registerButtonTextBold}>Sign Up</Text>
             </Text>
           </TouchableOpacity>
         </View>

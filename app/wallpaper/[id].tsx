@@ -33,7 +33,7 @@ import { useCartStore } from '@/store/useCartStore';
 import { useHistoryStore } from '@/store/useHistoryStore';
 import { SeoHead } from '@/components/SeoHead';
 
-import { getBaseName } from '@/utils/product';
+import { getBaseName, formatDimensionsImperial } from '@/utils/product';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IS_DESKTOP = SCREEN_WIDTH >= 1024;
@@ -264,15 +264,15 @@ export default function WallpaperDetailsScreen() {
 
             <View style={styles.skuContainer}>
               <Text style={styles.skuLabel}>Item #</Text>
-              <Text style={styles.skuValue}>{wallpaper.publicSku || wallpaper.id}</Text>
+              <Text style={styles.skuValue}>{wallpaper.publicSku || 'VIZ-GEN'}</Text>
             </View>
 
-            <Text style={styles.price}>${wallpaper.price.toFixed(2)} / rollo</Text>
+            <Text style={styles.price}>${wallpaper.price.toFixed(2)} / roll</Text>
 
             {/* Variants (Other Colors) */}
             {variants.length > 0 && (
               <View style={styles.variantsContainer}>
-                <Text style={styles.variantTitle}>Otros Colores:</Text>
+                <Text style={styles.variantTitle}>OTHER COLORS:</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.variantList}>
                   {variants.map(variant => (
                     <TouchableOpacity
@@ -303,12 +303,12 @@ export default function WallpaperDetailsScreen() {
               })}
             >
               <Camera size={20} color={Colors.light.primary} />
-              <Text style={styles.visualizerButtonText}>PROBAR EN MI PARED</Text>
+              <Text style={styles.visualizerButtonText}>TRY IN MY ROOM</Text>
             </TouchableOpacity>
 
             <View style={styles.divider} />
 
-            <Text style={styles.sectionHeader}>Descripción</Text>
+            <Text style={styles.sectionHeader}>Description</Text>
             <Text style={styles.description}>
               {wallpaper.description || "Un diseño exclusivo que transforma cualquier espacio. Fabricado con materiales de alta calidad para asegurar durabilidad y un acabado premium."}
             </Text>
@@ -317,15 +317,19 @@ export default function WallpaperDetailsScreen() {
               <View style={styles.specItem}>
                 <Ruler size={20} color={Colors.light.textSecondary} />
                 <View>
-                  <Text style={styles.specLabel}>Dimensiones</Text>
-                  <Text style={styles.specValue}>53cm x 10m</Text>
+                  <Text style={styles.specLabel}>Dimensions</Text>
+                  <Text style={styles.specValue}>
+                    {wallpaper.dimensions
+                      ? formatDimensionsImperial(wallpaper.dimensions.width, wallpaper.dimensions.height)
+                      : '21 in x 33 ft'}
+                  </Text>
                 </View>
               </View>
               <View style={styles.specItem}>
                 <ShieldCheck size={20} color={Colors.light.textSecondary} />
                 <View>
-                  <Text style={styles.specLabel}>Calidad</Text>
-                  <Text style={styles.specValue}>Lavable Premium</Text>
+                  <Text style={styles.specLabel}>Quality</Text>
+                  <Text style={styles.specValue}>Premium Washable</Text>
                 </View>
               </View>
             </View>
@@ -335,7 +339,7 @@ export default function WallpaperDetailsScreen() {
             {/* Calculator Teaser */}
             <TouchableOpacity style={styles.calculatorRow}>
               <Info size={20} color={Colors.light.accent} />
-              <Text style={styles.calculatorText}>¿Cuánto necesito? Calcular rollos</Text>
+              <Text style={styles.calculatorText}>How much do I need? Calculate rolls</Text>
             </TouchableOpacity>
 
             {/* Actions */}
@@ -360,13 +364,13 @@ export default function WallpaperDetailsScreen() {
                 style={styles.addToCartBtn}
                 onPress={() => addToCart(wallpaper, quantity)}
               >
-                <Text style={styles.addToCartText}>AGREGAR AL CARRITO</Text>
+                <Text style={styles.addToCartText}>ADD TO CART</Text>
               </TouchableOpacity>
             </View>
 
             <View style={styles.shippingInfo}>
               <Truck size={16} color={Colors.light.success} />
-              <Text style={styles.shippingText}>Envío Gratis en pedidos mayores a $2000</Text>
+              <Text style={styles.shippingText}>Free Shipping on orders over $2000</Text>
             </View>
 
           </View>

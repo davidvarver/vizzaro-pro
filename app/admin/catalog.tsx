@@ -23,6 +23,7 @@ import {
   EyeOff,
   RotateCcw,
 } from 'lucide-react-native';
+import { m2ToSqFt, formatDimensionsImperial } from '@/utils/product';
 import { Wallpaper } from '@/constants/wallpapers';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -171,7 +172,8 @@ export default function AdminCatalogScreen() {
 
         <View style={styles.productInfo}>
           <Text style={styles.productName} numberOfLines={1}>{name}</Text>
-          <Text style={styles.productSku}>SKU: {item.id}</Text>
+          <Text style={styles.productSku}>Internal ID: {item.id}</Text>
+          <Text style={styles.productSku}>Public SKU: {item.publicSku || 'N/A'}</Text>
           <Text style={styles.productPrice}>${price.toFixed(2)}</Text>
 
           {description && (
@@ -188,10 +190,10 @@ export default function AdminCatalogScreen() {
           </View>
 
           <Text style={styles.specText}>
-            {dimensions.width}m x {dimensions.height}m
+            {formatDimensionsImperial(dimensions.width, dimensions.height)}
           </Text>
           <Text style={styles.specText}>
-            {dimensions.coverage}m² por rollo
+            {m2ToSqFt(dimensions.coverage).toFixed(2)} sq ft per roll
           </Text>
 
           <View style={styles.actionButtons}>

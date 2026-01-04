@@ -56,7 +56,7 @@ export const WallpaperCard = ({ item, onPress, onVisualize, width }: WallpaperCa
                 />
                 {!item.inStock && (
                     <View style={styles.outOfStockBadge}>
-                        <Text style={styles.outOfStockText}>Agotado</Text>
+                        <Text style={styles.outOfStockText}>Out of Stock</Text>
                     </View>
                 )}
                 {onVisualize && (

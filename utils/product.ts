@@ -1,36 +1,18 @@
+export function getBaseName(name: string): string {
+    // Remove color variations like " - Blue", " (Red)" etc.
+    return name.replace(/ - .*/, '').replace(/ \(.*/, '').trim();
+}
 
-export const getBaseName = (name: string): string => {
-    if (!name) return '';
+export function formatDimensionsImperial(widthM: number, heightM: number): string {
+    const widthInches = (widthM * 39.3701).toFixed(1);
+    const heightFeet = (heightM * 3.28084).toFixed(1);
+    return `${widthInches} in x ${heightFeet} ft`;
+}
 
-    // 1. Specific fix for Dream Garden and similar known patterns
-    if (name.includes('Dream Garden')) return 'Dream Garden Peel & Stick Wallpaper';
-    if (name.includes('Retro Esme')) return 'Retro Esme Peel & Stick Wallpaper';
+export function m2ToSqFt(m2: number): number {
+    return m2 * 10.7639;
+}
 
-    // 2. Generic Regex to strip colors and suffixes
-    // List includes common colors, modifiers, and product types
-    // MUST sort by length so "Powdered Blue" is matched before "Blue"
-    // 2. Remove Product Types (Suffixes) FIRST
-    // This removes "Peel & Stick Wallpaper" so we can capture the color at the end of the base name more reliably if needed
-    // "Peel & Stick Wallpaper", "Wall Mural", "Wallpaper", "Removable"
-    const typeRegex = /\b(Peel & Stick Wallpaper|Peel and Stick|Wall Mural|Wallpaper|Removable|Stick|Peel)\b/gi;
-    let clean = name.replace(typeRegex, '');
-
-    // 3. Remove colors
-    // List includes common colors, modifiers, and product types
-    // MUST sort by length so "Powdered Blue" is matched before "Blue"
-    const colorRegex = /\b(Black & White|Black and White|Off White|Powdered Blue|Pink Dream|Dream|Powdered|Emerald|Chartreuse|Apricot|Lavender|Lilac|Mauve|Peach|Coral|Salmon|Magenta|Burgundy|Maroon|Crimson|Teal|Dark Brown|Grey|Gray|Green|Blue|Red|Black|White|Gold|Silver|Beige|Navy|Pink|Yellow|Orange|Purple|Brown|Cream|Aqua|Turquoise|Charcoal|Multi|Pastel|Rainbow|Light|Dark|Hot|Deep|Soft|Sage|Olive|Mint|Rose|Mustard|Rust|Taupe|Sand|Ivory|Champagne|Bronze|Copper|Neutral|Multicolor|Metallic|Matte|Glossy|Neon|Vibrant|Muted|Pale|Bright|Warm|Cool|Earth|Jewel|Tan|Blush|Moss|Indigo|Cobalt)\b/gi;
-
-    clean = clean.replace(colorRegex, '');
-
-    // Remove isolated "&" or "and" or "-" that might be left over
-    clean = clean.replace(/\s+(&|and|-)\s+/gi, ' ');
-
-    // Normalize whitespace
-    clean = clean.replace(/\s+/g, ' ').trim();
-
-    return clean;
-};
-
-export const areVariants = (name1: string, name2: string): boolean => {
-    return getBaseName(name1) === getBaseName(name2);
-};
+export function sqFtToM2(sqFt: number): number {
+    return sqFt / 10.7639;
+}

@@ -385,6 +385,7 @@ export default function AddProductScreen() {
     try {
       const newProduct = {
         id: Date.now().toString(),
+        publicSku: `VIZ-${Math.floor(1000 + Math.random() * 9000)}`,
         name: form.name,
         description: form.description,
         price: Number(form.price),
@@ -642,6 +643,7 @@ export default function AddProductScreen() {
 
           const newProduct: Wallpaper = {
             id: Date.now().toString() + '_' + i + '_' + Math.random().toString(36).substr(2, 9),
+            publicSku: `VIZ-${Math.floor(1000 + Math.random() * 9000)}`,
             name: String(name).trim(),
             description: String(description).trim(),
             price,
@@ -1045,7 +1047,7 @@ export default function AddProductScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Cobertura por rollo (m²) *</Text>
+              <Text style={styles.inputLabel}>Coverage per roll (m²) *</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="5.33"
@@ -1056,7 +1058,7 @@ export default function AddProductScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Peso por rollo (kg)</Text>
+              <Text style={styles.inputLabel}>Weight per roll (kg)</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="2.5"

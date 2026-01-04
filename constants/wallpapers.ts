@@ -30,8 +30,9 @@ export interface Wallpaper {
 export const wallpapers: Wallpaper[] = [
   {
     id: '1',
-    name: 'Papel Tapiz Floral Elegante',
-    description: 'Diseño floral clásico con toques dorados sobre fondo crema',
+    publicSku: 'VIZ-1042',
+    name: 'Elegant Floral Wallpaper',
+    description: 'Classic floral design with gold touches on a cream background',
     price: 45.99,
     imageUrl: 'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop', // Floral Wallpaper Texture
     imageUrls: [
@@ -39,15 +40,15 @@ export const wallpapers: Wallpaper[] = [
       'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop'
     ],
     category: 'Floral',
-    style: 'Clásico',
-    colors: ['Crema', 'Dorado', 'Verde'],
+    style: 'Classic',
+    colors: ['Cream', 'Gold', 'Green'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'Vinilo',
+      material: 'Vinyl',
       washable: true,
       removable: true,
       textured: false,
@@ -58,24 +59,25 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '2',
-    name: 'Diseño Geométrico Moderno',
-    description: 'Patrones geométricos contemporáneos en tonos neutros',
+    publicSku: 'VIZ-8491',
+    name: 'Modern Geometric Design',
+    description: 'Contemporary geometric patterns in neutral tones',
     price: 52.99,
     imageUrl: 'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop', // Geometric Pattern
     imageUrls: [
       'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop'
     ],
-    category: 'Geométrico',
-    style: 'Moderno',
-    colors: ['Gris', 'Blanco', 'Negro'],
+    category: 'Geometric',
+    style: 'Modern',
+    colors: ['Grey', 'White', 'Black'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'No tejido',
+      material: 'Non-woven',
       washable: true,
       removable: true,
       textured: true,
@@ -86,23 +88,24 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '3',
-    name: 'Textura Minimalista',
-    description: 'Textura sutil y elegante para espacios modernos',
+    publicSku: 'VIZ-3320',
+    name: 'Minimalist Texture',
+    description: 'Subtle and elegant texture for modern spaces',
     price: 38.99,
     imageUrl: 'https://images.unsplash.com/photo-1596253406322-2623d24959db?q=80&w=800&auto=format&fit=crop', // Minimal Texture
     imageUrls: [
       'https://images.unsplash.com/photo-1596253406322-2623d24959db?q=80&w=800&auto=format&fit=crop'
     ],
-    category: 'Textura',
-    style: 'Minimalista',
-    colors: ['Beige', 'Blanco'],
+    category: 'Texture',
+    style: 'Minimalist',
+    colors: ['Beige', 'White'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'Papel',
+      material: 'Paper',
       washable: false,
       removable: true,
       textured: true,
@@ -113,23 +116,24 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '4',
-    name: 'Rayas Verticales Clásicas',
-    description: 'Rayas verticales elegantes que agrandan visualmente el espacio',
+    publicSku: 'VIZ-5512',
+    name: 'Classic Vertical Stripes',
+    description: 'Elegant vertical stripes that visually enlarge space',
     price: 41.99,
     imageUrl: 'https://images.unsplash.com/photo-1549416872-466d338ddbf6?q=80&w=800&auto=format&fit=crop', // Vertical Stripes
     imageUrls: [
       'https://images.unsplash.com/photo-1549416872-466d338ddbf6?q=80&w=800&auto=format&fit=crop'
     ],
-    category: 'Rayas',
-    style: 'Clásico',
-    colors: ['Azul', 'Blanco'],
+    category: 'Stripes',
+    style: 'Classic',
+    colors: ['Blue', 'White'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'Vinilo',
+      material: 'Vinyl',
       washable: true,
       removable: true,
       textured: false,
@@ -140,8 +144,9 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '5',
-    name: 'Mármol Luxury',
-    description: 'Efecto mármol sofisticado para espacios de lujo',
+    publicSku: 'VIZ-9981',
+    name: 'Luxury Marble',
+    description: 'Sophisticated marble effect for luxury spaces',
     price: 68.99,
     imageUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop&auto=format&q=80',
     imageUrls: [
@@ -149,16 +154,16 @@ export const wallpapers: Wallpaper[] = [
       'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop&auto=format&q=80',
       'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=400&h=400&fit=crop&auto=format&q=80'
     ],
-    category: 'Textura',
+    category: 'Texture',
     style: 'Luxury',
-    colors: ['Blanco', 'Gris', 'Dorado'],
+    colors: ['White', 'Grey', 'Gold'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'Vinilo Premium',
+      material: 'Premium Vinyl',
       washable: true,
       removable: true,
       textured: true,
@@ -169,8 +174,9 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '6',
+    publicSku: 'VIZ-1029',
     name: 'Tropical Paradise',
-    description: 'Hojas tropicales vibrantes para un ambiente fresco',
+    description: 'Vibrant tropical leaves for a fresh atmosphere',
     price: 49.99,
     imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&auto=format&q=80',
     imageUrls: [
@@ -178,15 +184,15 @@ export const wallpapers: Wallpaper[] = [
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&auto=format&q=80'
     ],
     category: 'Tropical',
-    style: 'Moderno',
-    colors: ['Verde', 'Blanco', 'Rosa'],
+    style: 'Modern',
+    colors: ['Green', 'White', 'Pink'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'No tejido',
+      material: 'Non-woven',
       washable: true,
       removable: true,
       textured: false,
@@ -197,23 +203,24 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '7',
+    publicSku: 'VIZ-2214',
     name: 'Brewster 2969-26028 Pacifica',
-    description: 'Diseño tropical con hojas de palma en tonos verdes sobre fondo claro',
+    description: 'Tropical design with palm leaves in green tones on light background',
     price: 55.99,
     imageUrl: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&auto=format&q=80',
     imageUrls: [
       'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&auto=format&q=80'
     ],
     category: 'Tropical',
-    style: 'Moderno',
-    colors: ['Verde', 'Blanco'],
+    style: 'Modern',
+    colors: ['Green', 'White'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'No tejido',
+      material: 'Non-woven',
       washable: true,
       removable: true,
       textured: false,
@@ -224,23 +231,24 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '8',
+    publicSku: 'VIZ-1193',
     name: 'Brewster 2969-26027 Pacifica',
-    description: 'Patrón de hojas tropicales en tonos verdes y blancos, estilo contemporáneo',
+    description: 'Tropical leaf pattern in green and white tones, contemporary style',
     price: 55.99,
     imageUrl: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=400&h=400&fit=crop&auto=format&q=80',
     imageUrls: [
       'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=400&h=400&fit=crop&auto=format&q=80'
     ],
     category: 'Tropical',
-    style: 'Moderno',
-    colors: ['Verde', 'Blanco'],
+    style: 'Modern',
+    colors: ['Green', 'White'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'No tejido',
+      material: 'Non-woven',
       washable: true,
       removable: true,
       textured: false,
@@ -251,23 +259,24 @@ export const wallpapers: Wallpaper[] = [
   },
   {
     id: '9',
+    publicSku: 'VIZ-6642',
     name: 'Brewster 2969-26029 Pacifica',
-    description: 'Diseño de hojas tropicales grandes en tonos verdes vibrantes',
+    description: 'Large tropical leaf design in vibrant green tones',
     price: 55.99,
     imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&auto=format&q=80',
     imageUrls: [
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&auto=format&q=80'
     ],
     category: 'Tropical',
-    style: 'Moderno',
-    colors: ['Verde', 'Blanco'],
+    style: 'Modern',
+    colors: ['Green', 'White'],
     dimensions: {
       width: 0.53,
       height: 10.05,
       coverage: 5.33,
     },
     specifications: {
-      material: 'No tejido',
+      material: 'Non-woven',
       washable: true,
       removable: true,
       textured: false,
@@ -285,7 +294,7 @@ export function getCategoriesFromWallpapers(wallpaperList: Wallpaper[]): string[
       categorySet.add(w.category);
     }
   });
-  return ['Todos', ...Array.from(categorySet).sort()];
+  return ['All', ...Array.from(categorySet).sort()];
 }
 
 export function getStylesFromWallpapers(wallpaperList: Wallpaper[]): string[] {
@@ -295,7 +304,7 @@ export function getStylesFromWallpapers(wallpaperList: Wallpaper[]): string[] {
       styleSet.add(w.style);
     }
   });
-  return ['Todos', ...Array.from(styleSet).sort()];
+  return ['All', ...Array.from(styleSet).sort()];
 }
 
 export function getColorsFromWallpapers(wallpaperList: Wallpaper[]): string[] {
@@ -305,34 +314,34 @@ export function getColorsFromWallpapers(wallpaperList: Wallpaper[]): string[] {
       w.colors.forEach(color => colorSet.add(color));
     }
   });
-  return ['Todos', ...Array.from(colorSet).sort()];
+  return ['All', ...Array.from(colorSet).sort()];
 }
 
 export const categories = [
-  'Todos',
+  'All',
   'Floral',
-  'Geométrico',
-  'Textura',
-  'Rayas',
+  'Geometric',
+  'Texture',
+  'Stripes',
   'Tropical',
 ];
 
 export const styles = [
-  'Todos',
-  'Moderno',
-  'Clásico',
-  'Minimalista',
+  'All',
+  'Modern',
+  'Classic',
+  'Minimalist',
   'Luxury',
 ];
 
 export const colors = [
-  'Todos',
-  'Blanco',
-  'Gris',
+  'All',
+  'White',
+  'Grey',
   'Beige',
-  'Azul',
-  'Verde',
-  'Rosa',
-  'Dorado',
-  'Negro',
+  'Blue',
+  'Green',
+  'Pink',
+  'Gold',
+  'Black',
 ];

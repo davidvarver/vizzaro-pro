@@ -320,6 +320,25 @@ export default function EditProductScreen() {
               <Text style={styles.sectionTitle}>Información Básica</Text>
             </View>
 
+            <View style={styles.row}>
+              <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
+                <Text style={styles.inputLabel}>Internal ID</Text>
+                <TextInput
+                  style={[styles.input, { backgroundColor: '#f0f0f0', color: '#666' }]}
+                  value={formData.id}
+                  editable={false}
+                />
+              </View>
+              <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
+                <Text style={styles.inputLabel}>Public SKU</Text>
+                <TextInput
+                  style={[styles.input, { backgroundColor: '#f0f0f0', color: '#666' }]}
+                  value={formData.publicSku || 'N/A'}
+                  editable={false}
+                />
+              </View>
+            </View>
+
             <View style={styles.inputGroup}>
               <Text style={styles.inputLabel}>Nombre del Producto</Text>
               <TextInput
@@ -387,7 +406,7 @@ export default function EditProductScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Precio por Rollo ($)</Text>
+              <Text style={styles.inputLabel}>Price per Roll ($)</Text>
               <TextInput
                 style={styles.input}
                 value={formData.price.toString()}
@@ -552,7 +571,7 @@ export default function EditProductScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Cobertura por Rollo (m²)</Text>
+              <Text style={styles.inputLabel}>Coverage per Roll (m²)</Text>
               <TextInput
                 style={styles.input}
                 value={formData.dimensions.coverage.toString()}

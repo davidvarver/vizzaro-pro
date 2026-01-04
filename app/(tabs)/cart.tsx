@@ -56,7 +56,7 @@ export default function CartScreen() {
                   </View>
 
                   <Text style={styles.itemDetails}>
-                    {item.rollsNeeded} roll{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)}m²
+                    {item.rollsNeeded} roll{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)} sq ft
                   </Text>
                   <Text style={styles.itemPrice}>
                     ${item.wallpaper.price.toFixed(2)} × {item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}

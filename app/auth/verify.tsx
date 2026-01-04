@@ -84,7 +84,7 @@ export default function VerifyScreen() {
     const codeToVerify = fullCode || code.join('');
 
     if (codeToVerify.length !== 6) {
-      setError('Por favor ingresa el código completo');
+      setError('Please enter the full code');
       return;
     }
 
@@ -98,7 +98,7 @@ export default function VerifyScreen() {
     if (result.success) {
       router.replace('/(tabs)/profile' as any);
     } else {
-      setError(result.error || 'Código incorrecto');
+      setError(result.error || 'Incorrect code');
       setCode(['', '', '', '', '', '']);
       inputRefs.current[0]?.focus();
     }
@@ -120,7 +120,7 @@ export default function VerifyScreen() {
       setCode(['', '', '', '', '', '']);
       inputRefs.current[0]?.focus();
     } else {
-      setError(result.error || 'Error al reenviar código');
+      setError(result.error || 'Error resending code');
     }
   };
 
@@ -148,9 +148,9 @@ export default function VerifyScreen() {
         </View>
 
         <View style={styles.header}>
-          <Text style={styles.title}>Verifica tu correo</Text>
+          <Text style={styles.title}>Verify your Email</Text>
           <Text style={styles.subtitle}>
-            Hemos enviado un código de 6 dígitos a{'\n'}
+            We sent a 6-digit code to{'\n'}
             <Text style={styles.email}>{pendingEmail}</Text>
           </Text>
         </View>
@@ -193,7 +193,7 @@ export default function VerifyScreen() {
             ) : (
               <>
                 <CheckCircle size={20} color={Colors.light.background} />
-                <Text style={styles.verifyButtonText}>Verificar Código</Text>
+                <Text style={styles.verifyButtonText}>Verify Code</Text>
               </>
             )}
           </TouchableOpacity>
@@ -202,20 +202,20 @@ export default function VerifyScreen() {
             {canResend ? (
               <TouchableOpacity onPress={handleResend}>
                 <Text style={styles.resendText}>
-                  ¿No recibiste el código?{' '}
-                  <Text style={styles.resendTextBold}>Reenviar</Text>
+                  Didn't receive code?{' '}
+                  <Text style={styles.resendTextBold}>Resend</Text>
                 </Text>
               </TouchableOpacity>
             ) : (
               <Text style={styles.countdownText}>
-                Reenviar código en {countdown}s
+                Resend code in {countdown}s
               </Text>
             )}
           </View>
 
           <View style={styles.infoBox}>
             <Text style={styles.infoText}>
-              💡 Revisa tu bandeja de spam si no encuentras el correo
+              💡 Check your spam folder if you don't find the email
             </Text>
           </View>
         </View>

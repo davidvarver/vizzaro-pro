@@ -32,22 +32,22 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      setError('Por favor completa todos los campos');
+      setError('Please complete all fields');
       return;
     }
 
     if (!email.includes('@')) {
-      setError('Por favor ingresa un correo válido');
+      setError('Please enter a valid email');
       return;
     }
 
     if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres');
+      setError('Password must be at least 6 characters');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError('Passwords do not match');
       return;
     }
 
@@ -61,7 +61,7 @@ export default function RegisterScreen() {
     if (result.success) {
       router.push('/auth/verify' as any);
     } else {
-      setError(result.error || 'Error al registrar usuario');
+      setError(result.error || 'Error registering user');
     }
   };
 
@@ -83,8 +83,8 @@ export default function RegisterScreen() {
         </TouchableOpacity>
 
         <View style={styles.header}>
-          <Text style={styles.title}>Crear Cuenta</Text>
-          <Text style={styles.subtitle}>Regístrate para comenzar</Text>
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>Sign up to get started</Text>
         </View>
 
         <View style={styles.form}>
@@ -94,7 +94,7 @@ export default function RegisterScreen() {
             </View>
             <TextInput
               style={styles.input}
-              placeholder="Nombre completo"
+              placeholder="Full Name"
               placeholderTextColor={Colors.light.textSecondary}
               value={name}
               onChangeText={setName}
@@ -109,7 +109,7 @@ export default function RegisterScreen() {
             </View>
             <TextInput
               style={styles.input}
-              placeholder="Correo electrónico"
+              placeholder="Email"
               placeholderTextColor={Colors.light.textSecondary}
               value={email}
               onChangeText={setEmail}
@@ -125,7 +125,7 @@ export default function RegisterScreen() {
             </View>
             <TextInput
               style={styles.input}
-              placeholder="Contraseña"
+              placeholder="Password"
               placeholderTextColor={Colors.light.textSecondary}
               value={password}
               onChangeText={setPassword}
@@ -151,7 +151,7 @@ export default function RegisterScreen() {
             </View>
             <TextInput
               style={styles.input}
-              placeholder="Confirmar contraseña"
+              placeholder="Confirm Password"
               placeholderTextColor={Colors.light.textSecondary}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -185,13 +185,13 @@ export default function RegisterScreen() {
             {isLoading ? (
               <ActivityIndicator color={Colors.light.background} />
             ) : (
-              <Text style={styles.registerButtonText}>Registrarse</Text>
+              <Text style={styles.registerButtonText}>Sign Up</Text>
             )}
           </TouchableOpacity>
 
           <View style={styles.infoBox}>
             <Text style={styles.infoText}>
-              Al registrarte, recibirás un código de verificación en tu correo electrónico
+              By registering, you will receive a verification code in your email
             </Text>
           </View>
 
@@ -206,7 +206,7 @@ export default function RegisterScreen() {
             onPress={() => router.push('/auth/login' as any)}
           >
             <Text style={styles.loginButtonText}>
-              ¿Ya tienes cuenta? <Text style={styles.loginButtonTextBold}>Inicia sesión</Text>
+              Already have an account? <Text style={styles.loginButtonTextBold}>Log In</Text>
             </Text>
           </TouchableOpacity>
         </View>

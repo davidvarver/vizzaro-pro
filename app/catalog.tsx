@@ -320,9 +320,9 @@ export default function CatalogScreen() {
 // Helper for color dots
 function getColorHex(colorName: string) {
   const map: Record<string, string> = {
-    'Beige': '#F5F5DC', 'Gris': '#808080', 'Azul': '#0000FF',
-    'Verde': '#008000', 'Negro': '#000000', 'Blanco': '#FFFFFF',
-    'Dorado': '#FFD700', 'Rosa': '#FFC0CB', 'Rojo': '#FF0000'
+    'Beige': '#F5F5DC', 'Grey': '#808080', 'Blue': '#0000FF',
+    'Green': '#008000', 'Black': '#000000', 'White': '#FFFFFF',
+    'Gold': '#FFD700', 'Pink': '#FFC0CB', 'Red': '#FF0000'
   };
   return map[colorName] || '#CCC';
 }
