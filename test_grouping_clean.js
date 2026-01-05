@@ -1,4 +1,18 @@
-export function getBaseName(name: string): string {
+
+const testCases = [
+    "Dream Garden Off White Peel & Stick Wallpaper",
+    "Dream Garden Teal Peel & Stick Wallpaper",
+    "Dream Garden Dark Brown Peel & Stick Wallpaper",
+    "Retro Esme Navy Peel & Stick Wallpaper",
+    "Retro Esme Pink Peel & Stick Wallpaper",
+    "Jeani Blue Peel & Stick Wallpaper",
+    "Jeani Light Brown Peel & Stick Wallpaper",
+    "Talia Green Peel & Stick Wallpaper",
+    "Talia Light Blue Peel & Stick Wallpaper",
+    "Talia Navy Peel & Stick Wallpaper"
+];
+
+function getBaseName(name) {
     // 1. Remove common suffixes
     let cleanName = name
         .replace(/Peel & Stick Wallpaper/i, '')
@@ -25,16 +39,7 @@ export function getBaseName(name: string): string {
     return cleanName;
 }
 
-export function formatDimensionsImperial(widthM: number, heightM: number): string {
-    const widthInches = (widthM * 39.3701).toFixed(1);
-    const heightFeet = (heightM * 3.28084).toFixed(1);
-    return `${widthInches} in x ${heightFeet} ft`;
-}
-
-export function m2ToSqFt(m2: number): number {
-    return m2 * 10.7639;
-}
-
-export function sqFtToM2(sqFt: number): number {
-    return sqFt / 10.7639;
-}
+console.log("--- Testing Grouping Logic ---");
+testCases.forEach(name => {
+    console.log(`Original: "${name}" -> Base: "${getBaseName(name)}"`);
+});
