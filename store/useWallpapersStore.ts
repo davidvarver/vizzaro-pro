@@ -6,11 +6,22 @@ import { Wallpaper, wallpapers as defaultWallpapers } from '@/constants/wallpape
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
 const STORAGE_KEY = 'wallpapers_catalog';
 
+// New interface for saved user rooms
+export interface UserRoom {
+    id: string;
+    image: string; // Base64 or URI
+    createdAt: number;
+    name?: string;
+}
+
 interface WallpapersState {
     wallpapers: Wallpaper[];
     isLoading: boolean;
     error: string | null;
     visualizerImage: string | null;
+
+    // Room Gallery State
+    userRooms: UserRoom[];
 
     // Actions
     loadWallpapers: (forceRefresh?: boolean) => Promise<void>;
@@ -23,6 +34,11 @@ interface WallpapersState {
     refetchWallpapers: () => Promise<void>;
     resetCatalog: (adminToken?: string) => Promise<boolean>;
     setVisualizerImage: (image: string | null) => void;
+
+    // Room Gallery Actions
+    addUserRoom: (image: string) => Promise<void>;
+    deleteUserRoom: (id: string) => Promise<void>;
+    loadUserRooms: () => Promise<void>;
 
     // Helper to sync to storage/API
     saveWallpapers: (wallpapersData: Wallpaper[], authToken?: string) => Promise<boolean>;
@@ -366,7 +382,57 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
 
     setVisualizerImage: (image: string | null) => set({ visualizerImage: image }),
 
+    // Room Gallery Implementation
+    userRooms: [],
+
+    addUserRoom: async (image: string) => {
+        const { userRooms } = get();
+        const newRoom: UserRoom = {
+            id: Date.now().toString(),
+            image,
+            createdAt: Date.now(),
+            name: `Habitación ${userRooms.length + 1}`
+        };
+
+        const updatedRooms = [newRoom, ...userRooms];
+        set({ userRooms: updatedRooms });
+
+        try {
+            await AsyncStorage.setItem('user_rooms_gallery', JSON.stringify(updatedRooms));
+            console.log('[WallpapersStore] Room added to gallery:', newRoom.id);
+        } catch (error) {
+            console.error('[WallpapersStore] Error saving room to storage:', error);
+        }
+    },
+
+    deleteUserRoom: async (id: string) => {
+        const { userRooms } = get();
+        const updatedRooms = userRooms.filter(room => room.id !== id);
+        set({ userRooms: updatedRooms });
+
+        try {
+            await AsyncStorage.setItem('user_rooms_gallery', JSON.stringify(updatedRooms));
+            console.log('[WallpapersStore] Room deleted from gallery:', id);
+        } catch (error) {
+            console.error('[WallpapersStore] Error updating rooms storage:', error);
+        }
+    },
+
+    loadUserRooms: async () => {
+        try {
+            const stored = await AsyncStorage.getItem('user_rooms_gallery');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                set({ userRooms: parsed });
+                console.log('[WallpapersStore] Loaded user rooms:', parsed.length);
+            }
+        } catch (error) {
+            console.error('[WallpapersStore] Error loading user rooms:', error);
+        }
+    },
+
     initialize: async () => {
         await get().loadWallpapers();
+        await get().loadUserRooms();
     },
 }));

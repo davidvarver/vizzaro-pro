@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -10,7 +11,7 @@ import Colors from '@/constants/colors';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { useCartStore } from '@/store/useCartStore';
-
+import RoomGallery from '@/components/visualizer/RoomGallery';
 
 export default function CameraScreen() {
   const insets = useSafeAreaInsets();
@@ -20,11 +21,14 @@ export default function CameraScreen() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [isCameraReady, setIsCameraReady] = useState<boolean>(false);
+  const [showGallery, setShowGallery] = useState<boolean>(true); // Start with gallery open if walls exist
 
   const getWallpaperById = useWallpapersStore((s) => s.getWallpaperById);
   const wallpapers = useWallpapersStore((s) => s.wallpapers);
   const visualizerImage = useWallpapersStore((s) => s.visualizerImage);
   const setVisualizerImage = useWallpapersStore((s) => s.setVisualizerImage);
+  const userRooms = useWallpapersStore((s) => s.userRooms);
+  const addUserRoom = useWallpapersStore((s) => s.addUserRoom);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(visualizerImage); // Init from context
   const [showLowLightWarning, setShowLowLightWarning] = useState<boolean>(false);
@@ -62,6 +66,32 @@ export default function CameraScreen() {
   const availableImages = currentWallpaper?.imageUrls && currentWallpaper.imageUrls.length > 0
     ? currentWallpaper.imageUrls
     : [currentWallpaper?.imageUrl].filter(Boolean);
+
+  // Auto-hide gallery if no rooms
+  useEffect(() => {
+    if (userRooms.length === 0) {
+      setShowGallery(false);
+    }
+  }, [userRooms.length]);
+
+  const handleSelectRoom = async (image: string) => {
+    console.log('Selected room from gallery');
+    setUploadedImage(image);
+    setVisualizerImage(image);
+    setShowGallery(false);
+
+    // Auto-process if wallpaper selected
+    if (currentWallpaper) {
+      setIsProcessing(true);
+      try {
+        await processImageWithAI(image, currentWallpaper);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsProcessing(false);
+      }
+    }
+  };
 
   if (!permission) {
     return (
@@ -125,6 +155,9 @@ export default function CameraScreen() {
 
           setUploadedImage(imageBase64);
           setVisualizerImage(imageBase64); // Persist
+
+          // Save to user rooms gallery automatically
+          await addUserRoom(imageBase64);
 
           if (currentWallpaper) {
             setIsProcessing(true);
@@ -199,6 +232,9 @@ export default function CameraScreen() {
 
       setUploadedImage(photo.base64);
       setVisualizerImage(photo.base64); // Persist
+
+      // Save to user rooms gallery automatically
+      await addUserRoom(photo.base64);
 
       const isLowLight = await detectLowLight(photo.base64);
       console.log('Low light detected:', isLowLight);
@@ -816,255 +852,111 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
       } catch (compressError) {
         console.error('Error compressing fallback image:', compressError);
       }
-
-      const navigationParams = {
-        originalImage: compressedImageToUse,
-        processedImage: '', // Empty processed image
-        wallpaperId: selectedWallpaper?.id || '',
-        aiProcessingFailed: 'true',
-        errorMessage
-      };
-
-      console.log('Navigating to result screen with error fallback...');
-      router.push({
-        pathname: '/wallpaper-result',
-        params: navigationParams
-      });
     }
   }
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-          <ArrowLeft size={24} color={Colors.light.text} />
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <ArrowLeft color="#fff" size={24} />
         </TouchableOpacity>
-        <View style={styles.headerContent}>
-          <Text style={styles.headerTitle}>Visualizar Papel Tapiz</Text>
-          <Text style={styles.headerSubtitle}>
-            {currentWallpaper ? `Aplicando: ${currentWallpaper.name}` : 'Toma o sube una foto de tu pared'}
+
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>
+            {currentWallpaper ? 'Visualizador' : 'Cámara'}
           </Text>
-          {project && (
-            <Text style={styles.projectText}>
-              Proyecto: {project.name}
-            </Text>
-          )}
-          {cartWallpapers.length > 0 && !project && (
-            <Text style={styles.cartInfoText}>
-              {cartWallpapers.length} papel{cartWallpapers.length !== 1 ? 'es' : ''} tapiz en carrito
-            </Text>
-          )}
-          {availableImages.length > 1 && (
-            <Text style={styles.imageSelectionText}>
-              Imagen {selectedImageIndex + 1} de {availableImages.length}
+          {currentWallpaper && (
+            <Text style={styles.headerSubtitle} numberOfLines={1}>
+              {currentWallpaper.name}
             </Text>
           )}
         </View>
+
+        <View style={{ width: 40 }} />
       </View>
 
-      {availableWallpapers.length > 1 && !isProcessing && (
-        <View style={styles.wallpaperSelectionContainer}>
-          <View style={styles.wallpaperSelectionHeader}>
-            <Text style={styles.wallpaperSelectionTitle}>
-              {uploadedImage ? 'Cambiar papel tapiz:' : 'Papeles tapiz disponibles:'}
-            </Text>
-            {uploadedImage && (
-              <View style={styles.uploadedBadge}>
-                <Text style={styles.uploadedBadgeText}>Foto lista</Text>
-              </View>
-            )}
-          </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.wallpaperOptions}>
-            {availableWallpapers.map((wp, index) => (
-              <TouchableOpacity
-                key={wp.id}
-                style={[
-                  styles.wallpaperOption,
-                  currentWallpaperIndex === index && styles.wallpaperOptionSelected
-                ]}
-                onPress={() => {
-                  if (uploadedImage) {
-                    reprocessWithDifferentWallpaper(index);
-                  } else {
-                    setCurrentWallpaperIndex(index);
-                    setSelectedImageIndex(0);
-                  }
-                }}
-              >
-                <Image source={{ uri: wp.imageUrl }} style={styles.wallpaperOptionImage} />
-                <Text style={styles.wallpaperOptionName} numberOfLines={1}>{wp.name}</Text>
-                {currentWallpaperIndex === index && (
-                  <View style={styles.selectedIndicator}>
-                    <Text style={styles.selectedIndicatorText}>✓</Text>
-                  </View>
-                )}
-                {uploadedImage && (
-                  <View style={styles.reprocessIcon}>
-                    <Repeat size={14} color={Colors.light.background} />
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      )}
-
-      {availableImages.length > 1 && !isProcessing && (
-        <View style={styles.imageSelectionContainer}>
-          <Text style={styles.imageSelectionTitle}>Imágenes del papel tapiz:</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imageOptions}>
-            {availableImages.map((imageUrl, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.imageOption,
-                  selectedImageIndex === index && styles.imageOptionSelected
-                ]}
-                onPress={() => setSelectedImageIndex(index)}
-              >
-                <Image source={{ uri: imageUrl }} style={styles.optionImage} />
-                {selectedImageIndex === index && (
-                  <View style={styles.selectedIndicator}>
-                    <Text style={styles.selectedIndicatorText}>✓</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      )}
-
-      {showLowLightWarning && !isProcessing && (
-        <View style={styles.lightWarningContainer}>
-          <Text style={styles.lightWarningText}>
-            💡 Para obtener un resultado más exacto, mejora la iluminación
-          </Text>
-        </View>
-      )}
-
-      {isProcessing && (
+      {/* Camera View */}
+      {isProcessing ? (
         <View style={styles.processingContainer}>
           <ActivityIndicator size="large" color={Colors.light.primary} />
-          <Text style={styles.processingText}>
-            Procesando con IA...
-          </Text>
-          <Text style={styles.processingSubtext}>
-            Aplicando papel tapiz a tu pared
-          </Text>
+          <Text style={styles.processingText}>Procesando imagen con IA...</Text>
+          <Text style={styles.processingSubtext}>Esto puede tomar unos segundos</Text>
         </View>
-      )}
-
-      <View style={styles.cameraContainer}>
-        {uploadedImage ? (
-          <View style={styles.camera}>
-            <Image
-              source={{ uri: `data:image/jpeg;base64,${uploadedImage}` }}
-              style={styles.uploadedImagePreview}
-              resizeMode="contain"
-            />
-            <View style={styles.uploadedOverlay}>
-              <View style={styles.uploadedInfo}>
-                <Text style={styles.uploadedInfoText}>Foto lista para procesar</Text>
-                <Text style={styles.uploadedInfoSubtext}>
-                  {availableWallpapers.length > 1
-                    ? 'Selecciona diferentes papeles tapiz arriba para ver cambios'
-                    : 'Toca capturar para procesar'}
-                </Text>
+      ) : (
+        <CameraView
+          style={styles.camera}
+          facing={facing}
+          ref={cameraRef}
+          onCameraReady={() => setIsCameraReady(true)}
+        >
+          {/* Overlay Content */}
+          <View style={styles.overlay}>
+            {showLowLightWarning && (
+              <View style={styles.warningContainer}>
+                <Text style={styles.warningText}>⚠️ Poca luz detectada</Text>
               </View>
-            </View>
+            )}
 
-            <View style={styles.controls}>
-              <TouchableOpacity
-                style={[styles.changePhotoButton, isProcessing && styles.disabledButton]}
-                onPress={() => setUploadedImage(null)}
-                disabled={isProcessing}
-              >
-                <Camera size={24} color={Colors.light.background} />
-              </TouchableOpacity>
+            <View style={styles.controlsContainer}>
+              <View style={styles.topControls}>
+                {/* Room Gallery - Collapsible */}
+                {showGallery && userRooms.length > 0 && (
+                  <View style={styles.galleryContainer}>
+                    <RoomGallery
+                      onSelectRoom={handleSelectRoom}
+                      onAddRoom={pickImage}
+                    />
+                  </View>
+                )}
 
-              <TouchableOpacity
-                style={[styles.captureButton, isProcessing && styles.disabledButton]}
-                onPress={() => {
-                  if (currentWallpaper && uploadedImage) {
-                    setIsProcessing(true);
-                    processImageWithAI(uploadedImage, currentWallpaper).finally(() => setIsProcessing(false));
-                  }
-                }}
-                disabled={isProcessing}
-              >
-                <View style={styles.captureButtonInner}>
-                  {isProcessing ? (
-                    <ActivityIndicator size="small" color={Colors.light.background} />
-                  ) : (
-                    <Circle size={32} color={Colors.light.background} />
-                  )}
-                </View>
-              </TouchableOpacity>
+                {/* Toggle Gallery Button */}
+                {userRooms.length > 0 && !showGallery && (
+                  <TouchableOpacity
+                    style={styles.toggleGalleryButton}
+                    onPress={() => setShowGallery(true)}
+                  >
+                    <Home color="#FFF" size={20} />
+                    <Text style={styles.toggleGalleryText}>Mis Habitaciones</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
 
-              <TouchableOpacity
-                style={[styles.galleryButton, isProcessing && styles.disabledButton]}
-                onPress={pickImage}
-                disabled={isProcessing}
-              >
-                <ImageIcon size={24} color={Colors.light.background} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : (
-          <CameraView
-            ref={cameraRef}
-            style={styles.camera}
-            facing={facing}
-            zoom={0}
-            enableTorch={false}
-            videoQuality="480p"
-            responsiveOrientationWhenOrientationLocked={true}
-            onCameraReady={() => {
-              console.log('Camera ready callback triggered');
-              setIsCameraReady(true);
-            }}
-          >
-            <View style={styles.overlay}>
-              <View style={styles.guideline} />
-              <Text style={styles.guideText}>
-                Apunta hacia la pared donde quieres colocar el papel tapiz
+              <View style={styles.bottomControls}>
+                <TouchableOpacity
+                  style={styles.galleryButton}
+                  onPress={pickImage}
+                >
+                  <ImageIcon color="#fff" size={28} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.captureButton}
+                  onPress={takePicture}
+                  disabled={!isCameraReady}
+                >
+                  <View style={styles.captureButtonInner} />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.flipButton}
+                  onPress={toggleCameraFacing}
+                >
+                  <Repeat color="#fff" size={28} />
+                </TouchableOpacity>
+              </View>
+
+              <Text style={styles.instructionText}>
+                Toma una foto de tu pared o sube una imagen
               </Text>
             </View>
-
-            <View style={styles.controls}>
-              <TouchableOpacity
-                style={[styles.flipButton, isProcessing && styles.disabledButton]}
-                onPress={toggleCameraFacing}
-                disabled={isProcessing}
-              >
-                <FlipHorizontal size={24} color={Colors.light.background} />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.captureButton, (isProcessing || !isCameraReady) && styles.disabledButton]}
-                onPress={takePicture}
-                disabled={isProcessing || !isCameraReady}
-              >
-                <View style={styles.captureButtonInner}>
-                  {isProcessing ? (
-                    <ActivityIndicator size="small" color={Colors.light.background} />
-                  ) : (
-                    <Circle size={32} color={Colors.light.background} />
-                  )}
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={[styles.galleryButton, isProcessing && styles.disabledButton]}
-                onPress={pickImage}
-                disabled={isProcessing}
-              >
-                <ImageIcon size={24} color={Colors.light.background} />
-              </TouchableOpacity>
-            </View>
-          </CameraView>
-        )}
-      </View>
+          </View>
+        </CameraView>
+      )}
     </View>
   );
 }
@@ -1072,369 +964,217 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
+    backgroundColor: '#000',
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#000',
   },
   loadingText: {
+    color: '#fff',
+    marginTop: 10,
     fontSize: 16,
-    color: Colors.light.textSecondary,
+    fontFamily: 'Inter-Medium',
   },
   permissionContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
+    padding: 20,
+    backgroundColor: '#000',
   },
   permissionTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.light.text,
-    marginTop: 16,
-    marginBottom: 8,
+    fontFamily: 'Inter-Bold',
+    color: '#fff',
+    marginTop: 20,
+    marginBottom: 10,
   },
   permissionText: {
-    fontSize: 16,
-    color: Colors.light.textSecondary,
     textAlign: 'center',
+    color: '#ccc',
+    fontSize: 16,
+    marginBottom: 30,
+    fontFamily: 'Inter-Regular',
     lineHeight: 24,
-    marginBottom: 32,
   },
   permissionButton: {
     backgroundColor: Colors.light.primary,
-    paddingHorizontal: 32,
-    paddingVertical: 16,
-    borderRadius: 12,
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 30,
   },
   permissionButtonText: {
-    color: Colors.light.background,
+    color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: Colors.light.background,
-    gap: 16,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.light.backgroundSecondary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerContent: {
-    flex: 1,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.light.text,
-    marginBottom: 4,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-  },
-  cameraContainer: {
-    flex: 1,
-    margin: 16,
-    borderRadius: 16,
-    overflow: 'hidden',
+    fontFamily: 'Inter-Bold',
   },
   camera: {
     flex: 1,
   },
   overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    justifyContent: 'space-between',
   },
-  guideline: {
-    width: 200,
-    height: 200,
-    borderWidth: 2,
-    borderColor: Colors.light.primary,
-    borderRadius: 12,
-    borderStyle: 'dashed',
-    marginBottom: 16,
-  },
-  guideText: {
-    color: Colors.light.background,
-    fontSize: 16,
-    textAlign: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  controls: {
+  header: {
+    position: 'absolute',
+    top: 50, // Adjusted for inset
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 32,
-    paddingBottom: 32,
+    paddingHorizontal: 20,
+    zIndex: 10,
   },
-  flipButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  backButton: {
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  headerTitleContainer: {
+    alignItems: 'center',
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'Inter-Bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+  },
+  headerSubtitle: {
+    color: '#rgba(255,255,255,0.9)',
+    fontSize: 12,
+    fontFamily: 'Inter-Medium',
+    marginTop: 2,
+    maxWidth: 200,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 5,
+  },
+  controlsContainer: {
+    flex: 1,
+    justifyContent: 'space-between', // Push top controls up and bottom controls down
+    paddingBottom: 40,
+  },
+  topControls: {
+    marginTop: 100, // Space below header
+    paddingHorizontal: 0,
+  },
+  galleryContainer: {
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingVertical: 10,
+    marginTop: 10,
+  },
+  toggleGalleryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignSelf: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  toggleGalleryText: {
+    color: '#fff',
+    marginLeft: 8,
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+  },
+  bottomControls: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    marginBottom: 20,
   },
   captureButton: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: Colors.light.primary,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 4,
+    borderColor: '#fff',
   },
   captureButtonInner: {
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: Colors.light.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: Colors.light.background,
+    backgroundColor: '#fff',
   },
   galleryButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#fff',
   },
-  changePhotoButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  flipButton: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#fff',
+  },
+  instructionText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+    marginTop: 10,
   },
   processingContainer: {
-    backgroundColor: Colors.light.primary,
-    marginHorizontal: 16,
-    marginBottom: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderRadius: 12,
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    backgroundColor: '#000',
   },
   processingText: {
-    color: Colors.light.background,
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    color: '#fff',
+    marginTop: 20,
+    fontSize: 18,
+    fontFamily: 'Inter-Bold',
   },
   processingSubtext: {
-    color: Colors.light.background,
+    color: '#ccc',
+    marginTop: 10,
     fontSize: 14,
-    textAlign: 'center',
-    opacity: 0.8,
+    fontFamily: 'Inter-Regular',
   },
-  disabledButton: {
-    opacity: 0.5,
-  },
-  imageSelectionText: {
-    fontSize: 12,
-    color: Colors.light.textSecondary,
-    marginTop: 2,
-  },
-  projectText: {
-    fontSize: 12,
-    color: Colors.light.primary,
-    marginTop: 2,
-    fontWeight: '600',
-  },
-  wallpaperSelectionContainer: {
-    backgroundColor: Colors.light.primary,
-    marginHorizontal: 16,
-    marginBottom: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-  },
-  wallpaperSelectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.background,
-    marginBottom: 12,
-  },
-  wallpaperOptions: {
-    flexDirection: 'row',
-  },
-  wallpaperOption: {
-    position: 'relative',
-    marginRight: 12,
-    borderRadius: 8,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: 'transparent',
-    backgroundColor: Colors.light.background,
-    padding: 4,
-    width: 80,
-  },
-  wallpaperOptionSelected: {
-    borderColor: Colors.light.background,
-    borderWidth: 3,
-  },
-  wallpaperOptionImage: {
-    width: 72,
-    height: 72,
-    resizeMode: 'cover',
-    borderRadius: 4,
-  },
-  wallpaperOptionName: {
-    fontSize: 10,
-    color: Colors.light.text,
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  imageSelectionContainer: {
-    backgroundColor: Colors.light.backgroundSecondary,
-    marginHorizontal: 16,
-    marginBottom: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-  },
-  imageSelectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.light.text,
-    marginBottom: 12,
-  },
-  imageOptions: {
-    flexDirection: 'row',
-  },
-  imageOption: {
-    position: 'relative',
-    marginRight: 12,
-    borderRadius: 8,
-    overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  imageOptionSelected: {
-    borderColor: Colors.light.primary,
-  },
-  optionImage: {
-    width: 60,
-    height: 60,
-    resizeMode: 'cover',
-  },
-  selectedIndicator: {
+  warningContainer: {
     position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: Colors.light.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  selectedIndicatorText: {
-    color: Colors.light.background,
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  cartInfoText: {
-    fontSize: 12,
-    color: Colors.light.primary,
-    marginTop: 2,
-    fontWeight: '600',
-  },
-  wallpaperSelectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  uploadedBadge: {
-    backgroundColor: Colors.light.background,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  uploadedBadgeText: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: Colors.light.primary,
-  },
-  reprocessIcon: {
-    position: 'absolute',
-    bottom: 4,
-    right: 4,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: Colors.light.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  uploadedImagePreview: {
-    flex: 1,
-    width: '100%',
-  },
-  uploadedOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 80,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-  },
-  uploadedInfo: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  uploadedInfoText: {
-    color: Colors.light.background,
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  uploadedInfoSubtext: {
-    color: Colors.light.background,
-    fontSize: 14,
-    textAlign: 'center',
-    opacity: 0.8,
-  },
-  lightWarningContainer: {
-    backgroundColor: '#FFA500',
-    marginHorizontal: 16,
-    marginBottom: 8,
+    top: 100,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(255, 149, 0, 0.9)',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: 'center',
+    paddingVertical: 8,
+    borderRadius: 20,
   },
-  lightWarningText: {
-    color: Colors.light.background,
+  warningText: {
+    color: '#fff',
     fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontFamily: 'Inter-Bold',
   },
 });
