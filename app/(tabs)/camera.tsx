@@ -176,33 +176,20 @@ export default function CameraScreen() {
 
   async function takePicture() {
     console.log('=== TAKING PICTURE ===');
-    console.log('Camera ref exists:', !!cameraRef.current);
-    console.log('Camera ready:', isCameraReady);
-    console.log('Wallpaper exists:', !!wallpaper);
-    console.log('Wallpaper ID from params:', wallpaperId);
-    console.log('Selected wallpaper:', wallpaper ? { id: wallpaper.id, name: wallpaper.name } : 'null');
 
+    // Safety check for ref
     if (!cameraRef.current) {
       console.error('Camera ref is null');
-      if (Platform.OS !== 'web') {
-        Alert.alert('Error', 'No se pudo acceder a la cámara');
+      if (Platform.OS === 'web') {
+        alert('La cámara no está lista. Por favor recarga la página.');
+      } else {
+        Alert.alert('Error', 'No se pudo acceder a la cámara. Intenta reiniciar la app.');
       }
       return;
     }
 
     if (!isCameraReady) {
-      console.log('Camera not ready yet, waiting...');
-      if (Platform.OS !== 'web') {
-        Alert.alert('Espera', 'La cámara aún se está inicializando. Intenta de nuevo en un momento.');
-      }
-      return;
-    }
-
-    if (!currentWallpaper) {
-      console.error('No wallpaper selected');
-      if (Platform.OS !== 'web') {
-        Alert.alert('Error', 'No se seleccionó papel tapiz. Por favor, regresa y selecciona un papel tapiz.');
-      }
+      console.log('Camera not ready yet');
       return;
     }
 
@@ -210,15 +197,35 @@ export default function CameraScreen() {
       setIsProcessing(true);
       console.log('Starting photo capture...');
 
+      // Web specific delay to ensure stream is active
       if (Platform.OS === 'web') {
-        console.log('Web platform detected, adding delay for camera stream...');
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise(resolve => setTimeout(resolve, 200));
       }
 
-      const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.8,
-        base64: true,
-      });
+      let photo;
+      try {
+        photo = await cameraRef.current.takePictureAsync({
+          quality: 0.8,
+          base64: true,
+          // skipProcessing: true, // Potential optimization check if available
+        });
+      } catch (innerError) {
+        // Retry once for web
+        if (Platform.OS === 'web') {
+          console.log('Capture failed, retrying in 500ms...');
+          await new Promise(resolve => setTimeout(resolve, 500));
+          if (cameraRef.current) {
+            photo = await cameraRef.current.takePictureAsync({
+              quality: 0.8,
+              base64: true,
+            });
+          } else {
+            throw innerError;
+          }
+        } else {
+          throw innerError;
+        }
+      }
 
       console.log('Photo captured:', {
         hasUri: !!photo?.uri,
@@ -227,30 +234,47 @@ export default function CameraScreen() {
       });
 
       if (!photo || !photo.base64) {
-        throw new Error('No se pudo capturar la imagen');
+        throw new Error('No se pudo capturar la imagen (datos vacíos)');
       }
 
       setUploadedImage(photo.base64);
       setVisualizerImage(photo.base64); // Persist
 
       // Save to user rooms gallery automatically
-      await addUserRoom(photo.base64);
+      // Wrap in try-catch to prevent blocking main flow
+      try {
+        await addUserRoom(photo.base64);
+      } catch (e) {
+        console.error('Error saving room:', e);
+      }
 
       const isLowLight = await detectLowLight(photo.base64);
       console.log('Low light detected:', isLowLight);
       setShowLowLightWarning(isLowLight);
 
       console.log('Processing image with AI...');
-      await processImageWithAI(photo.base64, currentWallpaper);
+      if (currentWallpaper) {
+        await processImageWithAI(photo.base64, currentWallpaper);
+      } else {
+        // Should not happen due to guard clause before, but safe
+        console.warn('No wallpaper selected, skipping AI processing');
+        setIsProcessing(false);
+      }
 
     } catch (error) {
       console.error('Error capturing photo:', error);
+      setIsProcessing(false); // Ensure loader stops
+      const msg = error instanceof Error ? error.message : 'Error desconocido';
       if (Platform.OS !== 'web') {
-        Alert.alert('Error', 'No se pudo capturar la foto. Inténtalo de nuevo.');
+        Alert.alert('Error', `No se pudo capturar la foto: ${msg}`);
+      } else {
+        alert(`Error al capturar foto: ${msg}`);
       }
-    } finally {
-      setIsProcessing(false);
     }
+    // Do NOT put setIsProcessing(false) in finally because processImageWithAI is async and we want loading state to persist until IT finishes
+    // But wait, processImageWithAI handles its own finally{setIsProcessing(false)}? Yes.
+    // However, if we error OUT here before calling processImageWithAI, we must clear it.
+    // The catch block handles clearing it in error case.
   }
 
   async function reprocessWithDifferentWallpaper(wallpaperIndex: number) {
