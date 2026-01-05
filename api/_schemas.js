@@ -19,6 +19,12 @@ export const orderCreateSchema = z.object({
       name: z.string(),
       quantity: z.number().int().positive(),
       price: z.number().nonnegative(),
+      // Fields needed for Cart/Email logic
+      wallpaperId: z.string().optional(),
+      purchaseType: z.string().optional(),
+      rollsNeeded: z.number().optional(),
+      wallArea: z.number().optional(),
+      wallpaper: z.any().optional(), // Allow the full wallpaper object
     })).min(1, 'Debe haber al menos un item'),
     total: z.number().nonnegative().optional(),
     status: z.enum(['pending', 'processing', 'completed', 'cancelled']).optional(),
