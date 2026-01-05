@@ -298,8 +298,9 @@ export default function CameraScreen() {
       const cleanUrl = imageUrl.trim();
 
       const proxyServices = [
-        cleanUrl,
+        cleanUrl, // Try direct first (works on mobile)
         `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&default=1`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(cleanUrl)}`, // Added fallback
         `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
       ];
 
@@ -309,112 +310,47 @@ export default function CameraScreen() {
         const url = proxyServices[i];
         const methodName = i === 0 ? 'Direct' : `Proxy ${i}`;
         console.log(`[${i + 1}/${proxyServices.length}] Trying ${methodName}...`);
-        console.log(`URL: ${url.substring(0, 100)}...`);
 
         try {
+          // Skip Direct on Web if not same origin
+          if (Platform.OS === 'web' && i === 0 && !cleanUrl.includes(window.location.origin)) {
+            console.log('Skipping Direct fetch on Web (CORS risk)');
+            continue;
+          }
+
           const fetchOptions: RequestInit = {
             signal: controller.signal,
             method: 'GET',
           };
 
           if (i === 0) {
-            fetchOptions.headers = {
-              'Accept': 'image/*,*/*',
-              'Cache-Control': 'no-cache',
-            };
+            fetchOptions.headers = { 'Accept': 'image/*' };
           }
 
-          console.log(`Fetching with options:`, { method: fetchOptions.method });
           const response = await fetch(url, fetchOptions);
 
-          console.log(`Response status: ${response.status} ${response.statusText}`);
-          console.log(`Response headers:`, {
-            contentType: response.headers.get('content-type'),
-            contentLength: response.headers.get('content-length'),
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-          }
-
-          const contentType = response.headers.get('content-type');
-          if (contentType && !contentType.startsWith('image/')) {
-            console.warn('Response is not an image:', contentType);
-            throw new Error('Invalid content type');
-          }
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
           const blob = await response.blob();
-          console.log(`Blob received - size: ${blob.size}, type: ${blob.type}`);
+          if (blob.size === 0) throw new Error('Empty image');
 
-          if (blob.size === 0) {
-            throw new Error('Empty image response');
-          }
-
-          if (blob.size > 10 * 1024 * 1024) {
-            console.warn('Large image detected:', blob.size, 'bytes');
-          }
-
-          const base64 = await new Promise<string>((resolve, reject) => {
+          return await new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
-
-            const readerTimeout = setTimeout(() => {
-              reject(new Error('FileReader timeout'));
-            }, 15000);
-
             reader.onloadend = () => {
-              clearTimeout(readerTimeout);
-              const result = reader.result as string;
-              if (!result || typeof result !== 'string') {
-                reject(new Error('Failed to convert to base64'));
-                return;
-              }
-
-              const base64Data = result.split(',')[1];
-              if (!base64Data) {
-                reject(new Error('Invalid base64 format'));
-                return;
-              }
-
-              console.log(`Base64 conversion successful, length: ${base64Data.length}`);
-              resolve(base64Data);
+              const res = reader.result as string;
+              if (res) resolve(res.split(',')[1]);
+              else reject(new Error('Failed to convert'));
             };
-
-            reader.onerror = (error) => {
-              clearTimeout(readerTimeout);
-              console.error('FileReader error:', error);
-              reject(new Error('FileReader error'));
-            };
-
+            reader.onerror = reject;
             reader.readAsDataURL(blob);
           });
 
-          clearTimeout(timeoutId);
-          console.log(`✓ Successfully fetched and converted image using ${methodName}`);
-          return base64;
-
         } catch (error) {
-          const errorMsg = error instanceof Error ? error.message : String(error);
-          console.error(`✗ Method ${i + 1} (${methodName}) failed:`, errorMsg);
-
+          console.warn(`${methodName} failed:`, error);
           lastError = error instanceof Error ? error : new Error(String(error));
-
-          if (error instanceof Error && error.name === 'AbortError') {
-            console.error('Request aborted due to timeout');
-            break;
-          }
-
-          if (i < proxyServices.length - 1) {
-            console.log('Trying next method...');
-            await new Promise(resolve => setTimeout(resolve, 1000));
-          }
-          continue;
         }
       }
-
-      console.error('All fetch methods failed');
-      const errorMessage = lastError?.message || 'Unknown error';
-      throw new Error(`No se pudo cargar la imagen del papel tapiz. ${errorMessage.includes('Failed to fetch') ? 'Verifica tu conexión a internet o intenta con otra imagen.' : errorMessage}`);
-
+      throw lastError || new Error('All methods failed');
     } finally {
       clearTimeout(timeoutId);
     }
