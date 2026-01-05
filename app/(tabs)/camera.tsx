@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
-import { Camera, FlipHorizontal, Circle, ArrowLeft, ImageIcon, Repeat } from 'lucide-react-native';
+import { Camera, FlipHorizontal, Circle, ArrowLeft, ImageIcon, Repeat, Home } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
@@ -840,83 +840,86 @@ PRIORITY: Identify the PRIMARY WALL correctly (largest flat vertical surface in 
         <View style={{ width: 40 }} />
       </View>
 
-      {/* Camera View */}
-      {isProcessing ? (
-        <View style={styles.processingContainer}>
-          <ActivityIndicator size="large" color={Colors.light.primary} />
-          <Text style={styles.processingText}>Procesando imagen con IA...</Text>
-          <Text style={styles.processingSubtext}>Esto puede tomar unos segundos</Text>
-        </View>
-      ) : (
-        <CameraView
-          style={styles.camera}
-          facing={facing}
-          ref={cameraRef}
-          onCameraReady={() => setIsCameraReady(true)}
-        >
-          {/* Overlay Content */}
-          <View style={styles.overlay}>
-            {showLowLightWarning && (
-              <View style={styles.warningContainer}>
-                <Text style={styles.warningText}>⚠️ Poca luz detectada</Text>
-              </View>
-            )}
-
-            <View style={styles.controlsContainer}>
-              <View style={styles.topControls}>
-                {/* Room Gallery - Collapsible */}
-                {showGallery && userRooms.length > 0 && (
-                  <View style={styles.galleryContainer}>
-                    <RoomGallery
-                      onSelectRoom={handleSelectRoom}
-                      onAddRoom={pickImage}
-                    />
-                  </View>
-                )}
-
-                {/* Toggle Gallery Button */}
-                {userRooms.length > 0 && !showGallery && (
-                  <TouchableOpacity
-                    style={styles.toggleGalleryButton}
-                    onPress={() => setShowGallery(true)}
-                  >
-                    <Home color="#FFF" size={20} />
-                    <Text style={styles.toggleGalleryText}>Mis Habitaciones</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View style={styles.bottomControls}>
-                <TouchableOpacity
-                  style={styles.galleryButton}
-                  onPress={pickImage}
-                >
-                  <ImageIcon color="#fff" size={28} />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.captureButton}
-                  onPress={takePicture}
-                  disabled={!isCameraReady}
-                >
-                  <View style={styles.captureButtonInner} />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.flipButton}
-                  onPress={toggleCameraFacing}
-                >
-                  <Repeat color="#fff" size={28} />
-                </TouchableOpacity>
-              </View>
-
-              <Text style={styles.instructionText}>
-                Toma una foto de tu pared o sube una imagen
-              </Text>
+      {/* Camera View - Always mounted to preserve ref */}
+      <CameraView
+        style={styles.camera}
+        facing={facing}
+        ref={cameraRef}
+        onCameraReady={() => setIsCameraReady(true)}
+      >
+        {/* Overlay Content */}
+        <View style={styles.overlay}>
+          {showLowLightWarning && (
+            <View style={styles.warningContainer}>
+              <Text style={styles.warningText}>⚠️ Poca luz detectada</Text>
             </View>
+          )}
+
+          <View style={styles.controlsContainer}>
+            <View style={styles.topControls}>
+              {/* Room Gallery - Collapsible */}
+              {showGallery && userRooms.length > 0 && (
+                <View style={styles.galleryContainer}>
+                  <RoomGallery
+                    onSelectRoom={handleSelectRoom}
+                    onAddRoom={pickImage}
+                  />
+                </View>
+              )}
+
+              {/* Toggle Gallery Button */}
+              {userRooms.length > 0 && !showGallery && (
+                <TouchableOpacity
+                  style={styles.toggleGalleryButton}
+                  onPress={() => setShowGallery(true)}
+                >
+                  <Home color="#FFF" size={20} />
+                  <Text style={styles.toggleGalleryText}>Mis Habitaciones</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.bottomControls}>
+              <TouchableOpacity
+                style={styles.galleryButton}
+                onPress={pickImage}
+                disabled={isProcessing}
+              >
+                <ImageIcon color="#fff" size={28} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.captureButton, isProcessing && { opacity: 0.5 }]}
+                onPress={takePicture}
+                disabled={!isCameraReady || isProcessing}
+              >
+                <View style={styles.captureButtonInner} />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.flipButton}
+                onPress={toggleCameraFacing}
+                disabled={isProcessing}
+              >
+                <Repeat color="#fff" size={28} />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.instructionText}>
+              Toma una foto de tu pared o sube una imagen
+            </Text>
           </View>
-        </CameraView>
-      )}
+        </View>
+
+        {/* Processing Overlay */}
+        {isProcessing && (
+          <View style={[StyleSheet.absoluteFill, styles.processingContainer]}>
+            <ActivityIndicator size="large" color={Colors.light.primary} />
+            <Text style={styles.processingText}>Procesando imagen con IA...</Text>
+            <Text style={styles.processingSubtext}>Esto puede tomar unos segundos</Text>
+          </View>
+        )}
+      </CameraView>
     </View>
   );
 }
