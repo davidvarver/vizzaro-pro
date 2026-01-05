@@ -37,6 +37,7 @@ export default function CheckoutScreen() {
   const getShippingCost = useCartStore((s) => s.getShippingCost);
   const getGrandTotal = useCartStore((s) => s.getGrandTotal);
 
+  const cartItems = useCartStore((s) => s.cartItems);
   const contextClearCart = useCartStore((s) => s.clearCart);
 
   const items = cartItems || [];

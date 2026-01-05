@@ -640,6 +640,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1,
   },
+  sampleBtn: {
+    backgroundColor: 'transparent',
+    paddingVertical: 15,
+    borderRadius: 4,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.light.primary,
+    marginTop: 10,
+  },
+  sampleBtnText: {
+    color: Colors.light.primary,
+    fontSize: 14,
+    fontWeight: 'bold',
+    letterSpacing: 1,
+  },
 
   shippingInfo: {
     flexDirection: 'row',
