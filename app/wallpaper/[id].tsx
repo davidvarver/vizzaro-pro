@@ -10,6 +10,8 @@ import {
   Platform,
   ActivityIndicator,
   Animated,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
@@ -18,13 +20,8 @@ import {
   Share2,
   Minus,
   Plus,
-  ShieldCheck,
-  Truck,
-  Ruler,
-  Info,
-  ShoppingCart,
-  Heart,
-  Camera,
+  Layers,
+  X,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
@@ -42,7 +39,7 @@ export default function WallpaperDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const getWallpaperById = useWallpapersStore((s) => s.getWallpaperById);
-  const wallpapers = useWallpapersStore((s) => s.wallpapers); // Get all wallpapers to find variants
+  const wallpapers = useWallpapersStore((s) => s.wallpapers);
   const addToCart = useCartStore((s) => s.addToCart);
   const cartItems = useCartStore((s) => s.cartItems);
   const addToHistory = useHistoryStore((s) => s.addToHistory);
@@ -56,6 +53,49 @@ export default function WallpaperDetailsScreen() {
   const wallpaper = getWallpaperById(id || '');
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+
+  // Calculator State
+  const [showCalculator, setShowCalculator] = useState(false);
+  const [calcHeight, setCalcHeight] = useState('');
+  const [calcWidth, setCalcWidth] = useState('');
+  const [calculatedRolls, setCalculatedRolls] = useState(0);
+
+  const calculateRolls = () => {
+    if (!wallpaper || !calcHeight || !calcWidth) return;
+
+    const wHeightM = parseFloat(calcHeight) * 0.3048; // ft to m
+    const wWidthM = parseFloat(calcWidth) * 0.3048;   // ft to m
+
+    // Roll specs (defaulting if missing)
+    const rollWidth = wallpaper.dimensions?.width || 0.53;
+    const rollLength = wallpaper.dimensions?.height || 10.05;
+
+    // Pattern Repeat (inches to m)
+    const repeatM = (wallpaper.patternRepeat || 0) * 0.0254;
+
+    // Calc Strips
+    // Height needed per strip = Wall Height + Repeat + Trim Buffer (10cm)
+    const heightPerStrip = wHeightM + repeatM + 0.1;
+
+    // Strips possible per roll
+    const stripsPerRoll = Math.floor(rollLength / heightPerStrip);
+
+    if (stripsPerRoll <= 0) {
+      // Wall is taller than a single roll? Fallback to crude area calc + 20%
+      const wallArea = wHeightM * wWidthM;
+      const rollArea = rollWidth * rollLength;
+      const rolls = Math.ceil((wallArea * 1.2) / rollArea);
+      setCalculatedRolls(Math.max(1, rolls));
+      return;
+    }
+
+    // Total strips needed for width
+    const stripsNeeded = Math.ceil(wWidthM / rollWidth);
+
+    // Total rolls
+    const rollsNeeded = Math.ceil(stripsNeeded / stripsPerRoll);
+    setCalculatedRolls(Math.max(1, rollsNeeded));
+  };
 
   // ...
 
@@ -313,6 +353,37 @@ export default function WallpaperDetailsScreen() {
               {wallpaper.description || "Un diseño exclusivo que transforma cualquier espacio. Fabricado con materiales de alta calidad para asegurar durabilidad y un acabado premium."}
             </Text>
 
+            {/* Calculator Teaser */}
+            <TouchableOpacity style={styles.calculatorRow} onPress={() => setShowCalculator(true)}>
+              <Info size={20} color={Colors.light.accent} />
+              <View>
+                <Text style={styles.calculatorText}>How much do I need?</Text>
+                <Text style={styles.calculatorSubtext}>Calculate rolls inclusive of pattern repeat</Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Pattern Info Display */}
+            <View style={styles.specsContainer}>
+              <View style={styles.specItem}>
+                <Ruler size={20} color={Colors.light.textSecondary} />
+                <View>
+                  <Text style={styles.specLabel}>Pattern Repeat</Text>
+                  <Text style={styles.specValue}>
+                    {wallpaper.patternRepeat ? `${wallpaper.patternRepeat} in` : 'None'}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.specItem}>
+                <Layers size={20} color={Colors.light.textSecondary} />
+                <View>
+                  <Text style={styles.specLabel}>Match</Text>
+                  <Text style={styles.specValue}>{wallpaper.patternMatch || 'Random'}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+
             <View style={styles.specsContainer}>
               <View style={styles.specItem}>
                 <Ruler size={20} color={Colors.light.textSecondary} />
@@ -335,12 +406,6 @@ export default function WallpaperDetailsScreen() {
             </View>
 
             <View style={styles.divider} />
-
-            {/* Calculator Teaser */}
-            <TouchableOpacity style={styles.calculatorRow}>
-              <Info size={20} color={Colors.light.accent} />
-              <Text style={styles.calculatorText}>How much do I need? Calculate rolls</Text>
-            </TouchableOpacity>
 
             {/* Actions */}
             <View style={styles.actionContainer}>
@@ -374,6 +439,73 @@ export default function WallpaperDetailsScreen() {
                 <Text style={styles.sampleBtnText}>ORDER SAMPLE ($5.00)</Text>
               </TouchableOpacity>
             </View>
+
+            {/* CALCULATOR MODAL */}
+            <Modal
+              visible={showCalculator}
+              transparent
+              animationType="slide"
+              onRequestClose={() => setShowCalculator(false)}
+            >
+              <View style={styles.modalOverlay}>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Roll Calculator</Text>
+                    <TouchableOpacity onPress={() => setShowCalculator(false)}>
+                      <X color="#000" size={24} />
+                    </TouchableOpacity>
+                  </View>
+
+                  <Text style={styles.modalDesc}>
+                    Enter your wall dimensions. We account for pattern repeat ({wallpaper.patternRepeat || 0}") and basic trim waste.
+                  </Text>
+
+                  <View style={styles.inputRow}>
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Height (feet)</Text>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        value={calcHeight}
+                        onChangeText={setCalcHeight}
+                        placeholder="e.g. 9"
+                      />
+                    </View>
+                    <View style={styles.inputGroup}>
+                      <Text style={styles.inputLabel}>Width (feet)</Text>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="numeric"
+                        value={calcWidth}
+                        onChangeText={setCalcWidth}
+                        placeholder="e.g. 12"
+                      />
+                    </View>
+                  </View>
+
+                  <TouchableOpacity style={styles.calcBtn} onPress={calculateRolls}>
+                    <Text style={styles.calcBtnText}>Calculate</Text>
+                  </TouchableOpacity>
+
+                  {calculatedRolls > 0 && (
+                    <View style={styles.resultContainer}>
+                      <Text style={styles.resultText}>You need approximately:</Text>
+                      <Text style={styles.resultValue}>{calculatedRolls} Rolls</Text>
+                      <TouchableOpacity
+                        style={styles.useResultBtn}
+                        onPress={() => {
+                          setQuantity(calculatedRolls);
+                          setShowCalculator(false);
+                        }}
+                      >
+                        <Text style={styles.useResultText}>Update Cart Quantity</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </Modal>
+
 
 
 
@@ -412,7 +544,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 2,
     color: Colors.light.primary,
+    fontWeight: 'bold',
   },
+  calculatorSubtext: { fontSize: 10, color: '#666' },
+
+  modalOverlay: {
+    flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'
+  },
+  modalContent: {
+    width: '90%', maxWidth: 400, backgroundColor: '#FFF', borderRadius: 12, padding: 20,
+    elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84
+  },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
+  modalTitle: { fontSize: 20, fontWeight: 'bold' },
+  modalDesc: { fontSize: 14, color: '#666', marginBottom: 20 },
+  inputRow: { flexDirection: 'row', gap: 15, marginBottom: 20 },
+  inputGroup: { flex: 1 },
+  inputLabel: { fontSize: 12, fontWeight: '600', marginBottom: 5 },
+  input: { borderWidth: 1, borderColor: '#DDD', borderRadius: 8, padding: 10, fontSize: 16 },
+  calcBtn: { backgroundColor: Colors.light.primary, padding: 12, borderRadius: 8, alignItems: 'center' },
+  calcBtnText: { color: '#FFF', fontWeight: 'bold' },
+  resultContainer: { marginTop: 20, padding: 15, backgroundColor: '#F0F9FF', borderRadius: 8, alignItems: 'center' },
+  resultText: { fontSize: 14, color: '#000' },
+  resultValue: { fontSize: 24, fontWeight: 'bold', color: Colors.light.primary, marginVertical: 5 },
+  useResultBtn: { marginTop: 10 },
+  useResultText: { color: Colors.light.primary, fontWeight: '600', textDecorationLine: 'underline' }
 
   contentWrapper: {
     flexDirection: 'column',

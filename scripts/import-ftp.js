@@ -283,7 +283,14 @@ async function main() {
                     showInHome: true,
                     brand: row['Brand'],
                     origin: row['Country of Origin'],
-                    publicSku: `VIZ-${pattern}`
+                    rating: 0,
+                    reviews: 0,
+                    showInHome: true,
+                    brand: row['Brand'],
+                    origin: row['Country of Origin'],
+                    publicSku: `VIZ-${pattern}`,
+                    patternRepeat: cleanPrice(row['Repeat']), // Use cleanPrice to extract number
+                    patternMatch: row['Match'] || 'Random',
                 };
 
                 // Add to map and list

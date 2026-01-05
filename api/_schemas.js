@@ -65,36 +65,37 @@ export const catalogItemSchema = z.object({
   showInHome: z.boolean().optional().default(false),
   featured: z.boolean().optional(),
   tags: z.array(z.string()).optional(),
-});
+  patternRepeat: z.number().nonnegative().optional().default(0), // in inches usually? or matches dimensions unit
+  patternMatch: z.string().optional().default('Random'), // e.g., Straight, Drop, Random
 
-export const catalogUpdateSchema = z.object({
-  catalog: z.array(catalogItemSchema).min(1, 'El catálogo debe tener al menos un item'),
-});
+  export const catalogUpdateSchema = z.object({
+    catalog: z.array(catalogItemSchema).min(1, 'El catálogo debe tener al menos un item'),
+  });
 
-export const collectionSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
-  imageUrl: z.string().url().optional(),
-  wallpaperIds: z.array(z.string()).optional(),
-});
+  export const collectionSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1).max(100),
+    description: z.string().max(500).optional(),
+    imageUrl: z.string().url().optional(),
+    wallpaperIds: z.array(z.string()).optional(),
+  });
 
-export const collectionsUpdateSchema = z.object({
-  collections: z.array(collectionSchema),
-});
+  export const collectionsUpdateSchema = z.object({
+    collections: z.array(collectionSchema),
+  });
 
-export const verificationEmailSchema = z.object({
-  email: z.string().email('Email inválido'),
-  code: z.string().length(6, 'El código debe tener 6 dígitos'),
-});
+  export const verificationEmailSchema = z.object({
+    email: z.string().email('Email inválido'),
+    code: z.string().length(6, 'El código debe tener 6 dígitos'),
+  });
 
-export function validateRequest(schema, data) {
+  export function validateRequest(schema, data) {
   try {
     return {
       success: true,
       data: schema.parse(data),
     };
-  } catch (error) {
+  } catch(error) {
     if (error instanceof z.ZodError) {
       return {
         success: false,
