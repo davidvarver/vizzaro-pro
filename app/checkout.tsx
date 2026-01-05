@@ -33,8 +33,10 @@ type PaymentMethod = 'zelle' | 'credit_card';
 
 export default function CheckoutScreen() {
   const insets = useSafeAreaInsets();
-  const cartItems = useCartStore((s) => s.cartItems);
-  const getCartTotal = useCartStore((s) => s.getCartTotal);
+  const getSubtotal = useCartStore((s) => s.getSubtotal);
+  const getShippingCost = useCartStore((s) => s.getShippingCost);
+  const getGrandTotal = useCartStore((s) => s.getGrandTotal);
+
   const contextClearCart = useCartStore((s) => s.clearCart);
 
   const items = cartItems || [];
@@ -61,7 +63,9 @@ export default function CheckoutScreen() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-  const total = getCartTotal(); // Use the context function for consistency
+  const subtotal = getSubtotal();
+  const shipping = getShippingCost();
+  const total = getGrandTotal();
 
   let [fontsLoaded] = useFonts({
     PlayfairDisplay_700Bold,
@@ -98,7 +102,7 @@ export default function CheckoutScreen() {
     try {
       const orderData = {
         items,
-        total,
+        total, // Grand Total
         // Flat customer properties to match Order interface
         customerName: customerInfo.name,
         customerEmail: customerInfo.email,
@@ -284,7 +288,17 @@ export default function CheckoutScreen() {
 
         {/* FOOTER */}
         <View style={[styles.footer, { paddingBottom: insets.bottom + 20 }]}>
-          <View style={styles.totalRow}>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>Subtotal</Text>
+            <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
+          </View>
+          {shipping > 0 && (
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Shipping</Text>
+              <Text style={styles.summaryValue}>${shipping.toFixed(2)}</Text>
+            </View>
+          )}
+          <View style={[styles.summaryRow, { marginTop: 10 }]}>
             <Text style={styles.totalLabel}>Total</Text>
             <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
           </View>
@@ -306,6 +320,7 @@ export default function CheckoutScreen() {
 }
 
 const styles = StyleSheet.create({
+  // ... existing styles ...
   container: { flex: 1, backgroundColor: '#FFF' },
   header: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
@@ -359,13 +374,16 @@ const styles = StyleSheet.create({
     padding: 20, borderTopWidth: 1, borderTopColor: '#EEE',
     backgroundColor: '#FFF',
   },
-  totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
+  summaryLabel: { fontFamily: 'Lato_400Regular', fontSize: 16, color: '#666' },
+  summaryValue: { fontFamily: 'Lato_700Bold', fontSize: 16, color: '#333' },
+
   totalLabel: { fontFamily: 'PlayfairDisplay_700Bold', fontSize: 20 },
   totalValue: { fontFamily: 'Lato_700Bold', fontSize: 24, color: Colors.light.primary },
 
   placeOrderBtn: {
     backgroundColor: '#111', paddingVertical: 18, borderRadius: 4,
-    alignItems: 'center', justifyContent: 'center'
+    alignItems: 'center', justifyContent: 'center', marginTop: 15
   },
   placeOrderText: { color: '#FFF', fontFamily: 'Lato_700Bold', fontSize: 16, letterSpacing: 1 }
 });

@@ -366,6 +366,13 @@ export default function WallpaperDetailsScreen() {
               >
                 <Text style={styles.addToCartText}>ADD TO CART</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.sampleBtn}
+                onPress={() => addToCart(wallpaper, 1, 0, 'sample')}
+              >
+                <Text style={styles.sampleBtnText}>ORDER SAMPLE ($5.00)</Text>
+              </TouchableOpacity>
             </View>
 
 
