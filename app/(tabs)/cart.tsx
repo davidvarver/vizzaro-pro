@@ -11,13 +11,18 @@ export default function CartScreen() {
   const cartItems = useCartStore((state) => state.cartItems);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
-  const getCartTotal = useCartStore((state) => state.getCartTotal);
-  const [deliveryOption, setDeliveryOption] = useState<'delivery'>('delivery');
+
+  // Use new getters
+  const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const getShippingCost = useCartStore((state) => state.getShippingCost);
+  const getGrandTotal = useCartStore((state) => state.getGrandTotal);
+
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const subtotal = getCartTotal();
-  const deliveryFee = deliveryOption === 'delivery' ? 15.00 : 0;
-  const total = subtotal + deliveryFee;
+  // Derived State
+  const subtotal = getSubtotal();
+  const shippingCost = getShippingCost();
+  const total = getGrandTotal();
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -47,19 +52,29 @@ export default function CartScreen() {
                   <View style={styles.purchaseTypeIndicator}>
                     {item.purchaseType === 'roll' ? (
                       <Package size={14} color={Colors.light.primary} />
+                    ) : item.purchaseType === 'sample' ? (
+                      // Simple swatch icon or repurpose existing icon
+                      <View style={{ width: 14, height: 14, backgroundColor: Colors.light.primary, borderRadius: 2 }} />
                     ) : (
                       <Ruler size={14} color={Colors.light.primary} />
                     )}
                     <Text style={styles.purchaseTypeText}>
-                      {item.purchaseType === 'roll' ? 'By Roll' : 'Custom Size'}
+                      {item.purchaseType === 'roll' ? 'By Roll' : item.purchaseType === 'sample' ? 'Sample' : 'Custom Size'}
                     </Text>
                   </View>
 
                   <Text style={styles.itemDetails}>
-                    {item.rollsNeeded} roll{item.rollsNeeded > 1 ? 's' : ''} • {item.wallArea.toFixed(1)} sq ft
+                    {item.purchaseType === 'sample'
+                      ? `Quantity: ${item.quantity} • 8" x 10" approx`
+                      : `${item.rollsNeeded} roll${item.rollsNeeded > 1 ? 's' : ''} • ${item.wallArea.toFixed(1)} sq ft`
+                    }
                   </Text>
+
                   <Text style={styles.itemPrice}>
-                    ${item.wallpaper.price.toFixed(2)} × {item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}
+                    {item.purchaseType === 'sample'
+                      ? `$5.00 × ${item.quantity} = $${(5.00 * item.quantity).toFixed(2)}`
+                      : `$${item.wallpaper.price.toFixed(2)} × ${item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}`
+                    }
                   </Text>
                 </View>
 
@@ -72,7 +87,7 @@ export default function CartScreen() {
                       <Minus size={16} color={Colors.light.primary} />
                     </TouchableOpacity>
                     <Text style={styles.quantity}>
-                      {item.rollsNeeded}
+                      {item.purchaseType === 'sample' ? item.quantity : item.rollsNeeded}
                     </Text>
                     <TouchableOpacity
                       style={styles.quantityButton}
@@ -103,16 +118,14 @@ export default function CartScreen() {
               ]}
             >
               <View style={styles.deliveryOptionContent}>
-                <Text style={styles.deliveryOptionTitle}>Home Delivery</Text>
-                <Text style={styles.deliveryOptionSubtitle}>Shipping nationwide</Text>
+                <Text style={styles.deliveryOptionTitle}>Standard Shipping</Text>
+                <Text style={styles.deliveryOptionSubtitle}>
+                  Shipping calculated at checkout logic
+                </Text>
               </View>
-              <Text style={styles.deliveryPrice}>$15.00</Text>
+              <Text style={styles.deliveryPrice}>${shippingCost.toFixed(2)}</Text>
             </View>
           </View>
-
-
-
-          // ... (inside return, before Checkout button)
 
           <View style={styles.summarySection}>
             <Text style={styles.sectionTitle}>Order Summary</Text>
@@ -124,7 +137,7 @@ export default function CartScreen() {
 
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Delivery</Text>
-              <Text style={styles.summaryValue}>${deliveryFee.toFixed(2)}</Text>
+              <Text style={styles.summaryValue}>${shippingCost.toFixed(2)}</Text>
             </View>
 
             <View style={[styles.summaryRow, styles.totalRow]}>
@@ -420,6 +433,8 @@ const styles = StyleSheet.create({
     height: 10,
     backgroundColor: Colors.light.background,
     borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   termsTextContainer: {
     flex: 1,
