@@ -294,38 +294,37 @@ CRITICAL WALL DETECTION RULES:
     return (
         <View style={styles.container}>
             <CameraView
-                style={styles.camera}
+                style={StyleSheet.absoluteFill}
                 ref={cameraRef}
-            >
-                <SafeAreaView style={styles.uiContainer}>
-                    <View style={styles.header}>
-                        <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
-                            <Ionicons name="close" size={28} color="white" />
-                        </TouchableOpacity>
-                        <Text style={styles.headerTitle}>Escanear Habitación</Text>
-                        <View style={{ width: 28 }} />
-                    </View>
+            />
+            <SafeAreaView style={styles.uiContainer} pointerEvents="box-none">
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
+                        <Ionicons name="close" size={28} color="white" />
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Escanear Habitación</Text>
+                    <View style={{ width: 28 }} />
+                </View>
 
-                    <View style={styles.controls}>
-                        <TouchableOpacity onPress={pickImage} style={styles.galleryButton}>
-                            <Ionicons name="images" size={24} color="white" />
-                        </TouchableOpacity>
+                <View style={styles.controls}>
+                    <TouchableOpacity onPress={pickImage} style={styles.galleryButton}>
+                        <Ionicons name="images" size={24} color="white" />
+                    </TouchableOpacity>
 
-                        <TouchableOpacity onPress={takePicture} style={styles.captureButton}>
-                            <View style={styles.captureInner} />
-                        </TouchableOpacity>
+                    <TouchableOpacity onPress={takePicture} style={styles.captureButton}>
+                        <View style={styles.captureInner} />
+                    </TouchableOpacity>
 
-                        <View style={{ width: 44 }} />
-                    </View>
-                </SafeAreaView>
+                    <View style={{ width: 44 }} />
+                </View>
+            </SafeAreaView>
 
-                {isProcessing && (
-                    <View style={styles.loadingOverlay}>
-                        <ActivityIndicator size="large" color={Colors.light.tint} />
-                        <Text style={styles.loadingText}>{processingStep}</Text>
-                    </View>
-                )}
-            </CameraView>
+            {isProcessing && (
+                <View style={styles.loadingOverlay}>
+                    <ActivityIndicator size="large" color={Colors.light.tint} />
+                    <Text style={styles.loadingText}>{processingStep}</Text>
+                </View>
+            )}
         </View>
     );
 }
@@ -339,8 +338,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     uiContainer: {
-        flex: 1,
+        ...StyleSheet.absoluteFillObject,
         justifyContent: 'space-between',
+        zIndex: 10,
     },
     header: {
         flexDirection: 'row',
