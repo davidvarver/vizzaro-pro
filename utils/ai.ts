@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const API_URL = 'https://toolkit.rork.com/images/edit/';
 
@@ -26,7 +27,28 @@ export async function processImageWithAI(
 
     const prompt = promptOverride || defaultPrompt;
 
-    const cleanImageBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+    let processedImageBase64 = imageBase64;
+
+    // Resize image if needed to avoid payload limits or AI errors (max 1024px)
+    try {
+        const uri = processedImageBase64.startsWith('data:')
+            ? processedImageBase64
+            : `data:image/jpeg;base64,${processedImageBase64}`;
+
+        const result = await ImageManipulator.manipulateAsync(
+            uri,
+            [{ resize: { width: 1024 } }], // Resize width to 1024, height adjusts automatically
+            { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+        );
+
+        if (result.base64) {
+            processedImageBase64 = result.base64;
+        }
+    } catch (resizeError) {
+        console.warn('Failed to resize image before AI processing, using original:', resizeError);
+    }
+
+    const cleanImageBase64 = processedImageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
     const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
 
     const requestBody = {
