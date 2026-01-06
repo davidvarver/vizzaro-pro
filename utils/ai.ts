@@ -8,8 +8,7 @@ export interface AiProcessResult {
 // Helper to resize image
 async function resizeImage(base64: string, label: string): Promise<string> {
     try {
-        // Skip check for very small strings to be safe (e.g. valid small patterns), avoiding codec issues
-        if (base64.length < 10000) return base64;
+        // Check removed to ensure all patterns (even small ones) are resized to 512px for AI compatibility
 
         // Dynamic import to prevent crash on web initial load
         const ImageManipulator = await import('expo-image-manipulator');
@@ -115,8 +114,8 @@ export async function generateWallMask(imageBase64: string): Promise<string> {
     // CRITICAL: We start with a tiny 1x1 pixel, BUT we must resize it to 512x512 
     // using our resizeImage helper to ensure the AI service accepts it (avoiding 500 errors).
 
-    // 1x1 white pixel base64 (Valid PNG)
-    const tinyWhiteBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg==";
+    // 64x64 white pixel base64 (Valid PNG)
+    const tinyWhiteBase64 = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAACQd1PeAAAADElEQVR4nGP6z8AAAAABAAH2I8UAAAAASUVORK5CYII=";
 
     // Resize to 512x512 to satisfy "valid image" requirements of the AI
     const validWhitePattern = await resizeImage(tinyWhiteBase64, 'WhitePattern');
