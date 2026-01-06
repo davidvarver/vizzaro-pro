@@ -1,16 +1,9 @@
-import { Platform } from 'react-native';
-import * as ImageManipulator from 'expo-image-manipulator';
-
-const API_URL = 'https://toolkit.rork.com/images/edit/';
-
-export interface AiProcessResult {
-    processedBase64: string;
-    maskBase64?: string; // If we start returning mask separately
-}
-
 // Helper to resize image
 async function resizeImage(base64: string, label: string): Promise<string> {
     try {
+        // Dynamic import to prevent crash on web initial load if package limits apply
+        const ImageManipulator = await import('expo-image-manipulator');
+
         // Skip check for very small strings to be safe, just ensure it's a valid uri
         const uri = base64.startsWith('data:') ? base64 : `data:image/jpeg;base64,${base64}`;
 
