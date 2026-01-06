@@ -16,7 +16,20 @@ export default function RoomGallery({ onSelectRoom, onAddRoom, vertical = false 
     const userRooms = useWallpapersStore((s) => s.userRooms);
     const deleteUserRoom = useWallpapersStore((s) => s.deleteUserRoom);
 
-
+    const handleDelete = (id: string) => {
+        Alert.alert(
+            'Delete Room',
+            'Are you sure you want to delete this room?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: () => deleteUserRoom(id)
+                }
+            ]
+        );
+    };
 
     const renderItem = ({ item }: { item: UserRoom }) => {
         // Fix for potential missing prefix or double prefix
@@ -43,33 +56,12 @@ export default function RoomGallery({ onSelectRoom, onAddRoom, vertical = false 
                 <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => handleDelete(item.id)}
-                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                 >
-                    <Trash2 size={16} color="#FFF" />
+                    <Trash2 size={14} color="#FFF" />
                 </TouchableOpacity>
             </View>
         );
-    };
-
-    const handleDelete = (id: string) => {
-        if (typeof window !== 'undefined' && window.confirm) {
-            if (window.confirm('Are you sure you want to delete this room?')) {
-                deleteUserRoom(id);
-            }
-        } else {
-            Alert.alert(
-                'Delete Room',
-                'Are you sure you want to delete this room?',
-                [
-                    { text: 'Cancel', style: 'cancel' },
-                    {
-                        text: 'Delete',
-                        style: 'destructive',
-                        onPress: () => deleteUserRoom(id)
-                    }
-                ]
-            );
-        }
     };
 
     return (

@@ -39,7 +39,6 @@ interface WallpapersState {
     // Room Gallery Actions
     addUserRoom: (image: string) => Promise<void>;
     deleteUserRoom: (id: string) => Promise<void>;
-    updateUserRoomMask: (id: string, maskImage: string) => Promise<void>;
     loadUserRooms: () => Promise<void>;
 
     // Helper to sync to storage/API
@@ -430,21 +429,6 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
             }
         } catch (error) {
             console.error('[WallpapersStore] Error loading user rooms:', error);
-        }
-    },
-
-    updateUserRoomMask: async (id: string, maskImage: string) => {
-        const { userRooms } = get();
-        const updatedRooms = userRooms.map(room =>
-            room.id === id ? { ...room, maskImage } : room
-        );
-        set({ userRooms: updatedRooms });
-
-        try {
-            await AsyncStorage.setItem('user_rooms_gallery', JSON.stringify(updatedRooms));
-            console.log('[WallpapersStore] Room mask updated:', id);
-        } catch (error) {
-            console.error('[WallpapersStore] Error saving room mask:', error);
         }
     },
 

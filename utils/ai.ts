@@ -1,37 +1,10 @@
+import { Platform } from 'react-native';
+
 const API_URL = 'https://toolkit.rork.com/images/edit/';
 
 export interface AiProcessResult {
     processedBase64: string;
-    maskBase64?: string;
-}
-
-// Helper to resize image
-async function resizeImage(base64: string, label: string): Promise<string> {
-    try {
-        // Check removed to ensure all patterns (even small ones) are resized to 512px for AI compatibility
-
-        // Dynamic import to prevent crash on web initial load
-        const ImageManipulator = await import('expo-image-manipulator');
-
-        const uri = base64.startsWith('data:') ? base64 : `data:image/jpeg;base64,${base64}`;
-
-        // Log original size
-        console.log(`AI Processing [${label}]: Original Length:`, base64.length);
-
-        const result = await ImageManipulator.manipulateAsync(
-            uri,
-            [{ resize: { width: 512 } }],
-            { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-        );
-
-        if (result.base64) {
-            console.log(`AI Processing [${label}]: Resized Length:`, result.base64.length);
-            return result.base64;
-        }
-    } catch (error) {
-        console.warn(`Failed to resize ${label}, using original:`, error);
-    }
-    return base64;
+    maskBase64?: string; // If we start returning mask separately
 }
 
 export async function processImageWithAI(
@@ -53,20 +26,8 @@ export async function processImageWithAI(
 
     const prompt = promptOverride || defaultPrompt;
 
-    // Resize input images
-    const processedImageBase64 = await resizeImage(imageBase64, 'Source');
-
-    // For mask generation, we use source as pattern, so we can reuse the resized image
-    let processedWallpaperBase64 = wallpaperBase64;
-
-    if (wallpaperBase64 === imageBase64) {
-        processedWallpaperBase64 = processedImageBase64;
-    } else {
-        processedWallpaperBase64 = await resizeImage(wallpaperBase64, 'Pattern');
-    }
-
-    const cleanImageBase64 = processedImageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
-    const cleanWallpaperBase64 = processedWallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+    const cleanImageBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+    const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
 
     const requestBody = {
         prompt: prompt,
@@ -101,24 +62,19 @@ export async function processImageWithAI(
         return result.image.base64Data;
     } catch (error) {
         clearTimeout(timeoutId);
-        // Enhance error message for known issues
-        if (error instanceof Error && error.message.includes('INVALID_ARGUMENT')) {
-            console.error('AI Input Error: Check image size/format.');
-        }
         throw error;
     }
 }
 
 export async function generateWallMask(imageBase64: string): Promise<string> {
-    // Strategy: Use a SOLID WHITE pattern.
-    // CRITICAL: We start with a tiny 1x1 pixel, BUT we must resize it to 512x512 
-    // using our resizeImage helper to ensure the AI service accepts it (avoiding 500 errors).
+    // To generate a mask, we ask the AI to paint the wall WHITE and everything else BLACK.
+    // We send a simple white image as the "pattern" to apply? Or we ask it to segment.
+    // Since the endpoint expects 2 images (Source + Pattern), we can send a solid WHITE image as the pattern 
+    // and instruct it to "Replace the wall with this white pattern, and turn everything else BLACK".
 
-    // 64x64 white pixel base64 (Valid PNG)
-    const tinyWhiteBase64 = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAACQd1PeAAAADElEQVR4nGP6z8AAAAABAAH2I8UAAAAASUVORK5CYII=";
-
-    // Resize to 512x512 to satisfy "valid image" requirements of the AI
-    const validWhitePattern = await resizeImage(tinyWhiteBase64, 'WhitePattern');
+    // Create a simple 1x1 white pixel base64 (approx)
+    // iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg== 
+    const whitePatternBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg==";
 
     const maskPrompt = `TASK: Create a BINARY MASK of the main wall in the image.
     1. Identify the PRIMARY WALL (largest central vertical surface).
@@ -127,5 +83,5 @@ export async function generateWallMask(imageBase64: string): Promise<string> {
     4. The output must be a black and white image only. White = Wall, Black = Not Wall.
     5. No shadows, no lighting, just flat white on the wall area.`;
 
-    return await processImageWithAI(imageBase64, validWhitePattern, maskPrompt);
+    return await processImageWithAI(imageBase64, whitePatternBase64, maskPrompt);
 }

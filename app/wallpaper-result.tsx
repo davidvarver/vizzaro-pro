@@ -8,14 +8,12 @@ import {
   Image,
   Alert,
   Platform,
+  TextInput,
   Modal,
   Dimensions,
-  ActivityIndicator,
-  TextInput,
 } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { m2ToSqFt } from '@/utils/product';
-import { generateWallMask } from '@/utils/ai';
 import {
   ArrowLeft,
   Download,
@@ -81,42 +79,9 @@ export default function WallpaperResultScreen() {
   const maskImage = roomFromStore?.maskImage;
   const hasMask = !!maskImage;
 
-  // Auto-generate mask if missing
-  const [isProcessingMask, setIsProcessingMask] = useState(false);
-  const updateUserRoomMask = useWallpapersStore((s) => s.updateUserRoomMask);
-
-  // Import generateWallMask dynamically or assume it's available. 
-  // It was not imported in the file view, so I need to add import.
-  // Wait, I cannot add import easily with this tool without changing top of file.
-  // I will assume I can add the effect here and then add the import in a separate step or included if I edit top.
-  // Let's do the effect first.
-
-  React.useEffect(() => {
-    const generateMaskIfNeeded = async () => {
-      if (roomFromStore && !roomFromStore.maskImage && !isProcessingMask && originalImage && roomId) {
-        setIsProcessingMask(true);
-        try {
-          console.log('Generating mask for room:', roomId);
-          // We need to import this function. For now I will use the fully qualified name if possible or add import later.
-          // Assuming I will add `import { generateWallMask } from '@/utils/ai';` at the top.
-          const mask = await generateWallMask(originalImage);
-          if (mask) {
-            await updateUserRoomMask(roomId, mask);
-          }
-        } catch (error) {
-          console.error('Error generating mask:', error);
-        } finally {
-          setIsProcessingMask(false);
-        }
-      }
-    };
-
-    generateMaskIfNeeded();
-  }, [roomId, roomFromStore?.maskImage, originalImage, isProcessingMask]); // Added originalImage and isProcessingMask to dependencies for completeness
-
   // Determine display mode
   const shouldShowOriginal = aiProcessingFailed === 'true' || showOriginal;
-  const shouldUseOverlay = !showOriginal && hasMask && (!processedImage || processedImage === '' || aiProcessingFailed === 'true') && !isProcessingMask;
+  const shouldUseOverlay = !showOriginal && hasMask && (!processedImage || processedImage === '' || aiProcessingFailed === 'true');
 
   // Fix image URI construction
   const rawImage = shouldShowOriginal ? originalImage : (processedImage || originalImage);
@@ -205,12 +170,6 @@ export default function WallpaperResultScreen() {
         </View>
 
         <View style={styles.imageSection}>
-          {isProcessingMask && (
-            <View style={styles.loadingOverlay}>
-              <ActivityIndicator size="large" color={Theme.colors.black} />
-              <Text style={styles.loadingText}>Applying Wallpaper...</Text>
-            </View>
-          )}
           <ViewShot ref={viewShotRef} options={{ format: 'jpg', quality: 0.9 }} style={styles.viewShot}>
             {shouldUseOverlay ? (
               <View style={styles.visualizerContainer}>
@@ -361,11 +320,6 @@ const styles = StyleSheet.create({
   backLinkText: { fontFamily: Theme.typography.fontFamily.sansMedium, fontSize: 14 },
   toggleBtn: { flexDirection: 'row', gap: 6, alignItems: 'center', padding: 8, borderWidth: 1, borderColor: Theme.colors.border, borderRadius: 4 },
   toggleBtnText: { fontSize: 12, fontFamily: Theme.typography.fontFamily.sans },
-
-  loadingOverlay: {
-    padding: 24, justifyContent: 'center', alignItems: 'center', width: '100%', aspectRatio: 4 / 3, backgroundColor: '#f0f0f0', position: 'absolute', zIndex: 10
-  },
-  loadingText: { marginTop: 12, fontFamily: Theme.typography.fontFamily.sansBold, color: Theme.colors.black },
 
   imageSection: { width: '100%', marginVertical: 10 },
   viewShot: { width: '100%', aspectRatio: 4 / 3, backgroundColor: '#f0f0f0', position: 'relative' },
