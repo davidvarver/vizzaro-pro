@@ -1,3 +1,10 @@
+const API_URL = 'https://toolkit.rork.com/images/edit/';
+
+export interface AiProcessResult {
+    processedBase64: string;
+    maskBase64?: string;
+}
+
 // Helper to resize image
 async function resizeImage(base64: string, label: string): Promise<string> {
     try {
