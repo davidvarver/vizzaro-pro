@@ -10,6 +10,19 @@ import { StyleSheet } from "react-native";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { initSentry } from "../sentry.config";
 
+import {
+  useFonts,
+  PlayfairDisplay_400Regular,
+  PlayfairDisplay_600SemiBold,
+  PlayfairDisplay_700Bold,
+} from '@expo-google-fonts/playfair-display';
+import {
+  Montserrat_300Light,
+  Montserrat_400Regular,
+  Montserrat_500Medium,
+  Montserrat_600SemiBold,
+} from '@expo-google-fonts/montserrat';
+
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
@@ -48,10 +61,22 @@ import { useOrdersStore } from '@/store/useOrdersStore';
 
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    PlayfairDisplay_400Regular,
+    PlayfairDisplay_600SemiBold,
+    PlayfairDisplay_700Bold,
+    Montserrat_300Light,
+    Montserrat_400Regular,
+    Montserrat_500Medium,
+    Montserrat_600SemiBold,
+  });
+
   useEffect(() => {
     initSentry();
-    SplashScreen.hideAsync();
-    // Initialize Auth, Cart, Wallpapers & Favorites
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+    // Initialize Stores
     useAuthStore.getState().initialize();
     useCartStore.getState().initialize();
     useWallpapersStore.getState().initialize();
@@ -59,7 +84,11 @@ export default function RootLayout() {
     useCollectionsStore.getState().initialize();
     useHistoryStore.getState().initialize();
     useOrdersStore.getState().initialize();
-  }, []);
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <ErrorBoundary>

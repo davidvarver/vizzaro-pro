@@ -12,6 +12,8 @@ import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { useCartStore } from '@/store/useCartStore';
 import RoomGallery from '@/components/visualizer/RoomGallery';
+import { processImageWithAI as processAI, generateWallMask } from '@/utils/ai';
+import { WallpaperOverlay } from '@/components/visualizer/WallpaperOverlay';
 
 export default function CameraScreen() {
   const insets = useSafeAreaInsets();

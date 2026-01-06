@@ -38,6 +38,7 @@ import { useHistoryStore } from '@/store/useHistoryStore';
 import { SeoHead } from '@/components/SeoHead';
 
 import { getBaseName, formatDimensionsImperial } from '@/utils/product';
+import { calculateRollsNeeded } from '@/utils/calculator';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IS_DESKTOP = SCREEN_WIDTH >= 1024;
@@ -70,38 +71,20 @@ export default function WallpaperDetailsScreen() {
   const calculateRolls = () => {
     if (!wallpaper || !calcHeight || !calcWidth) return;
 
-    const wHeightM = parseFloat(calcHeight) * 0.3048; // ft to m
-    const wWidthM = parseFloat(calcWidth) * 0.3048;   // ft to m
+    const h = parseFloat(calcHeight);
+    const w = parseFloat(calcWidth);
 
-    // Roll specs (defaulting if missing)
-    const rollWidth = wallpaper.dimensions?.width || 0.53;
-    const rollLength = wallpaper.dimensions?.height || 10.05;
-
-    // Pattern Repeat (inches to m)
-    const repeatM = (wallpaper.patternRepeat || 0) * 0.0254;
-
-    // Calc Strips
-    // Height needed per strip = Wall Height + Repeat + Trim Buffer (10cm)
-    const heightPerStrip = wHeightM + repeatM + 0.1;
-
-    // Strips possible per roll
-    const stripsPerRoll = Math.floor(rollLength / heightPerStrip);
-
-    if (stripsPerRoll <= 0) {
-      // Wall is taller than a single roll? Fallback to crude area calc + 20%
-      const wallArea = wHeightM * wWidthM;
-      const rollArea = rollWidth * rollLength;
-      const rolls = Math.ceil((wallArea * 1.2) / rollArea);
-      setCalculatedRolls(Math.max(1, rolls));
+    if (isNaN(h) || isNaN(w) || h <= 0 || w <= 0) {
+      setCalculatedRolls(0);
       return;
     }
 
-    // Total strips needed for width
-    const stripsNeeded = Math.ceil(wWidthM / rollWidth);
+    // patternRepeat is in inches (data source convention), convert to meters
+    const repeatMeters = (wallpaper.patternRepeat || 0) * 0.0254;
 
-    // Total rolls
-    const rollsNeeded = Math.ceil(stripsNeeded / stripsPerRoll);
-    setCalculatedRolls(Math.max(1, rollsNeeded));
+    const { rollsNeeded } = calculateRollsNeeded(w, h, repeatMeters);
+
+    setCalculatedRolls(rollsNeeded);
   };
 
   // ...

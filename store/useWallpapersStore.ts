@@ -10,6 +10,7 @@ const STORAGE_KEY = 'wallpapers_catalog';
 export interface UserRoom {
     id: string;
     image: string; // Base64 or URI
+    maskImage?: string; // Base64 of the generated wall mask
     createdAt: number;
     name?: string;
 }

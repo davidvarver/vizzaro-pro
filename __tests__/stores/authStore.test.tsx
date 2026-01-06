@@ -1,33 +1,10 @@
 // __tests__/stores/authStore.test.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react-native';
 import { Text, Button } from 'react-native';
-import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuthStore } from '@/store/useAuthStore';
 
-const HookWrapper = ({ children }: { children: React.ReactNode }) => (
-    <AuthProvider>{children}</AuthProvider>
-);
-
-const TestComponent = () => {
-    const { user, isAuthenticated, login, logout, isLoading } = useAuth();
-
-    if (isLoading) return <Text testID="loading">Loading...</Text>;
-
-    return (
-        <>
-            <Text testID="auth-status">{isAuthenticated ? 'Authenticated' : 'Guest'}</Text>
-            <Text testID="user-email">{user?.email || 'No User'}</Text>
-            <Button
-                testID="login"
-                title="Login"
-                onPress={() => login('test@example.com', 'password')}
-            />
-            <Button testID="logout" title="Logout" onPress={logout} />
-        </>
-    );
-};
-
+// Mock fetch for login
 global.fetch = jest.fn(() =>
     Promise.resolve({
         ok: true,
@@ -46,14 +23,33 @@ global.fetch = jest.fn(() =>
     })
 ) as jest.Mock;
 
-test('Auth store handles login and logout', async () => {
-    const { getByTestId, queryByTestId } = render(
-        <HookWrapper>
-            <TestComponent />
-        </HookWrapper>
-    );
+const TestComponent = () => {
+    const { user, isAuthenticated, login, logout, isLoading, initialize } = useAuthStore();
 
-    // Wait for initial load
+    useEffect(() => {
+        initialize();
+    }, []);
+
+    if (isLoading) return <Text testID="loading">Loading...</Text>;
+
+    return (
+        <>
+            <Text testID="auth-status">{isAuthenticated ? 'Authenticated' : 'Guest'}</Text>
+            <Text testID="user-email">{user?.email || 'No User'}</Text>
+            <Button
+                testID="login"
+                title="Login"
+                onPress={() => login('test@example.com', 'password')}
+            />
+            <Button testID="logout" title="Logout" onPress={logout} />
+        </>
+    );
+};
+
+test('Auth store handles login and logout', async () => {
+    const { getByTestId, queryByTestId } = render(<TestComponent />);
+
+    // Wait for initial load (initialize checks storage)
     await waitFor(() => expect(queryByTestId('loading')).toBeNull());
 
     // Initial state
@@ -77,6 +73,9 @@ test('Auth store handles login and logout', async () => {
     });
 
     // Verify logged out
-    expect(getByTestId('auth-status').props.children).toBe('Guest');
+    await waitFor(() => {
+        expect(getByTestId('auth-status').props.children).toBe('Guest');
+    });
     expect(getByTestId('user-email').props.children).toBe('No User');
 });
+

@@ -35,6 +35,7 @@ import Colors from '@/constants/colors';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { useCartStore } from '@/store/useCartStore';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { WallpaperOverlay } from '@/components/visualizer/WallpaperOverlay';
 
 export default function WallpaperResultScreen() {
   const { originalImage, processedImage, wallpaperId, aiProcessingFailed, isGenerated, errorMessage, projectId } = useLocalSearchParams<{
@@ -51,6 +52,7 @@ export default function WallpaperResultScreen() {
   const isInCart = useCartStore((s) => s.isInCart);
   const getWallpaperById = useWallpapersStore((s) => s.getWallpaperById);
   const getProjectById = useFavoritesStore((s) => s.getProjectById);
+  const userRooms = useWallpapersStore((s) => s.userRooms);
 
   const [showOriginal, setShowOriginal] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
@@ -62,8 +64,22 @@ export default function WallpaperResultScreen() {
   const viewShotRef = useRef<ViewShot>(null);
 
   const project = projectId ? getProjectById(projectId) : null;
-
   const wallpaper = getWallpaperById(wallpaperId);
+
+  // Mask Logic
+  const currentRoom = userRooms.find(r => r.image === originalImage);
+  const maskImage = currentRoom?.maskImage;
+  const hasMask = !!maskImage;
+
+  // Determine display mode
+  // Helper for toggle text (Defined BEFORE use)
+  const shouldShowOriginal = aiProcessingFailed === 'true' || showOriginal; // Defined first
+
+  const shouldUseOverlay = !showOriginal && hasMask && (!processedImage || processedImage === '' || aiProcessingFailed === 'true');
+  const currentImage = shouldShowOriginal ? originalImage : processedImage;
+
+  const imageSource = { uri: `data:image/jpeg;base64,${shouldShowOriginal ? originalImage : processedImage}` };
+
 
   // Calculate wall area from length and height (Feet)
   const calculateWallArea = () => {
@@ -288,11 +304,6 @@ export default function WallpaperResultScreen() {
     });
   };
 
-  // If AI processing failed, always show original image, otherwise allow toggle
-  const shouldShowOriginal = aiProcessingFailed === 'true' || showOriginal;
-  const currentImage = shouldShowOriginal ? originalImage : processedImage;
-  const imageSource = { uri: `data:image/jpeg;base64,${currentImage}` };
-
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <Stack.Screen
@@ -327,7 +338,19 @@ export default function WallpaperResultScreen() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <ViewShot ref={viewShotRef} options={{ format: 'jpg', quality: 0.9 }}>
           <View style={styles.imageContainer}>
-            <Image source={imageSource} style={styles.resultImage} />
+
+            {shouldUseOverlay ? (
+              <View style={{ width: '100%', height: 400 }}>
+                <WallpaperOverlay
+                  originalImage={originalImage}
+                  maskImage={maskImage}
+                  patternImage={wallpaper.imageUrl}
+                  opacity={0.88}
+                />
+              </View>
+            ) : (
+              <Image source={imageSource} style={styles.resultImage} />
+            )}
 
             <View style={styles.watermarkOverlay}>
               <Text style={styles.watermarkText}>www.vizzarowallpaper.com</Text>
@@ -799,32 +822,19 @@ const styles = StyleSheet.create({
   addToCartButtonText: {
     color: Colors.light.background,
     fontSize: 16,
-    fontWeight: '600',
-  },
-  errorText: {
-    fontSize: 18,
-    color: Colors.light.error,
-    textAlign: 'center',
-    marginTop: 50,
-  },
-  measurementValue: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    fontWeight: 'bold',
   },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
+    justifyContent: 'flex-end',
   },
   modalContent: {
     backgroundColor: Colors.light.background,
-    borderRadius: 16,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 24,
-    width: '100%',
-    maxWidth: 400,
+    paddingBottom: 40,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -838,29 +848,24 @@ const styles = StyleSheet.create({
     color: Colors.light.text,
   },
   closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: Colors.light.backgroundSecondary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 4,
   },
   modalDescription: {
-    fontSize: 16,
+    fontSize: 14,
     color: Colors.light.textSecondary,
-    lineHeight: 22,
     marginBottom: 24,
+    lineHeight: 20,
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.text,
+    fontSize: 14,
+    color: Colors.light.textSecondary,
     marginBottom: 8,
   },
   input: {
+    backgroundColor: Colors.light.backgroundSecondary,
     borderWidth: 1,
     borderColor: Colors.light.border,
     borderRadius: 12,
@@ -868,22 +873,21 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     color: Colors.light.text,
-    backgroundColor: Colors.light.backgroundSecondary,
   },
   calculationResult: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.light.backgroundSecondary,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    padding: 16,
     borderRadius: 12,
-    gap: 8,
+    gap: 12,
+    marginTop: 8,
     marginBottom: 24,
   },
   calculationText: {
     fontSize: 16,
-    fontWeight: '600',
     color: Colors.light.primary,
+    fontWeight: '600',
   },
   modalActions: {
     flexDirection: 'row',
@@ -891,96 +895,51 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderRadius: 12,
-    backgroundColor: Colors.light.backgroundSecondary,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
     alignItems: 'center',
   },
   cancelButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.light.textSecondary,
+    color: Colors.light.text,
   },
   confirmButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 12,
     backgroundColor: Colors.light.primary,
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: 'center',
   },
   confirmButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.background,
-  },
-  editableRow: {
-    backgroundColor: Colors.light.backgroundSecondary,
-    marginHorizontal: -8,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-  },
-  warningBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.backgroundSecondary,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-    gap: 8,
-    marginBottom: 16,
-    borderLeftWidth: 4,
-    borderLeftColor: '#FF9500',
-  },
-  warningText: {
-    color: '#FF9500',
-    fontSize: 16,
-    fontWeight: '600',
-    flex: 1,
-  },
-  watermarkOverlay: {
-    position: 'absolute',
-    bottom: 20,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  watermarkText: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 16,
     fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    color: Colors.light.background,
   },
   wallpaperSelectorList: {
     maxHeight: 400,
-    paddingHorizontal: 20,
   },
   wallpaperSelectorItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
     gap: 12,
-    borderWidth: 2,
-    borderColor: 'transparent',
   },
   wallpaperSelectorItemActive: {
-    borderColor: Colors.light.primary,
-    backgroundColor: Colors.light.backgroundSecondary,
+    backgroundColor: 'rgba(0, 122, 255, 0.05)',
   },
   wallpaperSelectorImage: {
     width: 60,
     height: 60,
     borderRadius: 8,
-    resizeMode: 'cover',
+    backgroundColor: Colors.light.backgroundSecondary,
   },
   wallpaperSelectorInfo: {
     flex: 1,
-    gap: 2,
   },
   wallpaperSelectorName: {
     fontSize: 16,
@@ -993,15 +952,60 @@ const styles = StyleSheet.create({
   },
   wallpaperSelectorPrice: {
     fontSize: 14,
-    fontWeight: 'bold',
     color: Colors.light.primary,
+    fontWeight: '600',
+    marginTop: 2,
   },
   activeIndicator: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     backgroundColor: Colors.light.primary,
-    borderRadius: 20,
-    width: 32,
-    height: 32,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 18,
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 40,
+  },
+  editableRow: {
+    backgroundColor: 'rgba(0,0,0,0.02)',
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    marginHorizontal: -8,
+  },
+  measurementValue: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  watermarkOverlay: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  watermarkText: {
+    color: 'rgba(255,255,255,0.8)',
+    fontSize: 10,
+    fontWeight: '600',
+  },
+  warningBadge: {
+    backgroundColor: 'rgba(255, 149, 0, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
+    marginBottom: 12,
+  },
+  warningText: {
+    color: '#FF9500',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

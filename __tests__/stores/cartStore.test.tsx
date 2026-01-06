@@ -1,22 +1,27 @@
 // __tests__/stores/cartStore.test.tsx
-import React from 'react';
-import { render, act, waitFor, fireEvent } from '@testing-library/react-native';
+import React, { useEffect } from 'react';
+import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { Text, Button } from 'react-native';
-import { CartProvider, useCart } from '@/contexts/CartContext';
+import { useCartStore } from '@/store/useCartStore';
 import { Wallpaper } from '@/constants/wallpapers';
 
-// Helper component to expose the hook inside the provider
-const HookWrapper = ({ children }: { children: React.ReactNode }) => (
-    <CartProvider>{children}</CartProvider>
-);
-
 const TestComponent = () => {
-    const { cartItems, addToCart, removeFromCart, clearCart, getCartTotal, isLoading } = useCart();
+    const { cartItems, addToCart, removeFromCart, clearCart, getSubtotal, isLoading, initialize } = useCartStore();
+
+    useEffect(() => {
+        initialize();
+    }, []);
+
     const sampleWallpaper = {
         id: 'wall1',
         name: 'Test Wallpaper',
         price: 10,
-        image: '',
+        imageUrl: '',
+        dimensions: { width: 0.53, height: 10 },
+        specifications: {},
+        category: 'Test',
+        style: 'Test',
+        imageUrls: []
     } as unknown as Wallpaper;
 
     if (isLoading) return <Text testID="loading">Loading...</Text>;
@@ -24,20 +29,24 @@ const TestComponent = () => {
     return (
         <>
             <Text testID="count">{cartItems.length}</Text>
-            <Text testID="total">{getCartTotal()}</Text>
+            <Text testID="total">{getSubtotal()}</Text>
             <Button testID="add" title="Add" onPress={() => addToCart(sampleWallpaper)} />
-            <Button testID="remove" title="Remove" onPress={() => removeFromCart('wall1')} />
+            <Button
+                testID="remove"
+                title="Remove"
+                onPress={() => {
+                    if (cartItems.length > 0) {
+                        removeFromCart(cartItems[0].id);
+                    }
+                }}
+            />
             <Button testID="clear" title="Clear" onPress={clearCart} />
         </>
     );
 };
 
 test('Cart store adds and removes items correctly', async () => {
-    const { getByTestId, queryByTestId } = render(
-        <HookWrapper>
-            <TestComponent />
-        </HookWrapper>
-    );
+    const { getByTestId, queryByTestId } = render(<TestComponent />);
 
     // Wait for loading to finish
     await waitFor(() => expect(queryByTestId('loading')).toBeNull());
@@ -48,8 +57,10 @@ test('Cart store adds and removes items correctly', async () => {
 
     // Add an item
     fireEvent.press(getByTestId('add'));
+
+    // Wait for update
     expect(getByTestId('count').props.children).toBe(1);
-    expect(getByTestId('total').props.children).toBe(10);
+    expect(getByTestId('total').props.children).toBe(10); // 1 roll * 10 price
 
     // Remove the item
     fireEvent.press(getByTestId('remove'));
@@ -57,6 +68,9 @@ test('Cart store adds and removes items correctly', async () => {
 
     // Add again and clear
     fireEvent.press(getByTestId('add'));
+    expect(getByTestId('count').props.children).toBe(1);
+
     fireEvent.press(getByTestId('clear'));
     expect(getByTestId('count').props.children).toBe(0);
 });
+

@@ -1,29 +1,29 @@
-// Premium Palette
-const primary = "#701c45"; // Vizzaro Plum (Brand Color)
-const secondary = "#F8F5F2"; // Off-White / Cream (Soft Background)
-const accent = "#D4AF37"; // Metallic Gold (Elegant Details)
-const gold = "#C5A028";
-const darkGray = "#2D2D2D";
-const softGray = "#EAEAEA";
+// Premium Palette (York Inspired)
+const primary = "#000000"; // Black
+const secondary = "#FFFFFF"; // White
+const accent = "#E5E5E5"; // Light border
+const gold = "#C5A028"; // Kept for specific highlights if needed, but rarely used
+const darkGray = "#333333";
+const softGray = "#F9F9F9";
 
 export default {
   light: {
-    text: "#111111",
-    textSecondary: "#555555",
+    text: "#000000",
+    textSecondary: "#444444",
     background: "#FFFFFF",
-    backgroundSecondary: secondary,
+    backgroundSecondary: "#F9F9F9",
     tint: primary,
     tabIconDefault: "#B0B0B0",
     tabIconSelected: primary,
-    border: softGray,
+    border: "#E0E0E0",
     card: "#FFFFFF",
-    shadow: "rgba(0, 0, 0, 0.08)", // Softer, premium shadow
+    shadow: "transparent", // Removing shadows for flat design
     primary,
     secondary,
     accent,
     gold,
     darkGray,
-    success: "#2E7D32", // Forest Green (More elegant)
+    success: "#2E7D32",
     warning: "#F57F17",
     error: "#C62828",
   },

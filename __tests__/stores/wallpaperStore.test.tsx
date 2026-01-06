@@ -1,15 +1,50 @@
 // __tests__/stores/wallpaperStore.test.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react-native';
 import { Text, Button } from 'react-native';
-import { WallpapersProvider, useWallpapers } from '@/contexts/WallpapersContext';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
 
-const HookWrapper = ({ children }: { children: React.ReactNode }) => (
-    <WallpapersProvider>{children}</WallpapersProvider>
-);
+// Mock fetch
+const mockWallpapers = [
+    {
+        id: '1',
+        name: 'Wall 1',
+        price: 10,
+        imageUrl: 'url1',
+        dimensions: { width: 0.53, height: 10 },
+        specifications: {},
+        category: 'Test',
+        style: 'Test',
+        imageUrls: ['url1']
+    },
+    {
+        id: '2',
+        name: 'Wall 2',
+        price: 20,
+        imageUrl: 'url2',
+        dimensions: { width: 0.53, height: 10 },
+        specifications: {},
+        category: 'Test',
+        style: 'Test',
+        imageUrls: ['url2']
+    },
+];
+
+global.fetch = jest.fn(() =>
+    Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ success: true, catalog: mockWallpapers, timestamp: 123 }),
+    })
+) as jest.Mock;
 
 const TestComponent = () => {
-    const { wallpapers, isLoading, refetchWallpapers } = useWallpapers();
+    const { wallpapers, isLoading, loadWallpapers, refetchWallpapers } = useWallpapersStore();
+
+    useEffect(() => {
+        // Trigger fetch on mount if empty? Or assumes store auto-fetches?
+        // Usually store might verify timestamp on mount.
+        loadWallpapers();
+    }, []);
 
     if (isLoading) return <Text testID="loading">Loading...</Text>;
 
@@ -22,25 +57,8 @@ const TestComponent = () => {
     );
 };
 
-// Mock fetch
-const mockWallpapers = [
-    { id: '1', name: 'Wall 1', price: 10, image: 'url1' },
-    { id: '2', name: 'Wall 2', price: 20, image: 'url2' },
-];
-
-global.fetch = jest.fn(() =>
-    Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ success: true, catalog: mockWallpapers, timestamp: 123 }),
-    })
-) as jest.Mock;
-
 test('Wallpaper store fetches and displays wallpapers', async () => {
-    const { getByTestId, queryByTestId } = render(
-        <HookWrapper>
-            <TestComponent />
-        </HookWrapper>
-    );
+    const { getByTestId, queryByTestId } = render(<TestComponent />);
 
     // Wait for loading to finish
     await waitFor(() => expect(queryByTestId('loading')).toBeNull());
@@ -49,6 +67,8 @@ test('Wallpaper store fetches and displays wallpapers', async () => {
     expect(global.fetch).toHaveBeenCalled();
 
     // Verify data
+    // Note: If the store uses async storage, it might persist data. 
+    // For unit tests, we're mocking fetch.
     expect(getByTestId('count').props.children).toBe(2);
     expect(getByTestId('first-name').props.children).toBe('Wall 1');
 
@@ -58,3 +78,4 @@ test('Wallpaper store fetches and displays wallpapers', async () => {
     // Should reload
     expect(global.fetch).toHaveBeenCalledTimes(2);
 });
+
