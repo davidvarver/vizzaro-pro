@@ -1,4 +1,4 @@
-import { useCartStore } from '../store/useCartStore';
+import { useCartStore } from './store/useCartStore';
 
 console.log('Verifying useCartStore...');
 const state = useCartStore.getState();
