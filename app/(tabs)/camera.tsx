@@ -1,5 +1,5 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useRef, useEffect } from 'react';
 import {
     StyleSheet,
@@ -18,7 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
-import { generateWallMask, processImageWithAI } from '@/utils/ai';
+
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -37,11 +37,160 @@ export default function CameraScreen() {
         }
     }, [permission]);
 
+    const params = useLocalSearchParams<{ wallpaperId?: string }>();
+    const { wallpaperId } = params;
+    const { getWallpaperById } = useWallpapersStore();
+    const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
+
+    // Helper functions from user snippet
+    async function fetchImageAsBase64(imageUrl: string): Promise<string> {
+        console.log('Starting fetchImageAsBase64 for URL:', imageUrl);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+            console.log('Fetch timeout reached, aborting...');
+            controller.abort();
+        }, 45000);
+
+        try {
+            const cleanUrl = imageUrl.trim();
+            const proxyServices = [
+                cleanUrl,
+                `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&default=1`,
+                `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
+            ];
+
+            let lastError: Error | null = null;
+            for (let i = 0; i < proxyServices.length; i++) {
+                const url = proxyServices[i];
+                try {
+                    const response = await fetch(url, {
+                        signal: controller.signal,
+                        method: 'GET',
+                        headers: i === 0 ? { 'Accept': 'image/*,*/*', 'Cache-Control': 'no-cache' } : undefined
+                    });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const blob = await response.blob();
+
+                    return await new Promise<string>((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                            const result = reader.result as string;
+                            resolve(result.split(',')[1] || '');
+                        };
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (e) {
+                    console.warn(`Fetch method ${i} failed`, e);
+                    lastError = e instanceof Error ? e : new Error(String(e));
+                }
+            }
+            throw lastError || new Error('Failed to fetch image');
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    }
+
+    async function compressBase64Image(base64: string, maxSize: number = 1024): Promise<string> {
+        try {
+            if (Platform.OS === 'web') return base64; // Web compression omitted for brevity unless requested
+            const imageUri = `data:image/jpeg;base64,${base64}`;
+            const manipulated = await ImageManipulator.manipulateAsync(
+                imageUri,
+                [{ resize: { width: maxSize } }],
+                { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+            );
+            return manipulated.base64 || base64;
+        } catch (error) {
+            console.error('Error compressing:', error);
+            return base64;
+        }
+    }
+
+    async function processImageWithAI(imageBase64: string, selectedWallpaper: any) {
+        console.log('=== AI PROCESSING START ===');
+        try {
+            setProcessingStep('Preparando imágenes...');
+            // 1. Compress user image
+            const compressedUserImage = await compressBase64Image(imageBase64, 1280);
+
+            // 2. Prepare wallpaper image
+            // Note: adapting to store structure vs user snippet structure
+            const selectedImageUrl = selectedWallpaper.imageUrl;
+
+            setProcessingStep('Obteniendo papel tapiz...');
+            let wallpaperBase64 = await fetchImageAsBase64(selectedImageUrl);
+            wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
+
+            // 3. Prepare Request
+            const prompt = `You are an expert at applying wallpaper patterns to walls in photos with advanced wall detection capabilities.
+TASK: Apply the wallpaper pattern from the SECOND IMAGE onto the walls in the FIRST IMAGE.
+CRITICAL WALL DETECTION RULES:
+1. PRIMARY WALL IDENTIFICATION:
+   - Identify the largest continuous flat surface in the center (PRIMARY TARGET WALL).
+   - Ignore furniture, decorative items, doors, windows.
+2. APPLICATION STRATEGY:
+   - Apply wallpaper ONLY to the identified PRIMARY WALL.
+   - Maintain natural shadows, lighting, and perspective.
+   - KEEP furniture/objects clean.
+`;
+
+            const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
+            const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
+
+            const requestBody = {
+                prompt: prompt,
+                images: [
+                    { type: 'image', image: cleanImageBase64 },
+                    { type: 'image', image: cleanWallpaperBase64 }
+                ]
+            };
+
+            setProcessingStep('Procesando con IA...');
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
+
+            const response = await fetch('https://toolkit.rork.com/images/edit/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                const errText = await response.text();
+                throw new Error(`AI API Failed: ${response.status} - ${errText}`);
+            }
+
+            const result = await response.json();
+            if (!result.image?.base64Data) {
+                throw new Error('Invalid AI response format');
+            }
+
+            return {
+                original: compressedUserImage,
+                processed: result.image.base64Data,
+                failed: false
+            };
+
+        } catch (error) {
+            console.error('AI Processing Error:', error);
+            const compressed = await compressBase64Image(imageBase64, 1024);
+            return {
+                original: compressed,
+                processed: '',
+                failed: true,
+                error: error instanceof Error ? error.message : String(error)
+            };
+        }
+    }
+
     const compressImage = async (uri: string) => {
         try {
             const result = await ImageManipulator.manipulateAsync(
                 uri,
-                [{ resize: { width: 1080 } }], // Resize to reasonable width
+                [{ resize: { width: 1080 } }],
                 { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
             );
             return result;
@@ -54,95 +203,46 @@ export default function CameraScreen() {
     const processCapturedImage = async (uri: string) => {
         try {
             setIsProcessing(true);
-            setProcessingStep('Preparando imagen...');
+            setProcessingStep('Comprimiendo...');
 
-            // 1. Compress and get Base64
+            // Initial compression just to get base64
             const compressed = await compressImage(uri);
             const base64Image = compressed.base64 || '';
-            const finalUri = compressed.uri;
 
-            // Check if this image already exists in our rooms to avoid re-processing
-            // Simple check: if we just added it, it's new. 
-            // But if user picks same image again?
-            // For now, assume every capture/pick is a "new" attempt unless we find exact match?
-            // Let's just create a new room for every successful capture to be safe/simple.
+            if (wallpaper) {
+                // If we have a wallpaper, use the full AI flow
+                const result = await processImageWithAI(base64Image, wallpaper);
 
-            setProcessingStep('Analizando paredes...');
-
-            // 2. Generate Mask (Smart Masking)
-            let maskBase64 = '';
-            let aiFallbackNeeded = false;
-
-            try {
-                console.log('[Camera] Generating wall mask...');
-                maskBase64 = await generateWallMask(base64Image);
-                console.log('[Camera] Mask generated successfully');
-            } catch (maskError) {
-                console.warn('[Camera] Mask generation failed, falling back to full processing:', maskError);
-                aiFallbackNeeded = true;
-            }
-
-            // 3. Save to Store
-            // We add the room. If we have a mask, we save it too.
-            await addUserRoom(base64Image);
-
-            // Get the ID of the room we just added (it's the newest one)
-            // addUserRoom adds to the TOP of the list.
-            // We need to wait a tiny bit or just fetch store again?
-            // useWallpapersStore.getState() is better.
-            const currentRooms = useWallpapersStore.getState().userRooms;
-            const newRoom = currentRooms[0]; // The one we just added
-
-            if (maskBase64 && newRoom) {
-                await updateUserRoomMask(newRoom.id, maskBase64);
-            }
-
-            if (aiFallbackNeeded) {
-                // If mask generation failed, we can't do local preview.
-                // We will navigate to result, but the result screen needs to know 
-                // that it should probably trigger a full AI process or we do it here?
-                // The objective says: "If mask generation fails... implement a fallback to the full AI processing".
-                // It's better to do it here so user enters Result screen with SOMETHING.
-                setProcessingStep('Procesando diseño completo (Fallback)...');
-                // We need a wallpaper to process against? 
-                // Wait, if we are just "Scanning the room", we don't have a specific wallpaper selected yet?
-                // Usually Camera is entered from "Try in my room" on a wallpaper, OR from the tab.
-                // If from Tab, we don't have a wallpaper.
-                // If we don't have a wallpaper, we CAN'T do full AI processing (needs 2 images).
-
-                // If we came from the Tab, we just want to save the room and maybe go to "Select Wallpaper"?
-                // Or go to Result screen with "No Wallpaper Selected"?
-
-                // For Smart Visualizer:
-                // Ideally, we just save the room + mask.
-                // Then user picks a wallpaper.
-
-                // If mask generation failed, and we have no wallpaper, we just save the room (raw).
-                // The user will pick a wallpaper later, and THEN we might have to do full AI.
-                // But the "Result" screen usually expects to show *something*.
-
-                // Let's assume for now we just navigate to the result/preview with the room image.
-                // Pass `processedImage: ''` and the result screen handles the rest.
+                router.push({
+                    pathname: '/wallpaper-result',
+                    params: {
+                        originalImage: result.original,
+                        processedImage: result.processed,
+                        wallpaperId: wallpaper.id,
+                        aiProcessingFailed: result.failed ? 'true' : 'false',
+                        errorMessage: result.error
+                    }
+                });
             } else {
-                // Success with mask
+                // Fallback to old room-saving logic if no wallpaper selected
+                // Or maybe trigger error? "Select wallpaper first"
+                // For now, let's keep the room saving but navigate to result without processing?
+                // The user said "use only the AI". 
+                // Let's modify this to just navigate passing the image if no wallpaper.
+                router.push({
+                    pathname: '/wallpaper-result',
+                    params: {
+                        originalImage: base64Image,
+                        processedImage: '',
+                        aiProcessingFailed: 'false'
+                    }
+                });
             }
-
-            setIsProcessing(false);
-
-            // Navigate to options/result
-            // We pass the raw image uri to show.
-            // If we have a mask, the result screen (if updated) will find it in the store.
-            router.push({
-                pathname: '/wallpaper-result',
-                params: {
-                    image: finalUri,
-                    roomId: newRoom?.id,
-                }
-            });
 
         } catch (error) {
             console.error('Processing error:', error);
-            Alert.alert('Error', 'No se pudo procesar la imagen.');
+            Alert.alert('Error', 'No se pudo procesar.');
+        } finally {
             setIsProcessing(false);
         }
     };
