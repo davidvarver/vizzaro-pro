@@ -10,19 +10,19 @@ import {
   Dimensions,
   Platform,
   Modal,
-  TextInput
+  TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
-import { ArrowLeft, Filter, X, Check, Search } from 'lucide-react-native';
+import { ArrowLeft, Filter, X, Check, Search, ChevronDown } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Colors from '@/constants/colors';
+import { Theme } from '@/constants/theme';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { WallpaperCard } from '@/components/WallpaperCard';
-import { Wallpaper } from '@/constants/wallpapers';
-import { useFonts, PlayfairDisplay_600SemiBold, PlayfairDisplay_400Regular } from '@expo-google-fonts/playfair-display';
-import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { getBaseName } from '@/utils/product';
 import { SeoHead } from '@/components/SeoHead';
+import AnnouncementBar from '@/components/AnnouncementBar';
+import Header from '@/components/Header';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -36,35 +36,31 @@ export default function CatalogScreen() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeColors, setActiveColors] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Sync params with state on load
-  // Sync params with state on load (and clear others to ensure results)
+  // Sync params
   useEffect(() => {
     if (params.style) {
       setActiveStyle(params.style);
-      setActiveCategory(null); // Clear category if style is properly requested
+      setActiveCategory(null);
       setActiveColors([]);
     } else if (params.category) {
       setActiveCategory(params.category);
-      setActiveStyle(null); // Clear style if category is requested
+      setActiveStyle(null);
       setActiveColors([]);
     }
   }, [params.style, params.category]);
 
-  // Load Fonts
-  let [fontsLoaded] = useFonts({
-    PlayfairDisplay_600SemiBold,
-    PlayfairDisplay_400Regular,
-    Lato_400Regular,
-    Lato_700Bold
-  });
+  useEffect(() => {
+    if (params.search) {
+      setSearchQuery(params.search);
+    }
+  }, [params.search]);
 
-  // Dynamic Filters derived from actual data
+  // Derived Data
   const availableStyles = useMemo(() => {
     const styles = new Set<string>();
-    wallpapers.forEach(w => {
-      if (w.style) styles.add(w.style.trim());
-    });
+    wallpapers.forEach(w => { if (w.style) styles.add(w.style.trim()); });
     return Array.from(styles).sort();
   }, [wallpapers]);
 
@@ -81,238 +77,179 @@ export default function CatalogScreen() {
   const numColumns = useMemo(() => (SCREEN_WIDTH >= 1024 ? 4 : SCREEN_WIDTH >= 768 ? 3 : 2), []);
 
   const filteredWallpapers = useMemo(() => {
-    // 1. Filter first
     const filtered = wallpapers.filter(w => {
-      // Helper to normalize strings (remove accents, lowercase)
       const normalize = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-      // Filter by Style
-      if (activeStyle) {
-        if (!w.style || !normalize(w.style).includes(normalize(activeStyle))) return false;
-      }
+      if (activeStyle && (!w.style || !normalize(w.style).includes(normalize(activeStyle)))) return false;
+      if (activeCategory && (!w.category || !normalize(w.category).includes(normalize(activeCategory)))) return false;
 
-      // Filter by Category
-      if (activeCategory) {
-        if (!w.category || !normalize(w.category).includes(normalize(activeCategory))) return false;
-      }
-
-      // Filter by Color
       if (activeColors.length > 0) {
         const wColors = w.colors || [];
-        const hasColor = activeColors.some(c =>
-          wColors.some(wc => wc.toLowerCase().includes(c.toLowerCase()))
-        );
+        const hasColor = activeColors.some(c => wColors.some(wc => wc.toLowerCase().includes(c.toLowerCase())));
         if (!hasColor) return false;
       }
 
-      // Filter by Search (Name or SKU)
-      if (params.search) {
-        const search = params.search.toLowerCase();
-        const matchName = w.name.toLowerCase().includes(search);
-        const matchId = w.id.toLowerCase().includes(search);
-        const matchSku = w.publicSku?.toLowerCase().includes(search);
-
-        if (!matchName && !matchId && !matchSku) {
-          return false;
-        }
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const matchName = w.name.toLowerCase().includes(q);
+        const matchId = w.id.toLowerCase().includes(q);
+        const matchSku = w.publicSku?.toLowerCase().includes(q);
+        if (!matchName && !matchId && !matchSku) return false;
       }
 
       return true;
     });
 
-    // Deduplicate Variants
+    // Deduplicate variants
     const uniqueMap = new Map();
     filtered.forEach(w => {
       const baseName = getBaseName(w.name);
-      if (!uniqueMap.has(baseName)) {
-        uniqueMap.set(baseName, w);
-      }
+      if (!uniqueMap.has(baseName)) uniqueMap.set(baseName, w);
     });
 
     return Array.from(uniqueMap.values());
-  }, [wallpapers, activeStyle, activeCategory, activeColors, params.search]);
+  }, [wallpapers, activeStyle, activeCategory, activeColors, searchQuery]);
 
   const toggleColor = (color: string) => {
-    setActiveColors(prev =>
-      prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]
-    );
+    setActiveColors(prev => prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]);
   };
 
   const clearFilters = () => {
     setActiveStyle(null);
     setActiveCategory(null);
     setActiveColors([]);
-    router.setParams({ style: undefined, category: undefined });
+    setSearchQuery('');
+    router.setParams({ style: undefined, category: undefined, search: undefined });
   };
-
-  if (!fontsLoaded) return <View style={{ flex: 1, backgroundColor: '#FFF' }} />;
-
-
-
-  //... (before return)
 
   return (
     <View style={styles.container}>
-      <SeoHead
-        title="Full Catalog - Wallpaper & Murals NJ"
-        description="Explore our complete wallpaper collection in New Jersey. Filter by color, style, and design. Find the perfect style for your home or office in NJ."
-      />
-      <Stack.Screen options={{ headerShown: false }} />
-      <StatusBar barStyle="dark-content" />
+      <SeoHead title="Shop Wallpaper | Vizzaro" description="Browse our premium wallpaper collection." />
+      <StatusBar barStyle="dark-content" backgroundColor={Theme.colors.white} />
 
-      {/* HEADER */}
-      <View style={[styles.header, { paddingTop: insets.top }]}>
-        <View style={styles.headerTop}>
-          <TouchableOpacity
-            onPress={() => router.canGoBack() ? router.back() : router.replace('/(tabs)/home')}
-            style={styles.backBtn}
-          >
-            <ArrowLeft color="#000" size={24} />
-          </TouchableOpacity>
+      <AnnouncementBar />
+      <Header />
 
-          {/* SEARCH INPUT */}
-          <View style={styles.searchContainer}>
-            <Search color="#666" size={20} style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search by name or SKU..."
-              value={params.search as string} // Just display param or local state? Better local state synced with URL?
-              // Actually, let's use a local state for input to avoid jumpy URL updates
-              onChangeText={(text) => router.setParams({ search: text })}
-            // Note: Updating params on every keystroke might be slow. Debounce is better but keep it simple for now.
-            />
-            {params.search ? (
-              <TouchableOpacity onPress={() => router.setParams({ search: '' })}>
-                <X color="#666" size={18} />
-              </TouchableOpacity>
-            ) : null}
-          </View>
-
-          <TouchableOpacity onPress={() => setShowFilters(true)} style={styles.filterBtn}>
-            <Filter color="#000" size={24} />
-          </TouchableOpacity>
+      {/* SUB-HEADER COMPACT */}
+      <View style={styles.subHeader}>
+        <View style={styles.searchBar}>
+          <Search size={16} color={Theme.colors.textSecondary} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor={Theme.colors.textSecondary}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <X size={16} color={Theme.colors.textSecondary} />
+            </TouchableOpacity>
+          )}
         </View>
+        <TouchableOpacity style={styles.filterTrigger} onPress={() => setShowFilters(true)}>
+          <Text style={styles.filterTriggerText}>FILTER</Text>
+          <ChevronDown size={14} color={Theme.colors.black} />
+          {(activeStyle || activeCategory || activeColors.length > 0) && <View style={styles.activeDot} />}
+        </TouchableOpacity>
+      </View>
 
-        {/* ACTIVE FILTERS BAR */}
-        <View style={styles.activeFilters}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterGap}>
+      {/* ACTIVE FILTERS CHIPS */}
+      {(activeCategory || activeStyle || activeColors.length > 0) && (
+        <View style={styles.activeFiltersRow}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 20 }}>
             {activeCategory && (
               <TouchableOpacity style={styles.chip} onPress={() => setActiveCategory(null)}>
                 <Text style={styles.chipText}>{activeCategory}</Text>
-                <X size={14} color="#FFF" />
+                <X size={12} color={Theme.colors.white} />
               </TouchableOpacity>
             )}
             {activeStyle && (
               <TouchableOpacity style={styles.chip} onPress={() => setActiveStyle(null)}>
                 <Text style={styles.chipText}>{activeStyle}</Text>
-                <X size={14} color="#FFF" />
+                <X size={12} color={Theme.colors.white} />
               </TouchableOpacity>
             )}
             {activeColors.map(c => (
               <TouchableOpacity key={c} style={styles.chip} onPress={() => toggleColor(c)}>
-                <View style={[styles.colorDot, { backgroundColor: getColorHex(c) }]} />
                 <Text style={styles.chipText}>{c}</Text>
-                <X size={14} color="#FFF" />
+                <X size={12} color={Theme.colors.white} />
               </TouchableOpacity>
             ))}
+            <TouchableOpacity onPress={clearFilters}>
+              <Text style={styles.clearText}>Clear All</Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
-      </View>
+      )}
 
       {/* GRID */}
       <FlatList
         data={filteredWallpapers}
-        key={numColumns} // Force refresh on layout change
+        key={numColumns}
         numColumns={numColumns}
         style={{ flex: 1 }}
-        contentContainerStyle={[styles.gridContent, { paddingBottom: 100 }]} // Extra padding for safe area
+        contentContainerStyle={styles.gridContent}
         columnWrapperStyle={styles.gridRow}
         initialNumToRender={8}
-        maxToRenderPerBatch={8}
-        windowSize={5}
-        removeClippedSubviews={Platform.OS === 'android'}
         renderItem={({ item }) => (
-          <View style={{ flex: 1, padding: 8, maxWidth: `${100 / numColumns}%` }}>
-            <WallpaperCard
-              item={item}
-              onPress={() => router.push(`/wallpaper/${item.id}`)}
-              width="100%"
-            />
+          <View style={{ flex: 1, padding: 6, maxWidth: `${100 / numColumns}%` }}>
+            <WallpaperCard item={item} onPress={(w) => router.push(`/wallpaper/${w.id}` as any)} width="100%" />
           </View>
         )}
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={styles.emptyText}>No results found.</Text>
-            <TouchableOpacity onPress={clearFilters}>
-              <Text style={styles.emptyAction}>Clear filters</Text>
-            </TouchableOpacity>
+            <TouchableOpacity onPress={clearFilters}><Text style={styles.emptyLink}>Clear Filters</Text></TouchableOpacity>
           </View>
         }
       />
 
-      {/* FILTER MODAL */}
-      <Modal visible={showFilters} animationType="slide" presentationStyle="pageSheet">
-        <View style={styles.modalContainer}>
+      {/* FILTERS MODAL */}
+      <Modal visible={showFilters} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setShowFilters(false)}>
+        <View style={styles.modalBody}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Filters</Text>
+            <Text style={styles.modalTitle}>FILTERS</Text>
             <TouchableOpacity onPress={() => setShowFilters(false)}>
-              <X color="#000" size={24} />
+              <X size={24} color={Theme.colors.black} />
             </TouchableOpacity>
           </View>
 
-          <ScrollView style={styles.modalContent}>
+          <ScrollView style={styles.modalScroll}>
+            <View style={styles.filterSection}>
+              <Text style={styles.filterLabel}>STYLE</Text>
+              <View style={styles.tagsContainer}>
+                {availableStyles.map(s => (
+                  <TouchableOpacity
+                    key={s}
+                    style={[styles.tag, activeStyle === s && styles.tagActive]}
+                    onPress={() => setActiveStyle(activeStyle === s ? null : s)}
+                  >
+                    <Text style={[styles.tagText, activeStyle === s && styles.tagTextActive]}>{s}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
 
-            {/* CATEGORY (New Section if needed) */}
-
-            {/* STYLES */}
-            {availableStyles.length > 0 && (
-              <>
-                <Text style={styles.filterSectionTitle}>Style</Text>
-                <View style={styles.filterWrap}>
-                  {availableStyles.map(s => (
-                    <TouchableOpacity
-                      key={s}
-                      style={[styles.filterOption, activeStyle === s && styles.filterOptionActive]}
-                      onPress={() => setActiveStyle(s === activeStyle ? null : s)}
-                    >
-                      <Text style={[styles.filterOptionText, activeStyle === s && styles.filterTextActive]}>{s}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </>
-            )}
-
-            {/* COLORS */}
-            {availableColors.length > 0 && (
-              <>
-                <Text style={styles.filterSectionTitle}>Color</Text>
-                <View style={styles.filterWrap}>
-                  {availableColors.map(c => (
-                    <TouchableOpacity
-                      key={c}
-                      style={[
-                        styles.colorOption,
-                        activeColors.includes(c) && styles.colorOptionActive
-                      ]}
-                      onPress={() => toggleColor(c)}
-                    >
-                      <View style={[styles.colorCircle, { backgroundColor: getColorHex(c) }]} />
-                      <Text style={styles.colorName}>{c}</Text>
-                      {activeColors.includes(c) && (
-                        <View style={styles.checkIcon}>
-                          <Check size={12} color="#FFF" />
-                        </View>
-                      )}
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </>
-            )}
+            <View style={styles.filterSection}>
+              <Text style={styles.filterLabel}>COLOR</Text>
+              <View style={styles.tagsContainer}>
+                {availableColors.map(c => (
+                  <TouchableOpacity
+                    key={c}
+                    style={[styles.tag, activeColors.includes(c) && styles.tagActive]}
+                    onPress={() => toggleColor(c)}
+                  >
+                    <Text style={[styles.tagText, activeColors.includes(c) && styles.tagTextActive]}>{c}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
           </ScrollView>
 
           <View style={styles.modalFooter}>
             <TouchableOpacity style={styles.applyBtn} onPress={() => setShowFilters(false)}>
-              <Text style={styles.applyText}>View Results ({filteredWallpapers.length})</Text>
+              <Text style={styles.applyBtnText}>VIEW {filteredWallpapers.length} RESULTS</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -322,76 +259,84 @@ export default function CatalogScreen() {
   );
 }
 
-// Helper for color dots
-function getColorHex(colorName: string) {
-  const map: Record<string, string> = {
-    'Beige': '#F5F5DC', 'Grey': '#808080', 'Blue': '#0000FF',
-    'Green': '#008000', 'Black': '#000000', 'White': '#FFFFFF',
-    'Gold': '#FFD700', 'Pink': '#FFC0CB', 'Red': '#FF0000'
-  };
-  return map[colorName] || '#CCC';
-}
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFF' },
-  header: { backgroundColor: '#FFF', borderBottomWidth: 1, borderBottomColor: '#EEE' },
-  headerTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingBottom: 12 },
-  backBtn: { padding: 10 }, // Increased padding for touch target
-  headerTitle: { fontFamily: 'PlayfairDisplay_600SemiBold', fontSize: 20 },
-  filterBtn: { padding: 8 },
+  container: { flex: 1, backgroundColor: Theme.colors.white },
 
-  activeFilters: { paddingHorizontal: 16, paddingBottom: 12 },
-  filterGap: { gap: 8 },
-  chip: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#333', paddingVertical: 6, paddingHorizontal: 12, borderRadius: 20, gap: 6 },
-  chipText: { color: '#FFF', fontSize: 12, fontFamily: 'Lato_700Bold' },
-  colorDot: { width: 12, height: 12, borderRadius: 6, borderWidth: 1, borderColor: '#FFF' },
-
-  gridContent: { padding: 8 },
-  gridRow: { gap: 0 },
-
-  emptyState: { padding: 40, alignItems: 'center' },
-  emptyText: { fontFamily: 'PlayfairDisplay_400Regular', fontSize: 18, marginBottom: 10 },
-  emptyAction: { fontFamily: 'Lato_700Bold', color: Colors.light.primary, textDecorationLine: 'underline' },
-
-  // Modal
-  modalContainer: { flex: 1, backgroundColor: '#FFF', paddingTop: 20 },
-  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', padding: 20, borderBottomWidth: 1, borderBottomColor: '#EEE' },
-  modalTitle: { fontSize: 24, fontFamily: 'PlayfairDisplay_600SemiBold' },
-  modalContent: { padding: 20 },
-
-  filterSectionTitle: { fontSize: 18, fontFamily: 'Lato_700Bold', marginBottom: 15, marginTop: 10 },
-  filterWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-
-  filterOption: { paddingVertical: 8, paddingHorizontal: 20, borderRadius: 6, borderWidth: 1, borderColor: '#DDD', marginBottom: 5 },
-  filterOptionActive: { backgroundColor: '#333', borderColor: '#333' },
-  filterOptionText: { fontFamily: 'Lato_400Regular', fontSize: 14 },
-  filterTextActive: { color: '#FFF', fontWeight: 'bold' },
-
-  colorOption: { width: '30%', alignItems: 'center', marginBottom: 15, position: 'relative', padding: 10, borderRadius: 8, borderWidth: 1, borderColor: 'transparent' },
-  colorOptionActive: { borderColor: Colors.light.primary, backgroundColor: '#F9F9F9' },
-  colorCircle: { width: 40, height: 40, borderRadius: 20, marginBottom: 5, borderWidth: 1, borderColor: '#EEE' },
-  colorName: { fontSize: 12, fontFamily: 'Lato_400Regular' },
-  checkIcon: { position: 'absolute', top: 5, right: 5, backgroundColor: Colors.light.primary, borderRadius: 10, padding: 2 },
-
-  searchContainer: {
+  subHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Theme.colors.border,
+    gap: 16,
+  },
+  searchBar: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    marginHorizontal: 12, // Space between Back and Filter
-    paddingHorizontal: 10,
-    height: 40,
+    backgroundColor: Theme.colors.backgroundSecondary,
+    paddingHorizontal: 12,
+    height: 36,
+    borderRadius: 4, // Slightly rounded
+    gap: 8,
   },
-  searchIcon: { marginRight: 8 },
   searchInput: {
     flex: 1,
-    fontFamily: 'Lato_400Regular',
-    fontSize: 14,
-    color: '#000',
+    fontFamily: Theme.typography.fontFamily.sans,
+    fontSize: 13,
+    padding: 0,
     height: '100%',
   },
-  modalFooter: { padding: 20, borderTopWidth: 1, borderTopColor: '#EEE' },
-  applyBtn: { backgroundColor: Colors.light.primary, padding: 16, alignItems: 'center', borderRadius: 8 },
-  applyText: { color: '#FFF', fontFamily: 'Lato_700Bold', fontSize: 16 }
+  filterTrigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 8,
+  },
+  filterTriggerText: {
+    fontFamily: Theme.typography.fontFamily.sansBold,
+    fontSize: 12,
+    letterSpacing: 1,
+  },
+  activeDot: {
+    width: 6, height: 6, borderRadius: 3, backgroundColor: Theme.colors.black,
+  },
+
+  activeFiltersRow: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: Theme.colors.border,
+  },
+  chip: {
+    flexDirection: 'row', alignItems: 'center', backgroundColor: Theme.colors.black,
+    paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, gap: 6,
+  },
+  chipText: { color: Theme.colors.white, fontSize: 10, fontFamily: Theme.typography.fontFamily.sansBold },
+  clearText: { color: Theme.colors.textSecondary, fontSize: 11, paddingHorizontal: 8, textDecorationLine: 'underline' },
+
+  gridContent: { paddingVertical: 20, paddingHorizontal: 14 },
+  gridRow: { gap: 0 },
+
+  emptyState: { padding: 40, alignItems: 'center' },
+  emptyText: { fontFamily: Theme.typography.fontFamily.serif, fontSize: 18, marginBottom: 12 },
+  emptyLink: { color: Theme.colors.black, textDecorationLine: 'underline' },
+
+  // Modal
+  modalBody: { flex: 1, backgroundColor: Theme.colors.white, paddingTop: 20 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, paddingBottom: 20, borderBottomWidth: 1, borderBottomColor: Theme.colors.border },
+  modalTitle: { fontFamily: Theme.typography.fontFamily.serifBold, fontSize: 18, letterSpacing: 1 },
+  modalScroll: { padding: 20 },
+
+  filterSection: { marginBottom: 32 },
+  filterLabel: { fontFamily: Theme.typography.fontFamily.sansBold, fontSize: 12, marginBottom: 16, letterSpacing: 1 },
+  tagsContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  tag: { paddingHorizontal: 16, paddingVertical: 8, borderWidth: 1, borderColor: Theme.colors.border },
+  tagActive: { borderColor: Theme.colors.black, backgroundColor: Theme.colors.black },
+  tagText: { fontFamily: Theme.typography.fontFamily.sans, fontSize: 13 },
+  tagTextActive: { color: Theme.colors.white },
+
+  modalFooter: { padding: 20, borderTopWidth: 1, borderTopColor: Theme.colors.border, paddingBottom: 40 },
+  applyBtn: { backgroundColor: Theme.colors.black, paddingVertical: 16, alignItems: 'center' },
+  applyBtnText: { color: Theme.colors.white, fontFamily: Theme.typography.fontFamily.sansBold, letterSpacing: 1 },
 });

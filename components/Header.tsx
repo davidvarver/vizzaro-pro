@@ -1,52 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Theme } from '@/constants/theme';
 import { Menu, Search, ShoppingBag, User } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useCartStore } from '@/store/useCartStore';
+import { MenuDrawer } from '@/components/MenuDrawer';
 
 export default function Header() {
     const router = useRouter();
     const cartItemsCount = useCartStore((state) => state.cartItems.length);
+    const [menuVisible, setMenuVisible] = useState(false);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.leftSection}>
-                <TouchableOpacity style={styles.iconButton} onPress={() => { }}>
-                    <Menu size={24} color={Theme.colors.black} strokeWidth={1.5} />
-                </TouchableOpacity>
-                {Platform.OS === 'web' && (
-                    <View style={styles.desktopNav}>
-                        <TouchableOpacity onPress={() => router.push('/catalog' as any)}><Text style={styles.navLink}>SHOP</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={() => { }}><Text style={styles.navLink}>INSPIRATION</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={() => { }}><Text style={styles.navLink}>PROJECTS</Text></TouchableOpacity>
-                    </View>
-                )}
-            </View>
-
-            <View style={styles.centerSection}>
-                <TouchableOpacity onPress={() => router.push('/(tabs)/home' as any)}>
-                    <Text style={styles.logo}>VIZZARO</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.rightSection}>
-                <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/catalog' as any)}>
-                    <Search size={24} color={Theme.colors.black} strokeWidth={1.5} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/favorites' as any)}>
-                    <User size={24} color={Theme.colors.black} strokeWidth={1.5} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/(tabs)/cart' as any)}>
-                    <ShoppingBag size={24} color={Theme.colors.black} strokeWidth={1.5} />
-                    {cartItemsCount > 0 && (
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}>{cartItemsCount}</Text>
+        <>
+            <View style={styles.container}>
+                <View style={styles.leftSection}>
+                    <TouchableOpacity style={styles.iconButton} onPress={() => setMenuVisible(true)}>
+                        <Menu size={24} color={Theme.colors.black} strokeWidth={1.5} />
+                    </TouchableOpacity>
+                    {Platform.OS === 'web' && (
+                        <View style={styles.desktopNav}>
+                            <TouchableOpacity onPress={() => router.push('/catalog' as any)}><Text style={styles.navLink}>SHOP</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={() => { }}><Text style={styles.navLink}>INSPIRATION</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={() => { }}><Text style={styles.navLink}>PROJECTS</Text></TouchableOpacity>
                         </View>
                     )}
-                </TouchableOpacity>
+                </View>
+
+                <View style={styles.centerSection}>
+                    <TouchableOpacity onPress={() => router.push('/(tabs)/home' as any)}>
+                        <Text style={styles.logo}>VIZZARO</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.rightSection}>
+                    <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/catalog' as any)}>
+                        <Search size={24} color={Theme.colors.black} strokeWidth={1.5} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/favorites' as any)}>
+                        <User size={24} color={Theme.colors.black} strokeWidth={1.5} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/(tabs)/cart' as any)}>
+                        <ShoppingBag size={24} color={Theme.colors.black} strokeWidth={1.5} />
+                        {cartItemsCount > 0 && (
+                            <View style={styles.badge}>
+                                <Text style={styles.badgeText}>{cartItemsCount}</Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+            <MenuDrawer visible={menuVisible} onClose={() => setMenuVisible(false)} />
+        </>
     );
 }
 

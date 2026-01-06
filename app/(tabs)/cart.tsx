@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { ShoppingCart, Plus, Minus, Trash2, CreditCard, Package, Ruler } from 'lucide-react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Platform } from 'react-native';
+import { ShoppingCart, Plus, Minus, Trash2, X } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import Colors from '@/constants/colors';
+import { Theme } from '@/constants/theme';
 import { useCartStore } from '@/store/useCartStore';
 
 export default function CartScreen() {
@@ -12,452 +12,174 @@ export default function CartScreen() {
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
 
-  // Use new getters
   const getSubtotal = useCartStore((state) => state.getSubtotal);
   const getShippingCost = useCartStore((state) => state.getShippingCost);
   const getGrandTotal = useCartStore((state) => state.getGrandTotal);
 
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  // Derived State
   const subtotal = getSubtotal();
   const shippingCost = getShippingCost();
   const total = getGrandTotal();
 
+  if (cartItems.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyTitle}>YOUR SHOPPING BAG IS VIDE.</Text>
+        <Text style={styles.emptyText}>You haven't added any items yet.</Text>
+        <TouchableOpacity style={styles.shopBtn} onPress={() => router.push('/catalog' as any)}>
+          <Text style={styles.shopBtnText}>CONTINUE SHOPPING</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <ShoppingCart size={28} color={Colors.light.primary} />
-        <Text style={styles.headerTitle}>My Cart</Text>
+        <Text style={styles.headerTitle}>SHOPPING BAG ({cartItems.length})</Text>
       </View>
 
-      {cartItems.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <ShoppingCart size={64} color={Colors.light.textSecondary} />
-          <Text style={styles.emptyTitle}>Your cart is empty</Text>
-          <Text style={styles.emptyText}>
-            Browse our catalog to find the perfect wallpaper for your home
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.tableHeader}>
+          <Text style={[styles.colHeader, { flex: 3 }]}>ITEM</Text>
+          <Text style={[styles.colHeader, { flex: 1, textAlign: 'center' }]}>QTY</Text>
+          <Text style={[styles.colHeader, { flex: 1, textAlign: 'right' }]}>TOTAL</Text>
+        </View>
+
+        {cartItems.map((item) => (
+          <View key={item.id} style={styles.row}>
+            {/* Image & details */}
+            <View style={styles.itemCol}>
+              <Image source={{ uri: item.wallpaper.imageUrl }} style={styles.itemImg} />
+              <View style={styles.itemDetails}>
+                <Text style={styles.itemName}>{item.wallpaper.name}</Text>
+                <Text style={styles.itemSku}>Item: {item.wallpaper.publicSku || 'VIZ-001'}</Text>
+                <Text style={styles.unitPrice}>${item.wallpaper.price.toFixed(2)} / {item.purchaseType === 'sample' ? 'Sample' : 'Roll'}</Text>
+                {item.purchaseType === 'roll' && (
+                  <Text style={styles.coverage}>Covers approx {item.wallArea.toFixed(1)} sq ft</Text>
+                )}
+              </View>
+            </View>
+
+            {/* Quantity */}
+            <View style={styles.qtyCol}>
+              <View style={styles.qtyControl}>
+                <TouchableOpacity onPress={() => updateQuantity(item.id, -1)} style={styles.qtyBtn}>
+                  <Minus size={12} color={Theme.colors.black} />
+                </TouchableOpacity>
+                <Text style={styles.qtyVal}>{item.purchaseType === 'sample' ? item.quantity : item.rollsNeeded}</Text>
+                <TouchableOpacity onPress={() => updateQuantity(item.id, 1)} style={styles.qtyBtn}>
+                  <Plus size={12} color={Theme.colors.black} />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={() => removeFromCart(item.id)} style={styles.removeBtn}>
+                <Text style={styles.removeText}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Total */}
+            <View style={styles.priceCol}>
+              <Text style={styles.priceVal}>
+                ${(item.wallpaper.price * (item.purchaseType === 'sample' ? item.quantity : item.rollsNeeded)).toFixed(2)}
+              </Text>
+            </View>
+          </View>
+        ))}
+
+        <View style={styles.summarySection}>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>SUBTOTAL</Text>
+            <Text style={styles.summaryVal}>${subtotal.toFixed(2)}</Text>
+          </View>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>SHIPPING</Text>
+            <Text style={styles.summaryVal}>${shippingCost.toFixed(2)}</Text>
+          </View>
+          <View style={[styles.summaryRow, styles.totalRow]}>
+            <Text style={styles.totalLabel}>ESTIMATED TOTAL</Text>
+            <Text style={styles.totalVal}>${total.toFixed(2)}</Text>
+          </View>
+        </View>
+
+        {/* Terms */}
+        <View style={styles.termsBox}>
+          <TouchableOpacity style={styles.checkbox} onPress={() => setAcceptedTerms(!acceptedTerms)}>
+            {acceptedTerms && <View style={styles.checkboxInner} />}
+          </TouchableOpacity>
+          <Text style={styles.termsText}>
+            I agree to the <Text style={styles.link}>Terms & Conditions</Text>. I understand custom orders are final sale.
           </Text>
         </View>
-      ) : (
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.itemsContainer}>
-            {cartItems.map((item) => (
-              <View key={item.id} style={styles.cartItem}>
-                <Image source={{ uri: item.wallpaper.imageUrl }} style={styles.itemImage} />
+      </ScrollView>
 
-                <View style={styles.itemInfo}>
-                  <Text style={styles.itemName}>{item.wallpaper.name}</Text>
-
-                  <View style={styles.purchaseTypeIndicator}>
-                    {item.purchaseType === 'roll' ? (
-                      <Package size={14} color={Colors.light.primary} />
-                    ) : item.purchaseType === 'sample' ? (
-                      // Simple swatch icon or repurpose existing icon
-                      <View style={{ width: 14, height: 14, backgroundColor: Colors.light.primary, borderRadius: 2 }} />
-                    ) : (
-                      <Ruler size={14} color={Colors.light.primary} />
-                    )}
-                    <Text style={styles.purchaseTypeText}>
-                      {item.purchaseType === 'roll' ? 'By Roll' : item.purchaseType === 'sample' ? 'Sample' : 'Custom Size'}
-                    </Text>
-                  </View>
-
-                  <Text style={styles.itemDetails}>
-                    {item.purchaseType === 'sample'
-                      ? `Quantity: ${item.quantity} • 8" x 10" approx`
-                      : `${item.rollsNeeded} roll${item.rollsNeeded > 1 ? 's' : ''} • ${item.wallArea.toFixed(1)} sq ft`
-                    }
-                  </Text>
-
-                  <Text style={styles.itemPrice}>
-                    {item.purchaseType === 'sample'
-                      ? `$5.00 × ${item.quantity} = $${(5.00 * item.quantity).toFixed(2)}`
-                      : `$${item.wallpaper.price.toFixed(2)} × ${item.rollsNeeded} = ${(item.wallpaper.price * item.rollsNeeded).toFixed(2)}`
-                    }
-                  </Text>
-                </View>
-
-                <View style={styles.itemControls}>
-                  <View style={styles.quantityContainer}>
-                    <TouchableOpacity
-                      style={styles.quantityButton}
-                      onPress={() => updateQuantity(item.id, -1)}
-                    >
-                      <Minus size={16} color={Colors.light.primary} />
-                    </TouchableOpacity>
-                    <Text style={styles.quantity}>
-                      {item.purchaseType === 'sample' ? item.quantity : item.rollsNeeded}
-                    </Text>
-                    <TouchableOpacity
-                      style={styles.quantityButton}
-                      onPress={() => updateQuantity(item.id, 1)}
-                    >
-                      <Plus size={16} color={Colors.light.primary} />
-                    </TouchableOpacity>
-                  </View>
-
-                  <TouchableOpacity
-                    style={styles.removeButton}
-                    onPress={() => removeFromCart(item.id)}
-                  >
-                    <Trash2 size={20} color={Colors.light.error} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </View>
-
-          <View style={styles.deliverySection}>
-            <Text style={styles.sectionTitle}>Delivery Options</Text>
-
-            <View
-              style={[
-                styles.deliveryOption,
-                styles.deliveryOptionSelected
-              ]}
-            >
-              <View style={styles.deliveryOptionContent}>
-                <Text style={styles.deliveryOptionTitle}>Standard Shipping</Text>
-                <Text style={styles.deliveryOptionSubtitle}>
-                  Shipping calculated at checkout logic
-                </Text>
-              </View>
-              <Text style={styles.deliveryPrice}>${shippingCost.toFixed(2)}</Text>
-            </View>
-          </View>
-
-          <View style={styles.summarySection}>
-            <Text style={styles.sectionTitle}>Order Summary</Text>
-
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Subtotal</Text>
-              <Text style={styles.summaryValue}>${subtotal.toFixed(2)}</Text>
-            </View>
-
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Delivery</Text>
-              <Text style={styles.summaryValue}>${shippingCost.toFixed(2)}</Text>
-            </View>
-
-            <View style={[styles.summaryRow, styles.totalRow]}>
-              <Text style={styles.totalLabel}>Total</Text>
-              <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
-            </View>
-
-            {/* Terms and Conditions Checkbox */}
-            <View style={styles.termsContainer}>
-              <TouchableOpacity
-                style={styles.checkboxContainer}
-                onPress={() => setAcceptedTerms(!acceptedTerms)}
-              >
-                <View style={[styles.checkbox, acceptedTerms && styles.checkboxChecked]}>
-                  {acceptedTerms && <View style={styles.checkboxInner} />}
-                </View>
-              </TouchableOpacity>
-              <View style={styles.termsTextContainer}>
-                <Text style={styles.termsText}>
-                  I have read and agree to the <Text style={styles.linkText} onPress={() => router.push('/terms-of-sale')}>Terms and Conditions</Text>.
-                </Text>
-                <Text style={styles.termsSubtext}>
-                  I understand there are no returns on custom products.
-                </Text>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-      )}
-
-      {cartItems.length > 0 && (
-        <View style={styles.checkoutContainer}>
-          <TouchableOpacity
-            style={[styles.checkoutButton, !acceptedTerms && styles.checkoutButtonDisabled]}
-            disabled={!acceptedTerms}
-            onPress={() => router.push('/checkout')}
-          >
-            <CreditCard size={20} color={acceptedTerms ? Colors.light.background : Colors.light.textSecondary} />
-            <Text style={[styles.checkoutButtonText, !acceptedTerms && styles.checkoutButtonTextDisabled]}>
-              Proceed to Checkout • ${total.toFixed(2)}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      {/* FOOTER */}
+      <View style={styles.footer}>
+        <TouchableOpacity
+          style={[styles.checkoutBtn, !acceptedTerms && styles.disabledBtn]}
+          disabled={!acceptedTerms}
+          onPress={() => router.push('/checkout' as any)}
+        >
+          <Text style={styles.checkoutText}>PROCEED TO CHECKOUT</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    gap: 12,
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: Colors.light.text,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 32,
-  },
-  emptyTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: Colors.light.text,
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: Colors.light.textSecondary,
-    textAlign: 'center',
-    lineHeight: 24,
-  },
-  content: {
-    flex: 1,
-  },
-  itemsContainer: {
-    paddingHorizontal: 20,
-  },
-  cartItem: {
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: Colors.light.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    gap: 12,
-  },
-  itemImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-  },
-  itemInfo: {
-    flex: 1,
-    marginRight: 12,
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.text,
-    marginBottom: 4,
-  },
-  itemDetails: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-    marginBottom: 4,
-  },
-  itemPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.light.primary,
-  },
-  itemControls: {
-    alignItems: 'center',
-    gap: 12,
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.light.backgroundSecondary,
-    borderRadius: 8,
-    padding: 4,
-  },
-  quantityButton: {
-    width: 32,
-    height: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 6,
-  },
-  quantity: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.text,
-    minWidth: 32,
-    textAlign: 'center',
-  },
-  removeButton: {
-    padding: 8,
-  },
-  deliverySection: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: Colors.light.text,
-    marginBottom: 16,
-  },
-  deliveryOption: {
-    backgroundColor: Colors.light.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  deliveryOptionSelected: {
-    borderColor: Colors.light.primary,
-    backgroundColor: Colors.light.backgroundSecondary,
-  },
-  deliveryOptionContent: {
-    flex: 1,
-  },
-  deliveryOptionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.text,
-    marginBottom: 4,
-  },
-  deliveryOptionSubtitle: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-  },
-  deliveryPrice: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.light.primary,
-  },
-  summarySection: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-  summaryLabel: {
-    fontSize: 16,
-    color: Colors.light.textSecondary,
-  },
-  summaryValue: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.light.text,
-  },
-  totalRow: {
-    borderTopWidth: 1,
-    borderTopColor: Colors.light.border,
-    marginTop: 8,
-    paddingTop: 16,
-  },
-  totalLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: Colors.light.text,
-  },
-  totalValue: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: Colors.light.primary,
-  },
-  checkoutContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: Colors.light.border,
-  },
-  checkoutButton: {
-    backgroundColor: Colors.light.primary,
-    borderRadius: 12,
-    paddingVertical: 16,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8,
-  },
-  checkoutButtonText: {
-    color: Colors.light.background,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  purchaseTypeIndicator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    marginBottom: 4,
-  },
-  purchaseTypeText: {
-    fontSize: 12,
-    color: Colors.light.primary,
-    fontWeight: '600',
-  },
-  termsContainer: {
-    marginTop: 24,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-    backgroundColor: Colors.light.backgroundSecondary,
-    padding: 12,
-    borderRadius: 8,
-  },
-  checkboxContainer: {
-    paddingTop: 2,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 2,
-    borderColor: Colors.light.primary,
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: Colors.light.primary,
-  },
-  checkboxInner: {
-    width: 10,
-    height: 10,
-    backgroundColor: Colors.light.background,
-    borderRadius: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  termsTextContainer: {
-    flex: 1,
-  },
-  termsText: {
-    fontSize: 14,
-    color: Colors.light.text,
-    lineHeight: 20,
-  },
-  linkText: {
-    color: Colors.light.primary,
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-  },
-  termsSubtext: {
-    fontSize: 12,
-    color: Colors.light.error, // Red for warning
-    marginTop: 4,
-  },
-  checkoutButtonDisabled: {
-    backgroundColor: Colors.light.border,
-  },
-  checkoutButtonTextDisabled: {
-    color: Colors.light.textSecondary,
-  },
+  container: { flex: 1, backgroundColor: Theme.colors.white },
+
+  header: { padding: 20, borderBottomWidth: 1, borderBottomColor: Theme.colors.border },
+  headerTitle: { fontFamily: Theme.typography.fontFamily.serifBold, fontSize: 24, letterSpacing: 1 },
+
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: Theme.colors.white },
+  emptyTitle: { fontFamily: Theme.typography.fontFamily.serifBold, fontSize: 20, marginBottom: 12 },
+  emptyText: { fontFamily: Theme.typography.fontFamily.sans, fontSize: 14, color: Theme.colors.textSecondary, marginBottom: 24 },
+  shopBtn: { paddingVertical: 12, paddingHorizontal: 24, backgroundColor: Theme.colors.black },
+  shopBtnText: { color: Theme.colors.white, fontFamily: Theme.typography.fontFamily.sansBold, letterSpacing: 1 },
+
+  content: { flex: 1 },
+
+  tableHeader: { flexDirection: 'row', paddingHorizontal: 20, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Theme.colors.border },
+  colHeader: { fontSize: 11, fontFamily: Theme.typography.fontFamily.sansBold, color: Theme.colors.textSecondary },
+
+  row: { flexDirection: 'row', paddingHorizontal: 20, paddingVertical: 24, borderBottomWidth: 1, borderBottomColor: Theme.colors.border },
+
+  itemCol: { flex: 3, flexDirection: 'row', gap: 16 },
+  itemImg: { width: 60, height: 80, backgroundColor: '#f0f0f0' },
+  itemDetails: { flex: 1 },
+  itemName: { fontFamily: Theme.typography.fontFamily.serif, fontSize: 16, marginBottom: 4 },
+  itemSku: { fontSize: 11, color: Theme.colors.textSecondary, marginBottom: 4 },
+  unitPrice: { fontSize: 12, fontFamily: Theme.typography.fontFamily.sansMedium },
+  coverage: { fontSize: 10, color: Theme.colors.textSecondary, marginTop: 4 },
+
+  qtyCol: { flex: 1, alignItems: 'center', gap: 8 },
+  qtyControl: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: Theme.colors.border, height: 32 },
+  qtyBtn: { width: 24, height: '100%', alignItems: 'center', justifyContent: 'center' },
+  qtyVal: { width: 24, textAlign: 'center', fontSize: 12, fontFamily: Theme.typography.fontFamily.sansBold },
+  removeBtn: {},
+  removeText: { fontSize: 10, textDecorationLine: 'underline', color: Theme.colors.textSecondary },
+
+  priceCol: { flex: 1, alignItems: 'flex-end' },
+  priceVal: { fontFamily: Theme.typography.fontFamily.sansBold, fontSize: 14 },
+
+  summarySection: { padding: 24, gap: 12 },
+  summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  summaryLabel: { fontSize: 12, fontFamily: Theme.typography.fontFamily.sans },
+  summaryVal: { fontSize: 14, fontFamily: Theme.typography.fontFamily.sansBold },
+  totalRow: { borderTopWidth: 1, borderTopColor: Theme.colors.border, paddingTop: 16, marginTop: 8 },
+  totalLabel: { fontFamily: Theme.typography.fontFamily.serifBold, fontSize: 16 },
+  totalVal: { fontFamily: Theme.typography.fontFamily.serifBold, fontSize: 20 },
+
+  termsBox: { flexDirection: 'row', paddingHorizontal: 24, paddingBottom: 40, gap: 12 },
+  checkbox: { width: 20, height: 20, borderWidth: 1, borderColor: Theme.colors.black, padding: 3 },
+  checkboxInner: { flex: 1, backgroundColor: Theme.colors.black },
+  termsText: { flex: 1, fontSize: 12, color: Theme.colors.textSecondary, lineHeight: 18 },
+  link: { textDecorationLine: 'underline', color: Theme.colors.black },
+
+  footer: { padding: 20, borderTopWidth: 1, borderTopColor: Theme.colors.border },
+  checkoutBtn: { backgroundColor: Theme.colors.black, paddingVertical: 18, alignItems: 'center' },
+  checkoutText: { color: Theme.colors.white, fontFamily: Theme.typography.fontFamily.sansBold, letterSpacing: 1.5, fontSize: 13 },
+  disabledBtn: { opacity: 0.5 },
 });
