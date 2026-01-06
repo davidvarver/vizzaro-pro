@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
-import Svg, { Defs, Mask, Image as SvgImage, Rect, Pattern } from 'react-native-svg';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import Svg, { Defs, Mask, Image as SvgImage, Rect, Pattern, LinearGradient, Stop } from 'react-native-svg';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface WallpaperOverlayProps {
     originalImage: string; // Base64
-    maskImage: string;     // Base64 (White=Wall, Black=Background)
+    maskImage: string;     // Base64 (White=Wall, Black=Background) or "MOCK_GRADIENT_MASK_ID"
     patternImage: string;  // URI of the wallpaper pattern
     opacity?: number;
 }
@@ -22,31 +22,47 @@ export const WallpaperOverlay: React.FC<WallpaperOverlayProps> = ({
         originalImage.startsWith('data:') ? originalImage : `data:image/jpeg;base64,${originalImage}`,
         [originalImage]);
 
-    const maskUri = useMemo(() =>
-        maskImage.startsWith('data:') ? maskImage : `data:image/png;base64,${maskImage}`,
-        [maskImage]);
+    const isMockGradient = maskImage === "MOCK_GRADIENT_MASK_ID";
 
-    // Calculate aspect ratio if possible, or assume container fills screen?
-    // Usually we fit to width.
-    // For now assuming full fill logic (100%).
+    const maskUri = useMemo(() => {
+        if (isMockGradient) return '';
+        return maskImage.startsWith('data:') ? maskImage : `data:image/png;base64,${maskImage}`;
+    }, [maskImage, isMockGradient]);
 
     return (
         <View style={styles.container}>
             <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
                 <Defs>
-                    {/* Define the Mask based on the Mask Image */}
+                    <LinearGradient id="mockGradient" x1="0" y1="0" x2="0" y2="1">
+                        <Stop offset="0%" stopColor="white" stopOpacity="1" />
+                        <Stop offset="60%" stopColor="white" stopOpacity="0.8" />
+                        <Stop offset="80%" stopColor="black" stopOpacity="0" />
+                        <Stop offset="100%" stopColor="black" stopOpacity="0" />
+                    </LinearGradient>
+
+                    {/* Define the Mask based on the Mask Image OR Gradient */}
                     <Mask id="wallMask">
                         {/* 
                             We rely on the mask image: 
                             White areas = Visible (Opacity 1)
                             Black areas = Hidden (Opacity 0)
                         */}
-                        <SvgImage
-                            href={maskUri}
-                            width="100%"
-                            height="100%"
-                            preserveAspectRatio="xMidYMid slice"
-                        />
+                        {isMockGradient ? (
+                            <Rect
+                                x="0"
+                                y="0"
+                                width="100%"
+                                height="100%"
+                                fill="url(#mockGradient)"
+                            />
+                        ) : (
+                            <SvgImage
+                                href={maskUri}
+                                width="100%"
+                                height="100%"
+                                preserveAspectRatio="xMidYMid slice"
+                            />
+                        )}
                     </Mask>
 
                     {/* Define the Pattern Tiling */}

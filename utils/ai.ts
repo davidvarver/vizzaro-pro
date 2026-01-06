@@ -43,7 +43,9 @@ export async function processImageWithAI(
         const mockGradientMask = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP2FU6AAAAD0lEQVR42mP8/5+hHgAAggJ/0S1sUwAAAABJRU5ErkJggg==";
 
         // This mock mask will make the bottom 25% of the image "floor" (black/transparent) and the top 75% "wall".
-        return mockGradientMask;
+        // Return a special ID to signal the frontend to use a generated gradient mask.
+        // This avoids issues with tiny Base64 images not rendering correctly or being invisible.
+        return "MOCK_GRADIENT_MASK_ID";
     }
 
     // Default prompt if not provided
