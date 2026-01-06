@@ -125,7 +125,7 @@ export default function HomeScreen() {
               { name: 'Pink', color: '#EACCCC' },
               { name: 'Gold', color: '#D4AF37' },
             ].map((c) => (
-              <TouchableOpacity key={c.name} style={styles.colorSwatch} onPress={() => router.push({ pathname: '/catalog' } as any)}>
+              <TouchableOpacity key={c.name} style={styles.colorSwatch} onPress={() => router.push({ pathname: '/catalog', params: { color: c.name } } as any)}>
                 <View style={[styles.colorCircle, { backgroundColor: c.color }]} />
                 <Text style={styles.colorName}>{c.name}</Text>
               </TouchableOpacity>

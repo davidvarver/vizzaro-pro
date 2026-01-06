@@ -28,7 +28,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function CatalogScreen() {
   const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ style?: string; category?: string; search?: string }>();
+  const params = useLocalSearchParams<{ style?: string; category?: string; search?: string; color?: string }>();
   const wallpapers = useWallpapersStore((s) => s.wallpapers);
 
   // Local State
@@ -48,8 +48,12 @@ export default function CatalogScreen() {
       setActiveCategory(params.category);
       setActiveStyle(null);
       setActiveColors([]);
+    } else if (params.color) {
+      setActiveColors([params.color]);
+      setActiveStyle(null);
+      setActiveCategory(null);
     }
-  }, [params.style, params.category]);
+  }, [params.style, params.category, params.color]);
 
   useEffect(() => {
     if (params.search) {
@@ -78,22 +82,44 @@ export default function CatalogScreen() {
 
   const filteredWallpapers = useMemo(() => {
     const filtered = wallpapers.filter(w => {
-      const normalize = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      // Helper for normalization
+      const normalize = (str: string | null | undefined) => {
+        if (!str) return '';
+        return str.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      };
 
-      if (activeStyle && (!w.style || !normalize(w.style).includes(normalize(activeStyle)))) return false;
-      if (activeCategory && (!w.category || !normalize(w.category).includes(normalize(activeCategory)))) return false;
+      // 1. Filter by Style
+      if (activeStyle) {
+        const wStyle = normalize(w.style);
+        const filterStyle = normalize(activeStyle);
+        if (!wStyle.includes(filterStyle)) return false;
+      }
 
+      // 2. Filter by Category
+      if (activeCategory) {
+        const wCategory = normalize(w.category);
+        const filterCategory = normalize(activeCategory);
+        if (!wCategory.includes(filterCategory)) return false;
+      }
+
+      // 3. Filter by Colors
       if (activeColors.length > 0) {
         const wColors = w.colors || [];
-        const hasColor = activeColors.some(c => wColors.some(wc => wc.toLowerCase().includes(c.toLowerCase())));
+        // Check if ANY of the wallpaper colors match ANY of the active filter colors
+        const hasColor = activeColors.some(filterColor => {
+          const fColor = normalize(filterColor);
+          return wColors.some(itemColor => normalize(itemColor).includes(fColor));
+        });
         if (!hasColor) return false;
       }
 
+      // 4. Filter by Search Query
       if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        const matchName = w.name.toLowerCase().includes(q);
-        const matchId = w.id.toLowerCase().includes(q);
-        const matchSku = w.publicSku?.toLowerCase().includes(q);
+        const q = normalize(searchQuery);
+        const matchName = normalize(w.name).includes(q);
+        const matchId = normalize(w.id).includes(q);
+        const matchSku = normalize(w.publicSku).includes(q);
+
         if (!matchName && !matchId && !matchSku) return false;
       }
 
