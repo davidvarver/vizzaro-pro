@@ -55,7 +55,7 @@ export default function HomeScreen() {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Vizzaro Pro</Text>
-                <TouchableOpacity onPress={() => console.log('Search todo')}>
+                <TouchableOpacity onPress={() => router.push('/search')}>
                     <Ionicons name="search" size={24} color={Colors.light.text} />
                 </TouchableOpacity>
             </View>
