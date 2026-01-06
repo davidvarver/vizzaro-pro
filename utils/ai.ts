@@ -29,20 +29,24 @@ export async function processImageWithAI(
 
     let processedImageBase64 = imageBase64;
 
-    // Resize image if needed to avoid payload limits or AI errors (max 1024px)
+    // Resize image if needed to avoid payload limits or AI errors (max 512px for safety)
     try {
         const uri = processedImageBase64.startsWith('data:')
             ? processedImageBase64
             : `data:image/jpeg;base64,${processedImageBase64}`;
 
+        // Log original size
+        console.log('AI Processing: Original Image Length:', processedImageBase64.length);
+
         const result = await ImageManipulator.manipulateAsync(
             uri,
-            [{ resize: { width: 1024 } }], // Resize width to 1024, height adjusts automatically
-            { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+            [{ resize: { width: 512 } }], // Resize width to 512 to be super safe
+            { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG, base64: true }
         );
 
         if (result.base64) {
             processedImageBase64 = result.base64;
+            console.log('AI Processing: Resized Image Length:', processedImageBase64.length);
         }
     } catch (resizeError) {
         console.warn('Failed to resize image before AI processing, using original:', resizeError);
