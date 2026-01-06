@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
   resultText: { fontSize: 14, color: '#000' },
   resultValue: { fontSize: 24, fontWeight: 'bold', color: Colors.light.primary, marginVertical: 5 },
   useResultBtn: { marginTop: 10 },
-  useResultText: { color: Colors.light.primary, fontWeight: '600', textDecorationLine: 'underline' }
+  useResultText: { color: Colors.light.primary, fontWeight: '600', textDecorationLine: 'underline' },
 
   contentWrapper: {
     flexDirection: 'column',
