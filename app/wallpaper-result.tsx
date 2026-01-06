@@ -14,6 +14,12 @@ export default function WallpaperResultScreen() {
     const params = useLocalSearchParams();
     const { image, roomId, wallpaperId: initialWallpaperId, processedImage } = params;
 
+    const formatUri = (uri: string | undefined | null) => {
+        if (!uri) return '';
+        if (uri.startsWith('data:') || uri.startsWith('file:') || uri.startsWith('http')) return uri;
+        return `data:image/jpeg;base64,${uri}`;
+    };
+
     const { userRooms, wallpapers, getWallpaperById } = useWallpapersStore();
     const { addToCart } = useCartStore();
 
@@ -74,13 +80,13 @@ export default function WallpaperResultScreen() {
                     />
                 ) : showProcessedImage ? (
                     <Image
-                        source={{ uri: typeof processedImage === 'string' ? processedImage : '' }}
+                        source={{ uri: formatUri(typeof processedImage === 'string' ? processedImage : '') }}
                         style={styles.mainImage}
                         resizeMode="cover"
                     />
                 ) : (
                     <Image
-                        source={{ uri: originalImageUri }}
+                        source={{ uri: formatUri(originalImageUri) }}
                         style={styles.mainImage}
                         resizeMode="cover"
                     />
