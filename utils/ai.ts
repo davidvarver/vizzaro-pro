@@ -109,17 +109,19 @@ export async function processImageWithAI(
 }
 
 export async function generateWallMask(imageBase64: string): Promise<string> {
-    // Strategy: Use the source image itself as the "pattern" (since it's guaranteed to be a valid image)
-    // and rely on the prompt to instruct the AI to paint it white.
-    // This avoids issues with creating dummy invalid base64 images.
+    // To generate a mask, we ask the AI to paint the wall WHITE and everything else BLACK.
+    // We send a simple white image as the "pattern" to apply.
+    // We resize the source image in processImageWithAI to avoid size limits.
+
+    // 64x64 white pixel base64 (Valid PNG)
+    const whitePatternBase64 = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAACQd1PeAAAADElEQVR4nGP6z8AAAAABAAH2I8UAAAAASUVORK5CYII=";
 
     const maskPrompt = `TASK: Create a BINARY MASK of the main wall in the image.
     1. Identify the PRIMARY WALL (largest central vertical surface).
-    2. IGNORE the reference image content.
-    3. Output a pure BLACK and WHITE image.
-    4. WHITE = The Wall.
-    5. BLACK = Everything else (furniture, floor, ceiling, people).
-    6. NO gray, NO shadows, NO texture. Flat White on Flat Black.`;
+    2. Apply the provided WHITE pattern to the entire wall surface.
+    3. Make everything else (furniture, floor, ceiling, people, windows) BLACK.
+    4. The output must be a black and white image only. White = Wall, Black = Not Wall.
+    5. No shadows, no lighting, just flat white on the wall area.`;
 
-    return await processImageWithAI(imageBase64, imageBase64, maskPrompt);
+    return await processImageWithAI(imageBase64, whitePatternBase64, maskPrompt);
 }
