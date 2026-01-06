@@ -1,21 +1,23 @@
-import React, { useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated, Platform, DimensionValue } from 'react-native';
-import { Theme } from '@/constants/theme';
+import React, { useRef, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, DimensionValue, Animated, Platform } from 'react-native';
 import { Wallpaper } from '@/constants/wallpapers';
+import Colors from '@/constants/colors';
 
 interface WallpaperCardProps {
     item: Wallpaper;
     onPress: (item: Wallpaper) => void;
-    width?: DimensionValue;
+    onVisualize?: (item: Wallpaper) => void;
+    width: DimensionValue;
 }
 
-export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
+export const WallpaperCard = ({ item, onPress, onVisualize, width }: WallpaperCardProps) => {
     const scaleAnim = useRef(new Animated.Value(1)).current;
 
+    // Web-specific hover handling
     const handleMouseEnter = () => {
         if (Platform.OS === 'web') {
             Animated.spring(scaleAnim, {
-                toValue: 1.05,
+                toValue: 1.1,
                 useNativeDriver: true,
                 friction: 7,
                 tension: 40
@@ -36,7 +38,7 @@ export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
 
     return (
         <TouchableOpacity
-            style={[styles.container, width ? { width } : undefined]}
+            style={[styles.container, { width }]}
             onPress={() => onPress(item)}
             activeOpacity={0.9}
             //@ts-ignore - Web props
@@ -45,7 +47,7 @@ export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
         >
             <View style={styles.imageContainer}>
                 <Animated.Image
-                    source={{ uri: item.imageUrl }}
+                    source={{ uri: item.imageUrls?.[0] || item.imageUrl }}
                     style={[
                         styles.image,
                         { transform: [{ scale: scaleAnim }] }
@@ -54,12 +56,30 @@ export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
                 />
                 {!item.inStock && (
                     <View style={styles.outOfStockBadge}>
-                        <Text style={styles.outOfStockText}>OUT OF STOCK</Text>
+                        <Text style={styles.outOfStockText}>Out of Stock</Text>
                     </View>
+                )}
+                {onVisualize && (
+                    <TouchableOpacity
+                        style={styles.visualizerIconFromCard}
+                        onPress={(e) => {
+                            e.stopPropagation();
+                            onVisualize(item);
+                        }}
+                    >
+                        {/* Using text or simple icon because we need an import if we use Lucide here */}
+                        {/* But wait, I need to import Camera/Eye. Let's assume Lucide is available or use text/image */}
+                        {/* Since this is a component file, I need to check imports. */}
+                        {/* Actually, let's just make it a simple circle for now or check imports in next step if broken */}
+                        {/* Checking imports... I need to import Camera from lucide-react-native */}
+                        <Text style={{ fontSize: 12 }}>👁️</Text>
+                    </TouchableOpacity>
                 )}
             </View>
             <View style={styles.info}>
-                <Text style={styles.name} numberOfLines={1}>{item.name}</Text>
+                <Text style={styles.name} numberOfLines={1}>
+                    {item.name}
+                </Text>
                 <Text style={styles.price}>${item.price.toFixed(2)}</Text>
             </View>
         </TouchableOpacity>
@@ -69,14 +89,19 @@ export const WallpaperCard = ({ item, onPress, width }: WallpaperCardProps) => {
 const styles = StyleSheet.create({
     container: {
         marginBottom: 24,
-        backgroundColor: 'transparent',
+        backgroundColor: 'transparent', // Cleaner look, no card background
     },
     imageContainer: {
         width: '100%',
-        aspectRatio: 3 / 4, // Portrait for York style
-        borderRadius: 0,
+        aspectRatio: 0.85, // Taller, more elegant ratio
+        borderRadius: 4, // Sharper corners for modern look
         overflow: 'hidden',
-        backgroundColor: Theme.colors.backgroundSecondary,
+        backgroundColor: Colors.light.backgroundSecondary,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+        elevation: 5,
         marginBottom: 12,
     },
     image: {
@@ -84,35 +109,49 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     info: {
-        alignItems: 'center', // York centers text usually
         paddingHorizontal: 4,
     },
     name: {
-        fontFamily: Theme.typography.fontFamily.serif,
-        fontSize: 14,
-        color: Theme.colors.text,
+        fontSize: 15,
+        fontFamily: 'PlayfairDisplay_600SemiBold', // Elegant Serif
+        color: Colors.light.text,
         marginBottom: 4,
-        letterSpacing: 0.5,
-        textAlign: 'center',
+        letterSpacing: 0.2,
     },
     price: {
-        fontFamily: Theme.typography.fontFamily.sans,
-        fontSize: 12,
-        color: Theme.colors.textSecondary,
-        textAlign: 'center',
+        fontSize: 14,
+        fontFamily: 'Lato_400Regular', // Clean Sans
+        color: Colors.light.textSecondary,
+        fontWeight: '500',
     },
     outOfStockBadge: {
         position: 'absolute',
         top: 10,
         right: 10,
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: 'rgba(0,0,0,0.7)',
         paddingHorizontal: 8,
         paddingVertical: 4,
+        borderRadius: 2,
     },
     outOfStockText: {
         color: 'white',
         fontSize: 10,
-        fontFamily: Theme.typography.fontFamily.sansBold,
-        letterSpacing: 1,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
     },
+    visualizerIconFromCard: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        width: 32, height: 32,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+    }
 });

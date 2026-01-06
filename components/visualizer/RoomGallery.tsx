@@ -1,29 +1,28 @@
 
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
-import { Plus, Trash2 } from 'lucide-react-native';
-import { Theme } from '@/constants/theme';
+import { Plus, Trash2, Home } from 'lucide-react-native';
+import Colors from '@/constants/colors';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { UserRoom } from '@/store/useWallpapersStore';
 
 interface RoomGalleryProps {
     onSelectRoom: (image: string) => void;
     onAddRoom: () => void;
-    vertical?: boolean;
 }
 
-export default function RoomGallery({ onSelectRoom, onAddRoom, vertical = false }: RoomGalleryProps) {
+export default function RoomGallery({ onSelectRoom, onAddRoom }: RoomGalleryProps) {
     const userRooms = useWallpapersStore((s) => s.userRooms);
     const deleteUserRoom = useWallpapersStore((s) => s.deleteUserRoom);
 
     const handleDelete = (id: string) => {
         Alert.alert(
-            'Delete Room',
-            'Are you sure you want to delete this room?',
+            'Eliminar habitación',
+            '¿Estás seguro de que quieres eliminar esta habitación?',
             [
-                { text: 'Cancel', style: 'cancel' },
+                { text: 'Cancelar', style: 'cancel' },
                 {
-                    text: 'Delete',
+                    text: 'Eliminar',
                     style: 'destructive',
                     onPress: () => deleteUserRoom(id)
                 }
@@ -31,60 +30,49 @@ export default function RoomGallery({ onSelectRoom, onAddRoom, vertical = false 
         );
     };
 
-    const renderItem = ({ item }: { item: UserRoom }) => {
-        // Fix for potential missing prefix or double prefix
-        const imageUri = item.image.startsWith('data:image')
-            ? item.image
-            : `data:image/jpeg;base64,${item.image}`;
+    const renderItem = ({ item }: { item: UserRoom }) => (
+        <View style={styles.roomItem}>
+            <TouchableOpacity
+                style={styles.roomImageContainer}
+                onPress={() => onSelectRoom(item.image)}
+            >
+                <Image
+                    source={{ uri: `data:image/jpeg;base64,${item.image}` }}
+                    style={styles.roomImage}
+                />
+                <View style={styles.overlay} />
+            </TouchableOpacity>
 
-        return (
-            <View style={[styles.roomItem, vertical && styles.roomItemVertical]}>
-                <TouchableOpacity
-                    style={styles.roomImageContainer}
-                    onPress={() => onSelectRoom(item.image)}
-                >
-                    <Image
-                        source={{ uri: imageUri }}
-                        style={styles.roomImage}
-                    />
-                    {/* Minimalist Overlay */}
-                    <View style={styles.overlay}>
-                        <View style={styles.selectionRing} />
-                    </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={() => handleDelete(item.id)}
-                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                >
-                    <Trash2 size={14} color="#FFF" />
-                </TouchableOpacity>
-            </View>
-        );
-    };
+            <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => handleDelete(item.id)}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+                <Trash2 size={16} color="#FFF" />
+            </TouchableOpacity>
+        </View>
+    );
 
     return (
-        <View style={[styles.container, vertical && styles.containerVertical]}>
-            <View style={[styles.header, vertical && styles.headerVertical]}>
-                <Text style={styles.title}>MY ROOMS</Text>
-                {!vertical && <Text style={styles.count}>{userRooms.length} saved</Text>}
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Mis Habitaciones</Text>
+                <Text style={styles.count}>{userRooms.length} guardadas</Text>
             </View>
 
             <FlatList
-                horizontal={!vertical}
+                horizontal
                 data={userRooms}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={[styles.listContent, vertical && styles.listContentVertical]}
+                contentContainerStyle={styles.listContent}
                 ListHeaderComponent={
-                    <TouchableOpacity style={[styles.addButton, vertical && styles.addButtonVertical]} onPress={onAddRoom}>
+                    <TouchableOpacity style={styles.addButton} onPress={onAddRoom}>
                         <View style={styles.addIconContainer}>
-                            <Plus size={20} color={Theme.colors.black} />
+                            <Plus size={24} color={Colors.light.primary} />
                         </View>
-                        <Text style={styles.addText}>NEW</Text>
+                        <Text style={styles.addText}>Nueva</Text>
                     </TouchableOpacity>
                 }
             />
@@ -96,15 +84,6 @@ const styles = StyleSheet.create({
     container: {
         marginBottom: 20,
     },
-    containerVertical: {
-        marginBottom: 0,
-        flex: 1,
-        width: 100, // Fixed width sidebar
-        backgroundColor: 'rgba(255,255,255,0.9)', // Light frosted sidebar
-        borderLeftWidth: 1,
-        borderLeftColor: 'rgba(0,0,0,0.1)',
-        paddingVertical: 20,
-    },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -112,47 +91,27 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginBottom: 12,
     },
-    headerVertical: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginBottom: 20,
-        paddingHorizontal: 0,
-    },
     title: {
-        fontSize: 14,
-        fontFamily: Theme.typography.fontFamily.serifBold,
-        color: Theme.colors.black,
-        letterSpacing: 1,
+        fontSize: 18,
+        fontFamily: 'Inter-SemiBold',
+        color: Colors.light.text,
     },
     count: {
-        fontSize: 12,
-        fontFamily: Theme.typography.fontFamily.sans,
-        color: Theme.colors.textSecondary,
+        fontSize: 14,
+        fontFamily: 'Inter-Regular',
+        color: Colors.light.textSecondary,
     },
     listContent: {
         paddingHorizontal: 16,
         gap: 12,
     },
-    listContentVertical: {
-        paddingHorizontal: 10,
-        gap: 16,
-        alignItems: 'center',
-        paddingBottom: 40,
-    },
     roomItem: {
         width: 140,
         height: 180,
-        borderRadius: 4,
+        borderRadius: 12,
         overflow: 'hidden',
         position: 'relative',
-        backgroundColor: Theme.colors.backgroundSecondary,
-        borderWidth: 1,
-        borderColor: 'transparent',
-    },
-    roomItemVertical: {
-        width: 80,
-        height: 110,
-        borderRadius: 2,
+        backgroundColor: '#f0f0f0',
     },
     roomImageContainer: {
         width: '100%',
@@ -165,54 +124,48 @@ const styles = StyleSheet.create({
     },
     overlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.05)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    selectionRing: {
-        // Optional active state styling
+        backgroundColor: 'rgba(0,0,0,0.1)',
     },
     deleteButton: {
         position: 'absolute',
-        top: 4,
-        right: 4,
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        width: 24,
-        height: 24,
-        borderRadius: 12,
+        top: 8,
+        right: 8,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        width: 28,
+        height: 28,
+        borderRadius: 14,
         alignItems: 'center',
         justifyContent: 'center',
     },
     addButton: {
         width: 100,
         height: 180,
-        borderRadius: 4,
-        backgroundColor: '#FFF',
+        borderRadius: 12,
+        backgroundColor: '#F5F5F5',
         borderWidth: 1,
-        borderColor: Theme.colors.border,
+        borderColor: '#E0E0E0',
+        borderStyle: 'dashed',
         alignItems: 'center',
         justifyContent: 'center',
         marginRight: 0,
     },
-    addButtonVertical: {
-        width: 80,
-        height: 110,
-        borderRadius: 2,
-        marginBottom: 10,
-    },
     addIconContainer: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        backgroundColor: '#F5F5F5',
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        backgroundColor: '#FFF',
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 8,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 2,
     },
     addText: {
-        fontSize: 10,
-        fontFamily: Theme.typography.fontFamily.sansBold,
-        color: Theme.colors.black,
-        letterSpacing: 1,
+        fontSize: 14,
+        fontFamily: 'Inter-Medium',
+        color: Colors.light.text,
     },
 });

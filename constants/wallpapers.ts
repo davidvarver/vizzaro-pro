@@ -58,8 +58,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.8,
     reviews: 124,
-    patternRepeat: 21,
-    patternMatch: 'Straight',
   },
   {
     id: '2',
@@ -89,8 +87,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.6,
     reviews: 89,
-    patternRepeat: 12.5,
-    patternMatch: 'Straight',
   },
   {
     id: '3',
@@ -119,8 +115,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.7,
     reviews: 156,
-    patternRepeat: 0,
-    patternMatch: 'Random',
   },
   {
     id: '4',
@@ -149,8 +143,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.5,
     reviews: 78,
-    patternRepeat: 0,
-    patternMatch: 'Free',
   },
   {
     id: '5',
@@ -181,8 +173,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.9,
     reviews: 203,
-    patternRepeat: 25.2,
-    patternMatch: 'Drop',
   },
   {
     id: '6',
@@ -212,8 +202,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: false,
     rating: 4.4,
     reviews: 67,
-    patternRepeat: 27,
-    patternMatch: 'Half Drop',
   },
   {
     id: '7',
@@ -242,8 +230,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.7,
     reviews: 45,
-    patternRepeat: 21,
-    patternMatch: 'Half Drop',
   },
   {
     id: '8',
@@ -272,8 +258,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.6,
     reviews: 38,
-    patternRepeat: 21,
-    patternMatch: 'Half Drop',
   },
   {
     id: '9',
@@ -302,8 +286,6 @@ export const wallpapers: Wallpaper[] = [
     inStock: true,
     rating: 4.8,
     reviews: 52,
-    patternRepeat: 25.2,
-    patternMatch: 'Direct',
   },
 ];
 
