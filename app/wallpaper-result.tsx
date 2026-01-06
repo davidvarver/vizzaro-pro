@@ -41,14 +41,15 @@ import AnnouncementBar from '@/components/AnnouncementBar';
 import Header from '@/components/Header';
 
 export default function WallpaperResultScreen() {
-  const { originalImage, processedImage, wallpaperId, aiProcessingFailed, isGenerated, errorMessage, projectId } = useLocalSearchParams<{
-    originalImage: string;
-    processedImage: string;
+  const { originalImage: resultOriginalImage, processedImage, wallpaperId, aiProcessingFailed, isGenerated, errorMessage, projectId, roomId } = useLocalSearchParams<{
+    originalImage?: string;
+    processedImage?: string;
     wallpaperId: string;
     aiProcessingFailed?: string;
     isGenerated?: string;
     errorMessage?: string;
     projectId?: string;
+    roomId?: string;
   }>();
   const insets = useSafeAreaInsets();
   const addToCart = useCartStore((s) => s.addToCart);
@@ -56,6 +57,10 @@ export default function WallpaperResultScreen() {
   const getWallpaperById = useWallpapersStore((s) => s.getWallpaperById);
   const getProjectById = useFavoritesStore((s) => s.getProjectById);
   const userRooms = useWallpapersStore((s) => s.userRooms);
+
+  // Retrieve image from store if roomId is provided
+  const roomFromStore = roomId ? userRooms.find(r => r.id === roomId) : null;
+  const originalImage = roomFromStore?.image || resultOriginalImage;
 
   const [showOriginal, setShowOriginal] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
@@ -71,15 +76,18 @@ export default function WallpaperResultScreen() {
   const wallpaper = getWallpaperById(wallpaperId);
 
   // Mask Logic
-  const currentRoom = userRooms.find(r => r.image === originalImage);
-  const maskImage = currentRoom?.maskImage;
+  const maskImage = roomFromStore?.maskImage;
   const hasMask = !!maskImage;
 
   // Determine display mode
   const shouldShowOriginal = aiProcessingFailed === 'true' || showOriginal;
   const shouldUseOverlay = !showOriginal && hasMask && (!processedImage || processedImage === '' || aiProcessingFailed === 'true');
 
-  const imageSource = { uri: `data:image/jpeg;base64,${shouldShowOriginal ? originalImage : processedImage}` };
+  // Fix image URI construction
+  const rawImage = shouldShowOriginal ? originalImage : (processedImage || originalImage);
+  const imageUri = rawImage?.startsWith('data:image') ? rawImage : `data:image/jpeg;base64,${rawImage}`;
+
+  const imageSource = { uri: imageUri };
 
   const calculateWallArea = () => {
     const length = parseFloat(wallLength) || 0;
@@ -166,7 +174,7 @@ export default function WallpaperResultScreen() {
             {shouldUseOverlay ? (
               <View style={styles.visualizerContainer}>
                 <WallpaperOverlay
-                  originalImage={originalImage}
+                  originalImage={originalImage || ''}
                   maskImage={maskImage}
                   patternImage={wallpaper.imageUrl}
                   opacity={0.9}

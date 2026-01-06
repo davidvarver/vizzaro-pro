@@ -46,9 +46,18 @@ export default function CameraScreen() {
   );
 
   // Function stubs for readability - logic preserved from original
-  const handleSelectRoom = async (image: string) => {
-    setUploadedImage(image);
-    // Logic to navigate or process
+  const handleSelectRoom = async (image: string, roomId?: string) => {
+    // If we have a roomId, use it. If not (fresh capture), we expect it to be added to store already and we should get the ID.
+    // However, for simplicity in this flow, we will rely on finding the room in the store or passing the ID if available.
+
+    // Better approach: Find the room ID if not provided
+    let targetRoomId = roomId;
+    if (!targetRoomId) {
+      // Try to find the room with this image in the store
+      const room = userRooms.find(r => r.image === image);
+      targetRoomId = room?.id;
+    }
+
     if (wallpaper) {
       setIsProcessing(true);
       // Simulate processing call
@@ -56,7 +65,11 @@ export default function CameraScreen() {
         setIsProcessing(false);
         router.push({
           pathname: '/wallpaper-result',
-          params: { originalImage: image, wallpaperId: wallpaper.id, aiProcessingFailed: 'true' } // Fallback for now to skip real AI call in this rewrite
+          params: {
+            roomId: targetRoomId, // Pass ID instead of full image
+            wallpaperId: wallpaper.id,
+            aiProcessingFailed: 'true'
+          }
         } as any);
       }, 1000);
     }
@@ -67,7 +80,9 @@ export default function CameraScreen() {
     if (!result.canceled && result.assets[0].base64) {
       const img = result.assets[0].base64;
       await addUserRoom(img);
-      handleSelectRoom(img);
+      // Get the newly added room (it's prepended)
+      const newRoom = useWallpapersStore.getState().userRooms[0];
+      handleSelectRoom(img, newRoom?.id);
     }
   }
 
@@ -77,7 +92,8 @@ export default function CameraScreen() {
         const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.7 });
         if (photo?.base64) {
           await addUserRoom(photo.base64);
-          handleSelectRoom(photo.base64);
+          const newRoom = useWallpapersStore.getState().userRooms[0];
+          handleSelectRoom(photo.base64, newRoom?.id);
         }
       } catch (e) {
         console.error(e);
