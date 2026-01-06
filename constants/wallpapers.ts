@@ -25,6 +25,8 @@ export interface Wallpaper {
   rating: number;
   reviews: number;
   showInHome?: boolean;
+  patternRepeat?: number;
+  patternMatch?: string;
 }
 
 export const wallpapers: Wallpaper[] = [

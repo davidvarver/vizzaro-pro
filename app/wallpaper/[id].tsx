@@ -22,6 +22,13 @@ import {
   Plus,
   Layers,
   X,
+  Heart,
+  ShoppingCart,
+  Camera,
+  Info,
+  Ruler,
+  ShieldCheck,
+  Truck,
 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
