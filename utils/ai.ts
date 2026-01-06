@@ -62,6 +62,10 @@ export async function processImageWithAI(
         return result.image.base64Data;
     } catch (error) {
         clearTimeout(timeoutId);
+        // Enhance error message for known issues
+        if (error instanceof Error && error.message.includes('INVALID_ARGUMENT')) {
+            console.error('AI Input Error: Check image size/format.');
+        }
         throw error;
     }
 }
@@ -72,9 +76,8 @@ export async function generateWallMask(imageBase64: string): Promise<string> {
     // Since the endpoint expects 2 images (Source + Pattern), we can send a solid WHITE image as the pattern 
     // and instruct it to "Replace the wall with this white pattern, and turn everything else BLACK".
 
-    // Create a simple 1x1 white pixel base64 (approx)
-    // iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg== 
-    const whitePatternBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg==";
+    // Create a 64x64 white pixel base64 to ensure the model can process it as a valid pattern
+    const whitePatternBase64 = "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAACQd1PeAAAADElEQVR4nGP6z8AAAAABAAH2I8UAAAAASUVORK5CYII=";
 
     const maskPrompt = `TASK: Create a BINARY MASK of the main wall in the image.
     1. Identify the PRIMARY WALL (largest central vertical surface).
