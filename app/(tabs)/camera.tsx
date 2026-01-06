@@ -29,8 +29,6 @@ export default function CameraScreen() {
     const [processingStep, setProcessingStep] = useState<string>('');
     const cameraRef = useRef<CameraView>(null);
 
-    const { addUserRoom, updateUserRoomMask, userRooms } = useWallpapersStore();
-
     useEffect(() => {
         if (permission && !permission.granted) {
             requestPermission();
@@ -39,7 +37,7 @@ export default function CameraScreen() {
 
     const params = useLocalSearchParams<{ wallpaperId?: string }>();
     const { wallpaperId } = params;
-    const { getWallpaperById } = useWallpapersStore();
+    const { getWallpaperById, addUserRoom, userRooms } = useWallpapersStore();
     const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
 
     // Helper functions from user snippet
