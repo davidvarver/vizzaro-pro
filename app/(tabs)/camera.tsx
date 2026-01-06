@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Platform, ActivityIndicator, Image, StatusBar } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams, router, useFocusEffect } from 'expo-router';
 import { ArrowLeft, ImageIcon, Repeat, List, X } from 'lucide-react-native';
 import { Theme } from '@/constants/theme';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
@@ -21,6 +21,7 @@ export default function CameraScreen() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isCameraReady, setIsCameraReady] = useState<boolean>(false);
   const [showGallery, setShowGallery] = useState<boolean>(false); // Default to closed
+  const [isActive, setIsActive] = useState(false);
 
   const getWallpaperById = useWallpapersStore((s) => s.getWallpaperById);
   const wallpapers = useWallpapersStore((s) => s.wallpapers);
@@ -31,6 +32,18 @@ export default function CameraScreen() {
   const cameraRef = useRef<CameraView>(null);
 
   const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
+
+  // Manage camera lifecycle
+  useFocusEffect(
+    useCallback(() => {
+      // Screen is focused
+      setIsActive(true);
+      return () => {
+        // Screen is unfocused
+        setIsActive(false);
+      };
+    }, [])
+  );
 
   // Function stubs for readability - logic preserved from original
   const handleSelectRoom = async (image: string) => {
@@ -80,61 +93,64 @@ export default function CameraScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="black" />
 
-      <CameraView style={styles.camera} facing={facing} ref={cameraRef} onCameraReady={() => setIsCameraReady(true)}>
+      {isActive && (
+        <CameraView style={styles.camera} facing={facing} ref={cameraRef} onCameraReady={() => setIsCameraReady(true)}>
 
-        {/* HEADER */}
-        <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
-            <ArrowLeft color="white" size={24} />
-          </TouchableOpacity>
+          {/* HEADER */}
+          <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
+              <ArrowLeft color="white" size={24} />
+            </TouchableOpacity>
 
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerTitle}>{wallpaper ? 'TRY IN YOUR ROOM' : 'VISUALIZER'}</Text>
-            {wallpaper && <Text style={styles.headerSubtitle}>{wallpaper.name}</Text>}
-          </View>
-
-          <TouchableOpacity style={styles.iconButton} onPress={() => setShowGallery(!showGallery)}>
-            {showGallery ? <X color="white" size={24} /> : <List color="white" size={24} />}
-          </TouchableOpacity>
-        </View>
-
-        {/* SIDE GALLERY */}
-        {showGallery && (
-          <View style={[styles.sideGallery, { top: insets.top + 60, bottom: insets.bottom + 100 }]}>
-            <RoomGallery
-              vertical
-              onSelectRoom={handleSelectRoom}
-              onAddRoom={pickImage}
-            />
-          </View>
-        )}
-
-        {/* BOTTOM CONTROLS */}
-        <View style={[styles.bottomControls, { paddingBottom: insets.bottom + 30 }]}>
-          <TouchableOpacity style={styles.controlBtn} onPress={pickImage}>
-            <ImageIcon color="white" size={24} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.captureBtn} onPress={takePicture}>
-            <View style={styles.captureBtnInner} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.controlBtn} onPress={() => setFacing(f => f === 'back' ? 'front' : 'back')}>
-            <Repeat color="white" size={24} />
-          </TouchableOpacity>
-        </View>
-
-        {/* PROCESSING OVERLAY */}
-        {isProcessing && (
-          <View style={StyleSheet.absoluteFill}>
-            <View style={styles.processingOverlay}>
-              <ActivityIndicator color="white" size="large" />
-              <Text style={styles.processingText}>PROCESSING...</Text>
+            <View style={styles.headerTextContainer}>
+              <Text style={styles.headerTitle}>{wallpaper ? 'TRY IN YOUR ROOM' : 'VISUALIZER'}</Text>
+              {wallpaper && <Text style={styles.headerSubtitle}>{wallpaper.name}</Text>}
             </View>
-          </View>
-        )}
 
-      </CameraView>
+            <TouchableOpacity style={styles.iconButton} onPress={() => setShowGallery(!showGallery)}>
+              {showGallery ? <X color="white" size={24} /> : <List color="white" size={24} />}
+            </TouchableOpacity>
+          </View>
+
+          {/* SIDE GALLERY */}
+          {showGallery && (
+            <View style={[styles.sideGallery, { top: insets.top + 60, bottom: insets.bottom + 100 }]}>
+              <RoomGallery
+                vertical
+                onSelectRoom={handleSelectRoom}
+                onAddRoom={pickImage}
+              />
+            </View>
+          )}
+
+          {/* BOTTOM CONTROLS */}
+          <View style={[styles.bottomControls, { paddingBottom: insets.bottom + 30 }]}>
+            <TouchableOpacity style={styles.controlBtn} onPress={pickImage}>
+              <ImageIcon color="white" size={24} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.captureBtn} onPress={takePicture}>
+              <View style={styles.captureBtnInner} />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.controlBtn} onPress={() => setFacing(f => f === 'back' ? 'front' : 'back')}>
+              <Repeat color="white" size={24} />
+            </TouchableOpacity>
+          </View>
+
+          {/* PROCESSING OVERLAY */}
+          {isProcessing && (
+            <View style={StyleSheet.absoluteFill}>
+              <View style={styles.processingOverlay}>
+                <ActivityIndicator color="white" size="large" />
+                <Text style={styles.processingText}>PROCESSING...</Text>
+              </View>
+            </View>
+          )}
+
+        </CameraView>
+      )}
+      {!isActive && <View style={{ flex: 1, backgroundColor: 'black' }} />}
     </View>
   );
 }
