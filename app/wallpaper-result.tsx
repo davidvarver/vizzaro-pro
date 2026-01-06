@@ -8,9 +8,10 @@ import {
   Image,
   Alert,
   Platform,
-  TextInput,
   Modal,
   Dimensions,
+  ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { m2ToSqFt } from '@/utils/product';
@@ -204,6 +205,12 @@ export default function WallpaperResultScreen() {
         </View>
 
         <View style={styles.imageSection}>
+          {isProcessingMask && (
+            <View style={styles.loadingOverlay}>
+              <ActivityIndicator size="large" color={Theme.colors.black} />
+              <Text style={styles.loadingText}>Applying Wallpaper...</Text>
+            </View>
+          )}
           <ViewShot ref={viewShotRef} options={{ format: 'jpg', quality: 0.9 }} style={styles.viewShot}>
             {shouldUseOverlay ? (
               <View style={styles.visualizerContainer}>
@@ -354,6 +361,11 @@ const styles = StyleSheet.create({
   backLinkText: { fontFamily: Theme.typography.fontFamily.sansMedium, fontSize: 14 },
   toggleBtn: { flexDirection: 'row', gap: 6, alignItems: 'center', padding: 8, borderWidth: 1, borderColor: Theme.colors.border, borderRadius: 4 },
   toggleBtnText: { fontSize: 12, fontFamily: Theme.typography.fontFamily.sans },
+
+  loadingOverlay: {
+    padding: 24, justifyContent: 'center', alignItems: 'center', width: '100%', aspectRatio: 4 / 3, backgroundColor: '#f0f0f0', position: 'absolute', zIndex: 10
+  },
+  loadingText: { marginTop: 12, fontFamily: Theme.typography.fontFamily.sansBold, color: Theme.colors.black },
 
   imageSection: { width: '100%', marginVertical: 10 },
   viewShot: { width: '100%', aspectRatio: 4 / 3, backgroundColor: '#f0f0f0', position: 'relative' },
