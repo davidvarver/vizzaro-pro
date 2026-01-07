@@ -47,6 +47,64 @@ interface WallpapersState {
     initialize: () => Promise<void>;
 }
 
+// Helper to auto-group wallpapers based on name similarity
+const enrichWallpaperData = (data: any[]): Wallpaper[] => {
+    // 1. Common suffixes to strip
+    const SUFFIXES = [
+        'PEEL & STICK WALLPAPER',
+        'PEEL AND STICK WALLPAPER',
+        'WALLPAPER',
+        'PAPEL TAPIZ'
+    ];
+
+    // 2. Common colors to strip (Extend as needed based on screenshots)
+    const COLORS = [
+        'OFF WHITE', 'OFF-WHITE', 'WHITE', 'BLANCO',
+        'TEAL', 'TURQUESA',
+        'DARK BROWN', 'BROWN', 'CAFE', 'MARRON',
+        'AQUA',
+        'NAVY', 'AZUL MARINO', 'BLUE', 'AZUL', 'LIGHT BLUE',
+        'PINK', 'ROSA', 'ROSE',
+        'BLACK & WHITE', 'BLACK AND WHITE', 'BLACK', 'NEGRO',
+        'GREY', 'GRAY', 'GRIS',
+        'GOLD', 'DORADO',
+        'GREEN', 'VERDE',
+        'BEIGE', 'CREAM', 'CREMA',
+        'YELLOW', 'AMARILLO',
+        'RED', 'ROJO',
+        'ORANGE', 'NARANJA',
+        'PURPLE', 'MORADO'
+    ];
+
+    return data.map(item => {
+        // If group already exists, keep it
+        if (item.group) return item;
+
+        // Otherwise, infer it
+        let name = item.name.toUpperCase();
+
+        // Remove Suffixes
+        SUFFIXES.forEach(suffix => {
+            name = name.replace(suffix, '');
+        });
+
+        // Remove Colors (Careful to match whole words)
+        COLORS.forEach(color => {
+            // Regex to match color as a whole word
+            const regex = new RegExp(`\\b${color}\\b`, 'g');
+            name = name.replace(regex, '');
+        });
+
+        // Clean up
+        const modelName = name.replace(/[^A-Z0-9]/g, ' ').trim().replace(/\s+/g, '-').toLowerCase();
+
+        return {
+            ...item,
+            group: modelName // Use the "slugified" model name as the group ID
+        };
+    });
+};
+
 export const useWallpapersStore = create<WallpapersState>((set, get) => ({
     wallpapers: [],
     isLoading: true,
@@ -83,18 +141,21 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
 
                     if (response.ok) {
                         const data = await response.json();
-                        console.log('[WallpapersStore] Loaded from API:', data.catalog?.length || 0, 'items');
-                        console.log('[WallpapersStore] API timestamp:', data.timestamp);
+                        // console.log('[WallpapersStore] Loaded from API:', data.catalog?.length || 0, 'items');
 
                         if (data.success && data.catalog && Array.isArray(data.catalog)) {
                             const validCatalog = data.catalog.filter((item: any) =>
-                                item && typeof item === 'object' && item.id && item.name && typeof item.price === 'number'
+                                item && typeof item === 'object' && item.id && item.name
                             );
-                            console.log('[WallpapersStore] Valid items after filtering:', validCatalog.length);
 
-                            if (validCatalog.length > 0) {
-                                set({ wallpapers: validCatalog, isLoading: false });
-                                await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(validCatalog));
+                            // Process and Enrich Data
+                            const enrichedCatalog = enrichWallpaperData(validCatalog);
+
+                            console.log('[WallpapersStore] Enriched items:', enrichedCatalog.length);
+
+                            if (enrichedCatalog.length > 0) {
+                                set({ wallpapers: enrichedCatalog, isLoading: false });
+                                await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(enrichedCatalog));
                                 await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
                                 return;
                             } else {
