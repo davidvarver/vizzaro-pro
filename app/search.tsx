@@ -11,11 +11,16 @@ export default function SearchScreen() {
     const { wallpapers } = useWallpapersStore();
     const [query, setQuery] = useState('');
 
-    const filteredWallpapers = wallpapers.filter(w =>
-        w.name.toLowerCase().includes(query.toLowerCase()) ||
-        w.category.toLowerCase().includes(query.toLowerCase()) ||
-        w.style.toLowerCase().includes(query.toLowerCase())
-    );
+    const filteredWallpapers = React.useMemo(() => {
+        if (!query) return [];
+
+        const searchTerms = query.toLowerCase().split(/[\s+]+/).filter(Boolean);
+
+        return wallpapers.filter(w => {
+            const searchableText = `${w.name} ${w.category} ${w.style} ${w.group || ''}`.toLowerCase();
+            return searchTerms.every(term => searchableText.includes(term));
+        });
+    }, [query, wallpapers]);
 
     const renderItem = ({ item }: { item: any }) => (
         <TouchableOpacity
