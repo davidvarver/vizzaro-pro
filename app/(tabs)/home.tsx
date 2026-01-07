@@ -50,35 +50,62 @@ export default function HomeScreen() {
 
     // Filter Logic
     const filteredWallpapers = React.useMemo(() => {
+        // DEBUG: Inspect data structure (Check logs in terminal)
+        if (wallpapers.length > 0) {
+            console.log('[Home] Sample Wallpaper:', JSON.stringify(wallpapers[0], null, 2));
+            const allCats = [...new Set(wallpapers.map(w => w.category))];
+            const allColors = [...new Set(wallpapers.flatMap(w => w.colors || []))];
+            console.log('[Home] Available Categories:', allCats);
+            console.log('[Home] Available Colors:', allColors);
+        }
+
         return wallpapers.filter(w => {
             // 1. Category Filter
             let matchesCategory = true;
             if (selectedCategory !== "Todos") {
                 if (selectedCategory === "Nuevos") {
-                    // "New" is logic-based (e.g. recent matching), but here we mock it as ALL new items
-                    // Actually, let's just ignore category logic if "Nuevos" is picked, 
-                    // OR we can say "Nuevos" is a sort? 
-                    // Let's stick to the previous simple logic: Nuevos = just top 4, ignoring other categories?
-                    // User said "Florales si sirve", so let's keep the mapping logic but make it robust.
-                    return true; // We handle "Nuevos" slice separately or just let it pass here?
-                    // Wait, if it's "Nuevos", we probably want to return early.
+                    return true;
                 } else {
-                    let searchTerm = "";
-                    if (selectedCategory === "Florales") searchTerm = "Floral";
-                    if (selectedCategory === "Texturas") searchTerm = "Texture";
-                    if (selectedCategory === "Geométricos") searchTerm = "Geometric";
+                    // Try to match partial naming or logical mapping
+                    // Force lower case check
+                    const catName = (w.category || "").toLowerCase();
+                    const itemName = (w.name || "").toLowerCase();
 
-                    // Robust check: category includes term OR name includes term
-                    matchesCategory = (w.category?.includes(searchTerm) || w.name?.includes(searchTerm));
+                    let searchTerm = "";
+                    if (selectedCategory === "Florales") searchTerm = "floral"; // Lowercase
+                    if (selectedCategory === "Texturas") searchTerm = "textur"; // Partial "textur" matches "Texture"
+                    if (selectedCategory === "Geométricos") searchTerm = "geometr"; // Partial "geometr" matches "Geometric"
+
+                    matchesCategory = (catName.includes(searchTerm) || itemName.includes(searchTerm));
                 }
             }
 
             // 2. Color Filter
             let matchesColor = true;
             if (selectedColor !== "Todos") {
-                // Check if the wallpaper's colors array includes the selected color
-                // Our data has capitalized colors: "Green", "White"
-                matchesColor = w.colors?.some(c => c.toLowerCase() === selectedColor.toLowerCase());
+                if (!w.colors || !Array.isArray(w.colors)) {
+                    matchesColor = false;
+                } else {
+                    // Multi-language map
+                    const colorMap: Record<string, string[]> = {
+                        "White": ["white", "blanco", "blanca"],
+                        "Beige": ["beige", "crema", "cream"],
+                        "Grey": ["grey", "gray", "gris", "plata"],
+                        "Black": ["black", "negro", "negra"],
+                        "Gold": ["gold", "dorado", "oro"],
+                        "Green": ["green", "verde"],
+                        "Blue": ["blue", "azul", "celeste"],
+                        "Pink": ["pink", "rosa", "rosado"]
+                    };
+
+                    const targetColors = colorMap[selectedColor] || [selectedColor.toLowerCase()];
+
+                    matchesColor = w.colors.some(c => {
+                        if (!c) return false;
+                        const cLower = c.toLowerCase();
+                        return targetColors.some(start => cLower.includes(start));
+                    });
+                }
             }
 
             return matchesCategory && matchesColor;
@@ -216,6 +243,11 @@ export default function HomeScreen() {
             <View style={styles.cardContent}>
                 <Text style={styles.name} numberOfLines={1}>{item.name.toUpperCase()}</Text>
                 <Text style={styles.price}>${item.price.toFixed(2)} /rollo</Text>
+
+                {/* DEBUG INFO: REMOVE AFTER FIXING */}
+                <Text style={{ fontSize: 9, color: 'red', textAlign: 'center' }}>
+                    {item.category} / {item.colors?.join(',')}
+                </Text>
             </View>
         </TouchableOpacity>
     );
