@@ -2,12 +2,51 @@ import { Platform } from 'react-native';
 
 const API_URL = 'https://toolkit.rork.com/images/edit/';
 
-export interface AiProcessResult {
-    processedBase64: string;
-    maskBase64?: string; // If we start returning mask separately
-}
+const USE_MOCK_AI = false; // DISABLED: We want real AI now.
 
-const USE_MOCK_AI = true; // Set to true to bypass external API
+// Helper to fetch external image urls (for wallpapers)
+export async function fetchImageAsBase64(imageUrl: string): Promise<string> {
+    console.log('[AI] Fetching image:', imageUrl);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
+
+    try {
+        const cleanUrl = imageUrl.trim();
+        // Use a proxy cascade to avoid CORS issues on web/native
+        const proxyServices = [
+            cleanUrl,
+            `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&default=1`,
+            `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
+        ];
+
+        let lastError: Error | null = null;
+        for (let i = 0; i < proxyServices.length; i++) {
+            try {
+                const response = await fetch(proxyServices[i], {
+                    signal: controller.signal,
+                    method: 'GET',
+                    headers: i === 0 ? { 'Accept': 'image/*,*/*', 'Cache-Control': 'no-cache' } : undefined
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const blob = await response.blob();
+                return await new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        const result = reader.result as string;
+                        resolve(result.split(',')[1] || '');
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(blob);
+                });
+            } catch (e) {
+                lastError = e instanceof Error ? e : new Error(String(e));
+            }
+        }
+        throw lastError || new Error('Failed to fetch image');
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
 
 export async function processImageWithAI(
     imageBase64: string,
@@ -16,66 +55,47 @@ export async function processImageWithAI(
 ): Promise<string> {
 
     if (USE_MOCK_AI) {
-        console.log('[AI] Using MOCK mode. returning simulated result.');
-        // Simulate network delay
+        console.log('[AI] MOCK MODE ACTIVE');
         await new Promise(resolve => setTimeout(resolve, 1500));
-
-        // Return a dummy result. Ideally this would be a processed image.
-        // For mask generation, we might want to return a white mask (all wall).
-        // Let's return the input image as the "result" for now, or a solid color if possible?
-        // If this is "generateWallMask", the caller expects a mask (White=Wall).
-        // If we return the original image, light parts will be wall, dark parts not. Better than nothing.
-        // Return a generic "Back Wall" mask.
-        // This is a tiny 16x16 PNG that is white at the top (wall) and black at the bottom (floor).
-        // It will be scaled up by the overlay.
-        // Base64 of a simple gradient image (Top 70% White, Bottom 30% Black) created for this purpose.
-        const genericOnePixelWhite = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg==";
-
-        // Let's use a slightly better mock: A predefined small grayscale image that is mostly white in the middle-top.
-        // Since generating a complex PNG in pure JS without libs is hard, we'll use a hardcoded base64 of a 10x10 gradient.
-        // Row 1-7: White (255)
-        // Row 8-10: Black (0)
-        // This simulates a room with a floor.
-        const mockWallMask = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="; // This is actually 1x1 white. 
-
-        // Correct Gradient Mock (1x4 pixels: White, White, White, Black) - approximate for "Wall + Floor"
-        // Base64 for 1x4 PNG: W,W,W,B
-        const mockGradientMask = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAECAYAAABP2FU6AAAAD0lEQVR42mP8/5+hHgAAggJ/0S1sUwAAAABJRU5ErkJggg==";
-
-        // This mock mask will make the bottom 25% of the image "floor" (black/transparent) and the top 75% "wall".
-        // Return a special ID to signal the frontend to use a generated gradient mask.
-        // This avoids issues with tiny Base64 images not rendering correctly or being invisible.
         return "MOCK_GRADIENT_MASK_ID";
     }
 
-    // Default prompt if not provided
-    const defaultPrompt = `You are an expert at applying wallpaper patterns to walls in photos with advanced wall detection capabilities.
-    TASK: Apply the wallpaper pattern from the SECOND IMAGE onto the walls in the FIRST IMAGE.
-    CRITICAL WALL DETECTION RULES:
-    1. PRIMARY WALL IDENTIFICATION: Identify the largest continuous flat surface in the center (background).
-    2. DISTINGUISH WALLS FROM NON-WALLS: Ignore furniture, people, objects.
-    3. PATTERN EXTRACTION: Use pattern from second image.
-    4. APPLICATION STRATEGY: Apply ONLY to the primary wall. Respect perspective and lighting.
-    5. REALISM: Maintain shadows and depth.
-    PRIORITY: Identify the PRIMARY WALL correctly and apply wallpaper ONLY to that wall surface.`;
+    // Updated Prompt V4 from previous iterations
+    const defaultPrompt = `Role: Expert Interior Renovation AI.
+Mission: Apply wallpaper to the MAIN WALL of the room.
+TARGET IDENTIFICATION:
+1. FIND THE MAIN WALL: This is the largest continuous vertical surface visible.
+2. TEXTURE OVERRIDE RULES: The main wall might be PAINTED or TILED. You MUST replace the existing texture (e.g., ceramic tiles, old paint) with the new wallpaper.
+3. DO NOT PRESERVE TILES: If the main wall is tiled, SMOOTH IT OUT and apply the wallpaper pattern.
+
+STRICT PROTECTION ZONES (DO NOT TOUCH):
+- KITCHEN CABINETS & APPLIANCES (Keep 100% original).
+- FURNITURE (Tables, chairs, lamps).
+- CEILING & FLOORS.
+- DOORS & WINDOWS.
+- BACKGROUND ROOMS (Hallways, other rooms visible in depth).
+
+OUTPUT: A realistic renovation where the main wall is wallpapered, but the kitchen and furniture are untouched.`;
 
     const prompt = promptOverride || defaultPrompt;
 
+    // Ensure clean base64
     const cleanImageBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, '');
     const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
 
     const requestBody = {
         prompt: prompt,
         images: [
-            { type: 'image' as const, image: cleanImageBase64 },
-            { type: 'image' as const, image: cleanWallpaperBase64 }
+            { type: 'image', image: cleanImageBase64 },
+            { type: 'image', image: cleanWallpaperBase64 }
         ]
     };
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 90000);
+    const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
 
     try {
+        console.log('[AI] Sending request to API...');
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -85,42 +105,19 @@ export async function processImageWithAI(
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-            const errorText = await response.text();
-            // Fallback to mock on error
-            console.warn(`[AI] API Error (${response.status}), falling back to mock.`);
-            return imageBase64;
-            // throw new Error(`AI Service Error (${response.status}): ${errorText}`);
+            const errText = await response.text();
+            throw new Error(`AI API Failed: ${response.status} - ${errText}`);
         }
 
         const result = await response.json();
-        if (!result.image || !result.image.base64Data) {
+        if (!result.image?.base64Data) {
             throw new Error('Invalid AI response format');
         }
 
         return result.image.base64Data;
     } catch (error) {
         clearTimeout(timeoutId);
-        console.warn('[AI] Error in processImageWithAI, returning mock/original:', error);
-        return imageBase64; // Fallback to original image so app doesn't crash
+        console.error('[AI] Error:', error);
+        throw error;
     }
-}
-
-export async function generateWallMask(imageBase64: string): Promise<string> {
-    // To generate a mask, we ask the AI to paint the wall WHITE and everything else BLACK.
-    // We send a simple white image as the "pattern" to apply? Or we ask it to segment.
-    // Since the endpoint expects 2 images (Source + Pattern), we can send a solid WHITE image as the pattern 
-    // and instruct it to "Replace the wall with this white pattern, and turn everything else BLACK".
-
-    // Create a simple 1x1 white pixel base64 (approx)
-    // iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg== 
-    const whitePatternBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg==";
-
-    const maskPrompt = `TASK: Create a BINARY MASK of the main wall in the image.
-    1. Identify the PRIMARY WALL (largest central vertical surface).
-    2. Apply the provided WHITE pattern to the entire wall surface.
-    3. Make everything else (furniture, floor, ceiling, people, windows) BLACK.
-    4. The output must be a black and white image only. White = Wall, Black = Not Wall.
-    5. No shadows, no lighting, just flat white on the wall area.`;
-
-    return await processImageWithAI(imageBase64, whitePatternBase64, maskPrompt);
 }

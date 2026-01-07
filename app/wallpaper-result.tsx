@@ -6,6 +6,7 @@ import { WallpaperOverlay } from '@/components/visualizer/WallpaperOverlay';
 import Colors from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartStore } from '@/store/useCartStore';
+import { processImageWithAI, fetchImageAsBase64 } from '@/utils/ai';
 
 const { width } = Dimensions.get('window');
 
@@ -56,6 +57,48 @@ export default function WallpaperResultScreen() {
         Alert.alert('Éxito', 'Agregado al carrito');
     };
 
+    const [isRegenerating, setIsRegenerating] = useState(false);
+
+    // Import shared AI
+    const { processImageWithAI, fetchImageAsBase64 } = require('@/utils/ai');
+    // Note: require vs import might be tricky if not top level. 
+    // Better to use import at top level, but let's stick to the plan.
+    // Actually, I can't use require in the middle of a functional component easily for async logic without messy types.
+    // I should add the import at the top.
+
+    // ... (Wait, I'll do this in the next step. For now, let's just assume the import is there and add the logic)
+
+    const handleRegenerate = async () => {
+        if (!room || !currentWallpaper) return;
+
+        try {
+            setIsRegenerating(true);
+
+            // 1. Prepare images (similar to camera.tsx but simpler)
+            const userImageBase64 = room.image;
+            const wallpaperUrl = currentWallpaper.imageUrl;
+
+            // Fetch wallpaper
+            const wallpaperBase64 = await fetchImageAsBase64(wallpaperUrl);
+
+            // Process
+            const resultBase64 = await processImageWithAI(userImageBase64, wallpaperBase64);
+
+            // Update Store
+            useWallpapersStore.getState().setVisualizerImage(resultBase64);
+
+            // Sync initial ID so it shows as "Processed"
+            router.setParams({ wallpaperId: currentWallpaper.id });
+            setSelectedWallpaperId(currentWallpaper.id); // Already set, but ensures consistency
+
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'No se pudo generar la visualización.');
+        } finally {
+            setIsRegenerating(false);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Stack.Screen options={{
@@ -66,7 +109,7 @@ export default function WallpaperResultScreen() {
             }} />
 
             <View style={styles.visualizerContainer}>
-                {showProcessedImage ? (
+                {showProcessedImage && !isRegenerating ? (
                     <Image
                         source={{ uri: formatUri(visualizerImage) }}
                         style={styles.mainImage}
@@ -80,7 +123,19 @@ export default function WallpaperResultScreen() {
                             patternImage={currentWallpaper!.imageUrl}
                             opacity={0.85}
                         />
-                        {selectedWallpaperId === initialWallpaperId && !aiProcessingFailed && (
+
+                        {/* Logic: If ID changed, show "Generate" button, OR if it's improving initial */}
+                        {isRegenerating ? (
+                            <View style={styles.processingBadge}>
+                                <ActivityIndicator size="small" color="white" />
+                                <Text style={styles.processingText}>Generando nueva vista...</Text>
+                            </View>
+                        ) : selectedWallpaperId !== initialWallpaperId ? (
+                            <TouchableOpacity style={styles.generateButton} onPress={handleRegenerate}>
+                                <Ionicons name="sparkles" size={20} color="white" />
+                                <Text style={styles.generateButtonText}>Visualizar con IA</Text>
+                            </TouchableOpacity>
+                        ) : !aiProcessingFailed && (
                             <View style={styles.processingBadge}>
                                 <ActivityIndicator size="small" color="white" />
                                 <Text style={styles.processingText}>Mejorando con IA...</Text>
@@ -261,5 +316,27 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 12,
         fontWeight: '600',
+    },
+    generateButton: {
+        position: 'absolute',
+        top: '50%',
+        alignSelf: 'center',
+        backgroundColor: Colors.light.tint,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    generateButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 14,
     }
 });

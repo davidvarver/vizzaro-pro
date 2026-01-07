@@ -17,7 +17,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
-import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { processImageWithAI, fetchImageAsBase64 } from '@/utils/ai';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -48,54 +48,7 @@ export default function CameraScreen() {
 
     const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
 
-    // Helper functions from user snippet
-    async function fetchImageAsBase64(imageUrl: string): Promise<string> {
-        console.log('Starting fetchImageAsBase64 for URL:', imageUrl);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => {
-            console.log('Fetch timeout reached, aborting...');
-            controller.abort();
-        }, 45000);
 
-        try {
-            const cleanUrl = imageUrl.trim();
-            const proxyServices = [
-                cleanUrl,
-                `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}&default=1`,
-                `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
-            ];
-
-            let lastError: Error | null = null;
-            for (let i = 0; i < proxyServices.length; i++) {
-                const url = proxyServices[i];
-                try {
-                    const response = await fetch(url, {
-                        signal: controller.signal,
-                        method: 'GET',
-                        headers: i === 0 ? { 'Accept': 'image/*,*/*', 'Cache-Control': 'no-cache' } : undefined
-                    });
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const blob = await response.blob();
-
-                    return await new Promise<string>((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                            const result = reader.result as string;
-                            resolve(result.split(',')[1] || '');
-                        };
-                        reader.onerror = reject;
-                        reader.readAsDataURL(blob);
-                    });
-                } catch (e) {
-                    console.warn(`Fetch method ${i} failed`, e);
-                    lastError = e instanceof Error ? e : new Error(String(e));
-                }
-            }
-            throw lastError || new Error('Failed to fetch image');
-        } finally {
-            clearTimeout(timeoutId);
-        }
-    }
 
     async function compressBase64Image(base64: string, maxSize: number = 1024): Promise<string> {
         try {
@@ -113,7 +66,13 @@ export default function CameraScreen() {
         }
     }
 
-    async function processImageWithAI(imageBase64: string, selectedWallpaper: any) {
+
+
+    // REMOVED local fetchImageAsBase64 and processImageWithAI to use @/utils/ai instead
+    // We kept compressBase64Image as it uses ImageManipulator specific to this component or can be moved too.
+    // For minimal refactor risk, I won't move compressBase64Image yet unless needed.
+
+    async function processVisualizerFlow(imageBase64: string, selectedWallpaper: any) {
         console.log('=== AI PROCESSING START ===');
         try {
             setProcessingStep('Preparando imágenes...');
@@ -121,66 +80,18 @@ export default function CameraScreen() {
             const compressedUserImage = await compressBase64Image(imageBase64, 1280);
 
             // 2. Prepare wallpaper image
-            // Note: adapting to store structure vs user snippet structure
             const selectedImageUrl = selectedWallpaper.imageUrl;
-
             setProcessingStep('Obteniendo papel tapiz...');
             let wallpaperBase64 = await fetchImageAsBase64(selectedImageUrl);
             wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
 
-            // 3. Prepare Request
-            const prompt = `Role: Expert Interior Renovation AI.
-Mission: Apply wallpaper to the MAIN WALL of the room.
-TARGET IDENTIFICATION:
-1. FIND THE MAIN WALL: This is the largest continuous vertical surface visible.
-2. TEXTURE OVERRIDE RULES: The main wall might be PAINTED or TILED. You MUST replace the existing texture (e.g., ceramic tiles, old paint) with the new wallpaper.
-3. DO NOT PRESERVE TILES: If the main wall is tiled, SMOOTH IT OUT and apply the wallpaper pattern.
-
-STRICT PROTECTION ZONES (DO NOT TOUCH):
-- KITCHEN CABINETS & APPLIANCES (Keep 100% original).
-- FURNITURE (Tables, chairs, lamps).
-- CEILING & FLOORS.
-- DOORS & WINDOWS.
-- BACKGROUND ROOMS (Hallways, other rooms visible in depth).
-
-OUTPUT: A realistic renovation where the main wall is wallpapered, but the kitchen and furniture are untouched.`;
-
-            const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
-            const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
-
-            const requestBody = {
-                prompt: prompt,
-                images: [
-                    { type: 'image', image: cleanImageBase64 },
-                    { type: 'image', image: cleanWallpaperBase64 }
-                ]
-            };
-
+            // 3. Process
             setProcessingStep('Procesando con IA...');
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 90000); // 90s timeout
-
-            const response = await fetch('https://toolkit.rork.com/images/edit/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody),
-                signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                const errText = await response.text();
-                throw new Error(`AI API Failed: ${response.status} - ${errText}`);
-            }
-
-            const result = await response.json();
-            if (!result.image?.base64Data) {
-                throw new Error('Invalid AI response format');
-            }
+            const resultBase64 = await processImageWithAI(compressedUserImage, wallpaperBase64);
 
             return {
                 original: compressedUserImage,
-                processed: result.image.base64Data,
+                processed: resultBase64,
                 failed: false
             };
 
@@ -234,7 +145,7 @@ OUTPUT: A realistic renovation where the main wall is wallpapered, but the kitch
 
             if (wallpaper) {
                 // If we have a wallpaper, use the full AI flow
-                const result = await processImageWithAI(base64Image, wallpaper);
+                const result = await processVisualizerFlow(base64Image, wallpaper);
 
                 if (!result.failed && result.processed) {
                     setVisualizerImage(result.processed);
