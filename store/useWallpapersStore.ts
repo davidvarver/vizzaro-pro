@@ -510,7 +510,23 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
     },
 
     initialize: async () => {
-        await get().loadWallpapers();
-        await get().loadUserRooms();
+        try {
+            // Priority: Load from local storage first for speed, then enrich
+            const stored = await AsyncStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                // CRITICAL: Always enrich stored data to ensure new grouping logic applies to cached items
+                const enriched = enrichWallpaperData(parsed);
+                set({ wallpapers: enriched, isLoading: false });
+                console.log('[WallpapersStore] Initialized with', enriched.length, 'enriched items from storage');
+            }
+
+            // Then fetch fresh data in background
+            await get().loadWallpapers();
+            await get().loadUserRooms();
+        } catch (e) {
+            console.error('[WallpapersStore] Initialization error:', e);
+            await get().loadWallpapers();
+        }
     },
 }));
