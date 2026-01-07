@@ -15,28 +15,75 @@ export default function HomeScreen() {
     const { wallpapers, isLoading, error, loadWallpapers } = useWallpapersStore();
     const [selectedCategory, setSelectedCategory] = useState("Todos");
 
+    // Carousel State
+    const [heroIndex, setHeroIndex] = useState(0);
+    const heroWallpapers = wallpapers.slice(0, 5); // Use top 5 for carousel
+
     useEffect(() => {
         loadWallpapers();
     }, []);
 
+    // Carousel Timer
+    useEffect(() => {
+        if (heroWallpapers.length === 0) return;
+        const interval = setInterval(() => {
+            setHeroIndex((prev) => (prev + 1) % heroWallpapers.length);
+        }, 5000); // 5 seconds
+        return () => clearInterval(interval);
+    }, [heroWallpapers]);
+
     const categories = ["Todos", "Nuevos", "Florales", "Texturas", "Geométricos"];
 
+    // Filter Logic
+    const filteredWallpapers = React.useMemo(() => {
+        if (selectedCategory === "Todos") return wallpapers;
+        if (selectedCategory === "Nuevos") return wallpapers.slice(0, 4); // Mock "New"
+
+        // Mapping
+        let searchTerm = "";
+        if (selectedCategory === "Florales") searchTerm = "Floral";
+        if (selectedCategory === "Texturas") searchTerm = "Texture";
+        if (selectedCategory === "Geométricos") searchTerm = "Geometric";
+
+        return wallpapers.filter(w => w.category === searchTerm || w.name.includes(searchTerm));
+    }, [wallpapers, selectedCategory]);
+
     const renderHeader = () => {
-        const heroWallpaper = wallpapers.length > 0 ? wallpapers[0] : null;
+        const currentHero = heroWallpapers[heroIndex];
 
         return (
             <View>
-                {/* Hero Section */}
-                {heroWallpaper && (
+                {/* Hero Section (Carousel) */}
+                {currentHero && (
                     <View style={styles.heroContainer}>
-                        <Image source={{ uri: heroWallpaper.imageUrl }} style={styles.heroImage} resizeMode="cover" />
+                        {/* Fade transition would be nice but simple state switch works for MVP */}
+                        <Image
+                            key={currentHero.id} // Force re-render on change
+                            source={{ uri: currentHero.imageUrl }}
+                            style={styles.heroImage}
+                            resizeMode="cover"
+                        />
                         <LinearGradient
                             colors={['transparent', 'rgba(0,0,0,0.6)']}
                             style={styles.heroOverlay}
                         >
                             <Text style={styles.heroTitle}>ELEGANCIA ATEMPORAL</Text>
                             <Text style={styles.heroSubtitle}>Transforma cada rincón de tu hogar.</Text>
-                            <TouchableOpacity style={styles.heroButton} onPress={() => router.push(`/wallpaper/${heroWallpaper.id}`)}>
+
+                            {/* Pagination Dots */}
+                            <View style={styles.paginationConfig}>
+                                {heroWallpapers.map((_, i) => (
+                                    <View
+                                        key={i}
+                                        style={[
+                                            styles.dot,
+                                            i === heroIndex ? styles.dotActive : styles.dotInactive
+                                        ]}
+                                    />
+                                ))}
+                            </View>
+
+                            <TouchableOpacity style={styles.heroButton} onPress={() => router.push(`/wallpaper/${currentHero.id}`)}>
                                 <Text style={styles.heroButtonText}>DESCUBRIR</Text>
                             </TouchableOpacity>
                         </LinearGradient>
@@ -132,7 +179,7 @@ export default function HomeScreen() {
 
             <FlatList
                 ListHeaderComponent={renderHeader}
-                data={wallpapers}
+                data={filteredWallpapers}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
@@ -185,6 +232,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 450,
         marginBottom: 30,
+        position: 'relative',
     },
     heroImage: {
         width: '100%',
@@ -225,6 +273,27 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         fontSize: 12,
         letterSpacing: 1,
+    },
+
+    // Pagination
+    paginationConfig: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+    dot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        marginHorizontal: 4,
+    },
+    dotActive: {
+        backgroundColor: 'white',
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+    },
+    dotInactive: {
+        backgroundColor: 'rgba(255,255,255,0.4)',
     },
 
     // Visualizer Banner
