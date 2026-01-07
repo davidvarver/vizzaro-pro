@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
@@ -52,14 +52,10 @@ export default function WallpaperDetailScreen() {
 
     if (!wallpaper) {
         return (
-            <SafeAreaView style={styles.loadingContainer}>
+            <View style={styles.loadingContainer}>
                 <Stack.Screen options={{ headerShown: false }} />
-                <ActivityIndicator size="large" color={Colors.light.tint} />
-                <Text>Cargando producto...</Text>
-                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                    <Text style={styles.backText}>Volver</Text>
-                </TouchableOpacity>
-            </SafeAreaView>
+                <ActivityIndicator size="large" color="black" />
+            </View>
         );
     }
 
@@ -68,10 +64,21 @@ export default function WallpaperDetailScreen() {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ headerShown: false }} />
+            <StatusBar barStyle="dark-content" />
 
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                {/* Image Carousel */}
-                <View style={styles.imageContainer}>
+            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+                {/* Navbar Overlay */}
+                <View style={styles.navBar}>
+                    <TouchableOpacity onPress={() => router.back()} style={styles.navButton}>
+                        <Ionicons name="arrow-back" size={24} color="black" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleAddToFavorites} style={styles.navButton}>
+                        <Ionicons name="heart-outline" size={24} color="black" />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Hero Image / Carousel */}
+                <View style={styles.carouselContainer}>
                     <ScrollView
                         horizontal
                         pagingEnabled
@@ -85,71 +92,72 @@ export default function WallpaperDetailScreen() {
                             <Image key={index} source={{ uri: img }} style={styles.mainImage} resizeMode="cover" />
                         ))}
                     </ScrollView>
-                    <View style={styles.pagination}>
-                        {images.map((_: any, index: number) => (
-                            <View key={index} style={[styles.dot, index === activeImage && styles.activeDot]} />
-                        ))}
-                    </View>
 
-                    <TouchableOpacity style={styles.backBtnOverlay} onPress={() => router.back()}>
-                        <Ionicons name="arrow-back" size={24} color="black" />
-                    </TouchableOpacity>
+                    {/* Pagination Dots */}
+                    {images.length > 1 && (
+                        <View style={styles.pagination}>
+                            {images.map((_: any, index: number) => (
+                                <View key={index} style={[styles.dot, index === activeImage && styles.activeDot]} />
+                            ))}
+                        </View>
+                    )}
                 </View>
 
-                <View style={styles.detailsContainer}>
-                    <View style={styles.titleRow}>
-                        <Text style={styles.name}>{wallpaper.name}</Text>
-                        <Text style={styles.price}>${wallpaper.price.toFixed(2)}</Text>
+                <View style={styles.contentContainer}>
+                    {/* Header Info */}
+                    <Text style={styles.category}>{wallpaper.category.toUpperCase()}</Text>
+                    <Text style={styles.title}>{wallpaper.name.toUpperCase()}</Text>
+                    <Text style={styles.price}>${wallpaper.price.toFixed(2)} <Text style={styles.perRoll}>/ ROLLO</Text></Text>
+
+                    <View style={styles.divider} />
+
+                    {/* Actions */}
+                    <TouchableOpacity style={styles.visualizeButton} onPress={handleVisualize}>
+                        <Ionicons name="scan-outline" size={20} color="white" style={{ marginRight: 10 }} />
+                        <Text style={styles.visualizeText}>VISUALIZA EN TU HOGAR</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
+                        <Text style={styles.cartText}>AGREGAR AL CARRITO</Text>
+                    </TouchableOpacity>
+
+                    {/* Description */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>DESCRIPCIÓN</Text>
+                        <Text style={styles.description}>
+                            {wallpaper.description || 'Diseño exclusivo de alta calidad, ideal para transformar cualquier espacio con elegancia y estilo.'}
+                        </Text>
                     </View>
 
-                    <View style={styles.metaRow}>
-                        <View style={styles.metaItem}>
-                            <Ionicons name="scan-outline" size={16} color="#666" />
-                            <Text style={styles.metaText}>{wallpaper.category}</Text>
-                        </View>
-                        <View style={styles.metaItem}>
-                            <Ionicons name="color-palette-outline" size={16} color="#666" />
-                            <Text style={styles.metaText}>{wallpaper.style}</Text>
-                        </View>
-                    </View>
+                    {/* Specifications */}
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>ESPECIFICACIONES</Text>
 
-                    <Text style={styles.sectionTitle}>Descripción</Text>
-                    <Text style={styles.description}>{wallpaper.description || 'Sin descripción disponible.'}</Text>
-
-                    <Text style={styles.sectionTitle}>Especificaciones</Text>
-                    <View style={styles.specsContainer}>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>Material</Text>
-                            <Text style={styles.specValue}>{wallpaper.specifications?.material}</Text>
+                            <Text style={styles.specLabel}>ESTILO</Text>
+                            <Text style={styles.specValue}>{wallpaper.style}</Text>
                         </View>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>Dimensiones</Text>
+                            <Text style={styles.specLabel}>MATERIAL</Text>
+                            <Text style={styles.specValue}>{wallpaper.specifications?.material || 'No tejido'}</Text>
+                        </View>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>DIMENSIONES</Text>
                             <Text style={styles.specValue}>
                                 {wallpaper.dimensions?.width}m x {wallpaper.dimensions?.height}m
                             </Text>
                         </View>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>Lavable</Text>
+                            <Text style={styles.specLabel}>LAVABLE</Text>
                             <Text style={styles.specValue}>{wallpaper.specifications?.washable ? 'Sí' : 'No'}</Text>
+                        </View>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>COLORES</Text>
+                            <Text style={styles.specValue}>{wallpaper.colors?.join(', ')}</Text>
                         </View>
                     </View>
                 </View>
             </ScrollView>
-
-            <View style={styles.footer}>
-                <TouchableOpacity style={styles.iconBtn} onPress={handleAddToFavorites}>
-                    <Ionicons name="heart-outline" size={24} color={Colors.light.tint} />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.visualizeBtn} onPress={handleVisualize}>
-                    <Ionicons name="camera-outline" size={24} color="white" />
-                    <Text style={styles.visualizeText}>Visualizar</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.cartBtn} onPress={handleAddToCart}>
-                    <Text style={styles.cartText}>Agregar al Carrito</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 }
@@ -163,17 +171,42 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#fff',
     },
     scrollContent: {
-        paddingBottom: 100,
+        paddingBottom: 40,
     },
-    imageContainer: {
-        height: 350,
+    navBar: {
+        position: 'absolute',
+        top: 50,
+        left: 0,
+        right: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        zIndex: 10,
+    },
+    navButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    carouselContainer: {
+        width: '100%',
+        height: 500, // Taller, more impressive image
         position: 'relative',
     },
     mainImage: {
         width: width,
-        height: 350,
+        height: 500,
     },
     pagination: {
         position: 'absolute',
@@ -184,148 +217,125 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     dot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
+        width: 6,
+        height: 6,
+        borderRadius: 3,
         backgroundColor: 'rgba(255,255,255,0.5)',
         marginHorizontal: 4,
     },
     activeDot: {
         backgroundColor: '#fff',
-        width: 10,
-        height: 10,
+        width: 8,
+        height: 8,
     },
-    backBtnOverlay: {
-        position: 'absolute',
-        top: 50,
-        left: 20,
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: 'rgba(255,255,255,0.8)',
-        justifyContent: 'center',
-        alignItems: 'center',
+    contentContainer: {
+        padding: 24,
     },
-    detailsContainer: {
-        padding: 20,
-    },
-    titleRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginBottom: 10,
-    },
-    name: {
-        fontSize: 22,
+    category: {
+        fontSize: 10,
         fontWeight: 'bold',
-        color: '#333',
-        flex: 1,
-        marginRight: 10,
+        letterSpacing: 2,
+        color: '#999',
+        textAlign: 'center',
+        marginBottom: 8,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '400', // Elegance often implies lighter weights
+        letterSpacing: 1,
+        color: 'black',
+        textAlign: 'center',
+        marginBottom: 10,
+        fontFamily: 'System', // Use default legible font
     },
     price: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: Colors.light.tint,
-    },
-    metaRow: {
-        flexDirection: 'row',
-        marginBottom: 20,
-    },
-    metaItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginRight: 15,
-        backgroundColor: '#f5f5f5',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 15,
-    },
-    metaText: {
-        marginLeft: 5,
-        color: '#666',
-        fontSize: 12,
-    },
-    sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
-        marginBottom: 10,
-        marginTop: 10,
+        color: 'black',
+        textAlign: 'center',
+        marginBottom: 20,
     },
-    description: {
-        fontSize: 14,
-        color: '#666',
-        lineHeight: 22,
-    },
-    specsContainer: {
-        marginTop: 10,
-        backgroundColor: '#f9f9f9',
-        borderRadius: 8,
-        padding: 15,
-    },
-    specRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    specLabel: {
+    perRoll: {
+        fontSize: 12,
+        fontWeight: '400',
         color: '#666',
     },
-    specValue: {
-        fontWeight: '500',
-        color: '#333',
+    divider: {
+        height: 1,
+        backgroundColor: '#eee',
+        width: '40%',
+        alignSelf: 'center',
+        marginBottom: 30,
     },
-    footer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: '#fff',
-        padding: 20,
+
+    // Actions
+    visualizeButton: {
         flexDirection: 'row',
-        alignItems: 'center',
-        borderTopWidth: 1,
-        borderTopColor: '#f0f0f0',
-        gap: 15,
-    },
-    iconBtn: {
-        padding: 12,
-        borderRadius: 12,
-        backgroundColor: '#f5f5f5',
-    },
-    visualizeBtn: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
+        backgroundColor: 'black',
+        paddingVertical: 16,
         justifyContent: 'center',
-        backgroundColor: '#333',
-        paddingVertical: 14,
-        borderRadius: 12,
-        gap: 8,
+        alignItems: 'center',
+        marginBottom: 15,
+        borderRadius: 0, // Sharp corners for premium feel
     },
     visualizeText: {
         color: 'white',
-        fontWeight: '600',
+        fontSize: 12,
+        fontWeight: 'bold',
+        letterSpacing: 2,
     },
-    cartBtn: {
-        flex: 1,
-        alignItems: 'center',
+    cartButton: {
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'black',
+        paddingVertical: 16,
         justifyContent: 'center',
-        backgroundColor: Colors.light.tint,
-        paddingVertical: 14,
-        borderRadius: 12,
+        alignItems: 'center',
+        marginBottom: 40,
+        borderRadius: 0,
     },
     cartText: {
-        color: 'white',
+        color: 'black',
+        fontSize: 12,
         fontWeight: 'bold',
+        letterSpacing: 2,
     },
-    backButton: {
-        marginTop: 20,
-        padding: 10,
+
+    // Sections
+    section: {
+        marginBottom: 30,
     },
-    backText: {
-        color: Colors.light.tint,
-        textDecorationLine: 'underline',
+    sectionTitle: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        letterSpacing: 2,
+        marginBottom: 15,
+        color: '#333',
+        textAlign: 'center',
+    },
+    description: {
+        fontSize: 14,
+        lineHeight: 24,
+        color: '#555',
+        textAlign: 'center',
+    },
+
+    // Specs
+    specRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f5f5f5',
+    },
+    specLabel: {
+        fontSize: 11,
+        fontWeight: '600',
+        color: '#999',
+        letterSpacing: 1,
+    },
+    specValue: {
+        fontSize: 12,
+        color: '#333',
     },
 });
