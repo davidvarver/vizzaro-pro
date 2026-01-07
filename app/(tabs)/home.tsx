@@ -48,6 +48,11 @@ export default function HomeScreen() {
         { name: "Pink", hex: "#FFC0CB" }
     ];
 
+    // Helper: Remove accents and lower case
+    const normalize = (str: string) => {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    };
+
     // Filter Logic
     const filteredWallpapers = React.useMemo(() => {
         // DEBUG: Inspect data structure (Check logs in terminal)
@@ -68,8 +73,8 @@ export default function HomeScreen() {
                 } else {
                     // Try to match partial naming or logical mapping
                     // Force lower case check
-                    const catName = (w.category || "").toLowerCase();
-                    const itemName = (w.name || "").toLowerCase();
+                    const catName = normalize(w.category || "");
+                    const itemName = normalize(w.name || "");
 
                     let searchTerm = "";
                     if (selectedCategory === "Florales") searchTerm = "floral"; // Lowercase
@@ -88,13 +93,13 @@ export default function HomeScreen() {
                 } else {
                     // Multi-language map
                     const colorMap: Record<string, string[]> = {
-                        "White": ["white", "blanco", "blanca"],
+                        "White": ["white", "blanco", "blanca", "off-white"],
                         "Beige": ["beige", "crema", "cream"],
                         "Grey": ["grey", "gray", "gris", "plata"],
                         "Black": ["black", "negro", "negra"],
                         "Gold": ["gold", "dorado", "oro"],
                         "Green": ["green", "verde"],
-                        "Blue": ["blue", "azul", "celeste"],
+                        "Blue": ["blue", "azul", "celeste", "navy"],
                         "Pink": ["pink", "rosa", "rosado"]
                     };
 
@@ -102,8 +107,8 @@ export default function HomeScreen() {
 
                     matchesColor = w.colors.some(c => {
                         if (!c) return false;
-                        const cLower = c.toLowerCase();
-                        return targetColors.some(start => cLower.includes(start));
+                        const cNorm = normalize(c);
+                        return targetColors.some(start => cNorm.includes(start));
                     });
                 }
             }
@@ -243,11 +248,6 @@ export default function HomeScreen() {
             <View style={styles.cardContent}>
                 <Text style={styles.name} numberOfLines={1}>{item.name.toUpperCase()}</Text>
                 <Text style={styles.price}>${item.price.toFixed(2)} /rollo</Text>
-
-                {/* DEBUG INFO: REMOVE AFTER FIXING */}
-                <Text style={{ fontSize: 9, color: 'red', textAlign: 'center' }}>
-                    {item.category} / {item.colors?.join(',')}
-                </Text>
             </View>
         </TouchableOpacity>
     );
