@@ -38,14 +38,14 @@ export default function HomeScreen() {
     // Color Map for UI
     const colors = [
         { name: "Todos", hex: "transparent" },
-        { name: "White", hex: "#FFFFFF", border: true },
+        { name: "Blanco", hex: "#FFFFFF" },
         { name: "Beige", hex: "#F5F5DC" },
-        { name: "Grey", hex: "#808080" },
-        { name: "Black", hex: "#000000" },
-        { name: "Gold", hex: "#FFD700" },
-        { name: "Green", hex: "#4CAF50" },
-        { name: "Blue", hex: "#2196F3" },
-        { name: "Pink", hex: "#FFC0CB" }
+        { name: "Gris", hex: "#808080" },
+        { name: "Negro", hex: "#000000" },
+        { name: "Dorado", hex: "#FFD700" },
+        { name: "Verde", hex: "#4CAF50" },
+        { name: "Azul", hex: "#2196F3" },
+        { name: "Rosa", hex: "#FFC0CB" }
     ];
 
     // Helper: Remove accents and lower case
@@ -93,14 +93,14 @@ export default function HomeScreen() {
                 } else {
                     // Multi-language map
                     const colorMap: Record<string, string[]> = {
-                        "White": ["white", "blanco", "blanca", "off-white"],
+                        "Blanco": ["white", "blanco", "blanca", "off-white"],
                         "Beige": ["beige", "crema", "cream"],
-                        "Grey": ["grey", "gray", "gris", "plata"],
-                        "Black": ["black", "negro", "negra"],
-                        "Gold": ["gold", "dorado", "oro"],
-                        "Green": ["green", "verde"],
-                        "Blue": ["blue", "azul", "celeste", "navy"],
-                        "Pink": ["pink", "rosa", "rosado"]
+                        "Gris": ["grey", "gray", "gris", "plata"],
+                        "Negro": ["black", "negro", "negra"],
+                        "Dorado": ["gold", "dorado", "oro"],
+                        "Verde": ["green", "verde"],
+                        "Azul": ["blue", "azul", "celeste", "navy"],
+                        "Rosa": ["pink", "rosa", "rosado"]
                     };
 
                     const targetColors = colorMap[selectedColor] || [selectedColor.toLowerCase()];
@@ -198,7 +198,7 @@ export default function HomeScreen() {
                     ))}
                 </ScrollView>
 
-                {/* Color Navigation (Circles) */}
+                {/* Color Navigation (Text Pills) */}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -209,16 +209,13 @@ export default function HomeScreen() {
                             key={col.name}
                             style={[
                                 styles.colorItem,
-                                selectedColor === col.name && styles.colorItemActive,
-                                col.border ? { borderWidth: 1, borderColor: '#ddd' } : {}
+                                selectedColor === col.name && styles.colorItemActive
                             ]}
                             onPress={() => setSelectedColor(col.name)}
                         >
-                            {col.name === "Todos" ? (
-                                <Ionicons name="color-palette-outline" size={20} color={selectedColor === "Todos" ? "black" : "#999"} />
-                            ) : (
-                                <View style={[styles.colorCircle, { backgroundColor: col.hex }]} />
-                            )}
+                            <Text style={[styles.colorText, selectedColor === col.name && styles.colorTextActive]}>
+                                {col.name.toUpperCase()}
+                            </Text>
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
@@ -455,21 +452,26 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     colorItem: {
-        marginRight: 15,
-        padding: 2,
+        marginRight: 10,
+        paddingVertical: 6,
+        paddingHorizontal: 16,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: 'transparent',
+        borderColor: '#eee',
+        backgroundColor: '#f9f9f9',
     },
     colorItemActive: {
         borderColor: 'black',
+        backgroundColor: 'black',
     },
-    colorCircle: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.1)',
+    colorText: {
+        fontSize: 11,
+        fontWeight: '600',
+        letterSpacing: 0.5,
+        color: '#666',
+    },
+    colorTextActive: {
+        color: 'white',
     },
 
     // Grid
