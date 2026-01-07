@@ -93,55 +93,50 @@ export default function HomeScreen() {
 
     // Filter Logic
     const filteredWallpapers = React.useMemo(() => {
-        return wallpapers.filter(w => {
+        // Step 1: Filter by Category and Color
+        const filtered = wallpapers.filter(w => {
             // 1. Category Filter
             let matchesCategory = true;
-            if (selectedCategory !== "Todos") {
-                if (selectedCategory === "Nuevos") {
-                    return true;
-                } else {
-                    // Try to match partial naming or logical mapping
-                    // Force lower case check
-                    const catName = normalize(w.category || "");
-                    const itemName = normalize(w.name || "");
+            if (selectedCategory !== 'Todos' && selectedCategory !== 'Nuevos') {
+                const catName = normalize(w.category || "");
+                const itemName = normalize(w.name || "");
 
-                    let searchTerm = "";
-                    if (selectedCategory === "Florales") searchTerm = "floral"; // Lowercase
-                    if (selectedCategory === "Texturas") searchTerm = "textur"; // Partial "textur" matches "Texture"
-                    if (selectedCategory === "Geométricos") searchTerm = "geometr"; // Partial "geometr" matches "Geometric"
+                // Simple mapping for categories
+                let searchTerm = "";
+                if (selectedCategory === "Florales") searchTerm = "floral";
+                if (selectedCategory === "Texturas") searchTerm = "textur";
+                if (selectedCategory === "Geométricos") searchTerm = "geometr"; // Partial matches "Geometric"
 
-                    matchesCategory = (catName.includes(searchTerm) || itemName.includes(searchTerm));
-                }
+                // Fallback: If no mapping, use the category name itself
+                if (!searchTerm) searchTerm = normalize(selectedCategory);
+
+                matchesCategory = (catName.includes(searchTerm) || itemName.includes(searchTerm));
             }
 
             // 2. Color Filter
             let matchesColor = true;
-            if (selectedColor !== "Todos") {
-                if (!w.colors || !Array.isArray(w.colors)) {
-                    matchesColor = false;
-                } else {
-                    const targetColors = colorMap[selectedColor] || [selectedColor.toLowerCase()];
-
-                    matchesColor = w.colors.some(c => {
-                        if (!c) return false;
-                        const cNorm = normalize(c);
-                        return targetColors.some(start => cNorm.includes(start));
-                    });
-                }
+            if (selectedColor !== 'Todos' && w.colors) {
+                const mapped = colorMap[selectedColor] || [normalize(selectedColor)];
+                const wColorsNorm = w.colors.map(c => normalize(c));
+                matchesColor = mapped.some(m => wColorsNorm.includes(m));
             }
 
             return matchesCategory && matchesColor;
         });
 
-        // 3. Deduplicate by Group (Show only one variant per group)
+        // Step 2: Deduplicate by Group (Show only one variant per group)
+        // IMPORTANT: If a specific color is selected, we naturally only show that variant!
+        // But if "Todos" is selected (or no color filter), we want to deduplicate.
+
         const uniqueMap = new Map();
-        results.forEach(w => {
+        filtered.forEach(w => {
             if (w.group) {
+                // Check if we already have a variant for this group
                 if (!uniqueMap.has(w.group)) {
                     uniqueMap.set(w.group, w);
                 }
             } else {
-                // If doesn't belong to a group, use ID itself or just push
+                // If doesn't belong to a group, use ID itself
                 uniqueMap.set(w.id, w);
             }
         });
@@ -150,12 +145,14 @@ export default function HomeScreen() {
     }, [wallpapers, selectedCategory, selectedColor]);
 
     // Special case for "Nuevos" to limit results if no other filter applies? 
-    // Actually, user wants "Nuevos" to be a category. 
-    // Let's simplified: If "Nuevos", just slice the array.
-
-    const displayedWallpapers = selectedCategory === "Nuevos"
-        ? wallpapers.slice(0, 4)
-        : filteredWallpapers;
+    // Actually, we should use filteredWallpapers even for "Nuevos" to ensure deduplication applies.
+    const displayedWallpapers = React.useMemo(() => {
+        if (selectedCategory === 'Nuevos') {
+            // Return first 6 items from the deduplicated list
+            return filteredWallpapers.slice(0, 6);
+        }
+        return filteredWallpapers;
+    }, [selectedCategory, filteredWallpapers]);
 
     const renderHeader = () => {
         const currentHero = heroWallpapers[heroIndex];
