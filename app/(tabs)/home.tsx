@@ -14,6 +14,7 @@ export default function HomeScreen() {
     const router = useRouter();
     const { wallpapers, isLoading, error, loadWallpapers } = useWallpapersStore();
     const [selectedCategory, setSelectedCategory] = useState("Todos");
+    const [selectedColor, setSelectedColor] = useState("Todos");
 
     // Carousel State
     const [heroIndex, setHeroIndex] = useState(0);
@@ -34,19 +35,63 @@ export default function HomeScreen() {
 
     const categories = ["Todos", "Nuevos", "Florales", "Texturas", "Geométricos"];
 
+    // Color Map for UI
+    const colors = [
+        { name: "Todos", hex: "transparent" },
+        { name: "White", hex: "#FFFFFF", border: true },
+        { name: "Beige", hex: "#F5F5DC" },
+        { name: "Grey", hex: "#808080" },
+        { name: "Black", hex: "#000000" },
+        { name: "Gold", hex: "#FFD700" },
+        { name: "Green", hex: "#4CAF50" },
+        { name: "Blue", hex: "#2196F3" },
+        { name: "Pink", hex: "#FFC0CB" }
+    ];
+
     // Filter Logic
     const filteredWallpapers = React.useMemo(() => {
-        if (selectedCategory === "Todos") return wallpapers;
-        if (selectedCategory === "Nuevos") return wallpapers.slice(0, 4); // Mock "New"
+        return wallpapers.filter(w => {
+            // 1. Category Filter
+            let matchesCategory = true;
+            if (selectedCategory !== "Todos") {
+                if (selectedCategory === "Nuevos") {
+                    // "New" is logic-based (e.g. recent matching), but here we mock it as ALL new items
+                    // Actually, let's just ignore category logic if "Nuevos" is picked, 
+                    // OR we can say "Nuevos" is a sort? 
+                    // Let's stick to the previous simple logic: Nuevos = just top 4, ignoring other categories?
+                    // User said "Florales si sirve", so let's keep the mapping logic but make it robust.
+                    return true; // We handle "Nuevos" slice separately or just let it pass here?
+                    // Wait, if it's "Nuevos", we probably want to return early.
+                } else {
+                    let searchTerm = "";
+                    if (selectedCategory === "Florales") searchTerm = "Floral";
+                    if (selectedCategory === "Texturas") searchTerm = "Texture";
+                    if (selectedCategory === "Geométricos") searchTerm = "Geometric";
 
-        // Mapping
-        let searchTerm = "";
-        if (selectedCategory === "Florales") searchTerm = "Floral";
-        if (selectedCategory === "Texturas") searchTerm = "Texture";
-        if (selectedCategory === "Geométricos") searchTerm = "Geometric";
+                    // Robust check: category includes term OR name includes term
+                    matchesCategory = (w.category?.includes(searchTerm) || w.name?.includes(searchTerm));
+                }
+            }
 
-        return wallpapers.filter(w => w.category === searchTerm || w.name.includes(searchTerm));
-    }, [wallpapers, selectedCategory]);
+            // 2. Color Filter
+            let matchesColor = true;
+            if (selectedColor !== "Todos") {
+                // Check if the wallpaper's colors array includes the selected color
+                // Our data has capitalized colors: "Green", "White"
+                matchesColor = w.colors?.some(c => c.toLowerCase() === selectedColor.toLowerCase());
+            }
+
+            return matchesCategory && matchesColor;
+        });
+    }, [wallpapers, selectedCategory, selectedColor]);
+
+    // Special case for "Nuevos" to limit results if no other filter applies? 
+    // Actually, user wants "Nuevos" to be a category. 
+    // Let's simplified: If "Nuevos", just slice the array.
+
+    const displayedWallpapers = selectedCategory === "Nuevos"
+        ? wallpapers.slice(0, 4)
+        : filteredWallpapers;
 
     const renderHeader = () => {
         const currentHero = heroWallpapers[heroIndex];
@@ -121,6 +166,31 @@ export default function HomeScreen() {
                     ))}
                 </ScrollView>
 
+                {/* Color Navigation (Circles) */}
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.colorScroll}
+                >
+                    {colors.map((col) => (
+                        <TouchableOpacity
+                            key={col.name}
+                            style={[
+                                styles.colorItem,
+                                selectedColor === col.name && styles.colorItemActive,
+                                col.border ? { borderWidth: 1, borderColor: '#ddd' } : {}
+                            ]}
+                            onPress={() => setSelectedColor(col.name)}
+                        >
+                            {col.name === "Todos" ? (
+                                <Ionicons name="color-palette-outline" size={20} color={selectedColor === "Todos" ? "black" : "#999"} />
+                            ) : (
+                                <View style={[styles.colorCircle, { backgroundColor: col.hex }]} />
+                            )}
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+
                 <Text style={styles.sectionTitle}>NUESTRA COLECCIÓN</Text>
             </View>
         );
@@ -141,6 +211,7 @@ export default function HomeScreen() {
         >
             <View style={styles.imageContainer}>
                 <Image source={{ uri: item.imageUrl }} style={styles.image} resizeMode="cover" />
+                {/* Sale Tag Logic could go here */}
             </View>
             <View style={styles.cardContent}>
                 <Text style={styles.name} numberOfLines={1}>{item.name.toUpperCase()}</Text>
@@ -179,7 +250,7 @@ export default function HomeScreen() {
 
             <FlatList
                 ListHeaderComponent={renderHeader}
-                data={filteredWallpapers}
+                data={displayedWallpapers} // Use the double-filtered list
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
@@ -326,7 +397,7 @@ const styles = StyleSheet.create({
     // Categories
     categoryScroll: {
         paddingHorizontal: 20,
-        marginBottom: 30,
+        marginBottom: 15, // Reduced space to fit colors
     },
     catItem: {
         marginRight: 25,
@@ -344,6 +415,29 @@ const styles = StyleSheet.create({
     },
     catTextActive: {
         color: 'black',
+    },
+
+    // Colors
+    colorScroll: {
+        paddingHorizontal: 20,
+        marginBottom: 30,
+    },
+    colorItem: {
+        marginRight: 15,
+        padding: 2,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: 'transparent',
+    },
+    colorItemActive: {
+        borderColor: 'black',
+    },
+    colorCircle: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.1)',
     },
 
     // Grid
