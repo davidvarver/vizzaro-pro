@@ -54,27 +54,33 @@ const enrichWallpaperData = (data: any[]): Wallpaper[] => {
         'PEEL & STICK WALLPAPER',
         'PEEL AND STICK WALLPAPER',
         'WALLPAPER',
-        'PAPEL TAPIZ'
+        'PAPEL TAPIZ',
+        'WALL MURAL',
+        'FLOOR TILES',
+        'WALL DECALS',
+        'MOULDING',
+        'WALL PANELS',
+        'PEEL & STICK'
     ];
 
-    // 2. Common colors to strip (Extend as needed based on screenshots)
+    // 2. Common colors and descriptors to strip
     const COLORS = [
         'OFF WHITE', 'OFF-WHITE', 'WHITE', 'BLANCO',
         'TEAL', 'TURQUESA',
         'DARK BROWN', 'LIGHT BROWN', 'BROWN', 'CAFE', 'MARRON',
         'AQUA',
-        'NAVY', 'AZUL MARINO', 'SKY BLUE', 'LIGHT BLUE', 'BLUE', 'AZUL',
-        'PINK', 'ROSA', 'ROSE',
-        'BLACK & WHITE', 'BLACK AND WHITE', 'BLACK', 'NEGRO',
-        'GREY', 'GRAY', 'GRIS', 'SILVER', 'PLATA',
-        'GOLD', 'DORADO',
-        'GREEN', 'VERDE', 'EMERALD', 'ESMERALDA', 'SAGE', 'OLIVE', 'OLIVA', 'MINT', 'MENTA',
-        'BEIGE', 'CREAM', 'CREMA', 'TAN', 'TOSTADO', 'TAUPE',
+        'NAVY', 'AZUL MARINO', 'SKY BLUE', 'POWDERED BLUE', 'LIGHT BLUE', 'BLUE', 'AZUL', 'COBALT', 'COBALTO', 'INDIGO', 'INDIGO',
+        'PINK', 'ROSA', 'ROSE', 'BLUSH', 'RUBOR', 'MAGENTA',
+        'BLACK & WHITE', 'BLACK AND WHITE', 'BLACK', 'NEGRO', 'CHARCOAL', 'CARBON', 'ONYX',
+        'GREY', 'GRAY', 'GRIS', 'SILVER', 'PLATA', 'SLATE', 'PIZARRA',
+        'GOLD', 'DORADO', 'METALLIC', 'METALICO', 'COPPER', 'COBRE',
+        'GREEN', 'VERDE', 'EMERALD', 'ESMERALDA', 'SAGE', 'OLIVE', 'OLIVA', 'MINT', 'MENTA', 'MOSS', 'MUSGO', 'CHARTREUSE', 'FOREST',
+        'BEIGE', 'CREAM', 'CREMA', 'TAN', 'TOSTADO', 'TAUPE', 'OATMEAL', 'AVENA', 'NEUTRAL', 'NEUTRO', 'NATURAL',
         'YELLOW', 'AMARILLO', 'MUSTARD', 'MOSTAZA',
-        'RED', 'ROJO', 'RUST', 'OXIDO',
+        'RED', 'ROJO', 'RUST', 'OXIDO', 'BURGUNDY', 'VINO',
         'ORANGE', 'NARANJA', 'PEACH', 'DURAZNO', 'CORAL', 'TERRACOTTA', 'TERRACOTA',
-        'PURPLE', 'MORADO', 'LILAC', 'LILA', 'MAUVE', 'VIOLET', 'VIOLETA',
-        'MULTI', 'MULTICOLOR', 'RAINBOW'
+        'PURPLE', 'MORADO', 'LILAC', 'LILA', 'MAUVE', 'VIOLET', 'VIOLETA', 'LAVENDER', 'LAVANDA', 'PLUM', 'CIRUELA',
+        'MULTI', 'MULTICOLOR', 'RAINBOW', 'ARCOIRIS', 'PASTEL', 'BREEZY'
     ];
 
     return data.map(item => {
