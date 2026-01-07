@@ -129,16 +129,14 @@ export default function CameraScreen() {
             wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
 
             // 3. Prepare Request
-            const prompt = `You are an expert at applying wallpaper patterns to walls in photos with advanced wall detection capabilities.
-TASK: Apply the wallpaper pattern from the SECOND IMAGE onto the walls in the FIRST IMAGE.
-CRITICAL WALL DETECTION RULES:
-1. PRIMARY WALL IDENTIFICATION:
-   - Identify the largest continuous flat surface in the center (PRIMARY TARGET WALL).
-   - Ignore furniture, decorative items, doors, windows.
-2. APPLICATION STRATEGY:
-   - Apply wallpaper ONLY to the identified PRIMARY WALL.
-   - Maintain natural shadows, lighting, and perspective.
-   - KEEP furniture/objects clean.
+            const prompt = `You are an expert interior design AI.
+TASK: Replace the texture of the PRIMARY WALL in the first image with the wallpaper pattern from the second image.
+STRICT CONSTRAINTS (DO NOT IGNORE):
+1. PRESERVE GEOMETRY: You must NOT change the shape, position, or structure of the room, furniture, windows, or doors.
+2. PRESERVE LIGHTING: Keep all original shadows, reflections, and lighting conditions exact.
+3. MASKING ACCURACY: Only apply the wallpaper to the wall surface. DO NOT apply it to the floor, ceiling, or furniture.
+4. REALISM: The result should look like a photo, not a render. Blend the wallpaper naturally with the existing environment.
+5. NO HALLUCINATIONS: Do not add or remove objects. Do not change the style of the house.
 `;
 
             const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
