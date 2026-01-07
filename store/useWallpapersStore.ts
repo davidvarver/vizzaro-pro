@@ -61,19 +61,20 @@ const enrichWallpaperData = (data: any[]): Wallpaper[] => {
     const COLORS = [
         'OFF WHITE', 'OFF-WHITE', 'WHITE', 'BLANCO',
         'TEAL', 'TURQUESA',
-        'DARK BROWN', 'BROWN', 'CAFE', 'MARRON',
+        'DARK BROWN', 'LIGHT BROWN', 'BROWN', 'CAFE', 'MARRON',
         'AQUA',
-        'NAVY', 'AZUL MARINO', 'BLUE', 'AZUL', 'LIGHT BLUE',
+        'NAVY', 'AZUL MARINO', 'SKY BLUE', 'LIGHT BLUE', 'BLUE', 'AZUL',
         'PINK', 'ROSA', 'ROSE',
         'BLACK & WHITE', 'BLACK AND WHITE', 'BLACK', 'NEGRO',
-        'GREY', 'GRAY', 'GRIS',
+        'GREY', 'GRAY', 'GRIS', 'SILVER', 'PLATA',
         'GOLD', 'DORADO',
-        'GREEN', 'VERDE',
-        'BEIGE', 'CREAM', 'CREMA',
-        'YELLOW', 'AMARILLO',
-        'RED', 'ROJO',
-        'ORANGE', 'NARANJA',
-        'PURPLE', 'MORADO'
+        'GREEN', 'VERDE', 'EMERALD', 'ESMERALDA', 'SAGE', 'OLIVE', 'OLIVA', 'MINT', 'MENTA',
+        'BEIGE', 'CREAM', 'CREMA', 'TAN', 'TOSTADO', 'TAUPE',
+        'YELLOW', 'AMARILLO', 'MUSTARD', 'MOSTAZA',
+        'RED', 'ROJO', 'RUST', 'OXIDO',
+        'ORANGE', 'NARANJA', 'PEACH', 'DURAZNO', 'CORAL', 'TERRACOTTA', 'TERRACOTA',
+        'PURPLE', 'MORADO', 'LILAC', 'LILA', 'MAUVE', 'VIOLET', 'VIOLETA',
+        'MULTI', 'MULTICOLOR', 'RAINBOW'
     ];
 
     return data.map(item => {
