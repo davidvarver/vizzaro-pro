@@ -129,15 +129,20 @@ export default function CameraScreen() {
             wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
 
             // 3. Prepare Request
-            const prompt = `You are an expert interior design AI.
-TASK: Replace the texture of the PRIMARY WALL in the first image with the wallpaper pattern from the second image.
-STRICT CONSTRAINTS (DO NOT IGNORE):
-1. PRESERVE GEOMETRY: You must NOT change the shape, position, or structure of the room, furniture, windows, or doors.
-2. PRESERVE LIGHTING: Keep all original shadows, reflections, and lighting conditions exact.
-3. MASKING ACCURACY: Only apply the wallpaper to the wall surface. DO NOT apply it to the floor, ceiling, or furniture.
-4. REALISM: The result should look like a photo, not a render. Blend the wallpaper naturally with the existing environment.
-5. NO HALLUCINATIONS: Do not add or remove objects. Do not change the style of the house.
-`;
+            const prompt = `You are a strict architectural visualization AI.
+TASK: Replace the texture of the MAIN CENTER WALL in the first image with the wallpaper pattern from the second image.
+WALL SELECTION RULES (CRITICAL):
+1. SELECT ONLY THE CENTER WALL: The target is the wall directly FACING the camera.
+2. IGNORE SIDE WALLS: Do NOT apply wallpaper to walls on the left or right edges (perspective walls).
+3. IGNORE CEILING/FLOOR/OFF-CENTER WALLS.
+
+PRESERVATION RULES (ZERO TOLERANCE):
+1. PIXEL-PERFECT PRESERVATION: Every pixel that is NOT the centered wall must remain EXACTLY the same.
+2. NO NEW OBJECTS: Do NOT generate furniture, plants, or decorations.
+3. NO REMOVALS: Do NOT remove existing furniture or objects.
+4. LIGHTING: Keep the original lighting and shadows exactly as they are.
+
+OUTPUT GOAL: A photo-realistic composite where only the center wall texture is changed, and everything else is 100% original.`;
 
             const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
             const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
