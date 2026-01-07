@@ -53,17 +53,46 @@ export default function HomeScreen() {
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     };
 
+    // Color Mapping (Moved out for reuse)
+    const colorMap: Record<string, string[]> = {
+        "Blanco": ["white", "blanco", "blanca", "off-white"],
+        "Beige": ["beige", "crema", "cream"],
+        "Gris": ["grey", "gray", "gris", "plata"],
+        "Negro": ["black", "negro", "negra"],
+        "Dorado": ["gold", "dorado", "oro"],
+        "Verde": ["green", "verde"],
+        "Azul": ["blue", "azul", "celeste", "navy"],
+        "Rosa": ["pink", "rosa", "rosado"]
+    };
+
+    // Dynamic Available Colors
+    const availableColors = React.useMemo(() => {
+        const foundColors = new Set<string>();
+        wallpapers.forEach(w => {
+            w.colors?.forEach(c => {
+                if (c) foundColors.add(normalize(c));
+            });
+        });
+
+        // Always show "Todos" + only colors that exist in the loaded wallpapers
+        return colors.filter(uiColor => {
+            if (uiColor.name === "Todos") return true;
+
+            const targets = colorMap[uiColor.name] || [uiColor.name.toLowerCase()];
+            // Check if ANY of the targets match ANY of the found colors
+            return targets.some(target => {
+                // We check if the found color contains the target (e.g. found "dark green" matches "green")
+                // or if the target contains the found color (less likely but possible for exact matches)
+                for (const found of foundColors) {
+                    if (found.includes(target)) return true;
+                }
+                return false;
+            });
+        });
+    }, [wallpapers]);
+
     // Filter Logic
     const filteredWallpapers = React.useMemo(() => {
-        // DEBUG: Inspect data structure (Check logs in terminal)
-        if (wallpapers.length > 0) {
-            console.log('[Home] Sample Wallpaper:', JSON.stringify(wallpapers[0], null, 2));
-            const allCats = [...new Set(wallpapers.map(w => w.category))];
-            const allColors = [...new Set(wallpapers.flatMap(w => w.colors || []))];
-            console.log('[Home] Available Categories:', allCats);
-            console.log('[Home] Available Colors:', allColors);
-        }
-
         return wallpapers.filter(w => {
             // 1. Category Filter
             let matchesCategory = true;
@@ -91,18 +120,6 @@ export default function HomeScreen() {
                 if (!w.colors || !Array.isArray(w.colors)) {
                     matchesColor = false;
                 } else {
-                    // Multi-language map
-                    const colorMap: Record<string, string[]> = {
-                        "Blanco": ["white", "blanco", "blanca", "off-white"],
-                        "Beige": ["beige", "crema", "cream"],
-                        "Gris": ["grey", "gray", "gris", "plata"],
-                        "Negro": ["black", "negro", "negra"],
-                        "Dorado": ["gold", "dorado", "oro"],
-                        "Verde": ["green", "verde"],
-                        "Azul": ["blue", "azul", "celeste", "navy"],
-                        "Rosa": ["pink", "rosa", "rosado"]
-                    };
-
                     const targetColors = colorMap[selectedColor] || [selectedColor.toLowerCase()];
 
                     matchesColor = w.colors.some(c => {
@@ -204,7 +221,7 @@ export default function HomeScreen() {
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.colorScroll}
                 >
-                    {colors.map((col) => (
+                    {availableColors.map((col) => (
                         <TouchableOpacity
                             key={col.name}
                             style={[
