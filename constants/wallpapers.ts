@@ -47,6 +47,7 @@ export const wallpapers: Wallpaper[] = [
     group: 'floral-elegant', // GROUP KEY
     colors: ['Cream', 'Gold'],
     dimensions: { width: 0.53, height: 10.05, coverage: 5.33 },
+    patternRepeat: 53,
     specifications: { material: 'Vinyl', washable: true, removable: true, textured: false },
     inStock: true,
     rating: 4.8,

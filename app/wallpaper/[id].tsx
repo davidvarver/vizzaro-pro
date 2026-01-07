@@ -196,6 +196,12 @@ export default function WallpaperDetailScreen() {
                             <Text style={styles.specLabel}>COLORES</Text>
                             <Text style={styles.specValue}>{wallpaper.colors?.join(', ')}</Text>
                         </View>
+                        <View style={styles.specRow}>
+                            <Text style={styles.specLabel}>REPETICIÓN</Text>
+                            <Text style={styles.specValue}>
+                                {wallpaper.patternRepeat ? `${wallpaper.patternRepeat} cm` : '0 cm'}
+                            </Text>
+                        </View>
                     </View>
                 </View>
             </ScrollView>
