@@ -129,20 +129,17 @@ export default function CameraScreen() {
             wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
 
             // 3. Prepare Request
-            const prompt = `You are a strict architectural visualization AI.
-TASK: Replace the texture of the MAIN CENTER WALL in the first image with the wallpaper pattern from the second image.
-WALL SELECTION RULES (CRITICAL):
-1. SELECT ONLY THE CENTER WALL: The target is the wall directly FACING the camera.
-2. IGNORE SIDE WALLS: Do NOT apply wallpaper to walls on the left or right edges (perspective walls).
-3. IGNORE CEILING/FLOOR/OFF-CENTER WALLS.
-
-PRESERVATION RULES (ZERO TOLERANCE):
-1. PIXEL-PERFECT PRESERVATION: Every pixel that is NOT the centered wall must remain EXACTLY the same.
-2. NO NEW OBJECTS: Do NOT generate furniture, plants, or decorations.
-3. NO REMOVALS: Do NOT remove existing furniture or objects.
-4. LIGHTING: Keep the original lighting and shadows exactly as they are.
-
-OUTPUT GOAL: A photo-realistic composite where only the center wall texture is changed, and everything else is 100% original.`;
+            const prompt = `Role: Precise Architectural Image Editor.
+Mission: Replace the texture of the SINGLE LARGEST WALL surface with the provided wallpaper pattern.
+CRITICAL EXECUTION RULES:
+1. IDENTIFY THE TARGET: Find the main structural wall. Ignore distinct areas like kitchens, hallways, or cabinets.
+2. ISOLATION: Apply the wallpaper ONLY to that one specific wall. Do NOT apply it to adjacent walls, side walls, or walls in other rooms.
+3. PRESERVATION (MAXIMUM PRIORITY):
+   - IGNORE Kitchen cabinets, appliances, and woodwork.
+   - IGNORE Furniture, tables, and plants.
+   - IGNORE Floors and Ceilings.
+   - The image must remain IDENTICAL to the original except for the target wall pixels.
+4. NO HALLUCINATION: Do not regenerate the room. Do not fix imperfections. Do not add objects. Only swap the texture.`;
 
             const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
             const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
