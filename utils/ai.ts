@@ -121,3 +121,23 @@ OUTPUT: A realistic renovation where the main wall is wallpapered, but the kitch
         throw error;
     }
 }
+
+
+export async function generateWallMask(imageBase64: string): Promise<string> {
+    // We send a white square as "wallpaper" to create the mask
+    // 1x1 white pixel base64
+    const whitePixel = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP6DwABBAEKKFE8rwAAAABJRU5ErkJggg==";
+
+    // Strict Mask Prompt
+    const maskPrompt = `Role: Precise Architectural Segmentation AI.
+TASK: Create a BINARY MASK of the MAIN WALL (largest central vertical surface).
+OUTPUT RULES:
+1. The Main Wall must be PURE WHITE (#FFFFFF).
+2. EVERYTHING ELSE (Background, floor, ceiling, furniture, cabinets, windows) must be PURE BLACK (#000000).
+3. EDGES: Crisp and sharp. Use the "Tile Override" logic: if the wall is tiled, mask the whole surface as wall.
+4. DO NOT include the kitchen or side walls.
+5. RESULT must be a black and white image.`;
+
+    // Process using the existing function but with the mask prompt
+    return await processImageWithAI(imageBase64, whitePixel, maskPrompt);
+}

@@ -18,7 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
-import { processImageWithAI, fetchImageAsBase64 } from '@/utils/ai';
+import { processImageWithAI, fetchImageAsBase64, generateWallMask } from '@/utils/ai';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -140,8 +140,26 @@ export default function CameraScreen() {
             // NEW: Enable Smart Mask (Generic) immediately
             // This ensures logic "If hasMask, ALWAYS use overlay" works in Result screen.
             // This provides "Instant Preview" capability.
+            // NEW: Fire-and-forget generation of the Smart Mask
+            // We set a temporary mock mask so the user can enter the screen immediately.
+            // The AI will generate the real mask in background (~10-15s) and update the store.
             if (newRoomId) {
+                // Set initial placeholder
                 await updateUserRoomMask(newRoomId, "MOCK_GRADIENT_MASK_ID");
+
+                // Trigger background generation (NO AWAIT)
+                // Use the same base64Image (1080p) to ensure mask aligns with the room.
+                console.log('[Camera] Triggering background Mask Generation...');
+
+                generateWallMask(base64Image)
+                    .then(async (realMaskBase64) => {
+                        console.log('[Camera] Smart Mask Generated! Updating store...');
+                        await updateUserRoomMask(newRoomId, realMaskBase64);
+                    })
+                    .catch(err => {
+                        console.error('[Camera] Background Mask Generation Failed:', err);
+                        // We keep the mock mask as fallback
+                    });
             }
 
             if (wallpaper) {
