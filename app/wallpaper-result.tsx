@@ -131,10 +131,18 @@ export default function WallpaperResultScreen() {
                                 <Text style={styles.processingText}>Generando nueva vista...</Text>
                             </View>
                         ) : selectedWallpaperId !== initialWallpaperId ? (
-                            <TouchableOpacity style={styles.generateButton} onPress={handleRegenerate}>
-                                <Ionicons name="sparkles" size={20} color="white" />
-                                <Text style={styles.generateButtonText}>Visualizar con IA</Text>
-                            </TouchableOpacity>
+                            <>
+                                {room.maskImage === "MOCK_GRADIENT_MASK_ID" && (
+                                    <View style={[styles.processingBadge, { top: 60, backgroundColor: 'rgba(0,0,0,0.6)' }]}>
+                                        <ActivityIndicator size="small" color="#FFD700" />
+                                        <Text style={styles.processingText}>Escaneando geometría...</Text>
+                                    </View>
+                                )}
+                                <TouchableOpacity style={styles.generateButton} onPress={handleRegenerate}>
+                                    <Ionicons name="sparkles" size={20} color="white" />
+                                    <Text style={styles.generateButtonText}>Visualizar con IA</Text>
+                                </TouchableOpacity>
+                            </>
                         ) : !aiProcessingFailed && (
                             <View style={styles.processingBadge}>
                                 <ActivityIndicator size="small" color="white" />
