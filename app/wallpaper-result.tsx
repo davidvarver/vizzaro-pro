@@ -66,19 +66,27 @@ export default function WallpaperResultScreen() {
             }} />
 
             <View style={styles.visualizerContainer}>
-                {shouldUseOverlay && room ? (
-                    <WallpaperOverlay
-                        originalImage={room.image} // stored as base64
-                        maskImage={room.maskImage!}
-                        patternImage={currentWallpaper!.imageUrl}
-                        opacity={0.85}
-                    />
-                ) : showProcessedImage ? (
+                {showProcessedImage ? (
                     <Image
                         source={{ uri: formatUri(visualizerImage) }}
                         style={styles.mainImage}
                         resizeMode="cover"
                     />
+                ) : shouldUseOverlay && room ? (
+                    <View style={{ flex: 1 }}>
+                        <WallpaperOverlay
+                            originalImage={room.image}
+                            maskImage={room.maskImage!}
+                            patternImage={currentWallpaper!.imageUrl}
+                            opacity={0.85}
+                        />
+                        {selectedWallpaperId === initialWallpaperId && !aiProcessingFailed && (
+                            <View style={styles.processingBadge}>
+                                <ActivityIndicator size="small" color="white" />
+                                <Text style={styles.processingText}>Mejorando con IA...</Text>
+                            </View>
+                        )}
+                    </View>
                 ) : room ? (
                     <Image
                         source={{ uri: formatUri(room.image) }}
@@ -235,6 +243,23 @@ const styles = StyleSheet.create({
     },
     addToCartText: {
         color: 'white',
+        fontWeight: '600',
+    },
+    processingBadge: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    processingText: {
+        color: 'white',
+        fontSize: 12,
         fontWeight: '600',
     }
 });
