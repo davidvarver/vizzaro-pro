@@ -12,7 +12,7 @@ const { width } = Dimensions.get('window');
 export default function WallpaperResultScreen() {
     const router = useRouter();
     const params = useLocalSearchParams();
-    const { image, roomId, wallpaperId: initialWallpaperId, processedImage } = params;
+    const { roomId, wallpaperId: initialWallpaperId, aiProcessingFailed } = params;
 
     const formatUri = (uri: string | undefined | null) => {
         if (!uri) return '';
@@ -20,7 +20,7 @@ export default function WallpaperResultScreen() {
         return `data:image/jpeg;base64,${uri}`;
     };
 
-    const { userRooms, wallpapers, getWallpaperById } = useWallpapersStore();
+    const { userRooms, wallpapers, getWallpaperById, visualizerImage } = useWallpapersStore();
     const { addToCart } = useCartStore();
 
     const [selectedWallpaperId, setSelectedWallpaperId] = useState<string | null>(
@@ -38,22 +38,17 @@ export default function WallpaperResultScreen() {
     // Derived state
     const currentWallpaper = selectedWallpaperId ? getWallpaperById(selectedWallpaperId) : null;
     const hasMask = !!room?.maskImage;
-    const originalImageUri = typeof image === 'string' ? image : '';
 
-    // Logic for display:
-    // 1. If we have a PROCESSED image from AI (fallback/server), show that.
-    // 2. If we have a MASK and a SELECTED WALLPAPER, show Overlay.
-    // 3. Otherwise show ORIGINAL image.
+    // Display Logic:
+    // 1. If we have visualizerImage (AI result) AND user hasn't changed wallpaper yet, show AI result.
+    // 2. If user changed wallpaper or we prefer overlay (if implemented):
+    //    - Right now we only have AI or Original.
+    //    - If user changes wallpaper, we can't show AI result anymore (it's baked in).
+    //    - So we show original.
 
-    // However, if user changes wallpaper, we want to stay in Overlay mode.
-    // So "Processed Image" is only relevant for the INITIAL load if mask failed.
-    // If user picks another wallpaper, we can't use the processed image (it has the old wallpaper).
-    // So:
-    // If selectedWallpaperId !== initialWallpaperId, ignore processedImage?
-    // Or just: If hasMask, ALWAYS use overlay (preferred).
+    const showProcessedImage = !!visualizerImage && (selectedWallpaperId === initialWallpaperId);
 
-    const shouldUseOverlay = hasMask && !!currentWallpaper;
-    const showProcessedImage = !hasMask && !!processedImage && (selectedWallpaperId === initialWallpaperId);
+    const shouldUseOverlay = hasMask && !!currentWallpaper; // Smart masking fallback if we had it
 
     const handleAddToCart = () => {
         if (!currentWallpaper) return;
@@ -80,16 +75,21 @@ export default function WallpaperResultScreen() {
                     />
                 ) : showProcessedImage ? (
                     <Image
-                        source={{ uri: formatUri(typeof processedImage === 'string' ? processedImage : '') }}
+                        source={{ uri: formatUri(visualizerImage) }}
+                        style={styles.mainImage}
+                        resizeMode="cover"
+                    />
+                ) : room ? (
+                    <Image
+                        source={{ uri: formatUri(room.image) }}
                         style={styles.mainImage}
                         resizeMode="cover"
                     />
                 ) : (
-                    <Image
-                        source={{ uri: formatUri(originalImageUri) }}
-                        style={styles.mainImage}
-                        resizeMode="cover"
-                    />
+                    <View style={{ flex: 1, backgroundColor: '#f0f0f0', justifyContent: 'center', alignItems: 'center' }}>
+                        <ActivityIndicator color={Colors.light.tint} />
+                        <Text style={{ marginTop: 10, color: '#666' }}>Cargando imagen...</Text>
+                    </View>
                 )}
 
                 {(!shouldUseOverlay && !showProcessedImage && !currentWallpaper) && (

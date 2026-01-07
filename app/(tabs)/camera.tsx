@@ -37,7 +37,15 @@ export default function CameraScreen() {
 
     const params = useLocalSearchParams<{ wallpaperId?: string }>();
     const { wallpaperId } = params;
-    const { getWallpaperById, addUserRoom, userRooms } = useWallpapersStore();
+    const { getWallpaperById, addUserRoom, userRooms, setVisualizerImage } = useWallpapersStore();
+
+    // ... (helper functions fetchImageAsBase64, compressBase64Image, processImageWithAI are unchanged)
+
+    // BUT I must re-declare processCapturedImage because I am replacing it.
+    // I need to be careful to KEEP the helpers if I am only replacing the function.
+    // However, I need `setVisualizerImage` in scope.
+    // It is destructured at the top. I need to update the destructuring line first.
+
     const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
 
     // Helper functions from user snippet
@@ -207,15 +215,27 @@ CRITICAL WALL DETECTION RULES:
             const compressed = await compressImage(uri);
             const base64Image = compressed.base64 || '';
 
+            // Save to room gallery (History)
+            await addUserRoom(base64Image);
+            // Get the ID of the new room (first in list)
+            const currentRooms = useWallpapersStore.getState().userRooms;
+            const newRoomId = currentRooms[0]?.id;
+
             if (wallpaper) {
                 // If we have a wallpaper, use the full AI flow
                 const result = await processImageWithAI(base64Image, wallpaper);
 
+                if (!result.failed && result.processed) {
+                    setVisualizerImage(result.processed);
+                } else {
+                    setVisualizerImage(null);
+                }
+
                 router.push({
                     pathname: '/wallpaper-result',
                     params: {
-                        originalImage: result.original,
-                        processedImage: result.processed,
+                        roomId: newRoomId,
+                        // We do NOT pass the huge images here anymore
                         wallpaperId: wallpaper.id,
                         aiProcessingFailed: result.failed ? 'true' : 'false',
                         errorMessage: result.error
@@ -223,15 +243,11 @@ CRITICAL WALL DETECTION RULES:
                 });
             } else {
                 // Fallback to old room-saving logic if no wallpaper selected
-                // Or maybe trigger error? "Select wallpaper first"
-                // For now, let's keep the room saving but navigate to result without processing?
-                // The user said "use only the AI". 
-                // Let's modify this to just navigate passing the image if no wallpaper.
+                setVisualizerImage(null);
                 router.push({
                     pathname: '/wallpaper-result',
                     params: {
-                        originalImage: base64Image,
-                        processedImage: '',
+                        roomId: newRoomId,
                         aiProcessingFailed: 'false'
                     }
                 });
