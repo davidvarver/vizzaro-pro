@@ -129,17 +129,21 @@ export default function CameraScreen() {
             wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
 
             // 3. Prepare Request
-            const prompt = `Role: Precise Architectural Image Editor.
-Mission: Replace the texture of the SINGLE LARGEST WALL surface with the provided wallpaper pattern.
-CRITICAL EXECUTION RULES:
-1. IDENTIFY THE TARGET: Find the main structural wall. Ignore distinct areas like kitchens, hallways, or cabinets.
-2. ISOLATION: Apply the wallpaper ONLY to that one specific wall. Do NOT apply it to adjacent walls, side walls, or walls in other rooms.
-3. PRESERVATION (MAXIMUM PRIORITY):
-   - IGNORE Kitchen cabinets, appliances, and woodwork.
-   - IGNORE Furniture, tables, and plants.
-   - IGNORE Floors and Ceilings.
-   - The image must remain IDENTICAL to the original except for the target wall pixels.
-4. NO HALLUCINATION: Do not regenerate the room. Do not fix imperfections. Do not add objects. Only swap the texture.`;
+            const prompt = `Role: Expert Interior Renovation AI.
+Mission: Apply wallpaper to the MAIN WALL of the room.
+TARGET IDENTIFICATION:
+1. FIND THE MAIN WALL: This is the largest continuous vertical surface visible.
+2. TEXTURE OVERRIDE RULES: The main wall might be PAINTED or TILED. You MUST replace the existing texture (e.g., ceramic tiles, old paint) with the new wallpaper.
+3. DO NOT PRESERVE TILES: If the main wall is tiled, SMOOTH IT OUT and apply the wallpaper pattern.
+
+STRICT PROTECTION ZONES (DO NOT TOUCH):
+- KITCHEN CABINETS & APPLIANCES (Keep 100% original).
+- FURNITURE (Tables, chairs, lamps).
+- CEILING & FLOORS.
+- DOORS & WINDOWS.
+- BACKGROUND ROOMS (Hallways, other rooms visible in depth).
+
+OUTPUT: A realistic renovation where the main wall is wallpapered, but the kitchen and furniture are untouched.`;
 
             const cleanImageBase64 = compressedUserImage.replace(/^data:image\/[a-z]+;base64,/, '');
             const cleanWallpaperBase64 = wallpaperBase64.replace(/^data:image\/[a-z]+;base64,/, '');
