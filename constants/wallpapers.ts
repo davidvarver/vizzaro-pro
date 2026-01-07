@@ -8,6 +8,7 @@ export interface Wallpaper {
   imageUrls: string[]; // Array of multiple images
   category: string;
   style: string;
+  group?: string; // NEW: To identify variants of the same model
   colors: string[];
   dimensions: {
     width: number; // in meters
@@ -30,64 +31,90 @@ export interface Wallpaper {
 }
 
 export const wallpapers: Wallpaper[] = [
+  // VARIANT GROUP 1: Floral
   {
-    id: '1',
-    publicSku: 'VIZ-1042',
-    name: 'Elegant Floral Wallpaper',
+    id: '1a',
+    publicSku: 'VIZ-1042-CR',
+    name: 'Elegant Floral - Cream & Gold',
     description: 'Classic floral design with gold touches on a cream background',
     price: 45.99,
-    imageUrl: 'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop', // Floral Wallpaper Texture
+    imageUrl: 'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop',
     imageUrls: [
-      'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1628191011993-47926719266f?q=80&w=800&auto=format&fit=crop'
     ],
     category: 'Floral',
     style: 'Classic',
-    colors: ['Cream', 'Gold', 'Green'],
-    dimensions: {
-      width: 0.53,
-      height: 10.05,
-      coverage: 5.33,
-    },
-    specifications: {
-      material: 'Vinyl',
-      washable: true,
-      removable: true,
-      textured: false,
-    },
+    group: 'floral-elegant', // GROUP KEY
+    colors: ['Cream', 'Gold'],
+    dimensions: { width: 0.53, height: 10.05, coverage: 5.33 },
+    specifications: { material: 'Vinyl', washable: true, removable: true, textured: false },
     inStock: true,
     rating: 4.8,
     reviews: 124,
   },
   {
-    id: '2',
-    publicSku: 'VIZ-8491',
-    name: 'Modern Geometric Design',
-    description: 'Contemporary geometric patterns in neutral tones',
-    price: 52.99,
-    imageUrl: 'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop', // Geometric Pattern
+    id: '1b',
+    publicSku: 'VIZ-1042-GR',
+    name: 'Elegant Floral - Green',
+    description: 'Classic floral design with lush green tones',
+    price: 45.99,
+    imageUrl: 'https://images.unsplash.com/photo-1615800001869-7c70c0617578?q=80&w=800&auto=format&fit=crop', // Different image
     imageUrls: [
-      'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1615800001869-7c70c0617578?q=80&w=800&auto=format&fit=crop'
+    ],
+    category: 'Floral',
+    style: 'Classic',
+    group: 'floral-elegant', // SAME GROUP KEY
+    colors: ['Green'],
+    dimensions: { width: 0.53, height: 10.05, coverage: 5.33 },
+    specifications: { material: 'Vinyl', washable: true, removable: true, textured: false },
+    inStock: true,
+    rating: 4.8,
+    reviews: 12,
+  },
+
+  // VARIANT GROUP 2: Geometric
+  {
+    id: '2a',
+    publicSku: 'VIZ-8491-GY',
+    name: 'Modern Geometric - Grey',
+    description: 'Contemporary geometric patterns in neutral grey tones',
+    price: 52.99,
+    imageUrl: 'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop',
+    imageUrls: [
       'https://images.unsplash.com/photo-1549419137-c79659b9d3b7?q=80&w=800&auto=format&fit=crop'
     ],
     category: 'Geometric',
     style: 'Modern',
-    colors: ['Grey', 'White', 'Black'],
-    dimensions: {
-      width: 0.53,
-      height: 10.05,
-      coverage: 5.33,
-    },
-    specifications: {
-      material: 'Non-woven',
-      washable: true,
-      removable: true,
-      textured: true,
-    },
+    group: 'geo-modern', // GROUP KEY
+    colors: ['Grey', 'White'],
+    dimensions: { width: 0.53, height: 10.05, coverage: 5.33 },
+    specifications: { material: 'Non-woven', washable: true, removable: true, textured: true },
     inStock: true,
     rating: 4.6,
     reviews: 89,
   },
+  {
+    id: '2b',
+    publicSku: 'VIZ-8491-BK',
+    name: 'Modern Geometric - Black',
+    description: 'Bold geometric patterns in black and white',
+    price: 52.99,
+    imageUrl: 'https://images.unsplash.com/photo-1617103197170-13ad8c14f686?q=80&w=800&auto=format&fit=crop', // Darker image
+    imageUrls: [
+      'https://images.unsplash.com/photo-1617103197170-13ad8c14f686?q=80&w=800&auto=format&fit=crop'
+    ],
+    category: 'Geometric',
+    style: 'Modern',
+    group: 'geo-modern', // SAME GROUP KEY
+    colors: ['Black', 'White'],
+    dimensions: { width: 0.53, height: 10.05, coverage: 5.33 },
+    specifications: { material: 'Non-woven', washable: true, removable: true, textured: true },
+    inStock: true,
+    rating: 4.6,
+    reviews: 22,
+  },
+
   {
     id: '3',
     publicSku: 'VIZ-3320',

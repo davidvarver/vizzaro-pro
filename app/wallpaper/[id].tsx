@@ -43,6 +43,22 @@ export default function WallpaperDetailScreen() {
         }
     };
 
+    // Variant Logic
+    const { wallpapers } = useWallpapersStore();
+    const relatedVariants = React.useMemo(() => {
+        if (!wallpaper || !wallpaper.group) return [];
+        return wallpapers.filter(w => w.group === wallpaper.group && w.id !== wallpaper.id);
+    }, [wallpaper, wallpapers]);
+
+    const allVariants = React.useMemo(() => {
+        if (!wallpaper || !wallpaper.group) return [];
+        // Include current wallpaper to sort them nicely? 
+        // Or just use this to build the list.
+        // Let's get ALL variants including self
+        return wallpapers.filter(w => w.group === wallpaper.group);
+    }, [wallpaper, wallpapers]);
+
+
     const handleVisualize = () => {
         router.push({
             pathname: '/(tabs)/camera',
@@ -108,6 +124,31 @@ export default function WallpaperDetailScreen() {
                     <Text style={styles.category}>{wallpaper.category.toUpperCase()}</Text>
                     <Text style={styles.title}>{wallpaper.name.toUpperCase()}</Text>
                     <Text style={styles.price}>${wallpaper.price.toFixed(2)} <Text style={styles.perRoll}>/ ROLLO</Text></Text>
+
+                    {/* Variant Selector (If variants exist) */}
+                    {allVariants.length > 1 && (
+                        <View style={styles.variantContainer}>
+                            <Text style={styles.variantLabel}>COLOR:</Text>
+                            <View style={styles.variantRow}>
+                                {allVariants.map((variant) => (
+                                    <TouchableOpacity
+                                        key={variant.id}
+                                        style={[
+                                            styles.variantOption,
+                                            variant.id === wallpaper.id && styles.variantOptionActive
+                                        ]}
+                                        onPress={() => {
+                                            // Update local state without full reload if possible, but router push is safer for deep linking
+                                            router.replace(`/wallpaper/${variant.id}`);
+                                        }}
+                                    >
+                                        <Image source={{ uri: variant.imageUrl }} style={styles.variantImage} />
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                            <Text style={styles.variantName}>{wallpaper.colors?.[0] || 'Standard'}</Text>
+                        </View>
+                    )}
 
                     <View style={styles.divider} />
 
@@ -266,6 +307,44 @@ const styles = StyleSheet.create({
         width: '40%',
         alignSelf: 'center',
         marginBottom: 30,
+    },
+
+    // Variants
+    variantContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    variantLabel: {
+        fontSize: 10,
+        fontWeight: 'bold',
+        color: '#999',
+        letterSpacing: 1,
+        marginBottom: 10,
+    },
+    variantRow: {
+        flexDirection: 'row',
+        gap: 15,
+        marginBottom: 8,
+    },
+    variantOption: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        borderWidth: 2,
+        borderColor: 'transparent',
+        padding: 2, // gap between image and border
+    },
+    variantOptionActive: {
+        borderColor: 'black',
+    },
+    variantImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 22,
+    },
+    variantName: {
+        fontSize: 12,
+        color: '#333',
     },
 
     // Actions

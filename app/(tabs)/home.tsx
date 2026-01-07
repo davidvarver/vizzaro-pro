@@ -132,6 +132,21 @@ export default function HomeScreen() {
 
             return matchesCategory && matchesColor;
         });
+
+        // 3. Deduplicate by Group (Show only one variant per group)
+        const uniqueMap = new Map();
+        results.forEach(w => {
+            if (w.group) {
+                if (!uniqueMap.has(w.group)) {
+                    uniqueMap.set(w.group, w);
+                }
+            } else {
+                // If doesn't belong to a group, use ID itself or just push
+                uniqueMap.set(w.id, w);
+            }
+        });
+
+        return Array.from(uniqueMap.values());
     }, [wallpapers, selectedCategory, selectedColor]);
 
     // Special case for "Nuevos" to limit results if no other filter applies? 
