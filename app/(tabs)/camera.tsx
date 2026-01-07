@@ -17,6 +17,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/colors';
+import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { processImageWithAI, fetchImageAsBase64 } from '@/utils/ai';
 
 
