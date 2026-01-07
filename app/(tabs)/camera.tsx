@@ -37,7 +37,7 @@ export default function CameraScreen() {
 
     const params = useLocalSearchParams<{ wallpaperId?: string }>();
     const { wallpaperId } = params;
-    const { getWallpaperById, addUserRoom, userRooms, setVisualizerImage } = useWallpapersStore();
+    const { getWallpaperById, addUserRoom, userRooms, setVisualizerImage, updateUserRoomMask } = useWallpapersStore();
 
     // ... (helper functions fetchImageAsBase64, compressBase64Image, processImageWithAI are unchanged)
 
@@ -220,6 +220,13 @@ CRITICAL WALL DETECTION RULES:
             // Get the ID of the new room (first in list)
             const currentRooms = useWallpapersStore.getState().userRooms;
             const newRoomId = currentRooms[0]?.id;
+
+            // NEW: Enable Smart Mask (Generic) immediately
+            // This ensures logic "If hasMask, ALWAYS use overlay" works in Result screen.
+            // This provides "Instant Preview" capability.
+            if (newRoomId) {
+                await updateUserRoomMask(newRoomId, "MOCK_GRADIENT_MASK_ID");
+            }
 
             if (wallpaper) {
                 // If we have a wallpaper, use the full AI flow

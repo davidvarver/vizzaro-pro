@@ -44,10 +44,10 @@ export default function WallpaperDetailScreen() {
     };
 
     const handleVisualize = () => {
-        // Navigate to Camera, passing this wallpaper ID to pre-select it eventually?
-        // Or just go to camera.
-        router.push('/(tabs)/camera');
-        // Ideally we'd pass ?preselect=${wallpaper.id} but Camera needs to support it.
+        router.push({
+            pathname: '/(tabs)/camera',
+            params: { wallpaperId: wallpaper.id }
+        });
     };
 
     if (!wallpaper) {
