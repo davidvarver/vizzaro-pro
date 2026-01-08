@@ -124,7 +124,16 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
     loadWallpapers: async (forceRefresh = false) => {
         try {
             console.log('[WallpapersStore] Loading catalog... (forceRefresh:', forceRefresh, ')');
-            set({ error: null, isLoading: true });
+
+            // Stale-while-revalidate: Only show full loading if we have no data
+            // If forceRefresh is true (Pull-to-refresh), we let the UI handle the spinner via 'isLoading' 
+            const hasData = get().wallpapers.length > 0;
+            if (!hasData || forceRefresh) {
+                set({ error: null, isLoading: true });
+            } else {
+                // Background update - keep existing data visible
+                set({ error: null });
+            }
 
             // On Web, we can use relative paths if no API URL is set
             const shouldFetchApi = API_BASE_URL || Platform.OS === 'web';
@@ -147,10 +156,10 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
                         signal: controller.signal,
                     });
 
-                    clearTimeout(timeoutId);
-
                     if (response.ok) {
                         const data = await response.json();
+                        clearTimeout(timeoutId); // Clear timeout ONLY after successful JSON parse
+
                         // console.log('[WallpapersStore] Loaded from API:', data.catalog?.length || 0, 'items');
 
                         if (data.success && data.catalog && Array.isArray(data.catalog)) {
