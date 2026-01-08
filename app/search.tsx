@@ -14,10 +14,18 @@ export default function SearchScreen() {
     const filteredWallpapers = React.useMemo(() => {
         if (!query) return [];
 
-        const searchTerms = query.toLowerCase().split(/[\s+]+/).filter(Boolean);
+        const normalizeText = (text: string) => {
+            return text
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase();
+        };
+
+        const searchTerms = normalizeText(query).split(/[\s+]+/).filter(Boolean);
 
         return wallpapers.filter(w => {
-            const searchableText = `${w.name} ${w.category} ${w.style} ${w.group || ''}`.toLowerCase();
+            const rawText = `${w.name} ${w.category} ${w.style} ${w.group || ''}`;
+            const searchableText = normalizeText(rawText);
             return searchTerms.every(term => searchableText.includes(term));
         });
     }, [query, wallpapers]);
