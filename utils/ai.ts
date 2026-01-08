@@ -64,9 +64,10 @@ export async function processImageWithAI(
     const defaultPrompt = `Role: Expert Interior Renovation AI.
 Mission: Apply wallpaper to the MAIN WALL of the room.
 TARGET IDENTIFICATION:
-1. FIND THE MAIN WALL: This is the largest continuous vertical surface visible.
-2. TEXTURE OVERRIDE RULES: The main wall might be PAINTED or TILED. You MUST replace the existing texture (e.g., ceramic tiles, old paint) with the new wallpaper.
-3. DO NOT PRESERVE TILES: If the main wall is tiled, SMOOTH IT OUT and apply the wallpaper pattern.
+1. FIND THE MAIN WALL: This is the largest CENTRAL vertical surface visible. It may be any color (white, grey, colored) or material.
+2. COLOR BIAS WARNING: Do NOT just pick the brightest or whitest wall. Pick the wall that forms the main structure of the view.
+3. TEXTURE OVERRIDE RULES: The main wall might be PAINTED or TILED. You MUST replace the existing texture (e.g., ceramic tiles, old paint) with the new wallpaper.
+4. DO NOT PRESERVE TILES: If the main wall is tiled, SMOOTH IT OUT and apply the wallpaper pattern.
 
 STRICT PROTECTION ZONES (DO NOT TOUCH):
 - KITCHEN CABINETS & APPLIANCES (Keep 100% original).
