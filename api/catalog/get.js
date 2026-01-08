@@ -126,6 +126,7 @@ export default async function handler(req, res) {
                 rating: typeof item.rating === 'number' && !isNaN(item.rating) ? item.rating : 0,
                 reviews: typeof item.reviews === 'number' && !isNaN(item.reviews) ? item.reviews : 0,
                 description: item.description || '',
+                _raw_debug: item // TEMPORARY DEBUG: Expose full source object
               };
             }).filter(item => item !== null && item.id && item.name);
           }

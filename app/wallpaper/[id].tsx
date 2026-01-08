@@ -216,10 +216,8 @@ export default function WallpaperDetailScreen() {
                             group: wallpaper.group,
                             specs: wallpaper.specifications,
                             dims: wallpaper.dimensions,
-                            // Dump potential keys
-                            raw_repetition: wallpaper['repetition'],
-                            raw_pattern_repeat: wallpaper['pattern_repeat'],
-                            raw_match: wallpaper['match']
+                            // RAW SOURCE FROM API
+                            _FULL_RAW_SOURCE: wallpaper._raw_debug
                         }, null, 2)}
                     </Text>
                 </View>
