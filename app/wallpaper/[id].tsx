@@ -204,23 +204,6 @@ export default function WallpaperDetailScreen() {
                         </View>
                     </View>
                 </View>
-
-                {/* DEBUG SECTION - REMOVE LATER */}
-                <View style={{ padding: 20, backgroundColor: '#f0f0f0', marginTop: 20 }}>
-                    <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>DEBUG INFO (Capture Screenshot):</Text>
-                    <Text style={{ fontFamily: 'monospace', fontSize: 10 }}>
-                        {JSON.stringify({
-                            id: wallpaper.id,
-                            name: wallpaper.name,
-                            patternRepeat: wallpaper.patternRepeat,
-                            group: wallpaper.group,
-                            specs: wallpaper.specifications,
-                            dims: wallpaper.dimensions,
-                            // RAW SOURCE FROM API
-                            _FULL_RAW_SOURCE: wallpaper._raw_debug
-                        }, null, 2)}
-                    </Text>
-                </View>
             </ScrollView>
         </View>
     );

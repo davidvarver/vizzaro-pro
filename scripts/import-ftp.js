@@ -90,11 +90,23 @@ async function main() {
 
         // 1. Download Excel
         const excelBuffer = await sftp.get(`/New Products/All Data/${EXCEL_FILE}`);
+        console.log(`📦 Excel Buffer Size: ${excelBuffer.length} bytes`);
+
         const workbook = XLSX.read(excelBuffer, { type: 'buffer' });
+        console.log(`📑 Sheets: ${workbook.SheetNames.join(', ')}`);
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const data = XLSX.utils.sheet_to_json(sheet);
 
         console.log(`📊 Found ${data.length} total rows in Excel.`);
+
+        // DEBUG: Find target in RAW data
+        const targetDebug = data.find(r => JSON.stringify(r).includes('RMK51262'));
+        if (targetDebug) {
+            console.log('🔎 DEBUG: FOUND TARGET IN RAW DATA:', JSON.stringify(targetDebug));
+            console.log('   Keys:', Object.keys(targetDebug));
+        } else {
+            console.log('❌ DEBUG: TARGET NOT FOUND IN RAW DATA');
+        }
 
         // 2. Filter valid rows
         const validRows = data.filter(r => r['Pattern'] && r['Name']);
@@ -160,92 +172,97 @@ async function main() {
                 // await ensureConnection(); // Checking every item might be slow, let's catch errors instead
 
                 const pattern = row['Pattern'];
+                if (pattern === 'RMK51262') {
+                    console.log('🎯 PROCESSING TARGET SKU: RMK51262');
+                    console.log('   Row Data Repeat:', row['Repeat']);
+                }
 
                 // OPTIMIZATION: Skip if already exists
+                /* 
                 if (catalogMap.has(pattern)) {
                     // console.log(`   ⏭️ Skipping ${pattern} (Already exists)`);
                     continue;
                 }
+                */
+                // FORCE UPDATE for Pattern Repeat fix
 
-                // Add Reconnection Retry Wrapper
-                let retries = 3;
-                let imageExists = false;
-                let roomExists = false;
+                // Check if we already have images
+                const existingItem = catalogMap.get(pattern);
+                let imageUrl = existingItem?.imageUrl || '';
+                let imageUrls = existingItem?.imageUrls || [];
 
-                while (retries > 0) {
-                    try {
-                        const imagePath = `${IMAGE_DIR}/${pattern}.jpg`;
-                        imageExists = await sftp.exists(imagePath);
-                        const roomPath = `${IMAGE_DIR}/${pattern}_Room.jpg`;
-                        roomExists = await sftp.exists(roomPath);
-                        break; // Success
-                    } catch (err) {
-                        console.log(`   ⚠️ SFTP Error checking ${pattern}: ${err.message}. Retrying...`);
-                        retries--;
-                        if (retries === 0) throw err;
-                        await sftp.end(); // Close
-                        await new Promise(r => setTimeout(r, 5000)); // Wait
-                        await sftp.connect(FTP_CONFIG); // Reconnect
-                    }
-                }
-
-                // 4. Download and Upload Images
-                let imageUrl = '';
-                let imageUrls = [];
-
-                // Upload Main Image
-                if (imageExists) {
-                    // Check if we already have it in blob? (Optional optimization, skip for now to ensure update)
-
-                    let imgBuffer;
-                    try {
-                        imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
-                    } catch (err) {
-                        // Attempt one reconnect for download
-                        console.log('   ⚠️ Download failed. Reconnecting...');
-                        await sftp.end();
-                        await sftp.connect(FTP_CONFIG);
-                        imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
-                    }
-
-                    // Watermark
-                    imgBuffer = await addWatermark(imgBuffer);
-
-                    const blob = await put(`products/${pattern}.jpg`, imgBuffer, {
-                        access: 'public',
-                        token: process.env.BLOB_READ_WRITE_TOKEN,
-                        addRandomSuffix: false,
-                        allowOverwrite: true
-                    });
-                    imageUrl = blob.url;
-                    imageUrls.push(imageUrl);
-                    console.log(`      Uploaded Main: ${blob.url}`);
-                }
-
-                // Upload Room Scene
-                if (roomExists) {
-                    let roomBuffer;
-                    try {
-                        roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
-                    } catch (err) {
-                        // Reconnect handled in main catch slightly, but granular is better
-                        await sftp.end();
-                        await sftp.connect(FTP_CONFIG);
-                        roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
-                    }
-
-                    const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, {
-                        access: 'public',
-                        token: process.env.BLOB_READ_WRITE_TOKEN,
-                        addRandomSuffix: false,
-                        allowOverwrite: true
-                    });
-                    imageUrls.push(blobRoom.url);
-                    console.log(`      Uploaded Room: ${blobRoom.url}`);
-                }
-
+                // DOWNLOAD/UPLOAD IMAGES (Only if missing or force update needed)
+                // For this fix, we assume images are fine, we just want DATA.
                 if (!imageUrl) {
-                    console.log(`   ⚠️ Main image not found for ${pattern}`);
+                    // Add Reconnection Retry Wrapper
+                    let retries = 3;
+                    let imageExists = false;
+                    let roomExists = false;
+
+                    while (retries > 0) {
+                        try {
+                            const imagePath = `${IMAGE_DIR}/${pattern}.jpg`;
+                            imageExists = await sftp.exists(imagePath);
+                            const roomPath = `${IMAGE_DIR}/${pattern}_Room.jpg`;
+                            roomExists = await sftp.exists(roomPath);
+                            break; // Success
+                        } catch (err) {
+                            console.log(`   ⚠️ SFTP Error checking ${pattern}: ${err.message}. Retrying...`);
+                            retries--;
+                            if (retries === 0) throw err;
+                            await sftp.end(); // Close
+                            await new Promise(r => setTimeout(r, 5000)); // Wait
+                            await sftp.connect(FTP_CONFIG); // Reconnect
+                        }
+                    }
+
+                    // Upload Main Image
+                    if (imageExists) {
+                        let imgBuffer;
+                        try {
+                            imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
+                        } catch (err) {
+                            console.log('   ⚠️ Download failed. Reconnecting...');
+                            await sftp.end();
+                            await sftp.connect(FTP_CONFIG);
+                            imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
+                        }
+
+                        imgBuffer = await addWatermark(imgBuffer);
+
+                        const blob = await put(`products/${pattern}.jpg`, imgBuffer, {
+                            access: 'public',
+                            token: process.env.BLOB_READ_WRITE_TOKEN,
+                            addRandomSuffix: false,
+                            allowOverwrite: true
+                        });
+                        imageUrl = blob.url;
+                        imageUrls.push(imageUrl);
+                        console.log(`      Uploaded Main: ${blob.url}`);
+                    }
+
+                    // Upload Room Scene
+                    if (roomExists) {
+                        let roomBuffer;
+                        try {
+                            roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
+                        } catch (err) {
+                            await sftp.end();
+                            await sftp.connect(FTP_CONFIG);
+                            roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
+                        }
+
+                        const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, {
+                            access: 'public',
+                            token: process.env.BLOB_READ_WRITE_TOKEN,
+                            addRandomSuffix: false,
+                            allowOverwrite: true
+                        });
+                        imageUrls.push(blobRoom.url);
+                        console.log(`      Uploaded Room: ${blobRoom.url}`);
+                    }
+                } else {
+                    // console.log(`   ⏭️ Images exist for ${pattern}, skipping upload.`);
                 }
 
                 // 5. Build Product Object with Smart Category
