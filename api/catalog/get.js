@@ -86,7 +86,7 @@ export default async function handler(req, res) {
             catalog = null;
           }
 
-          if (catalog && Array.isArray(catalog)) {
+          if (catalog && Array.isArray(catalog) && catalog.length > 0) {
             catalog = catalog.map(item => {
               if (!item || typeof item !== 'object') return null;
 
@@ -111,12 +111,17 @@ export default async function handler(req, res) {
                   textured: item.specifications?.textured !== undefined ? item.specifications.textured : false,
                 },
                 patternRepeat: (() => {
-                  const val = item.patternRepeat ?? item.pattern_repeat ?? item.repetition;
+                  // Search everywhere: top level, specifications, dimensions
+                  const val = item.patternRepeat ?? item.pattern_repeat ?? item.repetition ??
+                    item.specifications?.patternRepeat ?? item.specifications?.repetition ??
+                    item.dimensions?.patternRepeat ?? item.dimensions?.repetition;
+
                   if (val === undefined || val === null) return 0;
                   const num = parseFloat(val);
                   return !isNaN(num) ? num : 0;
                 })(),
-                patternMatch: item.patternMatch || item.pattern_match || item.match || '',
+                patternMatch: item.patternMatch || item.pattern_match || item.match ||
+                  item.specifications?.patternMatch || item.specifications?.match || '',
                 inStock: item.inStock !== undefined ? item.inStock : true,
                 rating: typeof item.rating === 'number' && !isNaN(item.rating) ? item.rating : 0,
                 reviews: typeof item.reviews === 'number' && !isNaN(item.reviews) ? item.reviews : 0,
