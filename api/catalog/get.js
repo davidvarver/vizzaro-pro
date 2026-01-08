@@ -111,14 +111,27 @@ export default async function handler(req, res) {
                   textured: item.specifications?.textured !== undefined ? item.specifications.textured : false,
                 },
                 patternRepeat: (() => {
-                  // Search everywhere: top level, specifications, dimensions
+                  // 1. Try explicit fields (deep search)
                   const val = item.patternRepeat ?? item.pattern_repeat ?? item.repetition ??
                     item.specifications?.patternRepeat ?? item.specifications?.repetition ??
                     item.dimensions?.patternRepeat ?? item.dimensions?.repetition;
 
-                  if (val === undefined || val === null) return 0;
-                  const num = parseFloat(val);
-                  return !isNaN(num) ? num : 0;
+                  if (val !== undefined && val !== null) {
+                    const num = parseFloat(val);
+                    if (!isNaN(num)) return num;
+                  }
+
+                  // 2. Fallback: Try to extract from Description (e.g. "Repeat: 53.5", "Repetición: 64")
+                  if (item.description) {
+                    const regex = /(?:repeat|repetición|repetition|patrón|pattern)\s*[:.]?\s*(\d+(?:\.\d+)?)/i;
+                    const match = item.description.match(regex);
+                    if (match && match[1]) {
+                      const extracted = parseFloat(match[1]);
+                      return !isNaN(extracted) ? extracted : 0;
+                    }
+                  }
+
+                  return 0;
                 })(),
                 patternMatch: item.patternMatch || item.pattern_match || item.match ||
                   item.specifications?.patternMatch || item.specifications?.match || '',
