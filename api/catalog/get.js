@@ -110,6 +110,10 @@ export default async function handler(req, res) {
                   removable: item.specifications?.removable !== undefined ? item.specifications.removable : true,
                   textured: item.specifications?.textured !== undefined ? item.specifications.textured : false,
                 },
+                patternRepeat: (typeof item.patternRepeat === 'number') ? item.patternRepeat :
+                  (typeof item.pattern_repeat === 'number') ? item.pattern_repeat :
+                    (typeof item.repetition === 'number') ? item.repetition : 0,
+                patternMatch: item.patternMatch || item.pattern_match || item.match || '',
                 inStock: item.inStock !== undefined ? item.inStock : true,
                 rating: typeof item.rating === 'number' && !isNaN(item.rating) ? item.rating : 0,
                 reviews: typeof item.reviews === 'number' && !isNaN(item.reviews) ? item.reviews : 0,
