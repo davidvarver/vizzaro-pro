@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Image } from 'react-native';
-import { useRouter, Stack } from 'expo-router';
+import { useRouter, Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import Colors from '@/constants/colors';
@@ -9,7 +9,8 @@ import { Ionicons } from '@expo/vector-icons';
 export default function SearchScreen() {
     const router = useRouter();
     const { wallpapers } = useWallpapersStore();
-    const [query, setQuery] = useState('');
+    const { category } = useLocalSearchParams<{ category?: string }>();
+    const [query, setQuery] = useState(category || '');
 
     const filteredWallpapers = React.useMemo(() => {
         if (!query) return [];

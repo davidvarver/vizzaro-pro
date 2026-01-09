@@ -20,7 +20,25 @@ export default function HomeScreen() {
 
     // Carousel State
     const [heroIndex, setHeroIndex] = useState(0);
-    const heroWallpapers = wallpapers.slice(0, 5); // Use top 5 for carousel
+    const heroWallpapers = React.useMemo(() => {
+        const standard = wallpapers.filter(w =>
+            !w.category?.toLowerCase().includes('mat') &&
+            !w.category?.toLowerCase().includes('tapete')
+        ).slice(0, 5);
+
+        // Add Bath Mats promo slide
+        // We look for a representative image or use a static one if needed
+        const bathMatExample = wallpapers.find(w =>
+            w.category?.toLowerCase().includes('mat') ||
+            w.category?.toLowerCase().includes('tapete')
+        );
+
+        if (bathMatExample) {
+            return [...standard, { ...bathMatExample, isPromo: true, name: "Bath Mats Collection", description: "Soft & Absorbent" }];
+        }
+
+        return standard;
+    }, [wallpapers]);
 
     useEffect(() => {
         loadWallpapers();
@@ -130,6 +148,15 @@ export default function HomeScreen() {
                 matchesColor = mapped.some(m => wColorsNorm.includes(m));
             }
 
+            // 3. Exclude 'Bath Mats' (Tapetes) from main grid
+            // We want them ONLY in the carousel
+            const isBathMat = w.category?.toLowerCase().includes('mat') ||
+                w.category?.toLowerCase().includes('tapete') ||
+                w.name.toLowerCase().includes('tapete') ||
+                w.name.toLowerCase().includes('bath mat');
+
+            if (isBathMat) return false;
+
             return matchesCategory && matchesColor;
         });
 
@@ -198,8 +225,18 @@ export default function HomeScreen() {
                                 ))}
                             </View>
 
-                            <TouchableOpacity style={styles.heroButton} onPress={() => router.push(`/wallpaper/${currentHero.id}`)}>
-                                <Text style={styles.heroButtonText}>{home.heroButton}</Text>
+                            <TouchableOpacity style={styles.heroButton} onPress={() => {
+                                if ((currentHero as any).isPromo) {
+                                    // Navigate to filtered search for Bath Mats
+                                    // Requires search.tsx to handle 'category' param
+                                    router.push({ pathname: "/search", params: { category: "tapete" } } as any);
+                                } else {
+                                    router.push(`/wallpaper/${currentHero.id}`);
+                                }
+                            }}>
+                                <Text style={styles.heroButtonText}>
+                                    {(currentHero as any).isPromo ? home.heroButton : home.heroButton}
+                                </Text>
                             </TouchableOpacity>
                         </LinearGradient>
                     </View>
