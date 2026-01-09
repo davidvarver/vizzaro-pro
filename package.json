@@ -72,6 +72,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@expo/cli": "^54.0.21",
     "@expo/ngrok": "^4.1.0",
     "@testing-library/jest-native": "^5.0.1",
     "@testing-library/react-native": "^12.1.2",

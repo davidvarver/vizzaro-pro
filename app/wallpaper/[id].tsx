@@ -152,14 +152,17 @@ export default function WallpaperDetailScreen() {
                     <View style={styles.divider} />
 
                     {/* Actions */}
-                    <TouchableOpacity style={styles.visualizeButton} onPress={handleVisualize}>
-                        <Ionicons name="scan-outline" size={20} color="white" style={{ marginRight: 10 }} />
-                        <Text style={styles.visualizeText}>{product.visualize.toUpperCase()}</Text>
-                    </TouchableOpacity>
+                    {/* Actions */}
+                    <View style={styles.actionContainer}>
+                        <TouchableOpacity style={styles.visualizeButton} onPress={handleVisualize}>
+                            <Ionicons name="scan-outline" size={18} color="white" style={{ marginRight: 10 }} />
+                            <Text style={styles.visualizeText}>{product.visualize.toUpperCase()}</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
-                        <Text style={styles.cartText}>{product.addToCart}</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
+                            <Text style={styles.cartText}>{product.addToCart.toUpperCase()}</Text>
+                        </TouchableOpacity>
+                    </View>
 
                     {/* Description */}
                     <View style={styles.section}>
@@ -279,27 +282,31 @@ const styles = StyleSheet.create({
     },
     category: {
         fontSize: 10,
-        fontWeight: 'bold',
+        fontWeight: '700',
         letterSpacing: 2,
         color: '#999',
         textAlign: 'center',
         marginBottom: 8,
+        marginTop: 10,
     },
     title: {
-        fontSize: 24,
-        fontWeight: '400', // Elegance often implies lighter weights
+        fontSize: 22,
+        fontWeight: '400',
         letterSpacing: 1,
-        color: 'black',
+        color: '#000',
+        lineHeight: 30,
         textAlign: 'center',
-        marginBottom: 10,
-        fontFamily: 'System', // Use default legible font
+        marginBottom: 12,
+        fontFamily: 'System',
+        paddingHorizontal: 20,
     },
     price: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: 'black',
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#000',
         textAlign: 'center',
-        marginBottom: 20,
+        marginBottom: 25,
+        letterSpacing: 0.5,
     },
     perRoll: {
         fontSize: 12,
@@ -309,117 +316,130 @@ const styles = StyleSheet.create({
     divider: {
         height: 1,
         backgroundColor: '#eee',
-        width: '40%',
+        width: '60%',
         alignSelf: 'center',
-        marginBottom: 30,
+        marginVertical: 30,
     },
 
     // Variants
     variantContainer: {
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 25,
     },
     variantLabel: {
         fontSize: 10,
-        fontWeight: 'bold',
+        fontWeight: '700',
         color: '#999',
-        letterSpacing: 1,
-        marginBottom: 10,
+        letterSpacing: 1.5,
+        marginBottom: 15,
+        textTransform: 'uppercase',
     },
     variantRow: {
         flexDirection: 'row',
-        gap: 15,
-        marginBottom: 8,
+        gap: 12,
+        marginBottom: 10,
     },
     variantOption: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        borderWidth: 2,
-        borderColor: 'transparent',
-        padding: 2, // gap between image and border
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        padding: 2,
     },
     variantOptionActive: {
-        borderColor: 'black',
+        borderColor: '#000',
+        borderWidth: 2,
     },
     variantImage: {
         width: '100%',
         height: '100%',
-        borderRadius: 22,
+        borderRadius: 20,
     },
     variantName: {
-        fontSize: 12,
+        fontSize: 11,
         color: '#333',
+        marginTop: 5,
+        letterSpacing: 0.5,
     },
 
     // Actions
+    actionContainer: {
+        width: '100%',
+        paddingHorizontal: 10,
+        marginBottom: 40,
+        gap: 15,
+    },
     visualizeButton: {
         flexDirection: 'row',
-        backgroundColor: 'black',
-        paddingVertical: 16,
+        backgroundColor: '#000',
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 15,
-        borderRadius: 0, // Sharp corners for premium feel
+        borderRadius: 0,
     },
     visualizeText: {
-        color: 'white',
+        color: '#fff',
         fontSize: 12,
-        fontWeight: 'bold',
+        fontWeight: '700',
         letterSpacing: 2,
     },
     cartButton: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: 'black',
-        paddingVertical: 16,
+        backgroundColor: '#fff',
+        height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 40,
+        borderWidth: 1,
+        borderColor: '#000',
         borderRadius: 0,
     },
     cartText: {
-        color: 'black',
+        color: '#000',
         fontSize: 12,
-        fontWeight: 'bold',
+        fontWeight: '700',
         letterSpacing: 2,
     },
 
     // Sections
     section: {
-        marginBottom: 30,
+        marginBottom: 40,
+        paddingHorizontal: 10,
     },
     sectionTitle: {
-        fontSize: 12,
-        fontWeight: 'bold',
+        fontSize: 11,
+        fontWeight: '700',
         letterSpacing: 2,
-        marginBottom: 15,
-        color: '#333',
+        marginBottom: 20,
+        color: '#000',
         textAlign: 'center',
+        textTransform: 'uppercase',
     },
     description: {
         fontSize: 14,
         lineHeight: 24,
         color: '#555',
         textAlign: 'center',
+        paddingHorizontal: 10,
     },
 
     // Specs
     specRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingVertical: 12,
+        paddingVertical: 14,
         borderBottomWidth: 1,
-        borderBottomColor: '#f5f5f5',
+        borderBottomColor: '#f0f0f0',
     },
     specLabel: {
-        fontSize: 11,
-        fontWeight: '600',
+        fontSize: 10,
+        fontWeight: '700',
         color: '#999',
-        letterSpacing: 1,
+        letterSpacing: 1.5,
+        textTransform: 'uppercase',
     },
     specValue: {
         fontSize: 12,
         color: '#333',
+        fontWeight: '400',
     },
 });
