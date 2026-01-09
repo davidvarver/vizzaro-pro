@@ -1,6 +1,7 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useRef, useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import {
     StyleSheet,
     Text,
@@ -24,6 +25,7 @@ import { processImageWithAI, fetchImageAsBase64, generateWallMask } from '@/util
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function CameraScreen() {
+    const isFocused = useIsFocused();
     const router = useRouter();
     const [permission, requestPermission] = useCameraPermissions();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -250,10 +252,12 @@ export default function CameraScreen() {
 
     return (
         <View style={styles.container}>
-            <CameraView
-                style={StyleSheet.absoluteFill}
-                ref={cameraRef}
-            />
+            {isFocused && ( // Only render camera if screen is focused
+                <CameraView
+                    style={StyleSheet.absoluteFill}
+                    ref={cameraRef}
+                />
+            )}
             <SafeAreaView style={styles.uiContainer} pointerEvents="box-none">
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
