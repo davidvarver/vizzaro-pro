@@ -57,7 +57,7 @@ export default function SearchScreen() {
                     <Ionicons name="search" size={20} color="#999" style={styles.searchIcon} />
                     <TextInput
                         style={styles.input}
-                        placeholder="Buscar papel tapiz..."
+                        placeholder="Search wallpapers..."
                         value={query}
                         onChangeText={setQuery}
                         autoFocus
@@ -78,7 +78,7 @@ export default function SearchScreen() {
                 keyboardShouldPersistTaps="handled"
                 ListEmptyComponent={
                     <View style={styles.empty}>
-                        <Text style={styles.emptyText}>No se encontraron resultados</Text>
+                        <Text style={styles.emptyText}>No results found</Text>
                     </View>
                 }
             />

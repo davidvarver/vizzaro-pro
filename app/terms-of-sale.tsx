@@ -14,54 +14,54 @@ export default function TermsOfSaleScreen() {
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <ArrowLeft size={24} color={Colors.light.text} />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Términos y Condiciones</Text>
+                <Text style={styles.headerTitle}>Terms of Sale</Text>
             </View>
 
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>1. Política de Devoluciones y Reembolsos</Text>
+                    <Text style={styles.sectionTitle}>1. Return and Refund Policy</Text>
                     <Text style={styles.paragraph}>
-                        Debido a la naturaleza personalizada de nuestros productos (papel tapiz impreso bajo demanda o cortado a medida), <Text style={styles.bold}>NO ACEPTAMOS DEVOLUCIONES NI CAMBIOS</Text> una vez que el pedido ha sido procesado o entregado, excepto en casos de defectos de fabricación comprobados.
+                        Due to the personalized nature of our products (wallpaper printed on demand or cut to size), <Text style={styles.bold}>WE DO NOT ACCEPT RETURNS OR EXCHANGES</Text> once the order has been processed or delivered, except in cases of proven manufacturing defects.
                     </Text>
                     <Text style={styles.paragraph}>
-                        Por favor, asegúrese de ordenar una muestra antes de realizar su compra final para verificar el color y la textura, ya que las pantallas de los dispositivos pueden variar la percepción del color real.
-                    </Text>
-                </View>
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>2. Variaciones de Color (Lotes)</Text>
-                    <Text style={styles.paragraph}>
-                        El papel tapiz se produce en lotes. Puede haber ligeras variaciones de color entre diferentes lotes de impresión.
-                    </Text>
-                    <Text style={styles.paragraph}>
-                        <Text style={styles.bold}>Importante:</Text> Recomendamos encarecidamente comprar todo el papel necesario para un proyecto en un solo pedido para garantizar que provenga del mismo lote. No garantizamos coincidencia de color en pedidos separados realizados en diferentes momentos.
+                        Please ensure you order a sample before making your final purchase to verify color and texture, as device screens may alter the perception of the actual color.
                     </Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>3. Responsabilidad de las Medidas</Text>
+                    <Text style={styles.sectionTitle}>2. Color Variations (Batches)</Text>
                     <Text style={styles.paragraph}>
-                        El cliente es el único responsable de proporcionar las medidas correctas de sus paredes. Vizzaro no se hace responsable por la falta de material debido a mediciones incorrectas o errores en el cálculo de la cantidad necesaria por parte del cliente.
+                        Wallpaper is produced in batches. There may be slight color variations between different printing batches.
                     </Text>
                     <Text style={styles.paragraph}>
-                        Sugerimos siempre agregar un 10-15% extra al total calculado para cubrir desperdicios del patrón (rapport) y posibles errores de instalación.
-                    </Text>
-                </View>
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>4. Defectos y Daños</Text>
-                    <Text style={styles.paragraph}>
-                        Inspeccione su pedido inmediatamente al recibirlo. Si detecta algún defecto visible o daño en el envío, debe notificarnos dentro de las 48 horas posteriores a la recepción, enviando fotografías del empaque y del producto dañado.
-                    </Text>
-                    <Text style={styles.paragraph}>
-                        No se aceptarán reclamos sobre defectos después de que el papel haya sido cortado o instalado. Es responsabilidad del instalador verificar la calidad del material antes de la colocación. La instalación del producto constituye la aceptación de su calidad.
+                        <Text style={styles.bold}>Important:</Text> We strongly recommend buying all the necessary wallpaper for a project in a single order to ensure it comes from the same batch. We do not guarantee color matching for separate orders placed at different times.
                     </Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>5. Instalación</Text>
+                    <Text style={styles.sectionTitle}>3. Measurement Responsibility</Text>
                     <Text style={styles.paragraph}>
-                        Vizzaro es solo proveedor del material. No asumimos responsabilidad por errores de instalación, preparación inadecuada de la superficie, o costos de mano de obra.
+                        The customer is solely responsible for providing the correct wall measurements. Vizzaro is not responsible for material shortages due to incorrect measurements or errors in calculating the required quantity by the customer.
+                    </Text>
+                    <Text style={styles.paragraph}>
+                        We suggest always adding an extra 10-15% to the total calculated to cover pattern wastage (repeat) and potential installation errors.
+                    </Text>
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>4. Defects and Damages</Text>
+                    <Text style={styles.paragraph}>
+                        Inspect your order immediately upon receipt. If you detect any visible defect or shipping damage, you must notify us within 48 hours of receipt, sending photos of the packaging and the damaged product.
+                    </Text>
+                    <Text style={styles.paragraph}>
+                        Claims for defects will not be accepted after the wallpaper has been cut or installed. It is the installer's responsibility to verify the material quality before installation. Installing the product constitutes acceptance of its quality.
+                    </Text>
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>5. Installation</Text>
+                    <Text style={styles.paragraph}>
+                        Vizzaro is only the material supplier. We assume no responsibility for installation errors, improper surface preparation, or labor costs.
                     </Text>
                 </View>
 

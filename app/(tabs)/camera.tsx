@@ -78,18 +78,18 @@ export default function CameraScreen() {
     async function processVisualizerFlow(imageBase64: string, selectedWallpaper: any) {
         console.log('=== AI PROCESSING START ===');
         try {
-            setProcessingStep('Preparando imágenes...');
+            setProcessingStep('Preparing images...');
             // 1. Compress user image
             const compressedUserImage = await compressBase64Image(imageBase64, 1280);
 
             // 2. Prepare wallpaper image
             const selectedImageUrl = selectedWallpaper.imageUrl;
-            setProcessingStep('Obteniendo papel tapiz...');
+            setProcessingStep('Fetching wallpaper...');
             let wallpaperBase64 = await fetchImageAsBase64(selectedImageUrl);
             wallpaperBase64 = await compressBase64Image(wallpaperBase64, 1280);
 
             // 3. Process
-            setProcessingStep('Procesando con IA...');
+            setProcessingStep('Processing with AI...');
             const resultBase64 = await processImageWithAI(compressedUserImage, wallpaperBase64);
 
             return {
@@ -127,7 +127,7 @@ export default function CameraScreen() {
     const processCapturedImage = async (uri: string) => {
         try {
             setIsProcessing(true);
-            setProcessingStep('Comprimiendo...');
+            setProcessingStep('Compressing...');
 
             // Initial compression just to get base64
             const compressed = await compressImage(uri);
@@ -198,7 +198,7 @@ export default function CameraScreen() {
 
         } catch (error) {
             console.error('Processing error:', error);
-            Alert.alert('Error', 'No se pudo procesar.');
+            Alert.alert('Error', 'Could not process.');
         } finally {
             setIsProcessing(false);
         }
@@ -217,7 +217,7 @@ export default function CameraScreen() {
             }
         } catch (error) {
             console.error('Camera error:', error);
-            Alert.alert('Error', 'No se pudo tomar la foto.');
+            Alert.alert('Error', 'Could not take photo.');
         }
     };
 
@@ -234,7 +234,7 @@ export default function CameraScreen() {
             }
         } catch (error) {
             console.error('Picker error:', error);
-            Alert.alert('Error', 'Error al seleccionar imagen.');
+            Alert.alert('Error', 'Error selecting image.');
         }
     };
 
@@ -242,9 +242,9 @@ export default function CameraScreen() {
     if (!permission.granted) {
         return (
             <View style={styles.container}>
-                <Text style={{ textAlign: 'center', marginTop: 50 }}>Permiso de cámara necesario</Text>
+                <Text style={{ textAlign: 'center', marginTop: 50 }}>Camera permission required</Text>
                 <TouchableOpacity onPress={requestPermission} style={styles.button}>
-                    <Text style={styles.text}>Otorgar Permiso</Text>
+                    <Text style={styles.text}>Grant Permission</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -263,7 +263,7 @@ export default function CameraScreen() {
                     <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
                         <Ionicons name="close" size={28} color="white" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Escanear Habitación</Text>
+                    <Text style={styles.headerTitle}>Scan Room</Text>
                     <View style={{ width: 28 }} />
                 </View>
 

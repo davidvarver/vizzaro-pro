@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 export default function CartScreen() {
     const router = useRouter();
     const { cartItems, removeFromCart, updateQuantity, getGrandTotal, initialize } = useCartStore();
+    const { cart, common } = require('@/utils/units').translations;
 
     useEffect(() => {
         initialize();
@@ -16,7 +17,7 @@ export default function CartScreen() {
 
     const handleCheckout = () => {
         if (cartItems.length === 0) {
-            Alert.alert('Carrito Vacío', 'Agrega productos antes de continuar.');
+            Alert.alert('Cart Empty', 'Please add products before continuing.');
             return;
         }
         router.push('/checkout');
@@ -28,14 +29,14 @@ export default function CartScreen() {
             <View style={styles.details}>
                 <Text style={styles.name} numberOfLines={1}>{item.wallpaper.name}</Text>
                 <Text style={styles.type}>
-                    {item.purchaseType === 'sample' ? 'Muestra' : 'Rollos'}
+                    {item.purchaseType === 'sample' ? 'Sample' : 'Rolls'}
                 </Text>
                 <View style={styles.priceRow}>
                     <Text style={styles.price}>
                         ${(item.purchaseType === 'sample' ? 5.00 : item.wallpaper.price).toFixed(2)}
                     </Text>
                     {item.purchaseType === 'roll' && (
-                        <Text style={styles.subtext}>x{item.rollsNeeded} rollos</Text>
+                        <Text style={styles.subtext}>x{item.rollsNeeded} rolls</Text>
                     )}
                 </View>
             </View>
@@ -68,15 +69,15 @@ export default function CartScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Mi Carrito</Text>
+                <Text style={styles.title}>{cart.title}</Text>
             </View>
 
             {cartItems.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Ionicons name="cart-outline" size={64} color="#ccc" />
-                    <Text style={styles.emptyText}>Tu carrito está vacío</Text>
+                    <Text style={styles.emptyText}>{cart.empty}</Text>
                     <TouchableOpacity onPress={() => router.push('/')} style={styles.shopBtn}>
-                        <Text style={styles.shopBtnText}>Ir al Catálogo</Text>
+                        <Text style={styles.shopBtnText}>{cart.continueShopping}</Text>
                     </TouchableOpacity>
                 </View>
             ) : (
@@ -89,11 +90,11 @@ export default function CartScreen() {
                     />
                     <View style={styles.footer}>
                         <View style={styles.totalRow}>
-                            <Text style={styles.totalLabel}>Total</Text>
+                            <Text style={styles.totalLabel}>{cart.total}</Text>
                             <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
                         </View>
                         <TouchableOpacity style={styles.checkoutBtn} onPress={handleCheckout}>
-                            <Text style={styles.checkoutText}>Proceder al Pago</Text>
+                            <Text style={styles.checkoutText}>{cart.checkout}</Text>
                         </TouchableOpacity>
                     </View>
                 </>

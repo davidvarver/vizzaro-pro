@@ -13,8 +13,10 @@ const ITEM_WIDTH = width / 2;
 export default function HomeScreen() {
     const router = useRouter();
     const { wallpapers, isLoading, error, loadWallpapers } = useWallpapersStore();
-    const [selectedCategory, setSelectedCategory] = useState("Todos");
-    const [selectedColor, setSelectedColor] = useState("Todos");
+    const { home, common } = require('@/utils/units').translations;
+    // We map internal category names to display names if needed, but for now we update state init
+    const [selectedCategory, setSelectedCategory] = useState(home.filters.all);
+    const [selectedColor, setSelectedColor] = useState(home.filters.colors.all);
 
     // Carousel State
     const [heroIndex, setHeroIndex] = useState(0);
@@ -33,19 +35,25 @@ export default function HomeScreen() {
         return () => clearInterval(interval);
     }, [heroWallpapers]);
 
-    const categories = ["Todos", "Nuevos", "Florales", "Texturas", "Geométricos"];
+    const categories = [
+        home.filters.all,
+        home.filters.new,
+        home.filters.floral,
+        home.filters.texture,
+        home.filters.geometric
+    ];
 
     // Color Map for UI
     const colors = [
-        { name: "Todos", hex: "transparent" },
-        { name: "Blanco", hex: "#FFFFFF" },
-        { name: "Beige", hex: "#F5F5DC" },
-        { name: "Gris", hex: "#808080" },
-        { name: "Negro", hex: "#000000" },
-        { name: "Dorado", hex: "#FFD700" },
-        { name: "Verde", hex: "#4CAF50" },
-        { name: "Azul", hex: "#2196F3" },
-        { name: "Rosa", hex: "#FFC0CB" }
+        { name: home.filters.colors.all, hex: "transparent" },
+        { name: home.filters.colors.white, hex: "#FFFFFF" },
+        { name: home.filters.colors.beige, hex: "#F5F5DC" },
+        { name: home.filters.colors.grey, hex: "#808080" },
+        { name: home.filters.colors.black, hex: "#000000" },
+        { name: home.filters.colors.gold, hex: "#FFD700" },
+        { name: home.filters.colors.green, hex: "#4CAF50" },
+        { name: home.filters.colors.blue, hex: "#2196F3" },
+        { name: home.filters.colors.pink, hex: "#FFC0CB" }
     ];
 
     // Helper: Remove accents and lower case
@@ -54,15 +62,16 @@ export default function HomeScreen() {
     };
 
     // Color Mapping (Moved out for reuse)
+    // We map English display names to known data values (which might still be mixed/Spanish in DB)
     const colorMap: Record<string, string[]> = {
-        "Blanco": ["white", "blanco", "blanca", "off-white"],
-        "Beige": ["beige", "crema", "cream"],
-        "Gris": ["grey", "gray", "gris", "plata"],
-        "Negro": ["black", "negro", "negra"],
-        "Dorado": ["gold", "dorado", "oro"],
-        "Verde": ["green", "verde"],
-        "Azul": ["blue", "azul", "celeste", "navy"],
-        "Rosa": ["pink", "rosa", "rosado"]
+        [home.filters.colors.white]: ["white", "blanco", "blanca", "off-white"],
+        [home.filters.colors.beige]: ["beige", "crema", "cream"],
+        [home.filters.colors.grey]: ["grey", "gray", "gris", "plata"],
+        [home.filters.colors.black]: ["black", "negro", "negra"],
+        [home.filters.colors.gold]: ["gold", "dorado", "oro"],
+        [home.filters.colors.green]: ["green", "verde"],
+        [home.filters.colors.blue]: ["blue", "azul", "celeste", "navy"],
+        [home.filters.colors.pink]: ["pink", "rosa", "rosado"]
     };
 
     // Dynamic Available Colors
@@ -74,9 +83,9 @@ export default function HomeScreen() {
             });
         });
 
-        // Always show "Todos" + only colors that exist in the loaded wallpapers
+        // Always show "All" + only colors that exist in the loaded wallpapers
         return colors.filter(uiColor => {
-            if (uiColor.name === "Todos") return true;
+            if (uiColor.name === home.filters.all) return true;
 
             const targets = colorMap[uiColor.name] || [uiColor.name.toLowerCase()];
             // Check if ANY of the targets match ANY of the found colors
@@ -97,15 +106,15 @@ export default function HomeScreen() {
         const filtered = wallpapers.filter(w => {
             // 1. Category Filter
             let matchesCategory = true;
-            if (selectedCategory !== 'Todos' && selectedCategory !== 'Nuevos') {
+            if (selectedCategory !== home.filters.all && selectedCategory !== home.filters.new) {
                 const catName = normalize(w.category || "");
                 const itemName = normalize(w.name || "");
 
                 // Simple mapping for categories
                 let searchTerm = "";
-                if (selectedCategory === "Florales") searchTerm = "floral";
-                if (selectedCategory === "Texturas") searchTerm = "textur";
-                if (selectedCategory === "Geométricos") searchTerm = "geometr"; // Partial matches "Geometric"
+                if (selectedCategory === home.filters.floral) searchTerm = "floral";
+                if (selectedCategory === home.filters.texture) searchTerm = "textur"; // Works for textura/texture
+                if (selectedCategory === home.filters.geometric) searchTerm = "geometr"; // Partial matches "Geometric"
 
                 // Fallback: If no mapping, use the category name itself
                 if (!searchTerm) searchTerm = normalize(selectedCategory);
@@ -115,7 +124,7 @@ export default function HomeScreen() {
 
             // 2. Color Filter
             let matchesColor = true;
-            if (selectedColor !== 'Todos' && w.colors) {
+            if (selectedColor !== home.filters.colors.all && w.colors) {
                 const mapped = colorMap[selectedColor] || [normalize(selectedColor)];
                 const wColorsNorm = w.colors.map(c => normalize(c));
                 matchesColor = mapped.some(m => wColorsNorm.includes(m));
@@ -126,7 +135,7 @@ export default function HomeScreen() {
 
         // Step 2: Deduplicate by Group (Show only one variant per group)
         // IMPORTANT: If a specific color is selected, we naturally only show that variant!
-        // But if "Todos" is selected (or no color filter), we want to deduplicate.
+        // But if "All" is selected (or no color filter), we want to deduplicate.
 
         const uniqueMap = new Map();
         filtered.forEach(w => {
@@ -144,10 +153,10 @@ export default function HomeScreen() {
         return Array.from(uniqueMap.values());
     }, [wallpapers, selectedCategory, selectedColor]);
 
-    // Special case for "Nuevos" to limit results if no other filter applies? 
-    // Actually, we should use filteredWallpapers even for "Nuevos" to ensure deduplication applies.
+    // Special case for "New" to limit results if no other filter applies?
+    // Actually, we should use filteredWallpapers even for "New" to ensure deduplication applies.
     const displayedWallpapers = React.useMemo(() => {
-        if (selectedCategory === 'Nuevos') {
+        if (selectedCategory === home.filters.new) {
             // Return first 6 items from the deduplicated list
             return filteredWallpapers.slice(0, 6);
         }
@@ -173,8 +182,8 @@ export default function HomeScreen() {
                             colors={['transparent', 'rgba(0,0,0,0.6)']}
                             style={styles.heroOverlay}
                         >
-                            <Text style={styles.heroTitle}>ELEGANCIA ATEMPORAL</Text>
-                            <Text style={styles.heroSubtitle}>Transforma cada rincón de tu hogar.</Text>
+                            <Text style={styles.heroTitle}>{home.heroTitle}</Text>
+                            <Text style={styles.heroSubtitle}>{home.heroSubtitle}</Text>
 
                             {/* Pagination Dots */}
                             <View style={styles.paginationConfig}>
@@ -190,7 +199,7 @@ export default function HomeScreen() {
                             </View>
 
                             <TouchableOpacity style={styles.heroButton} onPress={() => router.push(`/wallpaper/${currentHero.id}`)}>
-                                <Text style={styles.heroButtonText}>DESCUBRIR</Text>
+                                <Text style={styles.heroButtonText}>{home.heroButton}</Text>
                             </TouchableOpacity>
                         </LinearGradient>
                     </View>
@@ -201,8 +210,8 @@ export default function HomeScreen() {
                     <View style={styles.visContent}>
                         <Ionicons name="scan-outline" size={28} color="black" />
                         <View style={{ marginLeft: 15 }}>
-                            <Text style={styles.visTitle}>VISUALIZA EN TU HOGAR</Text>
-                            <Text style={styles.visSubtitle}>Prueba nuestros papeles con IA en tu pared.</Text>
+                            <Text style={styles.visTitle}>{home.visualizerTitle}</Text>
+                            <Text style={styles.visSubtitle}>{home.visualizerSubtitle}</Text>
                         </View>
                     </View>
                     <Ionicons name="arrow-forward" size={24} color="black" />
@@ -249,7 +258,7 @@ export default function HomeScreen() {
                     ))}
                 </ScrollView>
 
-                <Text style={styles.sectionTitle}>NUESTRA COLECCIÓN</Text>
+                <Text style={styles.sectionTitle}>{home.collectionTitle}</Text>
             </View>
         );
     };
@@ -273,7 +282,7 @@ export default function HomeScreen() {
             </View>
             <View style={styles.cardContent}>
                 <Text style={styles.name} numberOfLines={1}>{item.name.toUpperCase()}</Text>
-                <Text style={styles.price}>${item.price.toFixed(2)} /rollo</Text>
+                <Text style={styles.price}>${item.price.toFixed(2)} {common.pricePerRoll || "/roll"}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -296,7 +305,7 @@ export default function HomeScreen() {
                     </TouchableOpacity>
                     <Text style={styles.logoText}>VIZZARO PRO</Text>
                     <View style={styles.navIcons}>
-                        <TouchableOpacity onPress={() => router.push('/search')} style={{ marginRight: 15 }}>
+                        <TouchableOpacity onPress={() => router.push('/search' as any)} style={{ marginRight: 15 }}>
                             <Ionicons name="search-outline" size={24} color="black" />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => router.push('/cart')}>

@@ -29,17 +29,20 @@ export default function WallpaperDetailScreen() {
         }
     }, [id, getWallpaperById]);
 
+    const { product } = require('@/utils/units').translations;
+    const { formatDimension, cmToInches } = require('@/utils/units');
+
     const handleAddToCart = () => {
         if (wallpaper) {
-            addToCart(wallpaper, 1, 5.33);
-            alert('Agregado al carrito');
+            addToCart(wallpaper, 1, 5.33); // Keep price calc as is for now
+            alert('Added to cart');
         }
     };
 
     const handleAddToFavorites = () => {
         if (wallpaper) {
             addToFavorites(wallpaper.name, 'General', wallpaper); // Default room type
-            alert('Agregado a favoritos');
+            alert('Added to favorites');
         }
     };
 
@@ -52,9 +55,6 @@ export default function WallpaperDetailScreen() {
 
     const allVariants = React.useMemo(() => {
         if (!wallpaper || !wallpaper.group) return [];
-        // Include current wallpaper to sort them nicely? 
-        // Or just use this to build the list.
-        // Let's get ALL variants including self
         return wallpapers.filter(w => w.group === wallpaper.group);
     }, [wallpaper, wallpapers]);
 
@@ -123,7 +123,7 @@ export default function WallpaperDetailScreen() {
                     {/* Header Info */}
                     <Text style={styles.category}>{wallpaper.category.toUpperCase()}</Text>
                     <Text style={styles.title}>{wallpaper.name.toUpperCase()}</Text>
-                    <Text style={styles.price}>${wallpaper.price.toFixed(2)} <Text style={styles.perRoll}>/ ROLLO</Text></Text>
+                    <Text style={styles.price}>${wallpaper.price.toFixed(2)} <Text style={styles.perRoll}> {product.pricePerRoll.toUpperCase()}</Text></Text>
 
                     {/* Variant Selector (If variants exist) */}
                     {allVariants.length > 1 && (
@@ -138,7 +138,6 @@ export default function WallpaperDetailScreen() {
                                             variant.id === wallpaper.id && styles.variantOptionActive
                                         ]}
                                         onPress={() => {
-                                            // Update local state without full reload if possible, but router push is safer for deep linking
                                             router.replace(`/wallpaper/${variant.id}`);
                                         }}
                                     >
@@ -155,51 +154,51 @@ export default function WallpaperDetailScreen() {
                     {/* Actions */}
                     <TouchableOpacity style={styles.visualizeButton} onPress={handleVisualize}>
                         <Ionicons name="scan-outline" size={20} color="white" style={{ marginRight: 10 }} />
-                        <Text style={styles.visualizeText}>VISUALIZA EN TU HOGAR</Text>
+                        <Text style={styles.visualizeText}>{product.visualize.toUpperCase()}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
-                        <Text style={styles.cartText}>AGREGAR AL CARRITO</Text>
+                        <Text style={styles.cartText}>{product.addToCart}</Text>
                     </TouchableOpacity>
 
                     {/* Description */}
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>DESCRIPCIÓN</Text>
+                        <Text style={styles.sectionTitle}>{product.description}</Text>
                         <Text style={styles.description}>
-                            {wallpaper.description || 'Diseño exclusivo de alta calidad, ideal para transformar cualquier espacio con elegancia y estilo.'}
+                            {wallpaper.description || 'Exclusive high-quality design, ideal for transforming any space with elegance and style.'}
                         </Text>
                     </View>
 
                     {/* Specifications */}
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>ESPECIFICACIONES</Text>
+                        <Text style={styles.sectionTitle}>{product.specifications}</Text>
 
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>ESTILO</Text>
+                            <Text style={styles.specLabel}>STYLE</Text>
                             <Text style={styles.specValue}>{wallpaper.style}</Text>
                         </View>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>MATERIAL</Text>
-                            <Text style={styles.specValue}>{wallpaper.specifications?.material || 'No tejido'}</Text>
+                            <Text style={styles.specLabel}>{product.material.toUpperCase()}</Text>
+                            <Text style={styles.specValue}>{wallpaper.specifications?.material || 'Non-Woven'}</Text>
                         </View>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>DIMENSIONES</Text>
+                            <Text style={styles.specLabel}>{product.dimensions.toUpperCase()}</Text>
                             <Text style={styles.specValue}>
-                                {wallpaper.dimensions?.width}m x {wallpaper.dimensions?.height}m
+                                {formatDimension(wallpaper.dimensions?.width, 'm')} x {formatDimension(wallpaper.dimensions?.height, 'm')} (roll)
                             </Text>
                         </View>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>LAVABLE</Text>
-                            <Text style={styles.specValue}>{wallpaper.specifications?.washable ? 'Sí' : 'No'}</Text>
+                            <Text style={styles.specLabel}>{product.washability.toUpperCase()}</Text>
+                            <Text style={styles.specValue}>{wallpaper.specifications?.washable ? 'Yes' : 'No'}</Text>
                         </View>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>COLORES</Text>
+                            <Text style={styles.specLabel}>COLORS</Text>
                             <Text style={styles.specValue}>{wallpaper.colors?.join(', ')}</Text>
                         </View>
                         <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>REPETICIÓN</Text>
+                            <Text style={styles.specLabel}>{product.patternRepeat.toUpperCase()}</Text>
                             <Text style={styles.specValue}>
-                                {wallpaper.patternRepeat ? `${wallpaper.patternRepeat} cm` : '0 cm'}
+                                {wallpaper.patternRepeat ? cmToInches(wallpaper.patternRepeat) : '0"'}
                             </Text>
                         </View>
                     </View>

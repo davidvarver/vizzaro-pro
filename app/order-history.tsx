@@ -52,17 +52,17 @@ export default function OrderHistoryScreen() {
   const getStatusText = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'Pendiente';
+        return 'Pending';
       case 'confirmed':
-        return 'Confirmado';
+        return 'Confirmed';
       case 'preparing':
-        return 'Preparando';
+        return 'Preparing';
       case 'ready':
-        return 'Listo';
+        return 'Ready';
       case 'delivered':
-        return 'Entregado';
+        return 'Delivered';
       case 'cancelled':
-        return 'Cancelado';
+        return 'Cancelled';
       default:
         return status;
     }
@@ -73,7 +73,7 @@ export default function OrderHistoryScreen() {
       <View style={styles.container}>
         <Stack.Screen
           options={{
-            title: 'Historial de Pedidos',
+            title: 'Order History',
             headerStyle: { backgroundColor: Colors.light.background },
             headerTintColor: Colors.light.text,
             headerLeft: () => (
@@ -85,15 +85,15 @@ export default function OrderHistoryScreen() {
         />
         <View style={styles.emptyContainer}>
           <Package size={64} color={Colors.light.textSecondary} />
-          <Text style={styles.emptyTitle}>Inicia sesión</Text>
+          <Text style={styles.emptyTitle}>Sign In</Text>
           <Text style={styles.emptyText}>
-            Debes iniciar sesión para ver tu historial de pedidos
+            You must sign in to view your order history
           </Text>
           <TouchableOpacity
             style={styles.loginButton}
             onPress={() => router.push('/auth/login' as any)}
           >
-            <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+            <Text style={styles.loginButtonText}>Sign In</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -105,7 +105,7 @@ export default function OrderHistoryScreen() {
       <View style={styles.container}>
         <Stack.Screen
           options={{
-            title: 'Historial de Pedidos',
+            title: 'Order History',
             headerStyle: { backgroundColor: Colors.light.background },
             headerTintColor: Colors.light.text,
             headerLeft: () => (
@@ -117,7 +117,7 @@ export default function OrderHistoryScreen() {
         />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.light.primary} />
-          <Text style={styles.loadingText}>Cargando pedidos...</Text>
+          <Text style={styles.loadingText}>Loading orders...</Text>
         </View>
       </View>
     );
@@ -127,7 +127,7 @@ export default function OrderHistoryScreen() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: 'Historial de Pedidos',
+          title: 'Order History',
           headerStyle: { backgroundColor: Colors.light.background },
           headerTintColor: Colors.light.text,
           headerLeft: () => (
@@ -141,15 +141,15 @@ export default function OrderHistoryScreen() {
         {userOrders.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Package size={64} color={Colors.light.textSecondary} />
-            <Text style={styles.emptyTitle}>No hay pedidos</Text>
+            <Text style={styles.emptyTitle}>No orders</Text>
             <Text style={styles.emptyText}>
-              Aún no has realizado ningún pedido. ¡Comienza a comprar!
+              You haven't placed any orders yet. Start shopping!
             </Text>
             <TouchableOpacity
               style={styles.shopButton}
               onPress={() => router.push('/' as any)}
             >
-              <Text style={styles.shopButtonText}>Explorar Catálogo</Text>
+              <Text style={styles.shopButtonText}>Explore Catalog</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -159,9 +159,9 @@ export default function OrderHistoryScreen() {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.header}>
-              <Text style={styles.headerTitle}>Mis Pedidos</Text>
+              <Text style={styles.headerTitle}>My Orders</Text>
               <Text style={styles.headerSubtitle}>
-                {userOrders.length} {userOrders.length === 1 ? 'pedido' : 'pedidos'}
+                {userOrders.length} {userOrders.length === 1 ? 'order' : 'orders'}
               </Text>
             </View>
 
@@ -169,7 +169,7 @@ export default function OrderHistoryScreen() {
               <View key={order.id} style={styles.orderCard}>
                 <View style={styles.orderHeader}>
                   <View style={styles.orderHeaderLeft}>
-                    <Text style={styles.orderId}>Pedido #{order.id}</Text>
+                    <Text style={styles.orderId}>Order #{order.id}</Text>
                     <View
                       style={[
                         styles.statusBadge,
@@ -189,7 +189,7 @@ export default function OrderHistoryScreen() {
                 <View style={styles.orderDetail}>
                   <Calendar size={16} color={Colors.light.textSecondary} />
                   <Text style={styles.orderDetailText}>
-                    {new Date(order.createdAt).toLocaleDateString('es-ES', {
+                    {new Date(order.createdAt).toLocaleDateString('en-US', {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric',
@@ -201,8 +201,8 @@ export default function OrderHistoryScreen() {
                   <MapPin size={16} color={Colors.light.textSecondary} />
                   <Text style={styles.orderDetailText}>
                     {order.deliveryMethod === 'delivery'
-                      ? `Envío: ${order.customerAddress}`
-                      : 'Recoger en tienda'}
+                      ? `Shipping: ${order.customerAddress}`
+                      : 'Store Pickup'}
                   </Text>
                 </View>
 
@@ -210,7 +210,7 @@ export default function OrderHistoryScreen() {
                   <View style={styles.orderDetail}>
                     <CreditCard size={16} color={Colors.light.textSecondary} />
                     <Text style={styles.orderDetailText}>
-                      {order.paymentMethod === 'zelle' ? 'Zelle' : 'Tarjeta de Crédito'}
+                      {order.paymentMethod === 'zelle' ? 'Zelle' : 'Credit Card'}
                       {order.paymentMethod === 'zelle' && order.paymentReference && (
                         <Text style={styles.referenceText}>
                           {' '}
@@ -223,7 +223,7 @@ export default function OrderHistoryScreen() {
 
                 <View style={styles.itemsContainer}>
                   <Text style={styles.itemsTitle}>
-                    Productos ({order.items.length}):
+                    Products ({order.items.length}):
                   </Text>
                   {order.items.map((item, index) => (
                     <View key={index} style={styles.itemRow}>
@@ -237,7 +237,7 @@ export default function OrderHistoryScreen() {
 
                 {order.notes && (
                   <View style={styles.notesContainer}>
-                    <Text style={styles.notesLabel}>Notas:</Text>
+                    <Text style={styles.notesLabel}>Notes:</Text>
                     <Text style={styles.notesText}>{order.notes}</Text>
                   </View>
                 )}

@@ -54,7 +54,7 @@ export default function WallpaperResultScreen() {
     const handleAddToCart = () => {
         if (!currentWallpaper) return;
         addToCart(currentWallpaper, 1, 5.33);
-        Alert.alert('Éxito', 'Agregado al carrito');
+        Alert.alert('Success', 'Added to cart');
     };
 
     const [isRegenerating, setIsRegenerating] = useState(false);
@@ -93,7 +93,7 @@ export default function WallpaperResultScreen() {
 
         } catch (error) {
             console.error(error);
-            Alert.alert('Error', 'No se pudo generar la visualización.');
+            Alert.alert('Error', 'Could not generate visualization.');
         } finally {
             setIsRegenerating(false);
         }
@@ -102,9 +102,9 @@ export default function WallpaperResultScreen() {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{
-                title: 'Visualizador',
+                title: 'Visualizer',
                 headerShown: true,
-                headerBackTitle: 'Cámara',
+                headerBackTitle: 'Camera',
                 headerTintColor: Colors.light.tint
             }} />
 
@@ -128,25 +128,25 @@ export default function WallpaperResultScreen() {
                         {isRegenerating ? (
                             <View style={styles.processingBadge}>
                                 <ActivityIndicator size="small" color="white" />
-                                <Text style={styles.processingText}>Generando nueva vista...</Text>
+                                <Text style={styles.processingText}>Generating new view...</Text>
                             </View>
                         ) : selectedWallpaperId !== initialWallpaperId ? (
                             <>
                                 {room.maskImage === "MOCK_GRADIENT_MASK_ID" && (
                                     <View style={[styles.processingBadge, { top: 60, backgroundColor: 'rgba(0,0,0,0.6)' }]}>
                                         <ActivityIndicator size="small" color="#FFD700" />
-                                        <Text style={styles.processingText}>Escaneando geometría...</Text>
+                                        <Text style={styles.processingText}>Scanning geometry...</Text>
                                     </View>
                                 )}
                                 <TouchableOpacity style={styles.generateButton} onPress={handleRegenerate}>
                                     <Ionicons name="sparkles" size={20} color="white" />
-                                    <Text style={styles.generateButtonText}>Visualizar con IA</Text>
+                                    <Text style={styles.generateButtonText}>Visualize with AI</Text>
                                 </TouchableOpacity>
                             </>
                         ) : !aiProcessingFailed && (
                             <View style={styles.processingBadge}>
                                 <ActivityIndicator size="small" color="white" />
-                                <Text style={styles.processingText}>Mejorando con IA...</Text>
+                                <Text style={styles.processingText}>Improving with AI...</Text>
                             </View>
                         )}
                     </View>
@@ -159,20 +159,20 @@ export default function WallpaperResultScreen() {
                 ) : (
                     <View style={{ flex: 1, backgroundColor: '#f0f0f0', justifyContent: 'center', alignItems: 'center' }}>
                         <ActivityIndicator color={Colors.light.tint} />
-                        <Text style={{ marginTop: 10, color: '#666' }}>Cargando imagen...</Text>
+                        <Text style={{ marginTop: 10, color: '#666' }}>Loading image...</Text>
                     </View>
                 )}
 
                 {(!shouldUseOverlay && !showProcessedImage && !currentWallpaper) && (
                     <View style={styles.instructionOverlay}>
-                        <Text style={styles.instructionText}>Selecciona un papel tapiz para visualizar</Text>
+                        <Text style={styles.instructionText}>Select a wallpaper to visualize</Text>
                     </View>
                 )}
             </View>
 
             <View style={styles.controlsContainer}>
                 <View style={styles.wallpaperListContainer}>
-                    <Text style={styles.sectionTitle}>Elegir Papel Tapiz</Text>
+                    <Text style={styles.sectionTitle}>Choose Wallpaper</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.wallpaperList}>
                         {wallpapers.map(wp => (
                             <TouchableOpacity
@@ -198,7 +198,7 @@ export default function WallpaperResultScreen() {
                         </View>
                         <TouchableOpacity style={styles.addToCartBtn} onPress={handleAddToCart}>
                             <Ionicons name="cart" size={20} color="white" />
-                            <Text style={styles.addToCartText}>Agregar</Text>
+                            <Text style={styles.addToCartText}>Add</Text>
                         </TouchableOpacity>
                     </View>
                 )}

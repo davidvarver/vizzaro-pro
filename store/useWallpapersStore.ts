@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 import { Wallpaper, wallpapers as defaultWallpapers } from '@/constants/wallpapers';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || '';
-const STORAGE_KEY = 'wallpapers_catalog';
+const STORAGE_KEY = 'wallpapers_catalog_en_v1';
 
 // New interface for saved user rooms
 export interface UserRoom {
@@ -473,7 +473,7 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
             id: Date.now().toString(),
             image,
             createdAt: Date.now(),
-            name: `Habitación ${userRooms.length + 1}`
+            name: `Room ${userRooms.length + 1}`
         };
 
         const updatedRooms = [newRoom, ...userRooms];

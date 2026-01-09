@@ -61,14 +61,14 @@ export default function FavoritesScreen() {
         <SafeAreaView style={styles.container}>
             <Stack.Screen options={{ headerShown: false }} />
             <View style={styles.header}>
-                <Text style={styles.title}>Mis Proyectos</Text>
+                <Text style={styles.title}>My Projects</Text>
             </View>
 
             {favoriteProjects.length === 0 ? (
                 <View style={styles.emptyState}>
                     <Ionicons name="heart-outline" size={64} color="#ccc" />
-                    <Text style={styles.emptyText}>No tienes proyectos guardados</Text>
-                    <Text style={styles.subText}>Guarda tus favoritos para verlos aquí</Text>
+                    <Text style={styles.emptyText}>No saved projects</Text>
+                    <Text style={styles.subText}>Save your favorites to see them here</Text>
                 </View>
             ) : (
                 <FlatList
