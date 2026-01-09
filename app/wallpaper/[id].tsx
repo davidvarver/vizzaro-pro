@@ -13,21 +13,29 @@ const { width } = Dimensions.get('window');
 export default function WallpaperDetailScreen() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
-    const { getWallpaperById, isLoading } = useWallpapersStore();
+    const { wallpapers, loadWallpapers, isLoading } = useWallpapersStore();
     const { addToCart } = useCartStore();
     const { addToFavorites } = useFavoritesStore();
 
     const [wallpaper, setWallpaper] = useState<any>(null);
     const [activeImage, setActiveImage] = useState(0);
 
+    // 1. Auto-load data if missing (e.g. reload on detail page)
+    useEffect(() => {
+        if (wallpapers.length === 0) {
+            loadWallpapers();
+        }
+    }, [wallpapers.length, loadWallpapers]);
+
+    // 2. React to data changes (once loaded)
     useEffect(() => {
         if (typeof id === 'string') {
-            const wp = getWallpaperById(id);
+            const wp = wallpapers.find(w => w.id === id);
             if (wp) {
                 setWallpaper(wp);
             }
         }
-    }, [id, getWallpaperById]);
+    }, [id, wallpapers]);
 
     const { product } = require('@/utils/units').translations;
     const { formatDimension, cmToInches } = require('@/utils/units');
@@ -47,7 +55,6 @@ export default function WallpaperDetailScreen() {
     };
 
     // Variant Logic
-    const { wallpapers } = useWallpapersStore();
     const relatedVariants = React.useMemo(() => {
         if (!wallpaper || !wallpaper.group) return [];
         return wallpapers.filter(w => w.group === wallpaper.group && w.id !== wallpaper.id);
@@ -65,6 +72,18 @@ export default function WallpaperDetailScreen() {
             params: { wallpaperId: wallpaper.id }
         });
     };
+
+    // 3. Handle "Not Found" state
+    if (!isLoading && wallpapers.length > 0 && !wallpaper) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text style={{ marginBottom: 20 }}>Product not found</Text>
+                <TouchableOpacity onPress={() => router.replace('/(tabs)/home')} style={styles.cartButton}>
+                    <Text style={styles.cartText}>GO HOME</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 
     if (!wallpaper) {
         return (
