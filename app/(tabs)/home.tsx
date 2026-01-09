@@ -21,13 +21,30 @@ export default function HomeScreen() {
     // Carousel State
     const [heroIndex, setHeroIndex] = useState(0);
     const heroWallpapers = React.useMemo(() => {
-        const standard = wallpapers.filter(w =>
+        // 1. Filter out mats
+        const candidates = wallpapers.filter(w =>
             !w.category?.toLowerCase().includes('mat') &&
             !w.category?.toLowerCase().includes('tapete') &&
             !w.name.toLowerCase().includes('bath mat') &&
             !w.name.toLowerCase().includes('drying mat') &&
             !w.name.toLowerCase().includes('stone mat')
-        ).slice(0, 5);
+        );
+
+        // 2. Group by model to ensure diversity (avoid showing 5 colors of same pattern)
+        const groups = new Map();
+        candidates.forEach(w => {
+            const key = w.group || w.id;
+            if (!groups.has(key)) {
+                groups.set(key, w); // Just keep the first one found for this group
+            }
+        });
+
+        // 3. Convert to array and Shuffle
+        const distinctModels = Array.from(groups.values())
+            .sort(() => 0.5 - Math.random()); // Simple shuffle
+
+        // 4. Take top 5 distinct models
+        const standard = distinctModels.slice(0, 5);
 
         // Add Bath Mats promo slide
         // We look for a representative image or use a static one if needed
