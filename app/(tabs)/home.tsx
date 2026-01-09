@@ -23,14 +23,18 @@ export default function HomeScreen() {
     const heroWallpapers = React.useMemo(() => {
         const standard = wallpapers.filter(w =>
             !w.category?.toLowerCase().includes('mat') &&
-            !w.category?.toLowerCase().includes('tapete')
+            !w.category?.toLowerCase().includes('tapete') &&
+            !w.name.toLowerCase().includes('bath mat') &&
+            !w.name.toLowerCase().includes('drying mat') &&
+            !w.name.toLowerCase().includes('stone mat')
         ).slice(0, 5);
 
         // Add Bath Mats promo slide
         // We look for a representative image or use a static one if needed
         const bathMatExample = wallpapers.find(w =>
             w.category?.toLowerCase().includes('mat') ||
-            w.category?.toLowerCase().includes('tapete')
+            w.category?.toLowerCase().includes('tapete') ||
+            w.name.toLowerCase().includes('drying mat')
         );
 
         if (bathMatExample) {
@@ -153,7 +157,9 @@ export default function HomeScreen() {
             const isBathMat = w.category?.toLowerCase().includes('mat') ||
                 w.category?.toLowerCase().includes('tapete') ||
                 w.name.toLowerCase().includes('tapete') ||
-                w.name.toLowerCase().includes('bath mat');
+                w.name.toLowerCase().includes('bath mat') ||
+                w.name.toLowerCase().includes('drying mat') ||
+                w.name.toLowerCase().includes('stone mat');
 
             if (isBathMat) return false;
 
