@@ -23,6 +23,8 @@ export default function WallpaperDetailScreen() {
 
     const [wallpaper, setWallpaper] = useState<any>(null);
     const [activeImage, setActiveImage] = useState(0);
+    const [quantity, setQuantity] = useState(1);
+    const [addedToCart, setAddedToCart] = useState(false);
 
     // 1. Auto-load data if missing (e.g. reload on detail page)
     useEffect(() => {
@@ -45,8 +47,17 @@ export default function WallpaperDetailScreen() {
 
     const handleAddToCart = () => {
         if (wallpaper) {
-            addToCart(wallpaper, 1, 5.33); // Keep price calc as is for now
-            alert('Added to cart');
+            addToCart(wallpaper, quantity, 5.33 * quantity);
+            // Show success state briefly
+            setAddedToCart(true);
+            setTimeout(() => setAddedToCart(false), 2000);
+        }
+    };
+
+    const handleOrderSample = () => {
+        if (wallpaper) {
+            addToCart(wallpaper, 1, 0, 'sample');
+            alert('Sample added to cart');
         }
     };
 
@@ -197,13 +208,46 @@ export default function WallpaperDetailScreen() {
 
                         {/* Actions */}
                         <View style={styles.actionContainer}>
+                            {/* Quantity Selector */}
+                            <View style={styles.quantityContainer}>
+                                <Text style={styles.quantityLabel}>QUANTITY:</Text>
+                                <View style={styles.quantityControls}>
+                                    <TouchableOpacity
+                                        style={styles.qtyButton}
+                                        onPress={() => setQuantity(Math.max(1, quantity - 1))}
+                                    >
+                                        <Ionicons name="remove" size={20} color="#000" />
+                                    </TouchableOpacity>
+                                    <View style={styles.qtyInput}>
+                                        <Text style={styles.qtyText}>{quantity}</Text>
+                                    </View>
+                                    <TouchableOpacity
+                                        style={styles.qtyButton}
+                                        onPress={() => setQuantity(quantity + 1)}
+                                    >
+                                        <Ionicons name="add" size={20} color="#000" />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
                             <TouchableOpacity style={styles.visualizeButton} onPress={handleVisualize}>
                                 <Ionicons name="scan-outline" size={18} color="white" style={{ marginRight: 10 }} />
                                 <Text style={styles.visualizeText}>{product.visualize.toUpperCase()}</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
-                                <Text style={styles.cartText}>{product.addToCart.toUpperCase()}</Text>
+                            <TouchableOpacity
+                                style={[styles.cartButton, addedToCart && styles.cartButtonSuccess]}
+                                onPress={handleAddToCart}
+                                disabled={addedToCart}
+                            >
+                                <Text style={[styles.cartText, addedToCart && styles.cartTextSuccess]}>
+                                    {addedToCart ? "ADDED TO CART" : product.addToCart.toUpperCase()}
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.sampleButton} onPress={handleOrderSample}>
+                                <Text style={styles.sampleText}>ORDER A SAMPLE ($5.00)</Text>
+                                <Text style={styles.sampleSubtext}>+ $0.99 shipping</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -521,5 +565,75 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: '#222',
         fontWeight: '400',
+    },
+
+    // Quantity Selector
+    quantityContainer: {
+        marginBottom: 10,
+    },
+    quantityLabel: {
+        fontSize: 11,
+        fontWeight: '600',
+        color: '#333',
+        letterSpacing: 1,
+        marginBottom: 8,
+        textTransform: 'uppercase',
+    },
+    quantityControls: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#ddd',
+        alignSelf: 'flex-start',
+        height: 44,
+    },
+    qtyButton: {
+        width: 44,
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
+    },
+    qtyInput: {
+        width: 60,
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor: '#ddd',
+        backgroundColor: '#fff',
+    },
+    qtyText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
+
+    // Sample Button
+    sampleButton: {
+        marginTop: 10,
+        alignItems: 'center',
+        paddingVertical: 10,
+    },
+    sampleText: {
+        fontSize: 13,
+        fontWeight: '600',
+        color: '#000',
+        textDecorationLine: 'underline',
+        letterSpacing: 1,
+    },
+    sampleSubtext: {
+        fontSize: 11,
+        color: '#666',
+        marginTop: 4,
+    },
+
+    // Success State
+    cartButtonSuccess: {
+        backgroundColor: '#4CAF50',
+        borderColor: '#4CAF50',
+    },
+    cartTextSuccess: {
+        color: '#fff',
     },
 });
