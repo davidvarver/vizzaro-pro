@@ -22,6 +22,7 @@ export default function CheckoutScreen() {
         city: '',
         zip: '',
         phone: '',
+        zelleRef: '',
     });
 
     const [paymentMethod, setPaymentMethod] = useState<'zelle' | 'credit_card'>('zelle');
@@ -32,6 +33,11 @@ export default function CheckoutScreen() {
     const handleCreateOrder = async () => {
         if (!form.name || !form.email || !form.address) {
             Alert.alert('Missing Info', 'Please fill in required fields.');
+            return;
+        }
+
+        if (paymentMethod === 'zelle' && !form.zelleRef) {
+            Alert.alert('Missing Reference', 'Please enter payment reference number.');
             return;
         }
 
@@ -46,7 +52,8 @@ export default function CheckoutScreen() {
                 total: total,
                 status: 'pending' as const,
                 deliveryMethod: 'delivery' as const,
-                paymentMethod: paymentMethod
+                paymentMethod: paymentMethod,
+                paymentReference: form.zelleRef || undefined
             };
 
             const orderId = await createOrder(orderData);
@@ -138,6 +145,20 @@ export default function CheckoutScreen() {
                             <Text style={[styles.paymentText, paymentMethod === 'credit_card' && styles.paymentTextActive]}>Credit Card</Text>
                         </TouchableOpacity>
                     </View>
+
+                    {paymentMethod === 'zelle' && (
+                        <View style={styles.zelleContainer}>
+                            <Text style={styles.zelleInstructions}>
+                                Please send ${total.toFixed(2)} to <Text style={{ fontWeight: 'bold' }}>7326646800</Text> via Zelle.
+                            </Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Zelle Reference Number (Required)"
+                                value={form.zelleRef}
+                                onChangeText={(t) => setForm({ ...form, zelleRef: t })}
+                            />
+                        </View>
+                    )}
                 </View>
 
                 <View style={styles.summary}>
@@ -245,6 +266,18 @@ const styles = StyleSheet.create({
     },
     paymentTextActive: {
         color: '#fff',
+    },
+    zelleContainer: {
+        marginTop: 16,
+        padding: 16,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 8,
+    },
+    zelleInstructions: {
+        fontSize: 14,
+        color: '#333',
+        marginBottom: 12,
+        lineHeight: 20,
     },
     summary: {
         backgroundColor: '#f9f9f9',

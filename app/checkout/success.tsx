@@ -30,7 +30,7 @@ export default function OrderSuccessScreen() {
     const copyToClipboard = async () => {
         if (orderId) {
             await Clipboard.setStringAsync(orderId as string);
-            alert('Número de orden copiado al portapapeles');
+            alert('Order number copied to clipboard');
         }
     };
 
@@ -53,14 +53,14 @@ export default function OrderSuccessScreen() {
                     <CheckCircle size={80} color="#10B981" fill="#D1FAE5" />
                 </View>
 
-                <Text style={styles.title}>¡Gracias por tu compra!</Text>
+                <Text style={styles.title}>Thank you for your purchase!</Text>
                 <Text style={styles.subtitle}>
-                    Tu pedido ha sido recibido y estamos procesándolo.
-                    {order?.customerEmail ? ` Enviamos un correo de confirmación a ${order.customerEmail}.` : ''}
+                    Your order has been received and we are processing it.
+                    {order?.customerEmail ? ` We sent a confirmation email to ${order.customerEmail}.` : ''}
                 </Text>
 
                 <View style={styles.orderInfoCard}>
-                    <Text style={styles.orderLabel}>Número de Orden</Text>
+                    <Text style={styles.orderLabel}>Order Number</Text>
                     <View style={styles.orderNumberContainer}>
                         <Text style={styles.orderNumber}>#{orderId}</Text>
                         <TouchableOpacity onPress={copyToClipboard} style={styles.copyButton}>
@@ -68,27 +68,27 @@ export default function OrderSuccessScreen() {
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.saveNote}>
-                        Guarda este número para rastrear tu pedido.
+                        Save this number to track your order.
                     </Text>
                 </View>
 
                 {order && (
                     <View style={styles.detailsCard}>
-                        <Text style={styles.detailsTitle}>Resumen</Text>
+                        <Text style={styles.detailsTitle}>Summary</Text>
                         <View style={styles.detailRow}>
-                            <Text style={styles.detailLabel}>Total Pagado</Text>
+                            <Text style={styles.detailLabel}>Total Paid</Text>
                             <Text style={styles.detailValue}>${order.total.toFixed(2)}</Text>
                         </View>
                         <View style={styles.detailRow}>
-                            <Text style={styles.detailLabel}>Método de Pago</Text>
+                            <Text style={styles.detailLabel}>Payment Method</Text>
                             <Text style={styles.detailValue}>
-                                {order.paymentMethod === 'zelle' ? 'Zelle Transfer' : 'Tarjeta de Crédito'}
+                                {order.paymentMethod === 'zelle' ? 'Zelle Transfer' : 'Credit Card'}
                             </Text>
                         </View>
                         <View style={styles.detailRow}>
-                            <Text style={styles.detailLabel}>Entrega</Text>
+                            <Text style={styles.detailLabel}>Delivery</Text>
                             <Text style={styles.detailValue}>
-                                {order.deliveryMethod === 'delivery' ? 'Envío a Domicilio' : 'Recoger en Tienda'}
+                                {order.deliveryMethod === 'delivery' ? 'Home Delivery' : 'Store Pickup'}
                             </Text>
                         </View>
                     </View>
@@ -96,13 +96,13 @@ export default function OrderSuccessScreen() {
 
                 <View style={styles.actions}>
                     <TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/profile')}>
-                        <Text style={styles.primaryButtonText}>Ver Mis Pedidos</Text>
+                        <Text style={styles.primaryButtonText}>View My Orders</Text>
                         <ArrowRight size={20} color="#fff" />
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.secondaryButton} onPress={handleContinueShopping}>
                         <Home size={20} color={Colors.light.primary} />
-                        <Text style={styles.secondaryButtonText}>Volver al Inicio</Text>
+                        <Text style={styles.secondaryButtonText}>Back to Home</Text>
                     </TouchableOpacity>
                 </View>
 
