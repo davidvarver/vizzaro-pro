@@ -30,6 +30,7 @@ export default function CameraScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const [isProcessing, setIsProcessing] = useState(false);
     const [processingStep, setProcessingStep] = useState<string>('');
+    const [facing, setFacing] = useState<'back' | 'front'>('back');
     const cameraRef = useRef<CameraView>(null);
 
     useEffect(() => {
@@ -255,6 +256,7 @@ export default function CameraScreen() {
             {isFocused && ( // Only render camera if screen is focused
                 <CameraView
                     style={StyleSheet.absoluteFill}
+                    facing={facing}
                     ref={cameraRef}
                 />
             )}
@@ -276,7 +278,9 @@ export default function CameraScreen() {
                         <View style={styles.captureInner} />
                     </TouchableOpacity>
 
-                    <View style={{ width: 44 }} />
+                    <TouchableOpacity onPress={() => setFacing(f => f === 'back' ? 'front' : 'back')} style={styles.galleryButton}>
+                        <Ionicons name="camera-reverse" size={24} color="white" />
+                    </TouchableOpacity>
                 </View>
             </SafeAreaView>
 
