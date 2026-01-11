@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, StatusBar, Platform } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, StatusBar, Platform, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
@@ -95,15 +95,20 @@ export default function WallpaperDetailScreen() {
     }
 
     const images = wallpaper.imageUrls && wallpaper.imageUrls.length > 0 ? wallpaper.imageUrls : [wallpaper.imageUrl];
+    const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const isLargeScreen = windowWidth > 768;
 
     return (
         <View style={styles.container}>
             <Stack.Screen options={{ headerShown: false }} />
             <StatusBar barStyle="dark-content" />
 
-            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={[
+                styles.scrollContent,
+                isLargeScreen && styles.scrollContentDesktop
+            ]} showsVerticalScrollIndicator={false}>
                 {/* Navbar Overlay */}
-                <View style={styles.navBar}>
+                <View style={isLargeScreen ? styles.navBarDesktop : styles.navBar}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.navButton}>
                         <Ionicons name="arrow-back" size={24} color="black" />
                     </TouchableOpacity>
@@ -112,116 +117,135 @@ export default function WallpaperDetailScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Hero Image / Carousel */}
-                <View style={styles.carouselContainer}>
-                    <ScrollView
-                        horizontal
-                        pagingEnabled
-                        showsHorizontalScrollIndicator={false}
-                        onMomentumScrollEnd={(e) => {
-                            const slide = Math.ceil(e.nativeEvent.contentOffset.x / e.nativeEvent.layoutMeasurement.width);
-                            setActiveImage(slide);
-                        }}
-                    >
-                        {images.map((img: string, index: number) => (
-                            <Image key={index} source={{ uri: img }} style={styles.mainImage} resizeMode="cover" />
-                        ))}
-                    </ScrollView>
-
-                    {/* Pagination Dots */}
-                    {images.length > 1 && (
-                        <View style={styles.pagination}>
-                            {images.map((_: any, index: number) => (
-                                <View key={index} style={[styles.dot, index === activeImage && styles.activeDot]} />
+                <View style={[
+                    styles.mainLayout,
+                    isLargeScreen && styles.mainLayoutDesktop
+                ]}>
+                    {/* Left Column: Image Carousel */}
+                    <View style={[
+                        styles.carouselContainer,
+                        isLargeScreen && styles.carouselContainerDesktop
+                    ]}>
+                        <ScrollView
+                            horizontal
+                            pagingEnabled
+                            showsHorizontalScrollIndicator={false}
+                            onMomentumScrollEnd={(e) => {
+                                const slide = Math.ceil(e.nativeEvent.contentOffset.x / e.nativeEvent.layoutMeasurement.width);
+                                setActiveImage(slide);
+                            }}
+                        >
+                            {images.map((img: string, index: number) => (
+                                <Image
+                                    key={index}
+                                    source={{ uri: img }}
+                                    style={[
+                                        styles.mainImage,
+                                        isLargeScreen ? { width: windowWidth * 0.55, height: windowHeight * 0.85 } : { width: windowWidth, height: 550 }
+                                    ]}
+                                    resizeMode="cover"
+                                />
                             ))}
-                        </View>
-                    )}
-                </View>
+                        </ScrollView>
 
-                <View style={styles.contentContainer}>
-                    {/* Header Info */}
-                    <Text style={styles.category}>{wallpaper.category.toUpperCase()}</Text>
-                    <Text style={styles.title}>{wallpaper.name.toUpperCase()}</Text>
-                    <Text style={styles.price}>${wallpaper.price.toFixed(2)} <Text style={styles.perRoll}> {product.pricePerRoll.toUpperCase()}</Text></Text>
-
-                    {/* Variant Selector (If variants exist) */}
-                    {allVariants.length > 1 && (
-                        <View style={styles.variantContainer}>
-                            <Text style={styles.variantLabel}>COLOR:</Text>
-                            <View style={styles.variantRow}>
-                                {allVariants.map((variant) => (
-                                    <TouchableOpacity
-                                        key={variant.id}
-                                        style={[
-                                            styles.variantOption,
-                                            variant.id === wallpaper.id && styles.variantOptionActive
-                                        ]}
-                                        onPress={() => {
-                                            router.replace(`/wallpaper/${variant.id}`);
-                                        }}
-                                    >
-                                        <Image source={{ uri: variant.imageUrl }} style={styles.variantImage} />
-                                    </TouchableOpacity>
+                        {/* Pagination Dots */}
+                        {images.length > 1 && (
+                            <View style={styles.pagination}>
+                                {images.map((_: any, index: number) => (
+                                    <View key={index} style={[styles.dot, index === activeImage && styles.activeDot]} />
                                 ))}
                             </View>
-                            <Text style={styles.variantName}>{wallpaper.colors?.[0] || 'Standard'}</Text>
-                        </View>
-                    )}
-
-                    <View style={styles.divider} />
-
-                    {/* Actions */}
-                    {/* Actions */}
-                    <View style={styles.actionContainer}>
-                        <TouchableOpacity style={styles.visualizeButton} onPress={handleVisualize}>
-                            <Ionicons name="scan-outline" size={18} color="white" style={{ marginRight: 10 }} />
-                            <Text style={styles.visualizeText}>{product.visualize.toUpperCase()}</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
-                            <Text style={styles.cartText}>{product.addToCart.toUpperCase()}</Text>
-                        </TouchableOpacity>
+                        )}
                     </View>
 
-                    {/* Description */}
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>{product.description}</Text>
-                        <Text style={styles.description}>
-                            {wallpaper.description || 'Exclusive high-quality design, ideal for transforming any space with elegance and style.'}
-                        </Text>
-                    </View>
+                    {/* Right Column: Content */}
+                    <View style={[
+                        styles.contentContainer,
+                        isLargeScreen && styles.contentContainerDesktop
+                    ]}>
+                        {/* Header Info */}
+                        <Text style={styles.category}>{wallpaper.category.toUpperCase()}</Text>
+                        <Text style={styles.title}>{wallpaper.name}</Text>
+                        <Text style={styles.price}>${wallpaper.price.toFixed(2)} <Text style={styles.perRoll}> {product.pricePerRoll.toUpperCase()}</Text></Text>
 
-                    {/* Specifications */}
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>{product.specifications}</Text>
+                        {/* Variant Selector (If variants exist) */}
+                        {allVariants.length > 1 && (
+                            <View style={styles.variantContainer}>
+                                <Text style={styles.variantLabel}>COLOR:</Text>
+                                <View style={styles.variantRow}>
+                                    {allVariants.map((variant) => (
+                                        <TouchableOpacity
+                                            key={variant.id}
+                                            style={[
+                                                styles.variantOption,
+                                                variant.id === wallpaper.id && styles.variantOptionActive
+                                            ]}
+                                            onPress={() => {
+                                                router.replace(`/wallpaper/${variant.id}`);
+                                            }}
+                                        >
+                                            <Image source={{ uri: variant.imageUrl }} style={styles.variantImage} />
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                                <Text style={styles.variantName}>{wallpaper.colors?.[0] || 'Standard'}</Text>
+                            </View>
+                        )}
 
-                        <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>STYLE</Text>
-                            <Text style={styles.specValue}>{wallpaper.style}</Text>
+                        <View style={styles.divider} />
+
+                        {/* Actions */}
+                        <View style={styles.actionContainer}>
+                            <TouchableOpacity style={styles.visualizeButton} onPress={handleVisualize}>
+                                <Ionicons name="scan-outline" size={18} color="white" style={{ marginRight: 10 }} />
+                                <Text style={styles.visualizeText}>{product.visualize.toUpperCase()}</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
+                                <Text style={styles.cartText}>{product.addToCart.toUpperCase()}</Text>
+                            </TouchableOpacity>
                         </View>
-                        <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>{product.material.toUpperCase()}</Text>
-                            <Text style={styles.specValue}>{wallpaper.specifications?.material || 'Non-Woven'}</Text>
-                        </View>
-                        <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>{product.dimensions.toUpperCase()}</Text>
-                            <Text style={styles.specValue}>
-                                {formatDimension(wallpaper.dimensions?.width, 'm')} x {formatDimension(wallpaper.dimensions?.height, 'm')} (roll)
+
+                        {/* Description */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>{product.description}</Text>
+                            <Text style={styles.description}>
+                                {wallpaper.description || 'Exclusive high-quality design, ideal for transforming any space with elegance and style.'}
                             </Text>
                         </View>
-                        <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>{product.washability.toUpperCase()}</Text>
-                            <Text style={styles.specValue}>{wallpaper.specifications?.washable ? 'Yes' : 'No'}</Text>
-                        </View>
-                        <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>COLORS</Text>
-                            <Text style={styles.specValue}>{wallpaper.colors?.join(', ')}</Text>
-                        </View>
-                        <View style={styles.specRow}>
-                            <Text style={styles.specLabel}>{product.patternRepeat.toUpperCase()}</Text>
-                            <Text style={styles.specValue}>
-                                {wallpaper.patternRepeat ? cmToInches(wallpaper.patternRepeat) : '0"'}
-                            </Text>
+
+                        {/* Specifications */}
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>{product.specifications}</Text>
+
+                            <View style={styles.specRow}>
+                                <Text style={styles.specLabel}>STYLE</Text>
+                                <Text style={styles.specValue}>{wallpaper.style}</Text>
+                            </View>
+                            <View style={styles.specRow}>
+                                <Text style={styles.specLabel}>{product.material.toUpperCase()}</Text>
+                                <Text style={styles.specValue}>{wallpaper.specifications?.material || 'Non-Woven'}</Text>
+                            </View>
+                            <View style={styles.specRow}>
+                                <Text style={styles.specLabel}>{product.dimensions.toUpperCase()}</Text>
+                                <Text style={styles.specValue}>
+                                    {formatDimension(wallpaper.dimensions?.width, 'm')} x {formatDimension(wallpaper.dimensions?.height, 'm')} (roll)
+                                </Text>
+                            </View>
+                            <View style={styles.specRow}>
+                                <Text style={styles.specLabel}>{product.washability.toUpperCase()}</Text>
+                                <Text style={styles.specValue}>{wallpaper.specifications?.washable ? 'Yes' : 'No'}</Text>
+                            </View>
+                            <View style={styles.specRow}>
+                                <Text style={styles.specLabel}>COLORS</Text>
+                                <Text style={styles.specValue}>{wallpaper.colors?.join(', ')}</Text>
+                            </View>
+                            <View style={styles.specRow}>
+                                <Text style={styles.specLabel}>{product.patternRepeat.toUpperCase()}</Text>
+                                <Text style={styles.specValue}>
+                                    {wallpaper.patternRepeat ? cmToInches(wallpaper.patternRepeat) : '0"'}
+                                </Text>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -243,6 +267,24 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingBottom: 40,
+        backgroundColor: '#fff',
+    },
+    // Desktop: Container centered
+    scrollContentDesktop: {
+        alignItems: 'center',
+        width: '100%',
+    },
+    // Desktop: Row Layout
+    mainLayout: {
+        width: '100%',
+        flexDirection: 'column',
+    },
+    mainLayoutDesktop: {
+        flexDirection: 'row',
+        maxWidth: 1400,
+        alignSelf: 'center',
+        justifyContent: 'center',
+        paddingTop: 80, // Space for navbar
     },
     navBar: {
         position: 'absolute',
@@ -253,6 +295,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         zIndex: 10,
+    },
+    navBarDesktop: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        zIndex: 20,
+        flexDirection: 'row',
+        gap: 20,
     },
     navButton: {
         width: 40,
@@ -269,9 +319,14 @@ const styles = StyleSheet.create({
     },
     carouselContainer: {
         width: '100%',
-        height: 550, // Even taller
+        height: 550,
         position: 'relative',
         marginBottom: 20,
+    },
+    carouselContainerDesktop: {
+        width: '55%', // Left Column Width
+        height: 'auto', // Allow full height
+        marginBottom: 0,
     },
     mainImage: {
         width: width,
@@ -301,31 +356,36 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         paddingBottom: 40,
     },
+    contentContainerDesktop: {
+        width: '45%', // Right Column Width
+        paddingHorizontal: 60, // Generous padding
+        paddingTop: 20,
+    },
     // York Typography Updates
     category: {
         fontSize: 11,
         fontWeight: '500',
         letterSpacing: 1,
         color: '#888',
-        textAlign: 'left', // Left aligned like desktop
-        marginBottom: 4,
+        textAlign: 'left',
+        marginBottom: 10,
         marginTop: 10,
     },
     title: {
-        fontSize: 26,
+        fontSize: 32, // Larger for desktop feel
         fontWeight: '400',
-        letterSpacing: 0.5,
+        letterSpacing: 0, // Normal tracking for serif
         color: '#000',
-        lineHeight: 34,
-        textAlign: 'left', // Left aligned
+        lineHeight: 40,
+        textAlign: 'left',
         marginBottom: 8,
-        fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif', // Serif font
+        fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif',
     },
     price: {
-        fontSize: 18,
-        fontWeight: '600',
+        fontSize: 20,
+        fontWeight: '500',
         color: '#000',
-        textAlign: 'left', // Left aligned
+        textAlign: 'left',
         marginBottom: 30,
         letterSpacing: 0.5,
     },
