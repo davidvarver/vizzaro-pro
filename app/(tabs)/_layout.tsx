@@ -68,14 +68,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
-      <Tabs.Screen
-        name="product"
-        options={{
-          href: null,
-          title: "Product",
-          headerShown: false,
-        }}
-      />
     </Tabs>
   );
 }

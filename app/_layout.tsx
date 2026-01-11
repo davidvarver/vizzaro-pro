@@ -20,6 +20,7 @@ function RootLayoutNav() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="index" options={{ headerShown: false }} />
 
+      <Stack.Screen name="product" options={{ headerShown: false }} />
       <Stack.Screen name="admin/dashboard" options={{ headerShown: false }} />
       <Stack.Screen name="admin/orders" options={{ headerShown: false }} />
       <Stack.Screen name="admin/catalog" options={{ headerShown: false }} />
