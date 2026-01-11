@@ -175,7 +175,7 @@ export default function HomeScreen() {
                 } else {
                     const mapped = colorMap[selectedColor] || [normalize(selectedColor)];
                     const wColorsNorm = w.colors.filter(c => c).map(c => normalize(c));
-                    matchesColor = mapped.some(m => wColorsNorm.includes(m));
+                    matchesColor = mapped.some(m => wColorsNorm.some(wc => wc.includes(m)));
                 }
             }
 
