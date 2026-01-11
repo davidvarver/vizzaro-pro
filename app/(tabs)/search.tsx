@@ -34,7 +34,7 @@ export default function SearchScreen() {
     const renderItem = ({ item }: { item: any }) => (
         <TouchableOpacity
             style={styles.item}
-            onPress={() => router.push(`/product/${item.id}`)}
+            onPress={() => router.push(`/product/${item.id}` as any)}
         >
             <Image source={{ uri: item.imageUrl }} style={styles.thumb} />
             <View style={styles.info}>

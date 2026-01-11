@@ -193,7 +193,7 @@ export default function WallpaperDetailScreen() {
                                                 variant.id === wallpaper.id && styles.variantOptionActive
                                             ]}
                                             onPress={() => {
-                                                router.replace(`/product/${variant.id}`);
+                                                router.replace(`/product/${variant.id}` as any);
                                             }}
                                         >
                                             <Image source={{ uri: variant.imageUrl }} style={styles.variantImage} />

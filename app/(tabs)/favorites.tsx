@@ -40,7 +40,7 @@ export default function FavoritesScreen() {
                 renderItem={({ item: wallpaper }: { item: Wallpaper }) => (
                     <TouchableOpacity
                         style={styles.wallpaperChip}
-                        onPress={() => router.push(`/product/${wallpaper.id}`)}
+                        onPress={() => router.push(`/product/${wallpaper.id}` as any)}
                     >
                         <Image source={{ uri: wallpaper.imageUrl }} style={styles.thumb} />
                         <Text numberOfLines={1} style={styles.wpName}>{wallpaper.name}</Text>

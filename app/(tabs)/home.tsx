@@ -264,7 +264,7 @@ export default function HomeScreen() {
                                     // Requires search.tsx to handle 'category' param
                                     router.push({ pathname: "/search", params: { category: "tapete" } } as any);
                                 } else {
-                                    router.push(`/product/${currentHero.id}`);
+                                    router.push(`/product/${currentHero.id}` as any);
                                 }
                             }}>
                                 <Text style={styles.heroButtonText}>
@@ -343,7 +343,7 @@ export default function HomeScreen() {
                     marginTop: index % 2 !== 0 ? 30 : 0 // Staggered grid effect
                 }
             ]}
-            onPress={() => router.push(`/product/${item.id}`)}
+            onPress={() => router.push(`/product/${item.id}` as any)}
             activeOpacity={0.9}
         >
             <View style={styles.imageContainer}>
