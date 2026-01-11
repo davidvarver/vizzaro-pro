@@ -79,7 +79,8 @@ export default function HomeScreen() {
         home.filters.new,
         home.filters.floral,
         home.filters.texture,
-        home.filters.geometric
+        home.filters.geometric,
+        home.filters.kids
     ];
 
     // Color Map for UI
@@ -155,10 +156,15 @@ export default function HomeScreen() {
                 if (selectedCategory === home.filters.texture) searchTerm = "textur"; // Works for textura/texture
                 if (selectedCategory === home.filters.geometric) searchTerm = "geometr"; // Partial matches "Geometric"
 
-                // Fallback: If no mapping, use the category name itself
-                if (!searchTerm) searchTerm = normalize(selectedCategory);
+                if (selectedCategory === home.filters.kids) {
+                    const kidsKeywords = ["kid", "child", "infant", "bebe", "baby", "nino", "nina", "disney", "marvel", "toy story", "cartoon", "juvenil", "princess"];
+                    matchesCategory = kidsKeywords.some(k => catName.includes(k) || itemName.includes(k));
+                } else {
+                    // Fallback: If no mapping, use the category name itself
+                    if (!searchTerm) searchTerm = normalize(selectedCategory);
 
-                matchesCategory = (catName.includes(searchTerm) || itemName.includes(searchTerm));
+                    matchesCategory = (catName.includes(searchTerm) || itemName.includes(searchTerm));
+                }
             }
 
             // 2. Color Filter

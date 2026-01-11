@@ -42,6 +42,7 @@ export const translations = {
             floral: "Floral",
             texture: "Texture",
             geometric: "Geometric",
+            kids: "Kids",
             colors: {
                 all: "All",
                 white: "White",
