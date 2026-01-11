@@ -11,6 +11,9 @@ import { Ionicons } from '@expo/vector-icons';
 const { width } = Dimensions.get('window');
 
 export default function WallpaperDetailScreen() {
+    const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+    const isLargeScreen = windowWidth > 768; // Desktop breakpoint
+
     const { id } = useLocalSearchParams();
     const router = useRouter();
     const { wallpapers, loadWallpapers, isLoading } = useWallpapersStore();
@@ -95,8 +98,6 @@ export default function WallpaperDetailScreen() {
     }
 
     const images = wallpaper.imageUrls && wallpaper.imageUrls.length > 0 ? wallpaper.imageUrls : [wallpaper.imageUrl];
-    const { width: windowWidth, height: windowHeight } = useWindowDimensions();
-    const isLargeScreen = windowWidth > 768;
 
     return (
         <View style={styles.container}>
