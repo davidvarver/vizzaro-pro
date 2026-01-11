@@ -68,30 +68,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => <User color={color} size={size} />,
         }}
       />
-      <Tabs.Screen
-        name="wallpaper"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="wallpaper-result"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="favorites"
-        options={{
-          href: null,
-        }}
-      />
     </Tabs>
   );
 }

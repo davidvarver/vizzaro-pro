@@ -1,4 +1,4 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions, CameraType } from 'expo-camera';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useState, useRef, useEffect } from 'react';
 import { useIsFocused } from '@react-navigation/native';
@@ -30,7 +30,7 @@ export default function CameraScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const [isProcessing, setIsProcessing] = useState(false);
     const [processingStep, setProcessingStep] = useState<string>('');
-    const [facing, setFacing] = useState<'back' | 'front'>('back');
+    const [facing, setFacing] = useState<CameraType>('back');
     const cameraRef = useRef<CameraView>(null);
 
     useEffect(() => {
@@ -43,16 +43,13 @@ export default function CameraScreen() {
     const { wallpaperId } = params;
     const { getWallpaperById, addUserRoom, userRooms, setVisualizerImage, updateUserRoomMask } = useWallpapersStore();
 
-    // ... (helper functions fetchImageAsBase64, compressBase64Image, processImageWithAI are unchanged)
-
-    // BUT I must re-declare processCapturedImage because I am replacing it.
-    // I need to be careful to KEEP the helpers if I am only replacing the function.
-    // However, I need `setVisualizerImage` in scope.
-    // It is destructured at the top. I need to update the destructuring line first.
-
     const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
 
+    function toggleCameraFacing() {
+        setFacing(current => (current === 'back' ? 'front' : 'back'));
+    }
 
+    // ... (keep helper functions like compressBase64Image, processVisualizerFlow, compressImage, processCapturedImage, takePicture, pickImage unchanged)
 
     async function compressBase64Image(base64: string, maxSize: number = 1024): Promise<string> {
         try {
@@ -69,12 +66,6 @@ export default function CameraScreen() {
             return base64;
         }
     }
-
-
-
-    // REMOVED local fetchImageAsBase64 and processImageWithAI to use @/utils/ai instead
-    // We kept compressBase64Image as it uses ImageManipulator specific to this component or can be moved too.
-    // For minimal refactor risk, I won't move compressBase64Image yet unless needed.
 
     async function processVisualizerFlow(imageBase64: string, selectedWallpaper: any) {
         console.log('=== AI PROCESSING START ===');
@@ -140,18 +131,11 @@ export default function CameraScreen() {
             const currentRooms = useWallpapersStore.getState().userRooms;
             const newRoomId = currentRooms[0]?.id;
 
-            // NEW: Enable Smart Mask (Generic) immediately
-            // This ensures logic "If hasMask, ALWAYS use overlay" works in Result screen.
-            // This provides "Instant Preview" capability.
-            // NEW: Fire-and-forget generation of the Smart Mask
-            // We set a temporary mock mask so the user can enter the screen immediately.
-            // The AI will generate the real mask in background (~10-15s) and update the store.
             if (newRoomId) {
                 // Set initial placeholder
                 await updateUserRoomMask(newRoomId, "MOCK_GRADIENT_MASK_ID");
 
                 // Trigger background generation (NO AWAIT)
-                // Use the same base64Image (1080p) to ensure mask aligns with the room.
                 console.log('[Camera] Triggering background Mask Generation...');
 
                 generateWallMask(base64Image)
@@ -161,7 +145,6 @@ export default function CameraScreen() {
                     })
                     .catch(err => {
                         console.error('[Camera] Background Mask Generation Failed:', err);
-                        // We keep the mock mask as fallback
                     });
             }
 
@@ -179,7 +162,6 @@ export default function CameraScreen() {
                     pathname: '/wallpaper-result',
                     params: {
                         roomId: newRoomId,
-                        // We do NOT pass the huge images here anymore
                         wallpaperId: wallpaper.id,
                         aiProcessingFailed: result.failed ? 'true' : 'false',
                         errorMessage: result.error
@@ -266,7 +248,10 @@ export default function CameraScreen() {
                         <Ionicons name="close" size={28} color="white" />
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>Scan Room</Text>
-                    <View style={{ width: 28 }} />
+                    {/* Camera Flip Button */}
+                    <TouchableOpacity onPress={toggleCameraFacing} style={styles.iconButton}>
+                        <Ionicons name="camera-reverse" size={28} color="white" />
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.controls}>
@@ -278,9 +263,8 @@ export default function CameraScreen() {
                         <View style={styles.captureInner} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => setFacing(f => f === 'back' ? 'front' : 'back')} style={styles.galleryButton}>
-                        <Ionicons name="camera-reverse" size={24} color="white" />
-                    </TouchableOpacity>
+                    {/* Placeholder to balance layout */}
+                    <View style={{ width: 44 }} />
                 </View>
             </SafeAreaView>
 
