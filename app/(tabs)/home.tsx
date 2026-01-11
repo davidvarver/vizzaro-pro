@@ -169,10 +169,14 @@ export default function HomeScreen() {
 
             // 2. Color Filter
             let matchesColor = true;
-            if (selectedColor !== home.filters.colors.all && w.colors) {
-                const mapped = colorMap[selectedColor] || [normalize(selectedColor)];
-                const wColorsNorm = w.colors.map(c => normalize(c));
-                matchesColor = mapped.some(m => wColorsNorm.includes(m));
+            if (selectedColor !== home.filters.colors.all) {
+                if (!w.colors || w.colors.length === 0) {
+                    matchesColor = false;
+                } else {
+                    const mapped = colorMap[selectedColor] || [normalize(selectedColor)];
+                    const wColorsNorm = w.colors.filter(c => c).map(c => normalize(c));
+                    matchesColor = mapped.some(m => wColorsNorm.includes(m));
+                }
             }
 
             // 3. Exclude 'Bath Mats' (Tapetes) from main grid
