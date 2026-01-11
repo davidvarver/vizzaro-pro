@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, StatusBar, Platform } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
@@ -269,12 +269,13 @@ const styles = StyleSheet.create({
     },
     carouselContainer: {
         width: '100%',
-        height: 500, // Taller, more impressive image
+        height: 550, // Even taller
         position: 'relative',
+        marginBottom: 20,
     },
     mainImage: {
         width: width,
-        height: 500,
+        height: 550,
     },
     pagination: {
         position: 'absolute',
@@ -297,71 +298,72 @@ const styles = StyleSheet.create({
         height: 8,
     },
     contentContainer: {
-        padding: 24,
+        paddingHorizontal: 24,
+        paddingBottom: 40,
     },
+    // York Typography Updates
     category: {
-        fontSize: 10,
-        fontWeight: '700',
-        letterSpacing: 2,
-        color: '#999',
-        textAlign: 'center',
-        marginBottom: 8,
+        fontSize: 11,
+        fontWeight: '500',
+        letterSpacing: 1,
+        color: '#888',
+        textAlign: 'left', // Left aligned like desktop
+        marginBottom: 4,
         marginTop: 10,
     },
     title: {
-        fontSize: 22,
+        fontSize: 26,
         fontWeight: '400',
-        letterSpacing: 1,
+        letterSpacing: 0.5,
         color: '#000',
-        lineHeight: 30,
-        textAlign: 'center',
-        marginBottom: 12,
-        fontFamily: 'System',
-        paddingHorizontal: 20,
+        lineHeight: 34,
+        textAlign: 'left', // Left aligned
+        marginBottom: 8,
+        fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif', // Serif font
     },
     price: {
-        fontSize: 16,
-        fontWeight: '500',
+        fontSize: 18,
+        fontWeight: '600',
         color: '#000',
-        textAlign: 'center',
-        marginBottom: 25,
+        textAlign: 'left', // Left aligned
+        marginBottom: 30,
         letterSpacing: 0.5,
     },
     perRoll: {
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: '400',
         color: '#666',
     },
     divider: {
         height: 1,
         backgroundColor: '#eee',
-        width: '60%',
-        alignSelf: 'center',
+        width: '100%',
         marginVertical: 30,
     },
 
-    // Variants
+    // Variants (Square/Rectangular)
     variantContainer: {
-        alignItems: 'center',
+        alignItems: 'flex-start', // Left align
         marginBottom: 25,
     },
     variantLabel: {
-        fontSize: 10,
-        fontWeight: '700',
-        color: '#999',
-        letterSpacing: 1.5,
-        marginBottom: 15,
+        fontSize: 11,
+        fontWeight: '600',
+        color: '#333',
+        letterSpacing: 1,
+        marginBottom: 12,
         textTransform: 'uppercase',
     },
     variantRow: {
         flexDirection: 'row',
         gap: 12,
-        marginBottom: 10,
+        marginBottom: 8,
+        flexWrap: 'wrap',
     },
     variantOption: {
-        width: 44,
-        height: 44,
-        borderRadius: 22,
+        width: 50,
+        height: 50,
+        borderRadius: 0, // Square
         borderWidth: 1,
         borderColor: '#ddd',
         padding: 2,
@@ -373,39 +375,39 @@ const styles = StyleSheet.create({
     variantImage: {
         width: '100%',
         height: '100%',
-        borderRadius: 20,
+        borderRadius: 0, // Square image
     },
     variantName: {
-        fontSize: 11,
-        color: '#333',
-        marginTop: 5,
+        fontSize: 12,
+        color: '#555',
+        marginTop: 4,
         letterSpacing: 0.5,
+        fontStyle: 'italic',
     },
 
     // Actions
     actionContainer: {
         width: '100%',
-        paddingHorizontal: 10,
         marginBottom: 40,
-        gap: 15,
+        gap: 12,
     },
     visualizeButton: {
         flexDirection: 'row',
         backgroundColor: '#000',
-        height: 50,
+        height: 54, // Taller touch target
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 0,
     },
     visualizeText: {
         color: '#fff',
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: '700',
         letterSpacing: 2,
     },
     cartButton: {
         backgroundColor: '#fff',
-        height: 50,
+        height: 54,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
@@ -414,31 +416,29 @@ const styles = StyleSheet.create({
     },
     cartText: {
         color: '#000',
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: '700',
         letterSpacing: 2,
     },
 
     // Sections
     section: {
-        marginBottom: 40,
-        paddingHorizontal: 10,
+        marginBottom: 35,
     },
     sectionTitle: {
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: '700',
-        letterSpacing: 2,
-        marginBottom: 20,
+        letterSpacing: 1.5,
+        marginBottom: 15,
         color: '#000',
-        textAlign: 'center',
+        textAlign: 'left',
         textTransform: 'uppercase',
     },
     description: {
-        fontSize: 14,
-        lineHeight: 24,
-        color: '#555',
-        textAlign: 'center',
-        paddingHorizontal: 10,
+        fontSize: 15,
+        lineHeight: 26,
+        color: '#444',
+        textAlign: 'left',
     },
 
     // Specs
@@ -447,18 +447,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 14,
         borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
+        borderBottomColor: '#f5f5f5',
     },
     specLabel: {
-        fontSize: 10,
-        fontWeight: '700',
-        color: '#999',
-        letterSpacing: 1.5,
+        fontSize: 11,
+        fontWeight: '600',
+        color: '#777',
+        letterSpacing: 1,
         textTransform: 'uppercase',
     },
     specValue: {
-        fontSize: 12,
-        color: '#333',
+        fontSize: 13,
+        color: '#222',
         fontWeight: '400',
     },
 });
