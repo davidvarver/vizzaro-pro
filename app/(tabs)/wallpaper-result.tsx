@@ -100,7 +100,8 @@ export default function WallpaperResultScreen() {
     }, [favoriteProjects]);
 
     const filteredWallpapers = useMemo(() => {
-        let result = wallpapers;
+        // 0. Base Filter: Exclude "Drying Mat" and non-wallpaper items if needed
+        let result = wallpapers.filter(w => !w.name.toLowerCase().includes('drying mat'));
 
         // 1. Search Logic
         if (searchQuery.trim()) {
