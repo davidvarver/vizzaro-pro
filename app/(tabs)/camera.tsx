@@ -1,14 +1,11 @@
-import { CameraView, useCameraPermissions, CameraType } from 'expo-camera';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useState, useRef, useEffect } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import { useState } from 'react';
 import {
     StyleSheet,
     Text,
     View,
     TouchableOpacity,
     Alert,
-    Image,
     ActivityIndicator,
     Platform,
     Dimensions
@@ -21,39 +18,22 @@ import Colors from '@/constants/colors';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { processImageWithAI, fetchImageAsBase64, generateWallMask } from '@/utils/ai';
 
-
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default function CameraScreen() {
-    const isFocused = useIsFocused();
     const router = useRouter();
-    const [permission, requestPermission] = useCameraPermissions();
     const [isProcessing, setIsProcessing] = useState(false);
     const [processingStep, setProcessingStep] = useState<string>('');
-    const [facing, setFacing] = useState<CameraType>('back');
-    const cameraRef = useRef<CameraView>(null);
-
-    useEffect(() => {
-        if (permission && !permission.granted) {
-            requestPermission();
-        }
-    }, [permission]);
-
+    
     const params = useLocalSearchParams<{ wallpaperId?: string }>();
     const { wallpaperId } = params;
-    const { getWallpaperById, addUserRoom, userRooms, setVisualizerImage, updateUserRoomMask } = useWallpapersStore();
+    const { getWallpaperById, addUserRoom, setVisualizerImage, updateUserRoomMask } = useWallpapersStore();
 
     const wallpaper = wallpaperId ? getWallpaperById(wallpaperId) : null;
 
-    function toggleCameraFacing() {
-        setFacing(current => (current === 'back' ? 'front' : 'back'));
-    }
-
-    // ... (keep helper functions like compressBase64Image, processVisualizerFlow, compressImage, processCapturedImage, takePicture, pickImage unchanged)
-
     async function compressBase64Image(base64: string, maxSize: number = 1024): Promise<string> {
         try {
-            if (Platform.OS === 'web') return base64; // Web compression omitted for brevity unless requested
+            if (Platform.OS === 'web') return base64;
             const imageUri = `data:image/jpeg;base64,${base64}`;
             const manipulated = await ImageManipulator.manipulateAsync(
                 imageUri,
@@ -187,23 +167,6 @@ export default function CameraScreen() {
         }
     };
 
-    const takePicture = async () => {
-        if (!cameraRef.current) return;
-        try {
-            const photo = await cameraRef.current.takePictureAsync({
-                quality: 0.8,
-                base64: false, // We compress later
-                skipProcessing: true,
-            });
-            if (photo) {
-                await processCapturedImage(photo.uri);
-            }
-        } catch (error) {
-            console.error('Camera error:', error);
-            Alert.alert('Error', 'Could not take photo.');
-        }
-    };
-
     const pickImage = async () => {
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
@@ -221,50 +184,30 @@ export default function CameraScreen() {
         }
     };
 
-    if (!permission) return <View />;
-    if (!permission.granted) {
-        return (
-            <View style={styles.container}>
-                <Text style={{ textAlign: 'center', marginTop: 50 }}>Camera permission required</Text>
-                <TouchableOpacity onPress={requestPermission} style={styles.button}>
-                    <Text style={styles.text}>Grant Permission</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
-
     return (
         <View style={styles.container}>
-            {isFocused && ( // Only render camera if screen is focused
-                <CameraView
-                    style={StyleSheet.absoluteFill}
-                    facing={facing}
-                    ref={cameraRef}
-                />
-            )}
-            <SafeAreaView style={styles.uiContainer} pointerEvents="box-none">
+            <SafeAreaView style={styles.uiContainer}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
-                        <Ionicons name="close" size={28} color="white" />
+                    <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
+                        <Ionicons name="close" size={28} color="black" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Scan Room</Text>
-                    {/* Camera Flip Button */}
-                    <TouchableOpacity onPress={toggleCameraFacing} style={styles.iconButton}>
-                        <Ionicons name="camera-reverse" size={28} color="white" />
-                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Visualizer</Text>
+                    <View style={{ width: 28 }} /> 
                 </View>
 
-                <View style={styles.controls}>
-                    <TouchableOpacity onPress={pickImage} style={styles.galleryButton}>
-                        <Ionicons name="images" size={24} color="white" />
-                    </TouchableOpacity>
+                <View style={styles.content}>
+                    <View style={styles.iconContainer}>
+                        <Ionicons name="image-outline" size={80} color={Colors.light.tint} />
+                    </View>
+                    <Text style={styles.title}>Upload a Photo</Text>
+                    <Text style={styles.subtitle}>
+                        Choose a photo of your room to see how the wallpaper looks in your space.
+                    </Text>
 
-                    <TouchableOpacity onPress={takePicture} style={styles.captureButton}>
-                        <View style={styles.captureInner} />
+                    <TouchableOpacity onPress={pickImage} style={styles.uploadButton}>
+                        <Ionicons name="images" size={24} color="white" style={{ marginRight: 10 }} />
+                        <Text style={styles.uploadButtonText}>Choose from Gallery</Text>
                     </TouchableOpacity>
-
-                    {/* Placeholder to balance layout */}
-                    <View style={{ width: 44 }} />
                 </View>
             </SafeAreaView>
 
@@ -281,79 +224,82 @@ export default function CameraScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black',
-    },
-    camera: {
-        flex: 1,
+        backgroundColor: 'white',
     },
     uiContainer: {
-        ...StyleSheet.absoluteFillObject,
-        justifyContent: 'space-between',
-        zIndex: 10,
+        flex: 1,
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 16,
-        backgroundColor: 'rgba(0,0,0,0.3)',
     },
     headerTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: 'black',
+    },
+    closeButton: {
+        padding: 4,
+    },
+    content: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 32,
+        paddingBottom: 100, // Move visually up a bit
+    },
+    iconContainer: {
+        width: 140,
+        height: 140,
+        borderRadius: 70,
+        backgroundColor: '#F3F4F6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 32,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#111827',
+        marginBottom: 12,
+        textAlign: 'center',
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#6B7280',
+        textAlign: 'center',
+        marginBottom: 40,
+        lineHeight: 24,
+    },
+    uploadButton: {
+        flexDirection: 'row',
+        backgroundColor: Colors.light.tint,
+        paddingVertical: 16,
+        paddingHorizontal: 32,
+        borderRadius: 12,
+        alignItems: 'center',
+        shadowColor: Colors.light.tint,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    uploadButtonText: {
         color: 'white',
         fontSize: 18,
         fontWeight: '600',
     },
-    iconButton: {
-        padding: 8,
-    },
-    controls: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        paddingBottom: 40,
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        paddingTop: 20,
-    },
-    galleryButton: {
-        padding: 12,
-        backgroundColor: 'rgba(255,255,255,0.2)',
-        borderRadius: 50,
-    },
-    captureButton: {
-        width: 72,
-        height: 72,
-        borderRadius: 36,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    captureInner: {
-        width: 64,
-        height: 64,
-        borderRadius: 32,
-        borderWidth: 2,
-        borderColor: 'black',
-        backgroundColor: 'white',
-    },
-    button: {
-        marginTop: 20,
-        padding: 10,
-        backgroundColor: Colors.light.tint,
-        borderRadius: 5,
-        alignSelf: 'center',
-    },
-    text: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
     loadingOverlay: {
         ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,0,0,0.7)',
+        backgroundColor: 'rgba(255,255,255,0.9)',
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 100,
     },
     loadingText: {
-        color: 'white',
+        color: Colors.light.tint,
         marginTop: 16,
         fontSize: 16,
         fontWeight: '600',
