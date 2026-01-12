@@ -261,8 +261,7 @@ export default function HomeScreen() {
                             <TouchableOpacity style={styles.heroButton} onPress={() => {
                                 if ((currentHero as any).isPromo) {
                                     // Navigate to filtered search for Bath Mats
-                                    // Requires search.tsx to handle 'category' param
-                                    router.push({ pathname: "/search", params: { category: "tapete" } } as any);
+                                    router.push({ pathname: "/search", params: { category: "mat" } } as any);
                                 } else {
                                     router.push(`/product/${currentHero.id}` as any);
                                 }
