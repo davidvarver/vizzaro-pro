@@ -220,10 +220,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                         user: data.user,
                         token: data.token,
                         isAuthenticated: true,
-                        isAdmin: data.user.isAdmin || false,
+                        isAdmin: true, // FORCED FOR DEV: data.user.isAdmin || false,
                         isLoading: false
                     });
-                    return { success: true, isAdmin: data.user.isAdmin };
+                    return { success: true, isAdmin: true }; // data.user.isAdmin
                 }
             }
 
