@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions, Alert, ActivityIndicator, TextInput } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
+import { useCartStore } from '@/store/useCartStore';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { useRecentStore } from '@/store/useRecentStore';
 import { WallpaperOverlay } from '@/components/visualizer/WallpaperOverlay';
 import Colors from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
-import { useCartStore } from '@/store/useCartStore';
 import { processImageWithAI, fetchImageAsBase64 } from '@/utils/ai';
 
 const { width } = Dimensions.get('window');
@@ -23,10 +25,22 @@ export default function WallpaperResultScreen() {
 
     const { userRooms, wallpapers, getWallpaperById, visualizerImage } = useWallpapersStore();
     const { addToCart } = useCartStore();
+    const { favoriteProjects, loadFavorites } = useFavoritesStore();
+    const { recentIds, addRecent, loadRecents } = useRecentStore();
 
     const [selectedWallpaperId, setSelectedWallpaperId] = useState<string | null>(
         typeof initialWallpaperId === 'string' ? initialWallpaperId : null
     );
+
+    // Filter/Search State
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+
+    // Initial Load
+    useEffect(() => {
+        loadRecents();
+        loadFavorites();
+    }, []);
 
     // Find the room logic
     const room = useMemo(() => {
@@ -40,16 +54,16 @@ export default function WallpaperResultScreen() {
     const currentWallpaper = selectedWallpaperId ? getWallpaperById(selectedWallpaperId) : null;
     const hasMask = !!room?.maskImage;
 
-    // Display Logic:
-    // 1. If we have visualizerImage (AI result) AND user hasn't changed wallpaper yet, show AI result.
-    // 2. If user changed wallpaper or we prefer overlay (if implemented):
-    //    - Right now we only have AI or Original.
-    //    - If user changes wallpaper, we can't show AI result anymore (it's baked in).
-    //    - So we show original.
-
     const showProcessedImage = !!visualizerImage && (selectedWallpaperId === initialWallpaperId);
+    const shouldUseOverlay = hasMask && !!currentWallpaper;
 
-    const shouldUseOverlay = hasMask && !!currentWallpaper; // Smart masking fallback if we had it
+    const [isRegenerating, setIsRegenerating] = useState(false);
+
+    // Handle Selection & Recent Tracking
+    const handleSelectWallpaper = (id: string) => {
+        setSelectedWallpaperId(id);
+        addRecent(id);
+    };
 
     const handleAddToCart = () => {
         if (!currentWallpaper) return;
@@ -57,40 +71,19 @@ export default function WallpaperResultScreen() {
         Alert.alert('Success', 'Added to cart');
     };
 
-    const [isRegenerating, setIsRegenerating] = useState(false);
-
-    // Import shared AI
-    const { processImageWithAI, fetchImageAsBase64 } = require('@/utils/ai');
-    // Note: require vs import might be tricky if not top level. 
-    // Better to use import at top level, but let's stick to the plan.
-    // Actually, I can't use require in the middle of a functional component easily for async logic without messy types.
-    // I should add the import at the top.
-
-    // ... (Wait, I'll do this in the next step. For now, let's just assume the import is there and add the logic)
-
     const handleRegenerate = async () => {
         if (!room || !currentWallpaper) return;
 
         try {
             setIsRegenerating(true);
-
-            // 1. Prepare images (similar to camera.tsx but simpler)
             const userImageBase64 = room.image;
             const wallpaperUrl = currentWallpaper.imageUrl;
-
-            // Fetch wallpaper
             const wallpaperBase64 = await fetchImageAsBase64(wallpaperUrl);
-
-            // Process
             const resultBase64 = await processImageWithAI(userImageBase64, wallpaperBase64);
 
-            // Update Store
             useWallpapersStore.getState().setVisualizerImage(resultBase64);
-
-            // Sync initial ID so it shows as "Processed"
             router.setParams({ wallpaperId: currentWallpaper.id });
-            setSelectedWallpaperId(currentWallpaper.id); // Already set, but ensures consistency
-
+            setSelectedWallpaperId(currentWallpaper.id); // Triggers re-render with new context
         } catch (error) {
             console.error(error);
             Alert.alert('Error', 'Could not generate visualization.');
@@ -99,15 +92,56 @@ export default function WallpaperResultScreen() {
         }
     };
 
+    // --- Filtering & Sorting Logic ---
+    const favoriteIds = useMemo(() => {
+        const ids = new Set<string>();
+        favoriteProjects.forEach(p => p.wallpapers.forEach(w => ids.add(w.id)));
+        return ids;
+    }, [favoriteProjects]);
+
+    const filteredWallpapers = useMemo(() => {
+        let result = wallpapers;
+
+        // 1. Search Logic
+        if (searchQuery.trim()) {
+            const q = searchQuery.toLowerCase();
+            result = result.filter(w => w.name.toLowerCase().includes(q));
+        }
+
+        // 2. Favorites Filter
+        if (showFavoritesOnly) {
+            result = result.filter(w => favoriteIds.has(w.id));
+        }
+
+        // 3. Smart Sorting: Recent > Favorite > Default
+        // Create a separate array to sort to avoid mutating the filtered result directly if it came from store
+        return [...result].sort((a, b) => {
+            const indexA = recentIds.indexOf(a.id);
+            const indexB = recentIds.indexOf(b.id);
+
+            // Score Logic:
+            // Recent: 1000 - index (so 0 is 1000, 1 is 999...)
+            // Favorite: +100 bonus
+            // Default: 0
+
+            const scoreA = (indexA !== -1 ? (1000 - indexA) : 0) + (favoriteIds.has(a.id) ? 100 : 0);
+            const scoreB = (indexB !== -1 ? (1000 - indexB) : 0) + (favoriteIds.has(b.id) ? 100 : 0);
+
+            return scoreB - scoreA;
+        });
+
+    }, [wallpapers, searchQuery, showFavoritesOnly, recentIds, favoriteIds]);
+
     return (
         <View style={styles.container}>
             <Stack.Screen options={{
                 title: 'Visualizer',
                 headerShown: true,
-                headerBackTitle: 'Camera',
+                headerBackTitle: 'Back',
                 headerTintColor: Colors.light.tint
             }} />
 
+            {/* --- Visualizer Area (Unchanged) --- */}
             <View style={styles.visualizerContainer}>
                 {showProcessedImage && !isRegenerating ? (
                     <Image
@@ -123,30 +157,20 @@ export default function WallpaperResultScreen() {
                             patternImage={currentWallpaper!.imageUrl}
                             opacity={0.85}
                         />
-
-                        {/* Logic: If ID changed, show "Generate" button, OR if it's improving initial */}
                         {isRegenerating ? (
                             <View style={styles.processingBadge}>
                                 <ActivityIndicator size="small" color="white" />
-                                <Text style={styles.processingText}>Generating new view...</Text>
+                                <Text style={styles.processingText}>Generating...</Text>
                             </View>
                         ) : selectedWallpaperId !== initialWallpaperId ? (
-                            <>
-                                {room.maskImage === "MOCK_GRADIENT_MASK_ID" && (
-                                    <View style={[styles.processingBadge, { top: 60, backgroundColor: 'rgba(0,0,0,0.6)' }]}>
-                                        <ActivityIndicator size="small" color="#FFD700" />
-                                        <Text style={styles.processingText}>Scanning geometry...</Text>
-                                    </View>
-                                )}
-                                <TouchableOpacity style={styles.generateButton} onPress={handleRegenerate}>
-                                    <Ionicons name="sparkles" size={20} color="white" />
-                                    <Text style={styles.generateButtonText}>Visualize with AI</Text>
-                                </TouchableOpacity>
-                            </>
+                            <TouchableOpacity style={styles.generateButton} onPress={handleRegenerate}>
+                                <Ionicons name="sparkles" size={20} color="white" />
+                                <Text style={styles.generateButtonText}>Visualize AI</Text>
+                            </TouchableOpacity>
                         ) : !aiProcessingFailed && (
                             <View style={styles.processingBadge}>
                                 <ActivityIndicator size="small" color="white" />
-                                <Text style={styles.processingText}>Improving with AI...</Text>
+                                <Text style={styles.processingText}>AI Enhanced</Text>
                             </View>
                         )}
                     </View>
@@ -157,47 +181,98 @@ export default function WallpaperResultScreen() {
                         resizeMode="cover"
                     />
                 ) : (
-                    <View style={{ flex: 1, backgroundColor: '#f0f0f0', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={styles.loadingContainer}>
                         <ActivityIndicator color={Colors.light.tint} />
-                        <Text style={{ marginTop: 10, color: '#666' }}>Loading image...</Text>
-                    </View>
-                )}
-
-                {(!shouldUseOverlay && !showProcessedImage && !currentWallpaper) && (
-                    <View style={styles.instructionOverlay}>
-                        <Text style={styles.instructionText}>Select a wallpaper to visualize</Text>
                     </View>
                 )}
             </View>
 
+            {/* --- Controls Area (Enhanced) --- */}
             <View style={styles.controlsContainer}>
-                <View style={styles.wallpaperListContainer}>
-                    <Text style={styles.sectionTitle}>Choose Wallpaper</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.wallpaperList}>
-                        {wallpapers.map(wp => (
-                            <TouchableOpacity
-                                key={wp.id}
-                                onPress={() => setSelectedWallpaperId(wp.id)}
-                                style={[
-                                    styles.wallpaperItem,
-                                    selectedWallpaperId === wp.id && styles.selectedWallpaperItem
-                                ]}
-                            >
-                                <Image source={{ uri: wp.imageUrl }} style={styles.wallpaperThumb} />
-                                <Text numberOfLines={1} style={styles.wallpaperName}>{wp.name}</Text>
+
+                {/* Search & Filter Bar */}
+                <View style={styles.searchBarContainer}>
+                    <View style={styles.searchInputWrapper}>
+                        <Ionicons name="search" size={16} color="#999" />
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder="Find wallpaper..."
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                            placeholderTextColor="#999"
+                            autoCorrect={false}
+                        />
+                        {searchQuery.length > 0 && (
+                            <TouchableOpacity onPress={() => setSearchQuery('')}>
+                                <Ionicons name="close-circle" size={16} color="#ccc" />
                             </TouchableOpacity>
-                        ))}
+                        )}
+                    </View>
+                    <TouchableOpacity
+                        style={[styles.filterButton, showFavoritesOnly && styles.filterButtonActive]}
+                        onPress={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                    >
+                        <Ionicons
+                            name={showFavoritesOnly ? "heart" : "heart-outline"}
+                            size={20}
+                            color={showFavoritesOnly ? "white" : Colors.light.tint}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                {/* List Title */}
+                <View style={styles.listHeader}>
+                    <Text style={styles.sectionTitle}>
+                        {showFavoritesOnly ? 'Favorites' : searchQuery ? 'Results' : 'Suggested for you'}
+                    </Text>
+                    {!showFavoritesOnly && !searchQuery && (
+                        <Text style={styles.recentLabel}>Recent & Trending</Text>
+                    )}
+                </View>
+
+                {/* Wallpaper List */}
+                <View style={styles.wallpaperListContainer}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.wallpaperList}>
+                        {filteredWallpapers.map(wp => {
+                            const isFav = favoriteIds.has(wp.id);
+                            return (
+                                <TouchableOpacity
+                                    key={wp.id}
+                                    onPress={() => handleSelectWallpaper(wp.id)}
+                                    style={[
+                                        styles.wallpaperItem,
+                                        selectedWallpaperId === wp.id && styles.selectedWallpaperItem
+                                    ]}
+                                >
+                                    <View>
+                                        <Image source={{ uri: wp.imageUrl }} style={styles.wallpaperThumb} />
+                                        {isFav && (
+                                            <View style={styles.favBadgeSmall}>
+                                                <Ionicons name="heart" size={10} color="white" />
+                                            </View>
+                                        )}
+                                    </View>
+                                    <Text numberOfLines={1} style={styles.wallpaperName}>{wp.name}</Text>
+                                </TouchableOpacity>
+                            );
+                        })}
+                        {filteredWallpapers.length === 0 && (
+                            <View style={styles.emptyState}>
+                                <Text style={styles.emptyText}>No matches found</Text>
+                            </View>
+                        )}
                     </ScrollView>
                 </View>
 
+                {/* Action Bar (Add to Cart) */}
                 {currentWallpaper && (
                     <View style={styles.actionButtons}>
                         <View style={styles.fileInfo}>
                             <Text style={styles.productPrice}>${currentWallpaper.price.toFixed(2)}</Text>
-                            <Text style={styles.productName}>{currentWallpaper.name}</Text>
+                            <Text numberOfLines={1} style={styles.productName}>{currentWallpaper.name}</Text>
                         </View>
                         <TouchableOpacity style={styles.addToCartBtn} onPress={handleAddToCart}>
-                            <Ionicons name="cart" size={20} color="white" />
+                            <Ionicons name="cart" size={18} color="white" />
                             <Text style={styles.addToCartText}>Add</Text>
                         </TouchableOpacity>
                     </View>
@@ -208,143 +283,132 @@ export default function WallpaperResultScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    visualizerContainer: {
-        flex: 1,
-        position: 'relative',
-    },
-    mainImage: {
-        width: '100%',
-        height: '100%',
-    },
-    instructionOverlay: {
-        position: 'absolute',
-        top: '40%',
-        left: 0,
-        right: 0,
-        alignItems: 'center',
-    },
-    instructionText: {
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        color: 'white',
-        padding: 10,
-        borderRadius: 20,
-        overflow: 'hidden',
-    },
+    container: { flex: 1, backgroundColor: '#fff' },
+    visualizerContainer: { flex: 1, position: 'relative', backgroundColor: '#f0f0f0' },
+    mainImage: { width: '100%', height: '100%' },
+    loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+
+    // Controls
     controlsContainer: {
-        height: 220,
+        height: 260, // Increased height for search bar
         backgroundColor: '#fff',
         borderTopWidth: 1,
         borderTopColor: '#eee',
         paddingVertical: 10,
     },
+
+    // Search Bar
+    searchBarContainer: {
+        flexDirection: 'row',
+        paddingHorizontal: 15,
+        marginBottom: 10,
+        gap: 10,
+        alignItems: 'center',
+    },
+    searchInputWrapper: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: '#f5f5f5',
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        height: 40,
+        alignItems: 'center',
+        gap: 8,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 14,
+        color: '#333',
+        height: '100%',
+    },
+    filterButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        backgroundColor: '#f5f5f5',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#eee',
+    },
+    filterButtonActive: {
+        backgroundColor: Colors.light.tint,
+        borderColor: Colors.light.tint,
+    },
+
+    // List Headers
+    listHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingRight: 15,
+        marginBottom: 5,
+    },
     sectionTitle: {
         fontSize: 14,
-        fontWeight: '600',
+        fontWeight: 'bold',
         marginLeft: 15,
-        marginBottom: 8,
-        color: '#666',
-    },
-    wallpaperListContainer: {
-        height: 120, // specific height for list
-    },
-    wallpaperList: {
-        paddingHorizontal: 10,
-    },
-    wallpaperItem: {
-        marginHorizontal: 5,
-        width: 80,
-    },
-    selectedWallpaperItem: {
-        borderWidth: 2,
-        borderColor: Colors.light.tint,
-        borderRadius: 8,
-    },
-    wallpaperThumb: {
-        width: 80,
-        height: 80,
-        borderRadius: 6,
-        backgroundColor: '#ddd',
-    },
-    wallpaperName: {
-        fontSize: 10,
-        textAlign: 'center',
-        marginTop: 4,
         color: '#333',
     },
+    recentLabel: {
+        fontSize: 10,
+        color: Colors.light.tint,
+        fontWeight: '600',
+        textTransform: 'uppercase',
+    },
+
+    // List
+    wallpaperListContainer: { height: 130 },
+    wallpaperList: { paddingHorizontal: 10 },
+    wallpaperItem: { marginHorizontal: 5, width: 85 },
+    selectedWallpaperItem: { borderWidth: 2, borderColor: Colors.light.tint, borderRadius: 8 },
+    wallpaperThumb: { width: 85, height: 85, borderRadius: 6, backgroundColor: '#eaebed' },
+    wallpaperName: { fontSize: 10, textAlign: 'center', marginTop: 4, color: '#333' },
+    favBadgeSmall: { position: 'absolute', top: 4, right: 4, backgroundColor: 'rgba(239, 68, 68, 0.9)', borderRadius: 10, width: 16, height: 16, justifyContent: 'center', alignItems: 'center' },
+    emptyState: { width: width - 40, justifyContent: 'center', alignItems: 'center', paddingTop: 20 },
+    emptyText: { color: '#999', fontSize: 13, fontStyle: 'italic' },
+
+    // Footer Actions
     actionButtons: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        marginTop: 10,
+        marginTop: 8,
+        paddingTop: 8,
+        borderTopWidth: 1,
+        borderTopColor: '#f5f5f5',
     },
-    fileInfo: {
-        flex: 1,
-    },
-    productName: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    productPrice: {
-        fontSize: 16,
-        color: Colors.light.tint,
-        fontWeight: 'bold',
-    },
+    fileInfo: { flex: 1, marginRight: 15 },
+    productName: { fontSize: 13, fontWeight: 'bold', color: '#333' },
+    productPrice: { fontSize: 15, color: Colors.light.tint, fontWeight: 'bold' },
     addToCartBtn: {
         backgroundColor: Colors.light.tint,
         flexDirection: 'row',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
         borderRadius: 25,
         alignItems: 'center',
-        gap: 8,
+        gap: 6,
     },
-    addToCartText: {
-        color: 'white',
-        fontWeight: '600',
-    },
+    addToCartText: { color: 'white', fontWeight: '600', fontSize: 13 },
+
+    // Overlay Elements
     processingBadge: {
-        position: 'absolute',
-        top: 20,
-        right: 20,
+        position: 'absolute', top: 20, right: 20,
         backgroundColor: 'rgba(0,0,0,0.7)',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
+        paddingHorizontal: 12, paddingVertical: 6,
         borderRadius: 20,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
+        flexDirection: 'row', alignItems: 'center', gap: 6,
     },
-    processingText: {
-        color: 'white',
-        fontSize: 12,
-        fontWeight: '600',
-    },
+    processingText: { color: 'white', fontSize: 12, fontWeight: '600' },
     generateButton: {
-        position: 'absolute',
-        top: '50%',
-        alignSelf: 'center',
+        position: 'absolute', top: '50%', alignSelf: 'center',
         backgroundColor: Colors.light.tint,
-        paddingHorizontal: 20,
-        paddingVertical: 12,
+        paddingHorizontal: 20, paddingVertical: 12,
         borderRadius: 30,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        flexDirection: 'row', alignItems: 'center', gap: 8,
+        elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84,
     },
-    generateButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 14,
-    }
+    generateButtonText: { color: 'white', fontWeight: 'bold', fontSize: 14 },
 });
