@@ -372,7 +372,11 @@ export default function HomeScreen() {
                     <TouchableOpacity onPress={() => { }}>
                         <Ionicons name="menu-outline" size={28} color="black" />
                     </TouchableOpacity>
-                    <Text style={styles.logoText}>VIZZARO PRO</Text>
+                    <Image
+                        source={require('@/assets/images/logo-header.png')}
+                        style={{ width: 140, height: 40 }}
+                        resizeMode="contain"
+                    />
                     <View style={styles.navIcons}>
                         <TouchableOpacity onPress={() => router.push('/search' as any)} style={{ marginRight: 15 }}>
                             <Ionicons name="search-outline" size={24} color="black" />
