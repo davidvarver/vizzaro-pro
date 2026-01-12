@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Platform } from 'react-native';
 import { User, Heart, ChevronRight, Package, Shield, LogOut, LogIn } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -45,33 +45,41 @@ export default function ProfileScreen() {
 
 
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log('🔴 handleLogout called');
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Sign Out',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await logout();
-              // Use push ensuring we navigate away even if replace fails contextually
-              if (router.canGoBack()) {
-                router.dismissAll();
-              }
-              router.replace('/auth/login' as any);
-            } catch (error) {
-              console.error('Logout error:', error);
-              // Fallback force navigation
-              router.replace('/auth/login' as any);
-            }
+
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm('Are you sure you want to sign out?');
+      if (confirmed) {
+        await performLogout();
+      }
+    } else {
+      Alert.alert(
+        'Sign Out',
+        'Are you sure you want to sign out?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Sign Out',
+            style: 'destructive',
+            onPress: performLogout,
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
+  };
+
+  const performLogout = async () => {
+    try {
+      await logout();
+      if (router.canGoBack()) {
+        router.dismissAll();
+      }
+      router.replace('/auth/login' as any);
+    } catch (error) {
+      console.error('Logout error:', error);
+      router.replace('/auth/login' as any);
+    }
   };
 
 
