@@ -57,13 +57,16 @@ export default function ProfileScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              console.log('🔴 Logging out...');
               await logout();
-              console.log('✅ Logout successful, redirecting...');
+              // Use push ensuring we navigate away even if replace fails contextually
+              if (router.canGoBack()) {
+                router.dismissAll();
+              }
               router.replace('/auth/login' as any);
             } catch (error) {
-              console.error('❌ Error during logout:', error);
-              Alert.alert('Error', 'Could not sign out. Please try again.');
+              console.error('Logout error:', error);
+              // Fallback force navigation
+              router.replace('/auth/login' as any);
             }
           },
         },
