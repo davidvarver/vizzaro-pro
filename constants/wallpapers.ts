@@ -9,6 +9,7 @@ export interface Wallpaper {
   category: string;
   style: string;
   group?: string; // NEW: To identify variants of the same model
+  collection?: string; // NEW: Brand/Collection name
   colors: string[];
   dimensions: {
     width: number; // in meters

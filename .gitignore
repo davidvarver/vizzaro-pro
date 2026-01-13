@@ -44,3 +44,8 @@ failures.json
 pytest-report.json
 playwright-report.json
 tests/__pycache__/
+
+
+# Import scripts temp files
+import_state.json
+ftp_dir.json

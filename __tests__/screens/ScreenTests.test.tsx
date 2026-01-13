@@ -110,7 +110,7 @@ global.fetch = jest.fn(() =>
 
 // Since they are default exports from files in 'app', we import them by path.
 import HomeScreen from '../../app/(tabs)/home';
-import CheckoutScreen from '../../app/checkout';
+import CheckoutScreen from '../../app/(tabs)/checkout';
 import CameraScreen from '../../app/(tabs)/camera';
 
 describe('Full Screen UI Tests', () => {

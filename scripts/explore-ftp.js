@@ -1,5 +1,5 @@
-// scripts/explore-ftp.js
 const Client = require('ssh2-sftp-client');
+const fs = require('fs');
 const sftp = new Client();
 
 const config = {
@@ -21,29 +21,20 @@ async function explore() {
     try {
         console.log(`Connecting to ${config.host}...`);
         await sftp.connect(config);
-        console.log('Connected!');
+        console.log('Connected! Listing root...');
 
-        console.log('Listing root directory...');
         const list = await sftp.list('/');
+        console.log(`Found ${list.length} items.`);
 
-        console.log('\n--- ROOT DIRECTORY ---');
-        list.forEach(item => {
-            console.log(`[${item.type}] ${item.name} \t (${formatSize(item.size)})`);
+        // Sort: Directories first
+        list.sort((a, b) => {
+            if (a.type === b.type) return a.name.localeCompare(b.name);
+            return a.type === 'd' ? -1 : 1;
         });
 
-        const subDirs = ['All Data New', 'All Images'];
-
-        for (const dir of subDirs) {
-            try {
-                console.log(`\n--- Listing ${dir} (First 20 items) ---`);
-                const subList = await sftp.list(dir);
-                subList.slice(0, 20).forEach(item => {
-                    console.log(`[${item.type}] ${item.name} \t (${formatSize(item.size)})`);
-                });
-            } catch (e) {
-                console.log(`Could not list ${dir}: ${e.message}`);
-            }
-        }
+        // Write to file to avoid encoding issues
+        fs.writeFileSync('ftp_dir.json', JSON.stringify(list, null, 2));
+        console.log('Successfully saved to ftp_dir.json');
 
     } catch (err) {
         console.error('SFTP Error:', err.message);

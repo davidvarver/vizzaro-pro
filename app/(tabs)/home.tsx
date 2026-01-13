@@ -17,6 +17,7 @@ export default function HomeScreen() {
     // We map internal category names to display names if needed, but for now we update state init
     const [selectedCategory, setSelectedCategory] = useState(home.filters.all);
     const [selectedColor, setSelectedColor] = useState(home.filters.colors.all);
+    const [selectedCollection, setSelectedCollection] = useState('all');
 
     // Carousel State
     const [heroIndex, setHeroIndex] = useState(0);
@@ -140,6 +141,15 @@ export default function HomeScreen() {
         });
     }, [wallpapers]);
 
+    // Available Collections
+    const availableCollections = React.useMemo(() => {
+        const cols = new Set<string>();
+        wallpapers.forEach(w => {
+            if (w.collection) cols.add(w.collection);
+        });
+        return ['all', ...Array.from(cols).sort()];
+    }, [wallpapers]);
+
     // Filter Logic
     const filteredWallpapers = React.useMemo(() => {
         // Step 1: Filter by Category and Color
@@ -179,6 +189,12 @@ export default function HomeScreen() {
                 }
             }
 
+            // 3. Collection Filter
+            let matchesCollection = true;
+            if (selectedCollection !== 'all') {
+                matchesCollection = w.collection === selectedCollection;
+            }
+
             // 3. Exclude 'Bath Mats' (Tapetes) from main grid
             // We want them ONLY in the carousel
             const isBathMat = w.category?.toLowerCase().includes('mat') ||
@@ -190,7 +206,7 @@ export default function HomeScreen() {
 
             if (isBathMat) return false;
 
-            return matchesCategory && matchesColor;
+            return matchesCategory && matchesColor && matchesCollection;
         });
 
         // Step 2: Deduplicate by Group (Show only one variant per group)
@@ -211,7 +227,7 @@ export default function HomeScreen() {
         });
 
         return Array.from(uniqueMap.values());
-    }, [wallpapers, selectedCategory, selectedColor]);
+    }, [wallpapers, selectedCategory, selectedColor, selectedCollection]);
 
     // Special case for "New" to limit results if no other filter applies?
     // Actually, we should use filteredWallpapers even for "New" to ensure deduplication applies.
@@ -327,8 +343,50 @@ export default function HomeScreen() {
                     ))}
                 </ScrollView>
 
+
+                {/* Collection Navigation */}
+                {
+                    availableCollections.length > 1 && (
+                        <View style={{ marginBottom: 20 }}>
+                            <Text style={{
+                                marginLeft: 20,
+                                marginBottom: 10,
+                                fontSize: 12,
+                                fontWeight: '700',
+                                letterSpacing: 1,
+                                color: '#333'
+                            }}>
+                                SHOP BY BRAND
+                            </Text>
+                            <ScrollView
+                                horizontal
+                                showsHorizontalScrollIndicator={false}
+                                contentContainerStyle={{ paddingHorizontal: 20 }}
+                            >
+                                {availableCollections.map((col) => (
+                                    <TouchableOpacity
+                                        key={col}
+                                        style={[
+                                            styles.catItem,
+                                            selectedCollection === col && styles.catItemActive
+                                        ]}
+                                        onPress={() => setSelectedCollection(col)}
+                                    >
+                                        <Text style={[
+                                            styles.catText,
+                                            selectedCollection === col && styles.catTextActive
+                                        ]}>
+                                            {col === 'all' ? 'ALL BRANDS' : col.toUpperCase()}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+                        </View>
+                    )
+                }
+
                 <Text style={styles.sectionTitle}>{home.collectionTitle}</Text>
-            </View>
+            </View >
         );
     };
 
