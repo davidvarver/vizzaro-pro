@@ -35,6 +35,10 @@ interface AuthState {
     resendCode: () => Promise<{ success: boolean; error?: string }>;
     logout: () => Promise<void>;
 
+    // Admin Actions
+    getUsers: () => Promise<{ success: boolean; users?: User[]; error?: string }>;
+    updateUserRole: (userId: string, isAdmin: boolean) => Promise<{ success: boolean; error?: string }>;
+
     // Initialization
     initialize: () => Promise<void>;
 }
@@ -220,10 +224,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
                         user: data.user,
                         token: data.token,
                         isAuthenticated: true,
-                        isAdmin: true, // FORCED FOR DEV: data.user.isAdmin || false,
+                        isAdmin: data.user.isAdmin || false,
                         isLoading: false
                     });
-                    return { success: true, isAdmin: true }; // data.user.isAdmin
+                    return { success: true, isAdmin: data.user.isAdmin };
                 }
             }
 
@@ -233,6 +237,55 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         } catch (error) {
             console.error(error);
             return { success: false, error: 'Error de conexión' };
+        }
+    },
+
+    getUsers: async () => {
+        try {
+            const baseUrl = getApiBaseUrl();
+            const { token } = get();
+            const response = await fetch(`${baseUrl}/api/users`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return { success: true, users: data.users || [] };
+            }
+            return { success: false, error: 'Failed to fetch users' };
+        } catch (error) {
+            console.error(error);
+            return { success: false, error: 'Network error' };
+        }
+    },
+
+    updateUserRole: async (userId: string, isAdmin: boolean) => {
+        try {
+            const baseUrl = getApiBaseUrl();
+            const { token } = get();
+
+            // Mock implementation if endpoint doesn't exist yet, 
+            // but we try to hit a standard route
+            const response = await fetch(`${baseUrl}/api/users/${userId}/role`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ isAdmin })
+            });
+
+            if (response.ok) {
+                return { success: true };
+            }
+            return { success: false, error: 'Failed to update role' };
+        } catch (error) {
+            console.error(error);
+            return { success: false, error: 'Network error' };
         }
     },
 

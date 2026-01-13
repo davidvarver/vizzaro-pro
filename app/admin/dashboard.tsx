@@ -17,7 +17,9 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
+  CheckCircle,
   AlertCircle,
+  Users,
 } from 'lucide-react-native';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useOrdersStore } from '@/store/useOrdersStore';
@@ -59,6 +61,10 @@ export default function AdminDashboard() {
 
   const navigateToCollections = () => {
     router.push('/admin/collections' as any);
+  };
+
+  const navigateToUsers = () => {
+    router.push('/admin/users' as any);
   };
 
   const StatCard = ({
@@ -189,6 +195,13 @@ export default function AdminDashboard() {
                 icon={BarChart3}
                 color="#8B5CF6"
                 onPress={navigateToCollections}
+              />
+              <QuickActionCard
+                title="Usuarios"
+                description="Gestionar permisos"
+                icon={Users}
+                color="#EF4444"
+                onPress={navigateToUsers}
               />
             </View>
           </View>
