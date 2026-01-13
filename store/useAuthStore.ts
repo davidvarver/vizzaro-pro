@@ -33,6 +33,7 @@ interface AuthState {
     register: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string; needsVerification?: boolean }>;
     verifyCode: (code: string) => Promise<{ success: boolean; error?: string }>;
     resendCode: () => Promise<{ success: boolean; error?: string }>;
+    recoverPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
     logout: () => Promise<void>;
 
     // Admin Actions
@@ -214,6 +215,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             return { success: true };
         } catch (e) {
             return { success: false, error: 'Error al reenviar' };
+        }
+    },
+
+    recoverPassword: async (email: string) => {
+        try {
+            const baseUrl = getApiBaseUrl();
+            const response = await fetch(`${baseUrl}/api/users/recover-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+
+            if (response.ok) {
+                return { success: true };
+            }
+
+            const errData = await response.json().catch(() => ({}));
+            return { success: false, error: errData.error || 'Failed to send recovery email' };
+        } catch (error) {
+            console.error(error);
+            return { success: false, error: 'Network error' };
         }
     },
 
