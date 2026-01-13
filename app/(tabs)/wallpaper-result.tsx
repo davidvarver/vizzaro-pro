@@ -36,11 +36,21 @@ export default function WallpaperResultScreen() {
     const [searchQuery, setSearchQuery] = useState('');
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
-    // Initial Load
+    // Initial Load & Error Handling
     useEffect(() => {
         loadRecents();
         loadFavorites();
-    }, []);
+
+        if (aiProcessingFailed === 'true') {
+            setTimeout(() => {
+                Alert.alert(
+                    'Optimization Needed',
+                    'We couldn\'t detect the wall clearly. \n\nTips for a better result:\n• Ensure the room is well-lit 💡\n• Stand directly in front of the wall 📸\n• Avoid blurry or very dark photos 🚫',
+                    [{ text: 'Got it' }]
+                );
+            }, 500);
+        }
+    }, [aiProcessingFailed]);
 
     // Find the room logic
     const room = useMemo(() => {
@@ -86,7 +96,13 @@ export default function WallpaperResultScreen() {
             setSelectedWallpaperId(currentWallpaper.id); // Triggers re-render with new context
         } catch (error) {
             console.error(error);
-            Alert.alert('Error', 'Could not generate visualization.');
+        } catch (error) {
+            console.error(error);
+            Alert.alert(
+                'Optimization Needed',
+                'We couldn\'t apply the wallpaper. \n\nTips:\n• Ensure the room is well-lit.\n• Face the wall directly.\n• Avoid blurry photos.',
+                [{ text: 'OK' }]
+            );
         } finally {
             setIsRegenerating(false);
         }

@@ -24,7 +24,7 @@ export default function CameraScreen() {
     const router = useRouter();
     const [isProcessing, setIsProcessing] = useState(false);
     const [processingStep, setProcessingStep] = useState<string>('');
-    
+
     const params = useLocalSearchParams<{ wallpaperId?: string }>();
     const { wallpaperId } = params;
     const { getWallpaperById, addUserRoom, setVisualizerImage, updateUserRoomMask } = useWallpapersStore();
@@ -192,7 +192,7 @@ export default function CameraScreen() {
                         <Ionicons name="close" size={28} color="black" />
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>Visualizer</Text>
-                    <View style={{ width: 28 }} /> 
+                    <View style={{ width: 28 }} />
                 </View>
 
                 <View style={styles.content}>
@@ -208,6 +208,13 @@ export default function CameraScreen() {
                         <Ionicons name="images" size={24} color="white" style={{ marginRight: 10 }} />
                         <Text style={styles.uploadButtonText}>Choose from Gallery</Text>
                     </TouchableOpacity>
+
+                    <View style={styles.tipsContainer}>
+                        <Text style={styles.tipsTitle}>💡 For best results:</Text>
+                        <Text style={styles.tipText}>• Ensure the room is well lit</Text>
+                        <Text style={styles.tipText}>• Stand directly in front of the main wall</Text>
+                        <Text style={styles.tipText}>• Avoid blurry or dark photos</Text>
+                    </View>
                 </View>
             </SafeAreaView>
 
@@ -303,5 +310,23 @@ const styles = StyleSheet.create({
         marginTop: 16,
         fontSize: 16,
         fontWeight: '600',
+    },
+    tipsContainer: {
+        marginTop: 40,
+        backgroundColor: '#F9FAFB',
+        padding: 16,
+        borderRadius: 12,
+        width: '100%',
+    },
+    tipsTitle: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#374151',
+        marginBottom: 8,
+    },
+    tipText: {
+        fontSize: 13,
+        color: '#6B7280',
+        marginBottom: 4,
     },
 });
