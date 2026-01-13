@@ -25,6 +25,7 @@ export default function ForgotPasswordScreen() {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const handleRecover = async () => {
         if (!email) {
@@ -40,20 +41,47 @@ export default function ForgotPasswordScreen() {
         setIsLoading(true);
         setError('');
 
-        const result = await recoverPassword(email);
+        try {
+            const result = await recoverPassword(email);
 
-        setIsLoading(false);
-
-        if (result.success) {
-            Alert.alert(
-                'Email Sent',
-                'Check your inbox for instructions to reset your password.',
-                [{ text: 'OK', onPress: () => router.back() }]
-            );
-        } else {
-            setError(result.error || 'Failed to send recovery email');
+            if (result.success) {
+                setIsSuccess(true);
+            } else {
+                setError(result.error || 'Failed to send recovery email');
+            }
+        } catch (err) {
+            setError('An unexpected error occurred');
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    if (isSuccess) {
+        return (
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+                <ScrollView
+                    contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top, justifyContent: 'center', alignItems: 'center', flexGrow: 1 }]}
+                >
+                    <View style={styles.successIcon}>
+                        <Mail size={48} color={Colors.light.primary} />
+                    </View>
+                    <Text style={[styles.title, { textAlign: 'center' }]}>Email Sent</Text>
+                    <Text style={[styles.subtitle, { textAlign: 'center', marginBottom: 32 }]}>
+                        Check your inbox (and spam folder) for instructions to reset your password.
+                    </Text>
+                    <TouchableOpacity
+                        style={[styles.loginButton, { width: '100%' }]}
+                        onPress={() => router.back()}
+                    >
+                        <Text style={styles.loginButtonText}>Back to Login</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        );
+    }
 
     return (
         <KeyboardAvoidingView
@@ -214,5 +242,16 @@ const styles = StyleSheet.create({
     loginLinkText: {
         color: Colors.light.primary,
         fontWeight: '600',
-    }
+    },
+    successIcon: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: Colors.light.card,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 24,
+        borderWidth: 1,
+        borderColor: Colors.light.border,
+    },
 });
