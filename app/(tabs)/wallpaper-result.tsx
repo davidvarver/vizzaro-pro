@@ -96,8 +96,6 @@ export default function WallpaperResultScreen() {
             setSelectedWallpaperId(currentWallpaper.id); // Triggers re-render with new context
         } catch (error) {
             console.error(error);
-        } catch (error) {
-            console.error(error);
             Alert.alert(
                 'Optimization Needed',
                 'We couldn\'t apply the wallpaper. \n\nTips:\n• Ensure the room is well-lit.\n• Face the wall directly.\n• Avoid blurry photos.',
