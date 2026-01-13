@@ -43,8 +43,7 @@ export default async function handler(req, res) {
         });
 
         if (!userResponse.ok) {
-            // User not found, but return success to prevent enumeration
-            return res.status(200).json({ success: true });
+            return res.status(404).json({ success: false, error: 'Correo no registrado' });
         }
 
         const userData = await userResponse.json();
@@ -59,8 +58,7 @@ export default async function handler(req, res) {
         }
 
         if (!user) {
-            // User not found in result
-            return res.status(200).json({ success: true });
+            return res.status(404).json({ success: false, error: 'Correo no registrado' });
         }
 
         // Generate temp password
