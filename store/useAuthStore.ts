@@ -99,6 +99,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             if (tokenJson && userJson) {
                 const token = tokenJson;
                 const user = JSON.parse(userJson);
+
+                // Master Admin Override
+                if (user.email === 'davidvarver@gmail.com') {
+                    user.isAdmin = true;
+                }
+
                 set({
                     user,
                     token,
@@ -163,6 +169,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             if (response.ok) {
                 const data = await response.json();
                 if (data.success && data.user && data.token) {
+
+                    // Master Admin Override
+                    if (data.user.email === 'davidvarver@gmail.com') {
+                        data.user.isAdmin = true;
+                    }
+
                     await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
                     await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
 
@@ -217,6 +229,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             if (response.ok) {
                 const data = await response.json();
                 if (data.success && data.user && data.token) {
+
+                    // Master Admin Override
+                    if (data.user.email === 'davidvarver@gmail.com') {
+                        data.user.isAdmin = true;
+                    }
+
                     await AsyncStorage.setItem(AUTH_TOKEN_KEY, data.token);
                     await AsyncStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
 

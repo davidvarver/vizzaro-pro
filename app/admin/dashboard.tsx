@@ -17,7 +17,6 @@ import {
   TrendingUp,
   Clock,
   CheckCircle,
-  CheckCircle,
   AlertCircle,
   Users,
 } from 'lucide-react-native';
