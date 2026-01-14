@@ -153,7 +153,7 @@ export default function CheckoutScreen() {
                             </Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Zelle Reference Number (Required)"
+                                placeholder="Name Registered on Zelle (Required)"
                                 value={form.zelleRef}
                                 onChangeText={(t) => setForm({ ...form, zelleRef: t })}
                             />

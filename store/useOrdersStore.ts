@@ -439,14 +439,14 @@ const sendOrderConfirmationEmail = async (order: Order): Promise<void> => {
                                 <div style="color: #78350f; font-size: 14px; margin-bottom: 8px;"><strong>Monto total:</strong></div>
                                 <div style="color: #1a1a1a; font-size: 18px; font-weight: 700; margin-bottom: 16px;">${order.total.toFixed(2)}</div>
                                 <div style="background-color: #FEF3C7; border-radius: 6px; padding: 12px; border: 2px dashed #F59E0B;">
-                                  <div style="color: #92400e; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Código de Referencia:</div>
+                                  <div style="color: #92400e; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Nombre Registrado en Zelle:</div>
                                   <div style="color: #1a1a1a; font-size: 20px; font-weight: 700; letter-spacing: 1px;">${order.paymentReference}</div>
                                 </div>
                               </div>
                               <div style="background-color: #FEE2E2; border-radius: 6px; padding: 12px; border-left: 4px solid #EF4444;">
                                 <div style="color: #991B1B; font-size: 14px; font-weight: 600; margin-bottom: 4px;">⚠️ MUY IMPORTANTE</div>
                                 <div style="color: #7F1D1D; font-size: 13px; line-height: 1.6;">
-                                  Debes incluir el código de referencia <strong>${order.paymentReference}</strong> en la nota o descripción de tu pago Zelle. Esto nos permite identificar y procesar tu pedido automáticamente.
+                                  Para confirmar tu pago, verifica que el nombre registrado en Zelle coincida con: <strong>${order.paymentReference}</strong>. Esto nos permite identificar tu pedido automáticamente.
                                 </div>
                               </div>
                             </div>
