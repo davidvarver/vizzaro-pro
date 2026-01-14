@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import { useWindowDimensions, View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
 import { WallpaperCard } from '@/components/WallpaperCard';
@@ -8,8 +7,21 @@ import { Ionicons } from '@expo/vector-icons';
 export default function CollectionDetailScreen() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
+    const { width } = useWindowDimensions();
     const { wallpapers, loadWallpapers, isLoading, error } = useWallpapersStore();
     const collectionName = typeof id === 'string' ? decodeURIComponent(id) : '';
+
+    // Calculate columns based on screen width
+    let numColumns = 2;
+    if (width > 600) numColumns = 3;
+    if (width > 900) numColumns = 4;
+    if (width > 1200) numColumns = 5;
+
+    // Calculate gap and item width
+    const gap = 15; // Increased gap for airy feel
+    const padding = 20; // Container padding
+    const availableWidth = width - (padding * 2) - (gap * (numColumns - 1));
+    const itemWidth = availableWidth / numColumns;
 
     useEffect(() => {
         if (collectionName) {
@@ -18,7 +30,7 @@ export default function CollectionDetailScreen() {
     }, [collectionName]);
 
     const renderItem = ({ item }: { item: any }) => (
-        <View style={styles.cardContainer}>
+        <View style={{ width: itemWidth, marginBottom: 20 }}>
             <WallpaperCard
                 item={item}
                 onPress={() => router.push(`/(tabs)/product/${item.id}` as any)}
@@ -64,12 +76,13 @@ export default function CollectionDetailScreen() {
             />
 
             <FlatList
+                key={`grid-${numColumns}`} // Force re-render when columns change
                 data={wallpapers}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
-                numColumns={2}
-                contentContainerStyle={styles.listContent}
-                columnWrapperStyle={styles.columnWrapper}
+                numColumns={numColumns}
+                contentContainerStyle={[styles.listContent, { paddingHorizontal: padding }]}
+                columnWrapperStyle={{ gap: gap }}
                 showsVerticalScrollIndicator={false}
                 ListEmptyComponent={
                     <View style={styles.centerContainer}>
@@ -98,14 +111,7 @@ const styles = StyleSheet.create({
         padding: 20
     },
     listContent: {
-        padding: 10,
-    },
-    columnWrapper: {
-        justifyContent: 'space-between',
-        marginBottom: 10,
-    },
-    cardContainer: {
-        width: '49%',
+        paddingVertical: 20,
     },
     loadingText: {
         marginTop: 10,
@@ -131,4 +137,29 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontStyle: 'italic'
     }
+});
+loadingText: {
+    marginTop: 10,
+        fontSize: 14,
+            color: '#666',
+                letterSpacing: 0.5
+},
+errorText: {
+    marginBottom: 15,
+        color: 'red',
+            textAlign: 'center'
+},
+retryButton: {
+    padding: 10,
+        backgroundColor: '#f0f0f0',
+            borderRadius: 5
+},
+retryText: {
+    color: '#333'
+},
+emptyText: {
+    color: '#888',
+        fontSize: 16,
+            fontStyle: 'italic'
+}
 });

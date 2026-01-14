@@ -1,16 +1,9 @@
-// scripts/import-ftp.js
-// Usage: node scripts/import-ftp.js
-// Requires .env with: BLOB_READ_WRITE_TOKEN, KV_REST_API_URL, KV_REST_API_TOKEN
-
 require('dotenv').config();
 const Client = require('ssh2-sftp-client');
-const XLSX = require('xlsx');
 const { put } = require('@vercel/blob');
 const { createClient } = require('@vercel/kv');
 const sharp = require('sharp');
-const path = require('path');
 
-// Initialize clients
 const sftp = new Client();
 const kv = createClient({
     url: process.env.KV_REST_API_URL,
@@ -20,37 +13,21 @@ const kv = createClient({
 const FTP_CONFIG = {
     host: 'ftpimages.brewsterhomefashions.com',
     username: 'dealers',
-    password: 'Brewster#1', // Verified correct
+    password: 'Brewster#1',
 };
 
-const EXCEL_FILE = 'All_NewProduct_Data.xlsx';
-const IMPORT_LIMIT = 5000; // Modified: Run import for ALL items (5000 safe limit)
 const IMAGE_DIRS = [
     '/New Products/All Images',
     '/WallpaperBooks/1 All Wallpaper Images/Images',
     '/WallpaperBooks/Brewster Kids - 2886'
 ];
 
-function cleanPrice(priceStr) {
-    if (!priceStr) return 0;
-    // Remove "MSRP " and symbols, parse float
-    return parseFloat(String(priceStr).replace(/[^0-9.]/g, '')) || 0;
-}
-
-function inchToMeter(inchStr) {
-    if (!inchStr) return 0;
-    const inch = parseFloat(inchStr);
-    return isNaN(inch) ? 0 : parseFloat((inch * 0.0254).toFixed(2));
-}
-
 async function addWatermark(imageBuffer) {
     try {
         const image = sharp(imageBuffer);
         const metadata = await image.metadata();
-
-        // Create an SVG text overlay
         const width = metadata.width || 1000;
-        const fontSize = Math.floor(width * 0.05); // 5% of image width
+        const fontSize = Math.floor(width * 0.05);
 
         const svgImage = `
         <svg width="${width}" height="${metadata.height}">
@@ -68,17 +45,7 @@ async function addWatermark(imageBuffer) {
           <text x="50%" y="50%" text-anchor="middle" class="title">vizzarowallpaper.com</text>
         </svg>
         `;
-
-        return await image
-            .composite([
-                {
-                    input: Buffer.from(svgImage),
-                    top: 0,
-                    left: 0,
-                    gravity: 'center'
-                },
-            ])
-            .toBuffer();
+        return await image.composite([{ input: Buffer.from(svgImage), top: 0, left: 0, gravity: 'center' }]).toBuffer();
     } catch (error) {
         console.error('   ⚠️ Error adding watermark:', error.message);
         return imageBuffer;
@@ -86,291 +53,121 @@ async function addWatermark(imageBuffer) {
 }
 
 async function main() {
-    let client;
     try {
         console.log('🔌 Connecting to SFTP...');
         await sftp.connect(FTP_CONFIG);
         console.log('✅ Connected.');
 
-        // 1. Download Excel
-        const excelBuffer = await sftp.get(`/New Products/All Data/${EXCEL_FILE}`);
-        console.log(`📦 Excel Buffer Size: ${excelBuffer.length} bytes`);
+        console.log('💾 Fetching Catalog from KV (Repair Mode)...');
+        let existingCatalog = await kv.get('wallpapers_catalog') || [];
 
-        const workbook = XLSX.read(excelBuffer, { type: 'buffer' });
-        console.log(`📑 Sheets: ${workbook.SheetNames.join(', ')}`);
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const data = XLSX.utils.sheet_to_json(sheet);
+        console.log(`📊 Catalog size: ${existingCatalog.length} items.`);
 
-        console.log(`📊 Found ${data.length} total rows in Excel.`);
+        // REPAIR ALL MISSING IMAGES
+        console.log('🧹 Filtering for items needing repair (missing images)...');
+        const pendingItems = existingCatalog.filter(i =>
+            (!i.imageUrl || i.imageUrl.length < 5) &&
+            (!i.imageUrls || i.imageUrls.length === 0)
+        );
 
-        // DEBUG: Find target in RAW data
-        const targetDebug = data.find(r => JSON.stringify(r).includes('RMK51262'));
-        if (targetDebug) {
-            console.log('🔎 DEBUG: FOUND TARGET IN RAW DATA:', JSON.stringify(targetDebug));
-            console.log('   Keys:', Object.keys(targetDebug));
-        } else {
-            console.log('❌ DEBUG: TARGET NOT FOUND IN RAW DATA');
+        console.log(`🎯 Found ${pendingItems.length} items in KV missing images.`);
+
+        if (pendingItems.length === 0) {
+            console.log('✅ No items need repair!');
+            return;
         }
 
-        // 2. Filter valid rows
-        const validRows = data.filter(r => r['Pattern'] && r['Name']);
-        console.log(`🔍 Valid products to process: ${validRows.length}`);
-
-        // 3. Process Items
-        let processed = 0;
-        let success = 0;
-        const limit = IMPORT_LIMIT;
-
-        // 🔹 FETCH EXISTING CATALOG FIRST
-        console.log(`💾 Fetching existing catalog from KV...`);
-        let existingCatalog = await kv.get('wallpapers_catalog') || [];
-        console.log(`   Found ${existingCatalog.length} existing items.`);
-
-        // Create a Map for faster lookup/update by ID
         const catalogMap = new Map();
         existingCatalog.forEach(item => catalogMap.set(item.id, item));
 
-        const displayItems = [];
-        const importedProducts = [];
+        let processedCount = 0;
 
-        // Keywords mapping for Smart Categorization
-        const STYLE_KEYWORDS = {
-            'Floral': ['floral', 'flower', 'botanic', 'leaf', 'hoja', 'flor', 'nature', 'tropical', 'palm'],
-            'Geométrico': ['geometric', 'geo', 'line', 'stripe', 'circle', 'square', 'rayas', 'cuadro', 'modern'],
-            'Textura': ['texture', 'plain', 'solid', 'weathered', 'concrete', 'stone', 'piedra', 'liso'],
-            'Lujo': ['luxury', 'damask', 'gold', 'metallic', 'dorado', 'ornament', 'baroque', 'elegance'],
-            'Vintage': ['vintage', 'retro', 'classic', 'old', 'antiguo'],
-            'Infantil': ['kid', 'child', 'baby', 'boy', 'girl', 'bear', 'star', 'infantil']
-        };
+        for (const item of pendingItems) {
+            processedCount++;
+            const pattern = item.id;
+            console.log(`\n[${processedCount}/${pendingItems.length}] 🔎 Processing ${pattern} (REPAIR MODE)`);
 
-        function determineCategory(row) {
-            const text = `${row['Name']} ${row['Description']} ${row['Style']} ${row['Book Name']}`.toLowerCase();
+            let foundImageDir = null;
+            let foundRoomDir = null;
 
-            for (const [style, keywords] of Object.entries(STYLE_KEYWORDS)) {
-                if (keywords.some(k => text.includes(k))) {
-                    return style;
-                }
+            // Check MAIN IMAGE
+            for (const dir of IMAGE_DIRS) {
+                const checkPath = `${dir}/${pattern}.jpg`;
+                // console.log(`      ? Checking Main: ${checkPath}`); // Reduce log spam
+                try {
+                    const exists = await sftp.exists(checkPath);
+                    if (exists) {
+                        console.log(`      ✅ FOUND Main in: ${dir}`);
+                        foundImageDir = dir;
+                        break;
+                    }
+                } catch (e) { }
             }
-            return 'General'; // Default
-        }
 
-        console.log(`🚀 Starting import (Limit: ${limit === Infinity ? 'Unlimited' : limit})...`);
-
-        // Helper to ensure connection
-        async function ensureConnection() {
-            try {
-                const type = await sftp.list('/'); // Simple check
-            } catch (e) {
-                console.log('   ⚠️ Connection lost. Reconnecting...');
-                await sftp.end();
-                await sftp.connect(FTP_CONFIG);
-                console.log('   ✅ Reconnected.');
+            // Check ROOM IMAGE
+            for (const dir of IMAGE_DIRS) {
+                const checkPath = `${dir}/${pattern}_Room.jpg`;
+                // console.log(`      ? Checking Room: ${checkPath}`);
+                try {
+                    const exists = await sftp.exists(checkPath);
+                    if (exists) {
+                        console.log(`      ✅ FOUND Room in: ${dir}`);
+                        foundRoomDir = dir;
+                        break;
+                    }
+                } catch (e) { }
             }
-        }
 
-        for (const row of validRows) {
-            if (processed >= limit) break;
+            let imageUrl = item.imageUrl || '';
+            let imageUrls = item.imageUrls || [];
+            let updated = false;
 
-            try {
-                // Ensure connection is alive before starting an item
-                // await ensureConnection(); // Checking every item might be slow, let's catch errors instead
+            if (foundImageDir) {
+                console.log(`⬇️ Downloading Main...`);
+                try {
+                    let imgBuffer = await sftp.get(`${foundImageDir}/${pattern}.jpg`);
+                    imgBuffer = await addWatermark(imgBuffer);
+                    const blob = await put(`products/${pattern}.jpg`, imgBuffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, allowOverwrite: true });
+                    imageUrl = blob.url;
+                    if (!imageUrls.includes(imageUrl)) imageUrls.unshift(imageUrl);
+                    console.log(`🚀 Uploaded Main: ${blob.url}`);
+                    updated = true;
+                } catch (err) { console.error('   ❌ Upload failed:', err.message); }
+            }
 
-                const pattern = row['Pattern'];
-                if (pattern === 'RMK51262') {
-                    console.log('🎯 PROCESSING TARGET SKU: RMK51262');
-                    console.log('   Row Data Repeat:', row['Repeat']);
-                }
+            if (foundRoomDir) {
+                console.log(`⬇️ Downloading Room...`);
+                try {
+                    let roomBuffer = await sftp.get(`${foundRoomDir}/${pattern}_Room.jpg`);
+                    const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, allowOverwrite: true });
+                    if (!imageUrls.includes(blobRoom.url)) imageUrls.push(blobRoom.url);
+                    console.log(`🚀 Uploaded Room: ${blobRoom.url}`);
+                    updated = true;
+                } catch (err) { console.error('   ❌ Upload failed:', err.message); }
+            }
 
-                // OPTIMIZATION: Skip if already exists
-                /* 
-                if (catalogMap.has(pattern)) {
-                    // console.log(`   ⏭️ Skipping ${pattern} (Already exists)`);
-                    continue;
-                }
-                */
-                // FORCE UPDATE for Pattern Repeat fix
+            if (updated) {
+                // Update Item
+                item.imageUrl = imageUrl;
+                item.imageUrls = imageUrls;
+                item.timestamp = Date.now();
 
-                // Check if we already have images
-                const existingItem = catalogMap.get(pattern);
-                let imageUrl = existingItem?.imageUrl || '';
-                let imageUrls = existingItem?.imageUrls || [];
+                catalogMap.set(pattern, item);
 
-                // DOWNLOAD/UPLOAD IMAGES (Only if missing or force update needed)
-                // For this fix, we assume images are fine, we just want DATA.
-                // DOWNLOAD/UPLOAD IMAGES (Only if missing or force update needed)
-                if (!imageUrl) {
-                    let retries = 3;
-                    let foundImageDir = null;
-                    let foundRoomDir = null;
-
-                    // Retry wrapper for existence check
-                    while (retries > 0) {
-                        try {
-                            // Check all directories for Main Image
-                            for (const dir of IMAGE_DIRS) {
-                                const checkPath = `${dir}/${pattern}.jpg`;
-                                const exists = await sftp.exists(checkPath);
-                                if (exists) {
-                                    foundImageDir = dir;
-                                    break;
-                                }
-                            }
-
-                            // Check all directories for Room Image
-                            for (const dir of IMAGE_DIRS) {
-                                const checkPath = `${dir}/${pattern}_Room.jpg`;
-                                const exists = await sftp.exists(checkPath);
-                                if (exists) {
-                                    foundRoomDir = dir;
-                                    break;
-                                }
-                            }
-                            break; // Success check
-                        } catch (err) {
-                            console.log(`   ⚠️ SFTP Error checking ${pattern}: ${err.message}. Retrying...`);
-                            retries--;
-                            if (retries === 0) throw err;
-                            await sftp.end(); // Close
-                            await new Promise(r => setTimeout(r, 5000)); // Wait
-                            await sftp.connect(FTP_CONFIG); // Reconnect
-                        }
-                    }
-
-                    // Upload Main Image
-                    if (foundImageDir) {
-                        let imgBuffer;
-                        try {
-                            imgBuffer = await sftp.get(`${foundImageDir}/${pattern}.jpg`);
-                        } catch (err) {
-                            console.log('   ⚠️ Download failed. Reconnecting...');
-                            await sftp.end();
-                            await sftp.connect(FTP_CONFIG);
-                            imgBuffer = await sftp.get(`${foundImageDir}/${pattern}.jpg`);
-                        }
-
-                        if (imgBuffer) {
-                            imgBuffer = await addWatermark(imgBuffer);
-
-                            const blob = await put(`products/${pattern}.jpg`, imgBuffer, {
-                                access: 'public',
-                                token: process.env.BLOB_READ_WRITE_TOKEN,
-                                addRandomSuffix: false,
-                                allowOverwrite: true
-                            });
-                            imageUrl = blob.url;
-                            imageUrls.push(imageUrl);
-                            console.log(`      Uploaded Main: ${blob.url} (from ${foundImageDir})`);
-                        }
-                    }
-
-                    // Upload Room Scene
-                    if (foundRoomDir) {
-                        let roomBuffer;
-                        try {
-                            roomBuffer = await sftp.get(`${foundRoomDir}/${pattern}_Room.jpg`);
-                        } catch (err) {
-                            await sftp.end();
-                            await sftp.connect(FTP_CONFIG);
-                            roomBuffer = await sftp.get(`${foundRoomDir}/${pattern}_Room.jpg`);
-                        }
-
-                        if (roomBuffer) {
-                            const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, {
-                                access: 'public',
-                                token: process.env.BLOB_READ_WRITE_TOKEN,
-                                addRandomSuffix: false,
-                                allowOverwrite: true
-                            });
-                            imageUrls.push(blobRoom.url);
-                            console.log(`      Uploaded Room: ${blobRoom.url} (from ${foundRoomDir})`);
-                        }
-                    }
-                } else {
-                    // console.log(`   ⏭️ Images exist for ${pattern}, skipping upload.`);
-                }
-
-                // 5. Build Product Object with Smart Category
-                const widthMeters = inchToMeter(row['Product Width']);
-                const lengthMeters = inchToMeter(row['Product Length']);
-                const coverage = (widthMeters && lengthMeters) ? (widthMeters * lengthMeters).toFixed(2) : '0';
-
-                const smartCategory = determineCategory(row);
-
-                const product = {
-                    id: pattern,
-                    name: row['Name'] || 'Untitled Wallpaper',
-                    description: row['Description'] || '',
-                    price: cleanPrice(row['MSRP']),
-                    category: smartCategory,
-                    style: row['Style'] || 'General',
-                    colors: row['Color Family'] ? [row['Color Family']] : [],
-                    dimensions: {
-                        width: widthMeters,
-                        height: lengthMeters,
-                        coverage: coverage,
-                        weight: parseFloat(row['Weight'] || 0),
-                    },
-                    specifications: {
-                        material: row['Material'] || 'Unknown',
-                        washable: true,
-                        removable: true,
-                        textured: false,
-                    },
-                    imageUrl: imageUrl || '',
-                    imageUrls: imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []),
-                    inStock: true,
-                    rating: 0,
-                    reviews: 0,
-                    showInHome: true,
-                    brand: row['Brand'],
-                    origin: row['Country of Origin'],
-                    rating: 0,
-                    reviews: 0,
-                    showInHome: true,
-                    brand: row['Brand'],
-                    origin: row['Country of Origin'],
-                    publicSku: `VIZ-${pattern}`,
-                    patternRepeat: cleanPrice(row['Repeat']), // Use cleanPrice to extract number
-                    patternMatch: row['Match'] || 'Random',
-                };
-
-                // Add to map and list
-                catalogMap.set(product.id, product);
-                importedProducts.push(product);
-                displayItems.push(`   + [${processed}] ${product.name} (${product.id})`);
-
-                processed++;
-
-                // INCREMENTAL SAVE (Batch of 50)
-                if (processed % 50 === 0) {
-                    console.log(`💾 Batch Save: Updating catalog with ${importedProducts.length} items so far...`);
-                    // We save the WHOLE accumulation, not just the batch, to ensure integrity if we stop
-                    // Ideally we'd merge with existing, but here we are building `importedProducts` as the new master list?
-                    // Wait, if we crash and restart, `importedProducts` starts empty.
-                    // So we should MERGE `importedProducts` into `existingCatalog` (or `catalogMap`) and save THAT.
-                    const currentFullList = Array.from(catalogMap.values());
-                    await kv.set('wallpapers_catalog', currentFullList);
-                    console.log(`   ✅ Saved ${currentFullList.length} items to KV.`);
-                }
-
-            } catch (loopErr) {
-                console.error(`❌ Error processing row ${row['Pattern']}:`, loopErr.message);
-                // Try to reconnect once more to ensure next loop has a chance
-                try { await sftp.end(); await sftp.connect(FTP_CONFIG); } catch (e) { }
+                // IMMEDIATE SAVE
+                // Save regularly to avoid data loss, but maybe not EVERY item to speed up?
+                // Actually safer to save every item for now.
+                console.log('💾 Saving to KV immediately...');
+                const finalBranch = Array.from(catalogMap.values());
+                await kv.set('wallpapers_catalog', finalBranch);
+                console.log('✅ Saved.');
+            } else {
+                console.log('   ⏭️ No images found, skipping.');
             }
         }
-
-        console.log(`✨ Import completed! Processed ${processed} items.`);
-        console.log(`📝 Summary:`);
-        // console.log(displayItems.join('\n')); // Too verbose
-
-        console.log(`📚 Final Update of Main Catalog Index...`);
-        const finalCatalog = Array.from(catalogMap.values());
-        await kv.set('wallpapers_catalog', finalCatalog);
-        console.log(`✅ Catalog updated with ${finalCatalog.length} items.`);
 
     } catch (err) {
-        console.error('❌ Import failed fatal:', err);
+        console.error('❌ Error:', err);
     } finally {
         sftp.end();
     }

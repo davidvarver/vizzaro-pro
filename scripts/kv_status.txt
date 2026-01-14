@@ -1,0 +1,9 @@
+--- HN002601 (Target) ---
+Name: Rodney White Tagged Brick Wallpaper
+ImageUrl: "https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/HN002601.jpg"
+ImageUrls: ["https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/HN002601.jpg","https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/HN002601_Room.jpg"]
+
+--- FPS6281 (Control) ---
+Name: Kilim Blue Stone Quick Drying Mat 
+ImageUrl: "https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/FPS6281.jpg"
+ImageUrls: ["https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/FPS6281.jpg","https://sgnzg3bfzkn4an7g.public.blob.vercel-storage.com/products/FPS6281_Room.jpg"]
