@@ -85,11 +85,15 @@ const enrichWallpaperData = (data: any[]): Wallpaper[] => {
     ];
 
     return data.map(item => {
-        if (item.group) return item;
+        // FORCE RECALCULATION: The API defaults group=id, which defeats this logic.
+        // We always recalculate to ensure "Rodney White" and "Rodney Grey" get the same group.
+
         let name = item.name.toUpperCase();
         SUFFIXES.forEach(suffix => { name = name.replace(suffix, ''); });
         COLORS.forEach(color => { const regex = new RegExp(`\\b${color}\\b`, 'g'); name = name.replace(regex, ''); });
         const modelName = name.replace(/[^A-Z0-9]/g, ' ').trim().replace(/\s+/g, '-').toLowerCase();
+
+        // Use the calculated model name as the group
         return { ...item, group: modelName };
     });
 };
