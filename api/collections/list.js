@@ -35,23 +35,35 @@ export default async function handler(request, response) {
             if (!item.collection) return;
 
             const collectionName = item.collection.trim();
-            if (!collectionName) return;
+
+            // Filter out system folders/artifacts or empty names
+            if (!collectionName ||
+                collectionName.toUpperCase() === 'ALL DATA' ||
+                collectionName.toUpperCase() === '300DPI' ||
+                collectionName.toUpperCase() === 'HI-RES' ||
+                collectionName.includes('.')) {
+                return;
+            }
+
+            // Determine valid image for this item
+            // Check all possible image fields: imageUrls array, imageUrl string, or legacy image field
+            const validImage = item.imageUrls?.[0] || item.imageUrl || item.image || null;
 
             if (!collectionsMap.has(collectionName)) {
                 collectionsMap.set(collectionName, {
                     id: collectionName, // simple ID for now, effectively the name
                     name: collectionName,
                     count: 0,
-                    thumbnail: item.imageUrls?.[0] || item.imageUrl || null
+                    thumbnail: validImage
                 });
             }
 
             const col = collectionsMap.get(collectionName);
             col.count++;
 
-            // Update thumbnail if the current one is null but this item has one
-            if (!col.thumbnail && (item.imageUrls?.[0] || item.imageUrl)) {
-                col.thumbnail = item.imageUrls?.[0] || item.imageUrl;
+            // Update thumbnail if the current one is null but this item has a valid one
+            if (!col.thumbnail && validImage) {
+                col.thumbnail = validImage;
             }
         });
 
