@@ -107,12 +107,19 @@ export default async function handler(req, res) {
               if (!item || typeof item !== 'object') return null;
 
               // Base fields needed for Listing
+              // Ensure imageUrl is a string, not array
+              let finalImage = '';
+              if (item.imageUrl && typeof item.imageUrl === 'string' && item.imageUrl.length > 5) {
+                finalImage = item.imageUrl;
+              } else if (Array.isArray(item.imageUrls) && item.imageUrls.length > 0) {
+                finalImage = item.imageUrls[0];
+              }
+
               const liteItem = {
-                id: item.id?.toString(), // Ensure ID is string
+                id: item.id?.toString(),
                 name: item.name,
                 price: typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0,
-                // Ensure imageUrl is a string, not array
-                imageUrl: (typeof item.imageUrl === 'string' ? item.imageUrl : (Array.isArray(item.imageUrls) ? item.imageUrls[0] : '')) || '',
+                imageUrl: finalImage,
                 category: item.category || 'General',
                 collection: item.collection || '',
                 group: item.group || item.id, // Fallback to ID if no group
