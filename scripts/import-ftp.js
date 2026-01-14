@@ -25,7 +25,11 @@ const FTP_CONFIG = {
 
 const EXCEL_FILE = 'All_NewProduct_Data.xlsx';
 const IMPORT_LIMIT = 5000; // Modified: Run import for ALL items (5000 safe limit)
-const IMAGE_DIR = '/New Products/All Images';
+const IMAGE_DIRS = [
+    '/New Products/All Images',
+    '/WallpaperBooks/1 All Wallpaper Images/Images',
+    '/WallpaperBooks/Brewster Kids - 2886'
+];
 
 function cleanPrice(priceStr) {
     if (!priceStr) return 0;
@@ -193,19 +197,35 @@ async function main() {
 
                 // DOWNLOAD/UPLOAD IMAGES (Only if missing or force update needed)
                 // For this fix, we assume images are fine, we just want DATA.
+                // DOWNLOAD/UPLOAD IMAGES (Only if missing or force update needed)
                 if (!imageUrl) {
-                    // Add Reconnection Retry Wrapper
                     let retries = 3;
-                    let imageExists = false;
-                    let roomExists = false;
+                    let foundImageDir = null;
+                    let foundRoomDir = null;
 
+                    // Retry wrapper for existence check
                     while (retries > 0) {
                         try {
-                            const imagePath = `${IMAGE_DIR}/${pattern}.jpg`;
-                            imageExists = await sftp.exists(imagePath);
-                            const roomPath = `${IMAGE_DIR}/${pattern}_Room.jpg`;
-                            roomExists = await sftp.exists(roomPath);
-                            break; // Success
+                            // Check all directories for Main Image
+                            for (const dir of IMAGE_DIRS) {
+                                const checkPath = `${dir}/${pattern}.jpg`;
+                                const exists = await sftp.exists(checkPath);
+                                if (exists) {
+                                    foundImageDir = dir;
+                                    break;
+                                }
+                            }
+
+                            // Check all directories for Room Image
+                            for (const dir of IMAGE_DIRS) {
+                                const checkPath = `${dir}/${pattern}_Room.jpg`;
+                                const exists = await sftp.exists(checkPath);
+                                if (exists) {
+                                    foundRoomDir = dir;
+                                    break;
+                                }
+                            }
+                            break; // Success check
                         } catch (err) {
                             console.log(`   ⚠️ SFTP Error checking ${pattern}: ${err.message}. Retrying...`);
                             retries--;
@@ -217,49 +237,53 @@ async function main() {
                     }
 
                     // Upload Main Image
-                    if (imageExists) {
+                    if (foundImageDir) {
                         let imgBuffer;
                         try {
-                            imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
+                            imgBuffer = await sftp.get(`${foundImageDir}/${pattern}.jpg`);
                         } catch (err) {
                             console.log('   ⚠️ Download failed. Reconnecting...');
                             await sftp.end();
                             await sftp.connect(FTP_CONFIG);
-                            imgBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}.jpg`);
+                            imgBuffer = await sftp.get(`${foundImageDir}/${pattern}.jpg`);
                         }
 
-                        imgBuffer = await addWatermark(imgBuffer);
+                        if (imgBuffer) {
+                            imgBuffer = await addWatermark(imgBuffer);
 
-                        const blob = await put(`products/${pattern}.jpg`, imgBuffer, {
-                            access: 'public',
-                            token: process.env.BLOB_READ_WRITE_TOKEN,
-                            addRandomSuffix: false,
-                            allowOverwrite: true
-                        });
-                        imageUrl = blob.url;
-                        imageUrls.push(imageUrl);
-                        console.log(`      Uploaded Main: ${blob.url}`);
+                            const blob = await put(`products/${pattern}.jpg`, imgBuffer, {
+                                access: 'public',
+                                token: process.env.BLOB_READ_WRITE_TOKEN,
+                                addRandomSuffix: false,
+                                allowOverwrite: true
+                            });
+                            imageUrl = blob.url;
+                            imageUrls.push(imageUrl);
+                            console.log(`      Uploaded Main: ${blob.url} (from ${foundImageDir})`);
+                        }
                     }
 
                     // Upload Room Scene
-                    if (roomExists) {
+                    if (foundRoomDir) {
                         let roomBuffer;
                         try {
-                            roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
+                            roomBuffer = await sftp.get(`${foundRoomDir}/${pattern}_Room.jpg`);
                         } catch (err) {
                             await sftp.end();
                             await sftp.connect(FTP_CONFIG);
-                            roomBuffer = await sftp.get(`${IMAGE_DIR}/${pattern}_Room.jpg`);
+                            roomBuffer = await sftp.get(`${foundRoomDir}/${pattern}_Room.jpg`);
                         }
 
-                        const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, {
-                            access: 'public',
-                            token: process.env.BLOB_READ_WRITE_TOKEN,
-                            addRandomSuffix: false,
-                            allowOverwrite: true
-                        });
-                        imageUrls.push(blobRoom.url);
-                        console.log(`      Uploaded Room: ${blobRoom.url}`);
+                        if (roomBuffer) {
+                            const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, {
+                                access: 'public',
+                                token: process.env.BLOB_READ_WRITE_TOKEN,
+                                addRandomSuffix: false,
+                                allowOverwrite: true
+                            });
+                            imageUrls.push(blobRoom.url);
+                            console.log(`      Uploaded Room: ${blobRoom.url} (from ${foundRoomDir})`);
+                        }
                     }
                 } else {
                     // console.log(`   ⏭️ Images exist for ${pattern}, skipping upload.`);
