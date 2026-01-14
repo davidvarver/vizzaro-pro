@@ -241,11 +241,15 @@ export default function OrderDetails() {
                     </View>
                 </View>
 
-                {/* Payment Ref */}
-                {order.payment && order.payment.reference && (
+                {/* Payment Ref - Fixed Data Access */}
+                {(order.paymentReference || (order.payment && order.payment.reference)) && (
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Referencia de Pago ({order.payment.method})</Text>
-                        <Text style={styles.refText}>{order.payment.reference}</Text>
+                        <Text style={styles.sectionTitle}>
+                            Referencia de Pago {order.paymentMethod === 'zelle' ? '(Zelle)' : ''}
+                        </Text>
+                        <Text style={styles.refText}>
+                            {order.paymentReference || order.payment?.reference}
+                        </Text>
                     </View>
                 )}
 
