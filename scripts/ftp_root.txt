@@ -1,0 +1,21 @@
+Root Directory:
+[d] $3823A78BB2734B74BA0C3D729F76D827
+[-] .DS_Store
+[d] aspnet_client
+[-] desktop.ini
+[d] DIY Products
+[d] general_inventory
+[-] key.php
+[d] New Price Inserts (2022)
+[d] New Products
+[-] sync.ffs_db
+[-] Terms of Use - Please Read Before Using.docx
+[-] Thumbs.db
+[d] WallpaperBooks
+[-] web.config
+[-] ~$rms of Use - Please Read Before Using.docx
+
+/New Products:
+[-] .DS_Store
+[d] All Data
+[d] All Images
