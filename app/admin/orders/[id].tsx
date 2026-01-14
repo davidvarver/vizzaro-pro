@@ -11,7 +11,8 @@ export default function OrderDetails() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
     const { adminToken } = useAdmin();
-    const orders = useOrdersStore((s) => s.orders); // Access loaded orders
+    const ordersStore = useOrdersStore();
+    const orders = ordersStore.orders; // Access loaded orders
 
     const [order, setOrder] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -75,33 +76,15 @@ export default function OrderDetails() {
     const updateStatus = async (newStatus: string) => {
         setIsUpdating(true);
         try {
-            const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-            if (!apiUrl) {
-                // Mock update if no API
-                setOrder({ ...order, status: newStatus });
-                Alert.alert('Success', `Order marked as ${newStatus} (Local)`);
-                setIsUpdating(false);
-                return;
-            }
+            await ordersStore.updateOrderStatus(order.id, newStatus as any);
 
-            const response = await fetch(`${apiUrl}/api/orders/${id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${adminToken}`
-                },
-                body: JSON.stringify({ status: newStatus })
-            });
-
-            const data = await response.json();
-            if (data.success) {
-                setOrder(data.order);
-                Alert.alert('Success', `Order marked as ${newStatus}`);
-            } else {
-                Alert.alert('Error', data.error);
-            }
+            // Refetch to confirm (optional, seeing as store updates local state too)
+            // But let's trust the store first.
+            setOrder({ ...order, status: newStatus });
+            Alert.alert('Success', `Order marked as ${newStatus}`);
         } catch (error) {
             Alert.alert('Error', 'Failed to update status');
+            console.error(error);
         } finally {
             setIsUpdating(false);
         }
