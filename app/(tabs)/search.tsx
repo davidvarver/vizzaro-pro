@@ -24,10 +24,21 @@ export default function SearchScreen() {
 
         const searchTerms = normalizeText(query).split(/[\s+]+/).filter(Boolean);
 
+        const seenGroups = new Set();
         return wallpapers.filter(w => {
             const rawText = `${w.name} ${w.category} ${w.style} ${w.group || ''}`;
             const searchableText = normalizeText(rawText);
-            return searchTerms.every(term => searchableText.includes(term));
+            const matches = searchTerms.every(term => searchableText.includes(term));
+
+            if (!matches) return false;
+
+            // Deduplicate by Group ID
+            const groupId = w.group || w.id;
+            if (seenGroups.has(groupId)) {
+                return false;
+            }
+            seenGroups.add(groupId);
+            return true;
         });
     }, [query, wallpapers]);
 
