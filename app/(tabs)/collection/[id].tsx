@@ -30,6 +30,19 @@ export default function CollectionDetailScreen() {
         }
     }, [collectionName]);
 
+    // Deduplicate wallpapers by Group ID
+    const uniqueWallpapers = React.useMemo(() => {
+        const seenGroups = new Set();
+        return wallpapers.filter(item => {
+            const groupId = item.group || item.id;
+            if (seenGroups.has(groupId)) {
+                return false;
+            }
+            seenGroups.add(groupId);
+            return true;
+        });
+    }, [wallpapers]);
+
     const renderItem = ({ item }: { item: any }) => (
         <View style={{ width: itemWidth, marginBottom: 20 }}>
             <WallpaperCard
@@ -78,7 +91,7 @@ export default function CollectionDetailScreen() {
 
             <FlatList
                 key={`grid-${numColumns}`} // Force re-render when columns change
-                data={wallpapers}
+                data={uniqueWallpapers}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
                 numColumns={numColumns}
