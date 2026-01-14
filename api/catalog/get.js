@@ -147,7 +147,7 @@ export default async function handler(req, res) {
                 rating: item.rating || 0,
                 reviews: item.reviews || 0,
               };
-            }).filter(item => item !== null && item.id && item.name && item.imageUrl && item.imageUrl.length > 5);
+            }).filter(item => item !== null && item.id && item.name);
           }
 
           console.log('[Catalog GET] KV fetch successful, catalog exists:', !!catalog);

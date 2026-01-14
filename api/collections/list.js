@@ -84,9 +84,9 @@ export default async function handler(request, response) {
         });
 
         // Convert map to array and sort alphabetically
-        const collections = Array.from(collectionsMap.values())
-            .filter(col => col.thumbnail) // ONLY show collections with a valid thumbnail
-            .sort((a, b) => a.name.localeCompare(b.name));
+        const collections = Array.from(collectionsMap.values()).sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
 
         return response.status(200).json({
             success: true,
