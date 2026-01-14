@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { useWindowDimensions, View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
@@ -137,29 +138,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontStyle: 'italic'
     }
-});
-loadingText: {
-    marginTop: 10,
-        fontSize: 14,
-            color: '#666',
-                letterSpacing: 0.5
-},
-errorText: {
-    marginBottom: 15,
-        color: 'red',
-            textAlign: 'center'
-},
-retryButton: {
-    padding: 10,
-        backgroundColor: '#f0f0f0',
-            borderRadius: 5
-},
-retryText: {
-    color: '#333'
-},
-emptyText: {
-    color: '#888',
-        fontSize: 16,
-            fontStyle: 'italic'
-}
 });
