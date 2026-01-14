@@ -17,8 +17,6 @@ export default async function handler(request, response) {
         }
 
         // Fetch the full catalog associated with 'wallpapers_catalog' key
-        // Note: For very large catalogs, we might eventually need a separate 'collections' key
-        // but for now, aggregating from the main catalog is the source of truth.
         const catalog = await kv.get('wallpapers_catalog');
 
         if (!catalog || !Array.isArray(catalog)) {
@@ -30,6 +28,25 @@ export default async function handler(request, response) {
 
         // Aggregate collections
         const collectionsMap = new Map();
+
+        // Helper to find any image-like string in values
+        const findImage = (obj) => {
+            // Priority check known keys
+            if (obj.imageUrls && Array.isArray(obj.imageUrls) && obj.imageUrls.length > 0) return obj.imageUrls[0];
+            if (obj.imageUrl && typeof obj.imageUrl === 'string' && obj.imageUrl.length > 5) return obj.imageUrl;
+            if (obj.image && typeof obj.image === 'string' && obj.image.length > 5) return obj.image;
+
+            // Fallback: search all keys for something that looks like a URL
+            for (const key in obj) {
+                const val = obj[key];
+                if (typeof val === 'string' && val.startsWith('http') && (
+                    val.endsWith('.jpg') || val.endsWith('.png') || val.endsWith('.jpeg') || val.endsWith('.webp')
+                )) {
+                    return val;
+                }
+            }
+            return null;
+        };
 
         catalog.forEach(item => {
             if (!item.collection) return;
@@ -45,9 +62,8 @@ export default async function handler(request, response) {
                 return;
             }
 
-            // Determine valid image for this item
-            // Check all possible image fields: imageUrls array, imageUrl string, or legacy image field
-            const validImage = item.imageUrls?.[0] || item.imageUrl || item.image || null;
+            // Determine valid image using aggressive search
+            const validImage = findImage(item);
 
             if (!collectionsMap.has(collectionName)) {
                 collectionsMap.set(collectionName, {
