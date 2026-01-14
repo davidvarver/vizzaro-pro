@@ -17,7 +17,7 @@ export default function WallpaperDetailScreen() {
 
     const { id } = useLocalSearchParams();
     const router = useRouter();
-    const { wallpapers, loadWallpapers, isLoading } = useWallpapersStore();
+    const { wallpapers, loadWallpapers, loadWallpaperDetails, isLoading } = useWallpapersStore();
     const { addToCart } = useCartStore();
     const { addToFavorites } = useFavoritesStore();
 
@@ -42,6 +42,13 @@ export default function WallpaperDetailScreen() {
             }
         }
     }, [id, wallpapers]);
+
+    // 3. Fetch Full Details (Lite Mode Support)
+    useEffect(() => {
+        if (typeof id === 'string') {
+            loadWallpaperDetails(id);
+        }
+    }, [id, loadWallpaperDetails]);
 
     const { product } = translations;
 

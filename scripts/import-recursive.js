@@ -111,7 +111,7 @@ async function traverse(currentPath, state) {
     console.log(`📂 Scanning: ${currentPath}`);
 
     // Check if this folder is an "Exclusion" folder
-    if (['/Trash', '/All Images', '/Logs', '/thumbnails'].some(p => currentPath.includes(p))) {
+    if (['/Trash', 'All Images', 'All Wallpaper Images', '/Logs', '/thumbnails', 'Collection_Images'].some(p => currentPath.includes(p))) {
         return;
     }
 
@@ -158,7 +158,7 @@ async function traverse(currentPath, state) {
 
 async function processCollection(dirPath, fileName, collectionName, filesInFolder, state) {
     console.log(`      Processing Collection: "${collectionName}" from ${fileName}`);
-    if (IS_DRY_RUN) return;
+    // if (IS_DRY_RUN) return; // Allow reading for debug
 
     // 1. Download Excel
     let data = [];
@@ -173,8 +173,14 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
         return;
     }
 
+    // DEBUG: Log headers
+    if (data.length > 0) {
+        console.log('      📊 Headers:', Object.keys(data[0]).join(', '));
+        console.log('      👀 First Row:', JSON.stringify(data[0]));
+    }
+
     const validRows = data.filter(r => r['Pattern'] && r['Name']);
-    console.log(`      Found ${validRows.length} items.`);
+    console.log(`      Found ${validRows.length} valid items (out of ${data.length} total rows).`);
 
     // 2. Process Items
     const newItems = [];
@@ -197,7 +203,7 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
         let imageUrls = [];
 
         // Upload Logic
-        if (mainImgName) {
+        if (mainImgName && !IS_DRY_RUN) {
             // Check if already uploaded (optimization: skip if blob exists? No, hard to check efficiently without map. 
             // We'll trust Vercel Blob dedup or just overwrite for now to be safe)
             try {
@@ -215,7 +221,7 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
             }
         }
 
-        if (roomImgName) {
+        if (roomImgName && !IS_DRY_RUN) {
             try {
                 let roomBuf = await sftp.get(`${dirPath}/${roomImgName}`);
                 const blob = await put(`products/${collectionName}/${pattern}_room.jpg`, roomBuf, {
@@ -254,6 +260,10 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
     }
 
     if (newItems.length > 0) {
+        if (IS_DRY_RUN) {
+            console.log(`      [DRY RUN] Would save ${newItems.length} items to KV.`);
+            return;
+        }
         // Save to KV (Append/Merge mode)
         // We fetch current catalog, merge, and save back. 
         // LOCKING ISSUE: If we do this for every collection, it might be slow.
@@ -302,7 +312,9 @@ async function main() {
         console.log('   Connected to FTP.');
 
         const state = IS_DRY_RUN ? { processedFolders: [], processedItems: 0 } : loadState();
-        await traverse('/', state);
+        const startPath = process.env.TARGET_FOLDER || '/';
+        console.log(`   🎯 Starting scan at: ${startPath}`);
+        await traverse(startPath, state);
 
         console.log('\n✨ Import Complete!');
     } catch (e) {

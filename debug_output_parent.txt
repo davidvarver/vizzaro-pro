@@ -1,0 +1,1987 @@
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+🚀 Starting Recursive Import (DRY RUN)...
+   Connected to FTP.
+   🎯 Starting scan at: /WallpaperBooks
+📂 Scanning: /WallpaperBooks
+📂 Scanning: /WallpaperBooks/1 All Wallpaper Images
+📂 Scanning: /WallpaperBooks/1 All Wallpaper Images/Collection_Images
+📂 Scanning: /WallpaperBooks/1 All Wallpaper Images/Images
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021
+   💎 Found Collection Data in: /WallpaperBooks/A-Street Select - 4021
+      Processing Collection: "A-Street Select - 4021" from A-StreetSelectData.xlsx
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali
+   💎 Found Collection Data in: /WallpaperBooks/A-Street Select - 4021/Advantage Bali
+      Processing Collection: "Advantage Bali" from BaliData.xlsx
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images/300dpi
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images/72dpi
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021/Images
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021/Images/300dpi
+📂 Scanning: /WallpaperBooks/A-Street Select - 4021/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Bath - 2814
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Bath - 2814
+      Processing Collection: "Advantage Bath - 2814" from BathData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Bath - 2814/Images
+📂 Scanning: /WallpaperBooks/Advantage Beyond Textures - 4015
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Beyond Textures - 4015
+      Processing Collection: "Advantage Beyond Textures - 4015" from BeyondTexturesData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Beyond Textures - 4015/Images
+📂 Scanning: /WallpaperBooks/Advantage Concrete - 4096
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Concrete - 4096
+      Processing Collection: "Advantage Concrete - 4096" from ConcreteData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Concrete - 4096/Images
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Concrete - 4096/Images
+      Processing Collection: "Images" from ConcreteData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Cuba - 4044
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Cuba - 4044
+      Processing Collection: "Advantage Cuba - 4044" from CubaData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Cuba - 4044/Images
+📂 Scanning: /WallpaperBooks/Advantage Cuba - 4044/Images/cuba
+📂 Scanning: /WallpaperBooks/Advantage Curio - 4157
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Curio - 4157
+      Processing Collection: "Advantage Curio - 4157" from CurioData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Curio - 4157/Images
+📂 Scanning: /WallpaperBooks/Advantage Deluxe - 2835
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Deluxe - 2835
+      Processing Collection: "Advantage Deluxe - 2835" from DeluxeData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Deluxe - 2835/Images
+📂 Scanning: /WallpaperBooks/Advantage Fusion - 4125
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Fusion - 4125
+      Processing Collection: "Advantage Fusion - 4125" from FusionData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Fusion - 4125/Images
+📂 Scanning: /WallpaperBooks/Advantage Geo & Textures - 4020
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Geo & Textures - 4020
+      Processing Collection: "Advantage Geo & Textures - 4020" from Geo&TexturesData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Geo & Textures - 4020/Images
+📂 Scanning: /WallpaperBooks/Advantage Geo & Textures - 4020/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Geo & Textures - 4020/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Geo - 2809
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Geo - 2809
+      Processing Collection: "Advantage Geo - 2809" from GeoData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Geo - 2809/Images
+📂 Scanning: /WallpaperBooks/Advantage Grasscloth Portfolio - 4018
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Grasscloth Portfolio - 4018
+      Processing Collection: "Advantage Grasscloth Portfolio - 4018" from GrassclothPortfolioData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Grasscloth Portfolio - 4018/Images
+📂 Scanning: /WallpaperBooks/Advantage Grasscloth Portfolio - 4018/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Grasscloth Portfolio - 4018/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Kitchen & Bath 2 - 4168
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Kitchen & Bath 2 - 4168
+      Processing Collection: "Advantage Kitchen & Bath 2 - 4168" from Kitchen&Bath2Data.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Kitchen & Bath 2 - 4168/Images
+📂 Scanning: /WallpaperBooks/Advantage Kitchen & Bath 2 - 4168/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Kitchen & Bath 2 - 4168/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Kitchen - 2813
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Kitchen - 2813
+      Processing Collection: "Advantage Kitchen - 2813" from KitchenData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Kitchen - 2813/Images
+📂 Scanning: /WallpaperBooks/Advantage Kitchen - 2813/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Kitchen - 2813/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Metallic - 2834
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Metallic - 2834
+      Processing Collection: "Advantage Metallic - 2834" from MetallicData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Metallic - 2834/Images
+📂 Scanning: /WallpaperBooks/Advantage Metallic - 2834/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Metallic - 2834/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Nature - 2811
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Nature - 2811
+      Processing Collection: "Advantage Nature - 2811" from NatureData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Nature - 2811/Images
+📂 Scanning: /WallpaperBooks/Advantage Nature - 2811/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Nature - 2811/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Neutral Black White - 2773
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Neutral Black White - 2773
+      Processing Collection: "Advantage Neutral Black White - 2773" from NeutralBlackWhiteData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Neutral Black White - 2773/Images
+📂 Scanning: /WallpaperBooks/Advantage Neutral Black White - 2773/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Neutral Black White - 2773/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Passport - 4041
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Passport - 4041
+      Processing Collection: "Advantage Passport - 4041" from PassportData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Passport - 4041/Images
+📂 Scanning: /WallpaperBooks/Advantage Passport - 4041/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Passport - 4041/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Perfect Plains - 4144
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Perfect Plains - 4144
+      Processing Collection: "Advantage Perfect Plains - 4144" from PerfectPlainsData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Perfect Plains - 4144/Images
+📂 Scanning: /WallpaperBooks/Advantage Perfect Plains - 4144/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Perfect Plains - 4144/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Radiance - 4025
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Radiance - 4025
+      Processing Collection: "Advantage Radiance - 4025" from RadianceData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Radiance - 4025/Images
+📂 Scanning: /WallpaperBooks/Advantage Radiance - 4025/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Radiance - 4025/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Shades of Grey - 2836
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Shades of Grey - 2836
+      Processing Collection: "Advantage Shades of Grey - 2836" from ShadesofGreyData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Shades of Grey - 2836/Images
+📂 Scanning: /WallpaperBooks/Advantage Shades of Grey - 2836/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Shades of Grey - 2836/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Splash - 2980
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Splash - 2980
+      Processing Collection: "Advantage Splash - 2980" from SplashData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Splash - 2980/Images
+📂 Scanning: /WallpaperBooks/Advantage Splash - 2980/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Splash - 2980/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Stones and Woods - 2774
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Stones and Woods - 2774
+      Processing Collection: "Advantage Stones and Woods - 2774" from StonesandWoodsData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Stones and Woods - 2774/Images
+📂 Scanning: /WallpaperBooks/Advantage Stones and Woods - 2774/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Stones and Woods - 2774/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Surfaces - 2812
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Surfaces - 2812
+      Processing Collection: "Advantage Surfaces - 2812" from SurfacesData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Surfaces - 2812/Images
+📂 Scanning: /WallpaperBooks/Advantage Surfaces - 2812/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Surfaces - 2812/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Titanium - 4082
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Titanium - 4082
+      Processing Collection: "Advantage Titanium - 4082" from TitaniumData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Titanium - 4082/Images
+📂 Scanning: /WallpaperBooks/Advantage Titanium - 4082/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Titanium - 4082/Images/300dpi/titanuim
+📂 Scanning: /WallpaperBooks/Advantage Titanium - 4082/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Tradition - 2810
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Tradition - 2810
+      Processing Collection: "Advantage Tradition - 2810" from TraditionalData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Tradition - 2810/Images
+📂 Scanning: /WallpaperBooks/Advantage Tradition - 2810/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Tradition - 2810/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Westbury Forest - 4164
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Westbury Forest - 4164
+      Processing Collection: "Advantage Westbury Forest - 4164" from WestburyForestData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Westbury Forest - 4164/Images
+📂 Scanning: /WallpaperBooks/Advantage Westbury Forest - 4164/Images/300dpi
+📂 Scanning: /WallpaperBooks/Advantage Westbury Forest - 4164/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage Windsong - 4035
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Windsong - 4035
+      Processing Collection: "Advantage Windsong - 4035" from WindsongData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Windsong - 4035/Images
+📂 Scanning: /WallpaperBooks/Advantage Windsong - 4035/Images/300dpi
+   💎 Found Collection Data in: /WallpaperBooks/Advantage Windsong - 4035/Images/300dpi
+      Processing Collection: "300dpi" from WindsongData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage Windsong - 4035/Images/72dpi
+📂 Scanning: /WallpaperBooks/Advantage World of Imagination - 4203
+   💎 Found Collection Data in: /WallpaperBooks/Advantage World of Imagination - 4203
+      Processing Collection: "Advantage World of Imagination - 4203" from WorldofImaginationData.xlsx
+📂 Scanning: /WallpaperBooks/Advantage World of Imagination - 4203/Images
+📂 Scanning: /WallpaperBooks/Aelfie - 4115
+   💎 Found Collection Data in: /WallpaperBooks/Aelfie - 4115
+      Processing Collection: "Aelfie - 4115" from AelfieData.xlsx
+📂 Scanning: /WallpaperBooks/Aelfie - 4115/Images
+📂 Scanning: /WallpaperBooks/Aelfie - 4115/Images/300dpi
+📂 Scanning: /WallpaperBooks/Aelfie - 4115/Images/72dpi
+📂 Scanning: /WallpaperBooks/Alchemy - 2908
+   💎 Found Collection Data in: /WallpaperBooks/Alchemy - 2908
+      Processing Collection: "Alchemy - 2908" from AlchemyData.xlsx
+📂 Scanning: /WallpaperBooks/Alchemy - 2908/Images
+📂 Scanning: /WallpaperBooks/Alchemy - 2908/Images/300dpi
+📂 Scanning: /WallpaperBooks/Alchemy - 2908/Images/72dpi
+📂 Scanning: /WallpaperBooks/Alja Horvat - 4107
+   💎 Found Collection Data in: /WallpaperBooks/Alja Horvat - 4107
+      Processing Collection: "Alja Horvat - 4107" from AljaHorvatData.xlsx
+📂 Scanning: /WallpaperBooks/Alja Horvat - 4107/Images
+📂 Scanning: /WallpaperBooks/Alja Horvat - 4107/Images/300dpi
+📂 Scanning: /WallpaperBooks/Alja Horvat - 4107/Images/72dpi
+📂 Scanning: /WallpaperBooks/Ami - 2657
+   💎 Found Collection Data in: /WallpaperBooks/Ami - 2657
+      Processing Collection: "Ami - 2657" from AmiData.xlsx
+📂 Scanning: /WallpaperBooks/Ami - 2657/Images
+📂 Scanning: /WallpaperBooks/Ami - 2657/Images/300dpi
+📂 Scanning: /WallpaperBooks/Ami - 2657/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Ami - 2657/Images/72dpi
+📂 Scanning: /WallpaperBooks/Ami - 2657/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Anaglypta XII - 2740
+   💎 Found Collection Data in: /WallpaperBooks/Anaglypta XII - 2740
+      Processing Collection: "Anaglypta XII - 2740" from AnaglyptaXIIData.xlsx
+📂 Scanning: /WallpaperBooks/Anaglypta XII - 2740/Images
+📂 Scanning: /WallpaperBooks/Anaglypta XII - 2740/Images/300dpi
+📂 Scanning: /WallpaperBooks/Anaglypta XII - 2740/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Anaglypta XII - 2740/Images/72dpi
+📂 Scanning: /WallpaperBooks/Anaglypta XII - 2740/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Annelie - 2999
+   💎 Found Collection Data in: /WallpaperBooks/Annelie - 2999
+      Processing Collection: "Annelie - 2999" from AnnelieData.xlsx
+📂 Scanning: /WallpaperBooks/Annelie - 2999/Images
+📂 Scanning: /WallpaperBooks/Annelie - 2999/Images/300dpi
+📂 Scanning: /WallpaperBooks/Annelie - 2999/Images/72dpi
+📂 Scanning: /WallpaperBooks/Antonina Vella Artifacts - F54
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Artifacts - F54
+      Processing Collection: "Antonina Vella Artifacts - F54" from F54-ArtifactsData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Artifacts - F54/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Boho Luxe - E38
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Boho Luxe - E38
+      Processing Collection: "Antonina Vella Boho Luxe - E38" from E38-BohoLuxeData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Boho Luxe - E38/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Dazzling Dimensions II - E37
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Dazzling Dimensions II - E37
+      Processing Collection: "Antonina Vella Dazzling Dimensions II - E37" from E37-DazzlingDimensionsIIData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Dazzling Dimensions II - E37/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Deco - D12
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Deco - D12
+      Processing Collection: "Antonina Vella Deco - D12" from D12-DecoData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Deco - D12/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Jardin - K11
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Jardin - K11
+      Processing Collection: "Antonina Vella Jardin - K11" from K11-AntoninaVellaJardinData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Jardin - K11/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Jardin - K11/Images/300dpi
+📂 Scanning: /WallpaperBooks/Antonina Vella Jardin - K11/Images/72dpi
+📂 Scanning: /WallpaperBooks/Antonina Vella Layered Luxe - F91
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Layered Luxe - F91
+      Processing Collection: "Antonina Vella Layered Luxe - F91" from LayeredLuxeData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Layered Luxe - F91/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Modern Metals - C37
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Modern Metals - C37
+      Processing Collection: "Antonina Vella Modern Metals - C37" from C37-ModernMetalsData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Modern Metals - C37/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Modern Metals II - E89
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Modern Metals II - E89
+      Processing Collection: "Antonina Vella Modern Metals II - E89" from E89-ModernMetalsIIData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Modern Metals II - E89/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Natural Opalescence - C67
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Natural Opalescence - C67
+      Processing Collection: "Antonina Vella Natural Opalescence - C67" from C67-NaturalOpalescenceData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Natural Opalescence - C67/Images
+📂 Scanning: /WallpaperBooks/Antonina Vella Opulent Accents - K15
+   💎 Found Collection Data in: /WallpaperBooks/Antonina Vella Opulent Accents - K15
+      Processing Collection: "Antonina Vella Opulent Accents - K15" from K15-AntoninaVellaOpulentAccentsData.xlsx
+📂 Scanning: /WallpaperBooks/Antonina Vella Opulent Accents - K15/Images
+📂 Scanning: /WallpaperBooks/Architecture - 2896
+   💎 Found Collection Data in: /WallpaperBooks/Architecture - 2896
+      Processing Collection: "Architecture - 2896" from ArchitectureData.xlsx
+📂 Scanning: /WallpaperBooks/Architecture - 2896/Images
+📂 Scanning: /WallpaperBooks/Architecture - 2896/Images/300dpi
+📂 Scanning: /WallpaperBooks/Architecture - 2896/Images/72dpi
+📂 Scanning: /WallpaperBooks/Archive Collection - 4069
+   💎 Found Collection Data in: /WallpaperBooks/Archive Collection - 4069
+      Processing Collection: "Archive Collection - 4069" from ArchiveData.xlsx
+📂 Scanning: /WallpaperBooks/Archive Collection - 4069/Images
+📂 Scanning: /WallpaperBooks/Archive Collection - 4069/Images/300dpi
+📂 Scanning: /WallpaperBooks/Archive Collection - 4069/Images/72dpi
+📂 Scanning: /WallpaperBooks/Arm of Casso - 4123
+   💎 Found Collection Data in: /WallpaperBooks/Arm of Casso - 4123
+      Processing Collection: "Arm of Casso - 4123" from ArmofCassoData.xlsx
+📂 Scanning: /WallpaperBooks/Arm of Casso - 4123/Images
+📂 Scanning: /WallpaperBooks/Arm of Casso - 4123/Images/300dpi
+📂 Scanning: /WallpaperBooks/Arm of Casso - 4123/Images/72dpi
+📂 Scanning: /WallpaperBooks/Arthouse - 4189
+   💎 Found Collection Data in: /WallpaperBooks/Arthouse - 4189
+      Processing Collection: "Arthouse - 4189" from ArthouseData.xlsx
+📂 Scanning: /WallpaperBooks/Arthouse - 4189/Images
+📂 Scanning: /WallpaperBooks/Arthouse - 4189/Images/300dpi
+📂 Scanning: /WallpaperBooks/Arthouse - 4189/Images/72dpi
+📂 Scanning: /WallpaperBooks/Artisan Digest - E36
+   💎 Found Collection Data in: /WallpaperBooks/Artisan Digest - E36
+      Processing Collection: "Artisan Digest - E36" from E36-ArtisanDigestData.xlsx
+📂 Scanning: /WallpaperBooks/Artisan Digest - E36/Images
+📂 Scanning: /WallpaperBooks/Artisan Studio - F68
+   💎 Found Collection Data in: /WallpaperBooks/Artisan Studio - F68
+      Processing Collection: "Artisan Studio - F68" from F68-ArtisanStudioData.xlsx
+📂 Scanning: /WallpaperBooks/Artisan Studio - F68/Images
+📂 Scanning: /WallpaperBooks/Artistic Abstracts - F16
+   💎 Found Collection Data in: /WallpaperBooks/Artistic Abstracts - F16
+      Processing Collection: "Artistic Abstracts - F16" from F16-ArtisticAbstractsData.xlsx
+📂 Scanning: /WallpaperBooks/Artistic Abstracts - F16/Images
+📂 Scanning: /WallpaperBooks/AS Creation - 4022
+   💎 Found Collection Data in: /WallpaperBooks/AS Creation - 4022
+      Processing Collection: "AS Creation - 4022" from ASCreationData.xlsx
+📂 Scanning: /WallpaperBooks/AS Creation - 4022/Images
+📂 Scanning: /WallpaperBooks/AS Creation - 4022/Images/300dpi
+📂 Scanning: /WallpaperBooks/AS Creation - 4022/Images/72dpi
+📂 Scanning: /WallpaperBooks/Aura - 4046
+   💎 Found Collection Data in: /WallpaperBooks/Aura - 4046
+      Processing Collection: "Aura - 4046" from AuraData.xlsx
+📂 Scanning: /WallpaperBooks/Aura - 4046/Images
+📂 Scanning: /WallpaperBooks/Aura - 4046/Images/300dpi
+📂 Scanning: /WallpaperBooks/Aura - 4046/Images/72dpi
+📂 Scanning: /WallpaperBooks/Aviva Stanoff PSWP - F42
+   💎 Found Collection Data in: /WallpaperBooks/Aviva Stanoff PSWP - F42
+      Processing Collection: "Aviva Stanoff PSWP - F42" from F42-AvivaStanoffPSWPData.xlsx
+📂 Scanning: /WallpaperBooks/Aviva Stanoff PSWP - F42/Images
+📂 Scanning: /WallpaperBooks/Azmaara - 2671
+   💎 Found Collection Data in: /WallpaperBooks/Azmaara - 2671
+      Processing Collection: "Azmaara - 2671" from AzmaaraData.xlsx
+📂 Scanning: /WallpaperBooks/Azmaara - 2671/Images
+📂 Scanning: /WallpaperBooks/Azmaara - 2671/Images/300dpi
+📂 Scanning: /WallpaperBooks/Azmaara - 2671/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Azmaara - 2671/Images/72dpi
+📂 Scanning: /WallpaperBooks/Azmaara - 2671/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Azmaara - 2671/Marketing
+📂 Scanning: /WallpaperBooks/Bath Bath Bath IV - 2532
+   💎 Found Collection Data in: /WallpaperBooks/Bath Bath Bath IV - 2532
+      Processing Collection: "Bath Bath Bath IV - 2532" from BathBathBathIVData.xlsx
+📂 Scanning: /WallpaperBooks/Bath Bath Bath IV - 2532/Images
+📂 Scanning: /WallpaperBooks/Bath Bath Bath IV - 2532/Images/300dpi
+📂 Scanning: /WallpaperBooks/Bath Bath Bath IV - 2532/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Bath Bath Bath IV - 2532/Images/72dpi
+📂 Scanning: /WallpaperBooks/Bath Bath Bath IV - 2532/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Bath Bath Bath IV - 2532/Marketing
+📂 Scanning: /WallpaperBooks/Beacon House Home - 2614
+   💎 Found Collection Data in: /WallpaperBooks/Beacon House Home - 2614
+      Processing Collection: "Beacon House Home - 2614" from BeaconHouseHomeData.xlsx
+📂 Scanning: /WallpaperBooks/Beacon House Home - 2614/Images
+📂 Scanning: /WallpaperBooks/Beacon House Home - 2614/Images/300dpi
+📂 Scanning: /WallpaperBooks/Beacon House Home - 2614/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Beacon House Home - 2614/Images/72dpi
+📂 Scanning: /WallpaperBooks/Beacon House Home - 2614/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Beacon House Home - 2614/Marketing
+📂 Scanning: /WallpaperBooks/Belgravia Decor - 4194
+   💎 Found Collection Data in: /WallpaperBooks/Belgravia Decor - 4194
+      Processing Collection: "Belgravia Decor - 4194" from BelgraviaData.xlsx
+📂 Scanning: /WallpaperBooks/Belgravia Decor - 4194/Images
+📂 Scanning: /WallpaperBooks/Belgravia Decor - 4194/Images/300dpi
+📂 Scanning: /WallpaperBooks/Belgravia Decor - 4194/Images/72dpi
+📂 Scanning: /WallpaperBooks/Bellissimo VI - 2768
+   💎 Found Collection Data in: /WallpaperBooks/Bellissimo VI - 2768
+      Processing Collection: "Bellissimo VI - 2768" from BellissimoVIData.xlsx
+📂 Scanning: /WallpaperBooks/Bellissimo VI - 2768/Images
+📂 Scanning: /WallpaperBooks/Bellissimo VI - 2768/Images/300dpi
+📂 Scanning: /WallpaperBooks/Bellissimo VI - 2768/Images/72dpi
+📂 Scanning: /WallpaperBooks/Birch & Sparrow -3118
+   💎 Found Collection Data in: /WallpaperBooks/Birch & Sparrow -3118
+      Processing Collection: "Birch & Sparrow -3118" from Birch&SparrowData.xlsx
+📂 Scanning: /WallpaperBooks/Birch & Sparrow -3118/Images
+📂 Scanning: /WallpaperBooks/Birch & Sparrow -3118/Images/300dpi
+📂 Scanning: /WallpaperBooks/Birch & Sparrow -3118/Images/72dpi
+📂 Scanning: /WallpaperBooks/Black & Light - 2670
+   💎 Found Collection Data in: /WallpaperBooks/Black & Light - 2670
+      Processing Collection: "Black & Light - 2670" from Black&LightData.xlsx
+📂 Scanning: /WallpaperBooks/Black & Light - 2670/Images
+📂 Scanning: /WallpaperBooks/Black & Light - 2670/Images/300dpi
+📂 Scanning: /WallpaperBooks/Black & Light - 2670/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Black & Light - 2670/Images/72dpi
+📂 Scanning: /WallpaperBooks/Black & Light - 2670/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Black & White Resource Library - E40
+   💎 Found Collection Data in: /WallpaperBooks/Black & White Resource Library - E40
+      Processing Collection: "Black & White Resource Library - E40" from E40-Black&WhiteResourceLibraryData.xlsx
+📂 Scanning: /WallpaperBooks/Black & White Resource Library - E40/Images
+📂 Scanning: /WallpaperBooks/Black Pepper Paperie - 4055
+   💎 Found Collection Data in: /WallpaperBooks/Black Pepper Paperie - 4055
+      Processing Collection: "Black Pepper Paperie - 4055" from BlackPepperPaperieData.xlsx
+📂 Scanning: /WallpaperBooks/Black Pepper Paperie - 4055/Images
+📂 Scanning: /WallpaperBooks/Black Pepper Paperie - 4055/Images/300dpi
+📂 Scanning: /WallpaperBooks/Black Pepper Paperie - 4055/Images/72dpi
+📂 Scanning: /WallpaperBooks/Blooms - F01
+   💎 Found Collection Data in: /WallpaperBooks/Blooms - F01
+      Processing Collection: "Blooms - F01" from F01-BloomsData.xlsx
+📂 Scanning: /WallpaperBooks/Blooms - F01/Images
+📂 Scanning: /WallpaperBooks/Blue Heron - 4071
+   💎 Found Collection Data in: /WallpaperBooks/Blue Heron - 4071
+      Processing Collection: "Blue Heron - 4071" from BlueHeronData.xlsx
+📂 Scanning: /WallpaperBooks/Blue Heron - 4071/Images
+📂 Scanning: /WallpaperBooks/Blue Heron - 4071/Images/300dpi
+📂 Scanning: /WallpaperBooks/Blue Heron - 4071/Images/72dpi
+📂 Scanning: /WallpaperBooks/Bluebell - 2903
+   💎 Found Collection Data in: /WallpaperBooks/Bluebell - 2903
+      Processing Collection: "Bluebell - 2903" from BluebellData.xlsx
+📂 Scanning: /WallpaperBooks/Bluebell - 2903/Images
+📂 Scanning: /WallpaperBooks/Bluebell - 2903/Images/300dpi
+📂 Scanning: /WallpaperBooks/Bluebell - 2903/Images/72dpi
+📂 Scanning: /WallpaperBooks/Bold - 2995
+   💎 Found Collection Data in: /WallpaperBooks/Bold - 2995
+      Processing Collection: "Bold - 2995" from BoldData.xlsx
+📂 Scanning: /WallpaperBooks/Bold - 2995/Images
+📂 Scanning: /WallpaperBooks/Bold - 2995/Images/300dpi
+📂 Scanning: /WallpaperBooks/Bold - 2995/Images/72dpi
+📂 Scanning: /WallpaperBooks/Borders - 3007
+   💎 Found Collection Data in: /WallpaperBooks/Borders - 3007
+      Processing Collection: "Borders - 3007" from BordersbyChesapeakeData.xlsx
+📂 Scanning: /WallpaperBooks/Borders - 3007/Images
+📂 Scanning: /WallpaperBooks/Borders - 3007/Images/Cover
+📂 Scanning: /WallpaperBooks/Borders - 3007/Images/Marketing
+📂 Scanning: /WallpaperBooks/Borders - 3007/Images/Marketing/BBC_Logo
+📂 Scanning: /WallpaperBooks/Borders - 3007/Marketing
+📂 Scanning: /WallpaperBooks/Botanica - 4143
+   💎 Found Collection Data in: /WallpaperBooks/Botanica - 4143
+      Processing Collection: "Botanica - 4143" from BotanicaData.xlsx
+📂 Scanning: /WallpaperBooks/Botanica - 4143/Images
+📂 Scanning: /WallpaperBooks/Botanica - 4143/Images/300dpi
+📂 Scanning: /WallpaperBooks/Botanica - 4143/Images/72dpi
+📂 Scanning: /WallpaperBooks/Brewster Essentials - 2734
+   💎 Found Collection Data in: /WallpaperBooks/Brewster Essentials - 2734
+      Processing Collection: "Brewster Essentials - 2734" from BrewsterEssentialsData.xlsx
+📂 Scanning: /WallpaperBooks/Brewster Essentials - 2734/Images
+📂 Scanning: /WallpaperBooks/Brewster Essentials - 2734/Images/300dpi
+📂 Scanning: /WallpaperBooks/Brewster Essentials - 2734/Images/72dpi
+📂 Scanning: /WallpaperBooks/Brewster Kids - 2886
+   💎 Found Collection Data in: /WallpaperBooks/Brewster Kids - 2886
+      Processing Collection: "Brewster Kids - 2886" from BrewsterKidsData.xlsx
+📂 Scanning: /WallpaperBooks/Brewster Kids - 2886/Images
+📂 Scanning: /WallpaperBooks/Brewster Kids - 2886/Images/300dpi
+📂 Scanning: /WallpaperBooks/Brewster Kids - 2886/Images/72dpi
+📂 Scanning: /WallpaperBooks/Briony - 4111
+   💎 Found Collection Data in: /WallpaperBooks/Briony - 4111
+      Processing Collection: "Briony - 4111" from BrionyData.xlsx
+📂 Scanning: /WallpaperBooks/Briony - 4111/Images
+📂 Scanning: /WallpaperBooks/Briony - 4111/Images/300dpi
+📂 Scanning: /WallpaperBooks/Briony - 4111/Images/72dpi
+📂 Scanning: /WallpaperBooks/Candice Olson After 8 - E61
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson After 8 - E61
+      Processing Collection: "Candice Olson After 8 - E61" from E61-After8Data.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson After 8 - E61/Images
+📂 Scanning: /WallpaperBooks/Candice Olson Botanical Dreams - D24
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Botanical Dreams - D24
+      Processing Collection: "Candice Olson Botanical Dreams - D24" from D24-BotanicalDreamsData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Botanical Dreams - D24/Images
+📂 Scanning: /WallpaperBooks/Candice Olson Casual Elegance - F05
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Casual Elegance - F05
+      Processing Collection: "Candice Olson Casual Elegance - F05" from F05-CasualEleganceData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Casual Elegance - F05/Images
+📂 Scanning: /WallpaperBooks/Candice Olson Decadence II - F70
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Decadence II - F70
+      Processing Collection: "Candice Olson Decadence II - F70" from F70-CandiceOlsonDecadenceIIData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Decadence II - F70/Images
+📂 Scanning: /WallpaperBooks/Candice Olson Modern Artisan II - D83
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Modern Artisan II - D83
+      Processing Collection: "Candice Olson Modern Artisan II - D83" from D83-ModernArtisanIIData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Modern Artisan II - D83/Images
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Modern Artisan II - D83/Images
+      Processing Collection: "Images" from D83-ModernArtisanIIData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Modern Nature II - E24
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Modern Nature II - E24
+      Processing Collection: "Candice Olson Modern Nature II - E24" from E24-ModernNatureIIData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Modern Nature II - E24/Images
+📂 Scanning: /WallpaperBooks/Candice Olson Natural Discovery - F41
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Natural Discovery - F41
+      Processing Collection: "Candice Olson Natural Discovery - F41" from F41-NaturalDiscoveryData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Natural Discovery - F41/Images
+📂 Scanning: /WallpaperBooks/Candice Olson Natural Splendor - B85
+   💎 Found Collection Data in: /WallpaperBooks/Candice Olson Natural Splendor - B85
+      Processing Collection: "Candice Olson Natural Splendor - B85" from B85-NaturalSplendorData.xlsx
+📂 Scanning: /WallpaperBooks/Candice Olson Natural Splendor - B85/Images
+📂 Scanning: /WallpaperBooks/Canton Road - 2732
+   💎 Found Collection Data in: /WallpaperBooks/Canton Road - 2732
+      Processing Collection: "Canton Road - 2732" from CantonRoadData.xlsx
+📂 Scanning: /WallpaperBooks/Canton Road - 2732/Images
+📂 Scanning: /WallpaperBooks/Canton Road - 2732/Images/300dpi
+📂 Scanning: /WallpaperBooks/Canton Road - 2732/Images/72dpi
+📂 Scanning: /WallpaperBooks/Carol Benson-Cobb Signature - E71
+   💎 Found Collection Data in: /WallpaperBooks/Carol Benson-Cobb Signature - E71
+      Processing Collection: "Carol Benson-Cobb Signature - E71" from E71-SignatureData.xlsx
+📂 Scanning: /WallpaperBooks/Carol Benson-Cobb Signature - E71/Images
+📂 Scanning: /WallpaperBooks/Caroline et Bettina - 4087
+   💎 Found Collection Data in: /WallpaperBooks/Caroline et Bettina - 4087
+      Processing Collection: "Caroline et Bettina - 4087" from CarolineetBettinaData.xlsx
+📂 Scanning: /WallpaperBooks/Caroline et Bettina - 4087/Images
+📂 Scanning: /WallpaperBooks/Caroline et Bettina - 4087/Images/300dpi
+📂 Scanning: /WallpaperBooks/Caroline et Bettina - 4087/Images/72dpi
+📂 Scanning: /WallpaperBooks/Catalina - 2656
+   💎 Found Collection Data in: /WallpaperBooks/Catalina - 2656
+      Processing Collection: "Catalina - 2656" from CatalinaData.xlsx
+📂 Scanning: /WallpaperBooks/Catalina - 2656/Images
+📂 Scanning: /WallpaperBooks/Catalina - 2656/Images/300dpi
+📂 Scanning: /WallpaperBooks/Catalina - 2656/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Catalina - 2656/Images/72dpi
+📂 Scanning: /WallpaperBooks/Catalina - 2656/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Caviar - F86
+   💎 Found Collection Data in: /WallpaperBooks/Caviar - F86
+      Processing Collection: "Caviar - F86" from CaviarData.xlsx
+📂 Scanning: /WallpaperBooks/Caviar - F86/Images
+📂 Scanning: /WallpaperBooks/Celadon - 2793
+   💎 Found Collection Data in: /WallpaperBooks/Celadon - 2793
+      Processing Collection: "Celadon - 2793" from CeladonData.xlsx
+📂 Scanning: /WallpaperBooks/Celadon - 2793/Images
+📂 Scanning: /WallpaperBooks/Celadon - 2793/Images/300dpi
+📂 Scanning: /WallpaperBooks/Celadon - 2793/Images/72dpi
+📂 Scanning: /WallpaperBooks/Chris Loves Julia - 4173
+   💎 Found Collection Data in: /WallpaperBooks/Chris Loves Julia - 4173
+      Processing Collection: "Chris Loves Julia - 4173" from ChrisLovesJuliaData.xlsx
+📂 Scanning: /WallpaperBooks/Chris Loves Julia - 4173/Images
+📂 Scanning: /WallpaperBooks/Chris Loves Julia - 4173/Images/300dpi
+📂 Scanning: /WallpaperBooks/Chris Loves Julia - 4173/Images/72dpi
+📂 Scanning: /WallpaperBooks/Chris Loves Julia NuWallpaper - 4170
+   💎 Found Collection Data in: /WallpaperBooks/Chris Loves Julia NuWallpaper - 4170
+      Processing Collection: "Chris Loves Julia NuWallpaper - 4170" from ChrisLovesJuliaData.xlsx
+📂 Scanning: /WallpaperBooks/Chris Loves Julia NuWallpaper - 4170/Images
+📂 Scanning: /WallpaperBooks/Chris Loves Julia NuWallpaper - 4170/Images/300dpi
+📂 Scanning: /WallpaperBooks/Chris Loves Julia NuWallpaper - 4170/Images/72dpi
+📂 Scanning: /WallpaperBooks/Classic Wovens - E32
+   💎 Found Collection Data in: /WallpaperBooks/Classic Wovens - E32
+      Processing Collection: "Classic Wovens - E32" from E32-ClassicWovensData.xlsx
+📂 Scanning: /WallpaperBooks/Classic Wovens - E32/Images
+📂 Scanning: /WallpaperBooks/Club - 2382
+   💎 Found Collection Data in: /WallpaperBooks/Club - 2382
+      Processing Collection: "Club - 2382" from ClubData.xlsx
+📂 Scanning: /WallpaperBooks/Club - 2382/Images
+📂 Scanning: /WallpaperBooks/Club - 2382/Images/300dpi
+📂 Scanning: /WallpaperBooks/Club - 2382/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Club - 2382/Images/72dpi
+📂 Scanning: /WallpaperBooks/Club - 2382/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Concept - 4091
+   💎 Found Collection Data in: /WallpaperBooks/Concept - 4091
+      Processing Collection: "Concept - 4091" from ConceptData.xlsx
+📂 Scanning: /WallpaperBooks/Concept - 4091/Images
+📂 Scanning: /WallpaperBooks/Concept - 4091/Images/300dpi
+📂 Scanning: /WallpaperBooks/Concept - 4091/Images/72dpi
+📂 Scanning: /WallpaperBooks/Conran's Plain Simple Useful - 2889
+   💎 Found Collection Data in: /WallpaperBooks/Conran's Plain Simple Useful - 2889
+      Processing Collection: "Conran's Plain Simple Useful - 2889" from ConranData.xlsx
+📂 Scanning: /WallpaperBooks/Conran's Plain Simple Useful - 2889/Images
+📂 Scanning: /WallpaperBooks/Conran's Plain Simple Useful - 2889/Images/300dpi
+📂 Scanning: /WallpaperBooks/Conran's Plain Simple Useful - 2889/Images/72dpi
+📂 Scanning: /WallpaperBooks/Cortina IV - 2830
+   💎 Found Collection Data in: /WallpaperBooks/Cortina IV - 2830
+      Processing Collection: "Cortina IV - 2830" from CortinaIVData.xlsx
+📂 Scanning: /WallpaperBooks/Cortina IV - 2830/Images
+📂 Scanning: /WallpaperBooks/Cortina IV - 2830/Images/300dpi
+📂 Scanning: /WallpaperBooks/Cortina IV - 2830/Images/72dpi
+📂 Scanning: /WallpaperBooks/Countryside - 3092
+   💎 Found Collection Data in: /WallpaperBooks/Countryside - 3092
+      Processing Collection: "Countryside - 3092" from CountrysideData.xlsx
+📂 Scanning: /WallpaperBooks/Countryside - 3092/Images
+📂 Scanning: /WallpaperBooks/Countryside - 3092/Images/300dpi
+📂 Scanning: /WallpaperBooks/Countryside - 3092/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Countryside - 3092/Images/72dpi
+📂 Scanning: /WallpaperBooks/Countryside - 3092/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Countryside - 3092/Marketing
+📂 Scanning: /WallpaperBooks/CWV - 2880
+   💎 Found Collection Data in: /WallpaperBooks/CWV - 2880
+      Processing Collection: "CWV - 2880" from CWVData.xlsx
+📂 Scanning: /WallpaperBooks/CWV - 2880/Images
+📂 Scanning: /WallpaperBooks/CWV - 2880/Images/300dpi
+📂 Scanning: /WallpaperBooks/CWV - 2880/Images/72dpi
+📂 Scanning: /WallpaperBooks/Damask Resource Library - E39
+   💎 Found Collection Data in: /WallpaperBooks/Damask Resource Library - E39
+      Processing Collection: "Damask Resource Library - E39" from E39-DamaskResourceLibraryData.xlsx
+📂 Scanning: /WallpaperBooks/Damask Resource Library - E39/Images
+📂 Scanning: /WallpaperBooks/Daydream - F90
+   💎 Found Collection Data in: /WallpaperBooks/Daydream - F90
+      Processing Collection: "Daydream - F90" from F90-DaydreamData.xlsx
+📂 Scanning: /WallpaperBooks/Daydream - F90/Images
+📂 Scanning: /WallpaperBooks/Daylight - 2973
+   💎 Found Collection Data in: /WallpaperBooks/Daylight - 2973
+      Processing Collection: "Daylight - 2973" from DaylightData.xlsx
+📂 Scanning: /WallpaperBooks/Daylight - 2973/Images
+📂 Scanning: /WallpaperBooks/Daylight - 2973/Images/300dpi
+📂 Scanning: /WallpaperBooks/Daylight - 2973/Images/72dpi
+📂 Scanning: /WallpaperBooks/Della Seta - 2872
+   💎 Found Collection Data in: /WallpaperBooks/Della Seta - 2872
+      Processing Collection: "Della Seta - 2872" from DellaSetaData.xlsx
+📂 Scanning: /WallpaperBooks/Della Seta - 2872/Images
+📂 Scanning: /WallpaperBooks/Della Seta - 2872/Images/300dpi
+📂 Scanning: /WallpaperBooks/Della Seta - 2872/Images/72dpi
+📂 Scanning: /WallpaperBooks/Delphine - 4072
+   💎 Found Collection Data in: /WallpaperBooks/Delphine - 4072
+      Processing Collection: "Delphine - 4072" from DelphineData.xlsx
+📂 Scanning: /WallpaperBooks/Delphine - 4072/Images
+📂 Scanning: /WallpaperBooks/Delphine - 4072/Images/300dpi
+📂 Scanning: /WallpaperBooks/Delphine - 4072/Images/72dpi
+📂 Scanning: /WallpaperBooks/Design Department - 2952
+   💎 Found Collection Data in: /WallpaperBooks/Design Department - 2952
+      Processing Collection: "Design Department - 2952" from DesignDeptData.xlsx
+📂 Scanning: /WallpaperBooks/Design Department - 2952/Images
+📂 Scanning: /WallpaperBooks/Design Department - 2952/Images/300dpi
+📂 Scanning: /WallpaperBooks/Design Department - 2952/Images/72dpi
+📂 Scanning: /WallpaperBooks/Dimensional Accents - 4140
+   💎 Found Collection Data in: /WallpaperBooks/Dimensional Accents - 4140
+      Processing Collection: "Dimensional Accents - 4140" from DimensionalAccentsData.xlsx
+📂 Scanning: /WallpaperBooks/Dimensional Accents - 4140/Images
+📂 Scanning: /WallpaperBooks/Dimensional Accents - 4140/Images/300dpi
+📂 Scanning: /WallpaperBooks/Dimensional Accents - 4140/Images/72dpi
+📂 Scanning: /WallpaperBooks/Dimensions - 2971
+   💎 Found Collection Data in: /WallpaperBooks/Dimensions - 2971
+      Processing Collection: "Dimensions - 2971" from DimensionsData.xlsx
+📂 Scanning: /WallpaperBooks/Dimensions - 2971/Images
+📂 Scanning: /WallpaperBooks/Dimensions - 2971/Images/300dpi
+📂 Scanning: /WallpaperBooks/Dimensions - 2971/Images/72dpi
+📂 Scanning: /WallpaperBooks/Disney Kids 4 - D37
+   💎 Found Collection Data in: /WallpaperBooks/Disney Kids 4 - D37
+      Processing Collection: "Disney Kids 4 - D37" from D37-DisneyKids4Data.xlsx
+📂 Scanning: /WallpaperBooks/Disney Kids 4 - D37/Images
+📂 Scanning: /WallpaperBooks/Drew & Jonathan Home Fifth Edition - 4177
+   💎 Found Collection Data in: /WallpaperBooks/Drew & Jonathan Home Fifth Edition - 4177
+      Processing Collection: "Drew & Jonathan Home Fifth Edition - 4177" from Drew&JonathanHomeFifthEditionData.xlsx
+📂 Scanning: /WallpaperBooks/Drew & Jonathan Home Fifth Edition - 4177/Images
+📂 Scanning: /WallpaperBooks/Drew & Jonathan Home IV - 4155
+   💎 Found Collection Data in: /WallpaperBooks/Drew & Jonathan Home IV - 4155
+      Processing Collection: "Drew & Jonathan Home IV - 4155" from Drew&JonathanHomeIVData.xlsx
+📂 Scanning: /WallpaperBooks/Drew & Jonathan Home IV - 4155/Images
+📂 Scanning: /WallpaperBooks/Drew & Jonathan Home IV - 4155/Images/300dpi
+📂 Scanning: /WallpaperBooks/Drew & Jonathan Home IV - 4155/Images/72dpi
+📂 Scanning: /WallpaperBooks/Echo Lake Lodge - 3095
+   💎 Found Collection Data in: /WallpaperBooks/Echo Lake Lodge - 3095
+      Processing Collection: "Echo Lake Lodge - 3095" from EchoLakeLodgeData.xlsx
+📂 Scanning: /WallpaperBooks/Echo Lake Lodge - 3095/Images
+📂 Scanning: /WallpaperBooks/Echo Lake Lodge - 3095/Images/300dpi
+📂 Scanning: /WallpaperBooks/Echo Lake Lodge - 3095/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Echo Lake Lodge - 3095/Images/72dpi
+📂 Scanning: /WallpaperBooks/Echo Lake Lodge - 3095/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Eclipse - 2716
+   💎 Found Collection Data in: /WallpaperBooks/Eclipse - 2716
+      Processing Collection: "Eclipse - 2716" from EclipseData.xlsx
+📂 Scanning: /WallpaperBooks/Eclipse - 2716/Images
+📂 Scanning: /WallpaperBooks/Eclipse - 2716/Images/300dpi
+📂 Scanning: /WallpaperBooks/Eclipse - 2716/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Eclipse - 2716/Images/72dpi
+📂 Scanning: /WallpaperBooks/Eclipse - 2716/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Eclipse - 2716/Marketing
+📂 Scanning: /WallpaperBooks/Egypt Sherrod - 4139
+   💎 Found Collection Data in: /WallpaperBooks/Egypt Sherrod - 4139
+      Processing Collection: "Egypt Sherrod - 4139" from EgyptSherrodData.xlsx
+📂 Scanning: /WallpaperBooks/Egypt Sherrod - 4139/Images
+📂 Scanning: /WallpaperBooks/Egypt Sherrod - 4139/Images/300dpi
+📂 Scanning: /WallpaperBooks/Egypt Sherrod - 4139/Images/72dpi
+📂 Scanning: /WallpaperBooks/Eijffinger Web Only - 2989
+   💎 Found Collection Data in: /WallpaperBooks/Eijffinger Web Only - 2989
+      Processing Collection: "Eijffinger Web Only - 2989" from EijffingerWebData.xlsx
+📂 Scanning: /WallpaperBooks/Eijffinger Web Only - 2989/Images
+📂 Scanning: /WallpaperBooks/Eijffinger Web Only - 2989/Images/300dpi
+📂 Scanning: /WallpaperBooks/Eijffinger Web Only - 2989/Images/72dpi
+📂 Scanning: /WallpaperBooks/Empress - 2669
+   💎 Found Collection Data in: /WallpaperBooks/Empress - 2669
+      Processing Collection: "Empress - 2669" from EmpressData.xlsx
+📂 Scanning: /WallpaperBooks/Empress - 2669/Images
+📂 Scanning: /WallpaperBooks/Empress - 2669/Images/300dpi
+📂 Scanning: /WallpaperBooks/Empress - 2669/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Empress - 2669/Images/72dpi
+📂 Scanning: /WallpaperBooks/Empress - 2669/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Equinox - 2861
+   💎 Found Collection Data in: /WallpaperBooks/Equinox - 2861
+      Processing Collection: "Equinox - 2861" from EquinoxData.xlsx
+📂 Scanning: /WallpaperBooks/Equinox - 2861/Images
+📂 Scanning: /WallpaperBooks/Equinox - 2861/Images/300dpi
+📂 Scanning: /WallpaperBooks/Equinox - 2861/Images/72dpi
+📂 Scanning: /WallpaperBooks/Erin Gates - 4063
+   💎 Found Collection Data in: /WallpaperBooks/Erin Gates - 4063
+      Processing Collection: "Erin Gates - 4063" from ErinGatesData.xlsx
+📂 Scanning: /WallpaperBooks/Erin Gates - 4063/Images
+📂 Scanning: /WallpaperBooks/Erin Gates - 4063/Images/300dpi
+📂 Scanning: /WallpaperBooks/Erin Gates - 4063/Images/72dpi
+📂 Scanning: /WallpaperBooks/Essence - 2735
+   💎 Found Collection Data in: /WallpaperBooks/Essence - 2735
+      Processing Collection: "Essence - 2735" from EssenceData.xlsx
+📂 Scanning: /WallpaperBooks/Essence - 2735/Images
+📂 Scanning: /WallpaperBooks/Essence - 2735/Images/300dpi
+📂 Scanning: /WallpaperBooks/Essence - 2735/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Essence - 2735/Images/72dpi
+📂 Scanning: /WallpaperBooks/Essence - 2735/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Evolve - 2683
+   💎 Found Collection Data in: /WallpaperBooks/Evolve - 2683
+      Processing Collection: "Evolve - 2683" from EvolveData.xlsx
+📂 Scanning: /WallpaperBooks/Evolve - 2683/Images
+📂 Scanning: /WallpaperBooks/Evolve - 2683/Images/300dpi
+📂 Scanning: /WallpaperBooks/Evolve - 2683/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Evolve - 2683/Images/72dpi
+📂 Scanning: /WallpaperBooks/Evolve - 2683/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Fable - 4060
+   💎 Found Collection Data in: /WallpaperBooks/Fable - 4060
+      Processing Collection: "Fable - 4060" from FableData.xlsx
+📂 Scanning: /WallpaperBooks/Fable - 4060/Images
+📂 Scanning: /WallpaperBooks/Fable - 4060/Images/300dpi
+📂 Scanning: /WallpaperBooks/Fable - 4060/Images/72dpi
+📂 Scanning: /WallpaperBooks/Farmhouse - 3115
+   💎 Found Collection Data in: /WallpaperBooks/Farmhouse - 3115
+      Processing Collection: "Farmhouse - 3115" from FarmhouseData.xlsx
+📂 Scanning: /WallpaperBooks/Farmhouse - 3115/Images
+📂 Scanning: /WallpaperBooks/Farmhouse - 3115/Images/300dpi
+📂 Scanning: /WallpaperBooks/Farmhouse - 3115/Images/72dpi
+📂 Scanning: /WallpaperBooks/Fibers - 2829
+   💎 Found Collection Data in: /WallpaperBooks/Fibers - 2829
+      Processing Collection: "Fibers - 2829" from FibersData.xlsx
+📂 Scanning: /WallpaperBooks/Fibers - 2829/Images
+📂 Scanning: /WallpaperBooks/Fibers - 2829/Images/300dpi
+📂 Scanning: /WallpaperBooks/Fibers - 2829/Images/72dpi
+📂 Scanning: /WallpaperBooks/Flora & Fauna - 3122
+   💎 Found Collection Data in: /WallpaperBooks/Flora & Fauna - 3122
+      Processing Collection: "Flora & Fauna - 3122" from Flora&FaunaData.xlsx
+📂 Scanning: /WallpaperBooks/Flora & Fauna - 3122/Images
+📂 Scanning: /WallpaperBooks/Flora & Fauna - 3122/Images/300dpi
+📂 Scanning: /WallpaperBooks/Flora & Fauna - 3122/Images/72dpi
+📂 Scanning: /WallpaperBooks/Folklore - 2821
+   💎 Found Collection Data in: /WallpaperBooks/Folklore - 2821
+      Processing Collection: "Folklore - 2821" from FolkloreData.xlsx
+📂 Scanning: /WallpaperBooks/Folklore - 2821/Images
+📂 Scanning: /WallpaperBooks/Folklore - 2821/Images/300dpi
+📂 Scanning: /WallpaperBooks/Folklore - 2821/Images/72dpi
+📂 Scanning: /WallpaperBooks/For Your Bath III - 2704
+   💎 Found Collection Data in: /WallpaperBooks/For Your Bath III - 2704
+      Processing Collection: "For Your Bath III - 2704" from ForYourBathIIIData.xlsx
+📂 Scanning: /WallpaperBooks/For Your Bath III - 2704/Images
+📂 Scanning: /WallpaperBooks/For Your Bath III - 2704/Images/300dpi
+📂 Scanning: /WallpaperBooks/For Your Bath III - 2704/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/For Your Bath III - 2704/Images/72dpi
+📂 Scanning: /WallpaperBooks/For Your Bath III - 2704/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Formations - F53
+   💎 Found Collection Data in: /WallpaperBooks/Formations - F53
+      Processing Collection: "Formations - F53" from F53-FormationsData.xlsx
+📂 Scanning: /WallpaperBooks/Formations - F53/Images
+📂 Scanning: /WallpaperBooks/Fresh Start Kitchen & Bath - 2904
+   💎 Found Collection Data in: /WallpaperBooks/Fresh Start Kitchen & Bath - 2904
+      Processing Collection: "Fresh Start Kitchen & Bath - 2904" from FreshStartData.xlsx
+📂 Scanning: /WallpaperBooks/Fresh Start Kitchen & Bath - 2904/Images
+📂 Scanning: /WallpaperBooks/Fresh Start Kitchen & Bath - 2904/Images/300dpi
+📂 Scanning: /WallpaperBooks/Fresh Start Kitchen & Bath - 2904/Images/72dpi
+📂 Scanning: /WallpaperBooks/Geometrie - 2697
+   💎 Found Collection Data in: /WallpaperBooks/Geometrie - 2697
+      Processing Collection: "Geometrie - 2697" from GeometrieData.xlsx
+📂 Scanning: /WallpaperBooks/Geometrie - 2697/Images
+📂 Scanning: /WallpaperBooks/Geometrie - 2697/Images/300dpi
+📂 Scanning: /WallpaperBooks/Geometrie - 2697/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Geometrie - 2697/Images/72dpi
+📂 Scanning: /WallpaperBooks/Geometrie - 2697/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Geometrie - 2697/Marketing
+📂 Scanning: /WallpaperBooks/Geonature - 2715
+   💎 Found Collection Data in: /WallpaperBooks/Geonature - 2715
+      Processing Collection: "Geonature - 2715" from GeonatureData.xlsx
+📂 Scanning: /WallpaperBooks/Geonature - 2715/Images
+📂 Scanning: /WallpaperBooks/Geonature - 2715/Images/300dpi
+📂 Scanning: /WallpaperBooks/Geonature - 2715/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Geonature - 2715/Images/72dpi
+📂 Scanning: /WallpaperBooks/Geonature - 2715/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Georgia - 4074
+   💎 Found Collection Data in: /WallpaperBooks/Georgia - 4074
+      Processing Collection: "Georgia - 4074" from GeorgiaData.xlsx
+📂 Scanning: /WallpaperBooks/Georgia - 4074/Images
+📂 Scanning: /WallpaperBooks/Georgia - 4074/Images/300dpi
+   💎 Found Collection Data in: /WallpaperBooks/Georgia - 4074/Images/300dpi
+      Processing Collection: "300dpi" from GeorgiaData.xlsx
+📂 Scanning: /WallpaperBooks/Georgia - 4074/Images/72dpi
+📂 Scanning: /WallpaperBooks/GeoTex - 2765
+   💎 Found Collection Data in: /WallpaperBooks/GeoTex - 2765
+      Processing Collection: "GeoTex - 2765" from GeoTexData.xlsx
+📂 Scanning: /WallpaperBooks/GeoTex - 2765/Images
+📂 Scanning: /WallpaperBooks/GeoTex - 2765/Images/300dpi
+📂 Scanning: /WallpaperBooks/GeoTex - 2765/Images/72dpi
+📂 Scanning: /WallpaperBooks/Glasshouse
+   💎 Found Collection Data in: /WallpaperBooks/Glasshouse
+      Processing Collection: "Glasshouse" from GlasshouseData.xlsx
+📂 Scanning: /WallpaperBooks/Glasshouse/Images
+📂 Scanning: /WallpaperBooks/Glasshouse/Images/300dpi
+📂 Scanning: /WallpaperBooks/Glasshouse/Images/72dpi
+📂 Scanning: /WallpaperBooks/Glenyse Thompson
+   💎 Found Collection Data in: /WallpaperBooks/Glenyse Thompson
+      Processing Collection: "Glenyse Thompson" from GlenyseThompsonData.xlsx
+📂 Scanning: /WallpaperBooks/Glenyse Thompson/Images
+📂 Scanning: /WallpaperBooks/Glenyse Thompson/Images/300dpi
+📂 Scanning: /WallpaperBooks/Glenyse Thompson/Images/72dpi
+📂 Scanning: /WallpaperBooks/Grandmillenial - E29
+   💎 Found Collection Data in: /WallpaperBooks/Grandmillenial - E29
+      Processing Collection: "Grandmillenial - E29" from E29-GrandmillenialData.xlsx
+📂 Scanning: /WallpaperBooks/Grandmillenial - E29/Images
+📂 Scanning: /WallpaperBooks/Graphic World
+   💎 Found Collection Data in: /WallpaperBooks/Graphic World
+      Processing Collection: "Graphic World" from GraphicWorldData.xlsx
+📂 Scanning: /WallpaperBooks/Graphic World/Images
+📂 Scanning: /WallpaperBooks/Graphic World/Images/300dpi
+📂 Scanning: /WallpaperBooks/Graphic World/Images/72dpi
+📂 Scanning: /WallpaperBooks/Grasscloth Resource Library - D86
+   💎 Found Collection Data in: /WallpaperBooks/Grasscloth Resource Library - D86
+      Processing Collection: "Grasscloth Resource Library - D86" from D86-GrassclothResourceLibraryData.xlsx
+📂 Scanning: /WallpaperBooks/Grasscloth Resource Library - D86/Images
+📂 Scanning: /WallpaperBooks/Greenhouse - E69
+   💎 Found Collection Data in: /WallpaperBooks/Greenhouse - E69
+      Processing Collection: "Greenhouse - E69" from E69-GreenhouseData.xlsx
+📂 Scanning: /WallpaperBooks/Greenhouse - E69/Images
+📂 Scanning: /WallpaperBooks/Grey Resource - 2976
+   💎 Found Collection Data in: /WallpaperBooks/Grey Resource - 2976
+      Processing Collection: "Grey Resource - 2976" from GreyResourceData.xlsx
+📂 Scanning: /WallpaperBooks/Grey Resource - 2976/Images
+📂 Scanning: /WallpaperBooks/Grey Resource - 2976/Images/300dpi
+📂 Scanning: /WallpaperBooks/Grey Resource - 2976/Images/72dpi
+📂 Scanning: /WallpaperBooks/Haberdashery - 4147
+   💎 Found Collection Data in: /WallpaperBooks/Haberdashery - 4147
+      Processing Collection: "Haberdashery - 4147" from HaberdasheryData.xlsx
+📂 Scanning: /WallpaperBooks/Haberdashery - 4147/Images
+📂 Scanning: /WallpaperBooks/Haberdashery - 4147/Images/300dpi
+📂 Scanning: /WallpaperBooks/Haberdashery - 4147/Images/72dpi
+📂 Scanning: /WallpaperBooks/Habitat - 2782
+   💎 Found Collection Data in: /WallpaperBooks/Habitat - 2782
+      Processing Collection: "Habitat - 2782" from HabitatData.xlsx
+📂 Scanning: /WallpaperBooks/Habitat - 2782/Images
+📂 Scanning: /WallpaperBooks/Habitat - 2782/Images/300dpi
+📂 Scanning: /WallpaperBooks/Habitat - 2782/Images/72dpi
+📂 Scanning: /WallpaperBooks/Hannah - 4066
+   💎 Found Collection Data in: /WallpaperBooks/Hannah - 4066
+      Processing Collection: "Hannah - 4066" from HannahData.xlsx
+📂 Scanning: /WallpaperBooks/Hannah - 4066/Images
+📂 Scanning: /WallpaperBooks/Hannah - 4066/Images/300dpi
+📂 Scanning: /WallpaperBooks/Hannah - 4066/Images/72dpi
+📂 Scanning: /WallpaperBooks/Happy - 4081
+   💎 Found Collection Data in: /WallpaperBooks/Happy - 4081
+      Processing Collection: "Happy - 4081" from HappyData.xlsx
+📂 Scanning: /WallpaperBooks/Happy - 4081/Images
+📂 Scanning: /WallpaperBooks/Happy - 4081/Images/300dpi
+📂 Scanning: /WallpaperBooks/Happy - 4081/Images/72dpi
+📂 Scanning: /WallpaperBooks/Harmony - 4146
+   💎 Found Collection Data in: /WallpaperBooks/Harmony - 4146
+      Processing Collection: "Harmony - 4146" from HarmonyData.xlsx
+📂 Scanning: /WallpaperBooks/Harmony - 4146/Images
+📂 Scanning: /WallpaperBooks/Harmony - 4146/Images/300dpi
+📂 Scanning: /WallpaperBooks/Harmony - 4146/Images/72dpi
+📂 Scanning: /WallpaperBooks/Hidden Treasures - 4153
+   💎 Found Collection Data in: /WallpaperBooks/Hidden Treasures - 4153
+      Processing Collection: "Hidden Treasures - 4153" from HiddenTreasuresData.xlsx
+📂 Scanning: /WallpaperBooks/Hidden Treasures - 4153/Images
+📂 Scanning: /WallpaperBooks/Hidden Treasures - 4153/Images/300dpi
+📂 Scanning: /WallpaperBooks/Hidden Treasures - 4153/Images/72dpi
+📂 Scanning: /WallpaperBooks/Hidden Treasures 2 - 4171
+   💎 Found Collection Data in: /WallpaperBooks/Hidden Treasures 2 - 4171
+      Processing Collection: "Hidden Treasures 2 - 4171" from HiddenTreasures2Data.xlsx
+📂 Scanning: /WallpaperBooks/Hidden Treasures 2 - 4171/Images
+📂 Scanning: /WallpaperBooks/Hidden Treasures 2 - 4171/Images/300dpi
+📂 Scanning: /WallpaperBooks/Hidden Treasures 2 - 4171/Images/72dpi
+📂 Scanning: /WallpaperBooks/Hide & Seek - 3093
+   💎 Found Collection Data in: /WallpaperBooks/Hide & Seek - 3093
+      Processing Collection: "Hide & Seek - 3093" from HideAndSeekData.xlsx
+📂 Scanning: /WallpaperBooks/Hide & Seek - 3093/Images
+📂 Scanning: /WallpaperBooks/Hide & Seek - 3093/Images/300dpi
+📂 Scanning: /WallpaperBooks/Hide & Seek - 3093/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Hide & Seek - 3093/Images/72dpi
+📂 Scanning: /WallpaperBooks/Hide & Seek - 3093/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Hide & Seek - 3093/Marketing
+📂 Scanning: /WallpaperBooks/Homestead - 3123
+   💎 Found Collection Data in: /WallpaperBooks/Homestead - 3123
+      Processing Collection: "Homestead - 3123" from HomesteadData.xlsx
+📂 Scanning: /WallpaperBooks/Homestead - 3123/Images
+📂 Scanning: /WallpaperBooks/Homestead - 3123/Images/300dpi
+📂 Scanning: /WallpaperBooks/Homestead - 3123/Images/72dpi
+📂 Scanning: /WallpaperBooks/Hoopla Walls
+   💎 Found Collection Data in: /WallpaperBooks/Hoopla Walls
+      Processing Collection: "Hoopla Walls" from HooplaWallsData.xlsx
+📂 Scanning: /WallpaperBooks/Hoopla Walls/Images
+📂 Scanning: /WallpaperBooks/IBC Beige & Neutrals - E77
+   💎 Found Collection Data in: /WallpaperBooks/IBC Beige & Neutrals - E77
+      Processing Collection: "IBC Beige & Neutrals - E77" from E77-Beige&NeutralsData.xlsx
+📂 Scanning: /WallpaperBooks/IBC Beige & Neutrals - E77/Images
+📂 Scanning: /WallpaperBooks/IBC Black & White III - E82
+   💎 Found Collection Data in: /WallpaperBooks/IBC Black & White III - E82
+      Processing Collection: "IBC Black & White III - E82" from E82-Black&WhiteIIIData.xlsx
+📂 Scanning: /WallpaperBooks/IBC Black & White III - E82/Images
+📂 Scanning: /WallpaperBooks/IBC Blues II - E79
+   💎 Found Collection Data in: /WallpaperBooks/IBC Blues II - E79
+      Processing Collection: "IBC Blues II - E79" from E79-BluesIIData.xlsx
+📂 Scanning: /WallpaperBooks/IBC Blues II - E79/Images
+📂 Scanning: /WallpaperBooks/IBC Earthy Tones - E80
+   💎 Found Collection Data in: /WallpaperBooks/IBC Earthy Tones - E80
+      Processing Collection: "IBC Earthy Tones - E80" from E80-EarthyTonesData.xlsx
+📂 Scanning: /WallpaperBooks/IBC Earthy Tones - E80/Images
+📂 Scanning: /WallpaperBooks/IBC Grasscloth II - E78
+   💎 Found Collection Data in: /WallpaperBooks/IBC Grasscloth II - E78
+      Processing Collection: "IBC Grasscloth II - E78" from E78-GrassclothIIData.xlsx
+📂 Scanning: /WallpaperBooks/IBC Grasscloth II - E78/Images
+   💎 Found Collection Data in: /WallpaperBooks/IBC Grasscloth II - E78/Images
+      Processing Collection: "Images" from E78-GrassclothIIData.xlsx
+📂 Scanning: /WallpaperBooks/IBC Shimmering Finishes - E81
+   💎 Found Collection Data in: /WallpaperBooks/IBC Shimmering Finishes - E81
+      Processing Collection: "IBC Shimmering Finishes - E81" from E81-ShimmeringFinishesData.xlsx
+📂 Scanning: /WallpaperBooks/IBC Shimmering Finishes - E81/Images
+📂 Scanning: /WallpaperBooks/Ibiza - 2454
+   💎 Found Collection Data in: /WallpaperBooks/Ibiza - 2454
+      Processing Collection: "Ibiza - 2454" from IbizaData.xlsx
+📂 Scanning: /WallpaperBooks/Ibiza - 2454/Images
+📂 Scanning: /WallpaperBooks/Ibiza - 2454/Images/300dpi
+📂 Scanning: /WallpaperBooks/Ibiza - 2454/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Ibiza - 2454/Images/72dpi
+📂 Scanning: /WallpaperBooks/Ibiza - 2454/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Imprint - 2949
+   💎 Found Collection Data in: /WallpaperBooks/Imprint - 2949
+      Processing Collection: "Imprint - 2949" from ImprintData.xlsx
+📂 Scanning: /WallpaperBooks/Imprint - 2949/Images
+📂 Scanning: /WallpaperBooks/Imprint - 2949/Images/300dpi
+📂 Scanning: /WallpaperBooks/Imprint - 2949/Images/72dpi
+📂 Scanning: /WallpaperBooks/In Bloom - 2827
+   💎 Found Collection Data in: /WallpaperBooks/In Bloom - 2827
+      Processing Collection: "In Bloom - 2827" from InBloomData.xlsx
+📂 Scanning: /WallpaperBooks/In Bloom - 2827/Images
+📂 Scanning: /WallpaperBooks/In Bloom - 2827/Images/300dpi
+📂 Scanning: /WallpaperBooks/In Bloom - 2827/Images/72dpi
+📂 Scanning: /WallpaperBooks/Ingrid - 4080
+   💎 Found Collection Data in: /WallpaperBooks/Ingrid - 4080
+      Processing Collection: "Ingrid - 4080" from IngridData.xlsx
+📂 Scanning: /WallpaperBooks/Ingrid - 4080/Images
+📂 Scanning: /WallpaperBooks/Ingrid - 4080/Images/300dpi
+📂 Scanning: /WallpaperBooks/Ingrid - 4080/Images/72dpi
+📂 Scanning: /WallpaperBooks/Inlay - 2988
+   💎 Found Collection Data in: /WallpaperBooks/Inlay - 2988
+      Processing Collection: "Inlay - 2988" from InlayData.xlsx
+📂 Scanning: /WallpaperBooks/Inlay - 2988/Images
+📂 Scanning: /WallpaperBooks/Inlay - 2988/Images/300dpi
+📂 Scanning: /WallpaperBooks/Inlay - 2988/Images/72dpi
+📂 Scanning: /WallpaperBooks/Italian Silk - 4058
+   💎 Found Collection Data in: /WallpaperBooks/Italian Silk - 4058
+      Processing Collection: "Italian Silk - 4058" from ItalianSilkData.xlsx
+📂 Scanning: /WallpaperBooks/Italian Silk - 4058/Images
+📂 Scanning: /WallpaperBooks/Italian Silk - 4058/Images/300dpi
+📂 Scanning: /WallpaperBooks/Italian Silk - 4058/Images/72dpi
+📂 Scanning: /WallpaperBooks/Jade Grasscloth - 2622
+   💎 Found Collection Data in: /WallpaperBooks/Jade Grasscloth - 2622
+      Processing Collection: "Jade Grasscloth - 2622" from JadeData.xlsx
+📂 Scanning: /WallpaperBooks/Jade Grasscloth - 2622/Images
+📂 Scanning: /WallpaperBooks/Jade Grasscloth - 2622/Images/300dpi
+📂 Scanning: /WallpaperBooks/Jade Grasscloth - 2622/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Jade Grasscloth - 2622/Images/72dpi
+📂 Scanning: /WallpaperBooks/Jade Grasscloth - 2622/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Jen Hewett
+   💎 Found Collection Data in: /WallpaperBooks/Jen Hewett
+      Processing Collection: "Jen Hewett" from JenHewettData.xlsx
+📂 Scanning: /WallpaperBooks/Jen Hewett/Images
+📂 Scanning: /WallpaperBooks/Jen Hewett/Images/300dpi
+📂 Scanning: /WallpaperBooks/Jen Hewett/Images/72dpi
+📂 Scanning: /WallpaperBooks/Jiangsu Grasscloth - 2039
+   💎 Found Collection Data in: /WallpaperBooks/Jiangsu Grasscloth - 2039
+      Processing Collection: "Jiangsu Grasscloth - 2039" from JiangsuGrassclothData.xlsx
+📂 Scanning: /WallpaperBooks/Jiangsu Grasscloth - 2039/Images
+📂 Scanning: /WallpaperBooks/Jiangsu Grasscloth - 2039/Images/300dpi
+📂 Scanning: /WallpaperBooks/Jiangsu Grasscloth - 2039/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Jiangsu Grasscloth - 2039/Images/72dpi
+📂 Scanning: /WallpaperBooks/Jiangsu Grasscloth - 2039/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Karen Revis
+   💎 Found Collection Data in: /WallpaperBooks/Karen Revis
+      Processing Collection: "Karen Revis" from KarenRevisData.xlsx
+📂 Scanning: /WallpaperBooks/Karen Revis/Images
+📂 Scanning: /WallpaperBooks/Karen Revis/Images/300dpi
+📂 Scanning: /WallpaperBooks/Karen Revis/Images/72dpi
+📂 Scanning: /WallpaperBooks/Katie Hunt
+   💎 Found Collection Data in: /WallpaperBooks/Katie Hunt
+      Processing Collection: "Katie Hunt" from KatieHuntData.xlsx
+📂 Scanning: /WallpaperBooks/Katie Hunt/Images
+📂 Scanning: /WallpaperBooks/Katie Hunt/Images/300dpi
+📂 Scanning: /WallpaperBooks/Katie Hunt/Images/72dpi
+📂 Scanning: /WallpaperBooks/Kindred - 3119
+   💎 Found Collection Data in: /WallpaperBooks/Kindred - 3119
+      Processing Collection: "Kindred - 3119" from KindredData.xlsx
+📂 Scanning: /WallpaperBooks/Kindred - 3119/Images
+📂 Scanning: /WallpaperBooks/Kindred - 3119/Images/300dpi
+📂 Scanning: /WallpaperBooks/Kindred - 3119/Images/72dpi
+📂 Scanning: /WallpaperBooks/Kinfolk - 3125
+   💎 Found Collection Data in: /WallpaperBooks/Kinfolk - 3125
+      Processing Collection: "Kinfolk - 3125" from KinfolkData.xlsx
+📂 Scanning: /WallpaperBooks/Kinfolk - 3125/Images
+📂 Scanning: /WallpaperBooks/Kinfolk - 3125/Images/300dpi
+📂 Scanning: /WallpaperBooks/Kinfolk - 3125/Images/72dpi
+📂 Scanning: /WallpaperBooks/Kismet - 1014
+   💎 Found Collection Data in: /WallpaperBooks/Kismet - 1014
+      Processing Collection: "Kismet - 1014" from KismetData.xlsx
+📂 Scanning: /WallpaperBooks/Kismet - 1014/Images
+📂 Scanning: /WallpaperBooks/Kismet - 1014/Images/300dpi
+📂 Scanning: /WallpaperBooks/Kismet - 1014/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Kismet - 1014/Images/72dpi
+📂 Scanning: /WallpaperBooks/Kismet - 1014/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Kitchen & Bath - 4191
+   💎 Found Collection Data in: /WallpaperBooks/Kitchen & Bath - 4191
+      Processing Collection: "Kitchen & Bath - 4191" from Kitchen&BathData.xlsx
+📂 Scanning: /WallpaperBooks/Kitchen & Bath - 4191/Images
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Essentials - 2766
+   💎 Found Collection Data in: /WallpaperBooks/Kitchen & Bath Essentials - 2766
+      Processing Collection: "Kitchen & Bath Essentials - 2766" from KitchenBathEssentialsData.xlsx
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Essentials - 2766/Images
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Essentials - 2766/Images/300dpi
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Essentials - 2766/Images/72dpi
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Resources II
+   💎 Found Collection Data in: /WallpaperBooks/Kitchen & Bath Resources II
+      Processing Collection: "Kitchen & Bath Resources II" from KitchenAndBathResourceIIData.xlsx
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Resources II/Images
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Resources II/Images/300dpi
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Resources II/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Resources II/Images/72dpi
+📂 Scanning: /WallpaperBooks/Kitchen & Bath Resources II/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Kitchen, Bed, & Bath IV - 2686
+   💎 Found Collection Data in: /WallpaperBooks/Kitchen, Bed, & Bath IV - 2686
+      Processing Collection: "Kitchen, Bed, & Bath IV - 2686" from KitchenBedBathIVData.xlsx
+📂 Scanning: /WallpaperBooks/Kitchen, Bed, & Bath IV - 2686/Images
+📂 Scanning: /WallpaperBooks/Kitchen, Bed, & Bath IV - 2686/Images/300dpi
+📂 Scanning: /WallpaperBooks/Kitchen, Bed, & Bath IV - 2686/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Kitchen, Bed, & Bath IV - 2686/Images/72dpi
+📂 Scanning: /WallpaperBooks/Kitchen, Bed, & Bath IV - 2686/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Komar Colours
+   💎 Found Collection Data in: /WallpaperBooks/Komar Colours
+      Processing Collection: "Komar Colours" from KomarColoursData.xlsx
+📂 Scanning: /WallpaperBooks/Komar Colours/Images
+📂 Scanning: /WallpaperBooks/Komar Colours/Images/300dpi
+📂 Scanning: /WallpaperBooks/Komar Colours/Images/72dpi
+📂 Scanning: /WallpaperBooks/KT Merz
+   💎 Found Collection Data in: /WallpaperBooks/KT Merz
+      Processing Collection: "KT Merz" from KTMerzData.xlsx
+📂 Scanning: /WallpaperBooks/KT Merz/Images
+📂 Scanning: /WallpaperBooks/KT Merz/Images/300dpi
+📂 Scanning: /WallpaperBooks/KT Merz/Images/72dpi
+📂 Scanning: /WallpaperBooks/Leah Duncan
+   💎 Found Collection Data in: /WallpaperBooks/Leah Duncan
+      Processing Collection: "Leah Duncan" from LeahDuncanData.xlsx
+📂 Scanning: /WallpaperBooks/Leah Duncan/Images
+📂 Scanning: /WallpaperBooks/Leah Duncan/Images/300dpi
+📂 Scanning: /WallpaperBooks/Leah Duncan/Images/72dpi
+📂 Scanning: /WallpaperBooks/Lele Sadoughi
+   💎 Found Collection Data in: /WallpaperBooks/Lele Sadoughi
+      Processing Collection: "Lele Sadoughi" from LeleSadoughiData.xlsx
+📂 Scanning: /WallpaperBooks/Lele Sadoughi/Images
+📂 Scanning: /WallpaperBooks/Lele Sadoughi/Images/300dpi
+📂 Scanning: /WallpaperBooks/Lele Sadoughi/Images/72dpi
+📂 Scanning: /WallpaperBooks/Lemieux et Cie Signature - F18
+   💎 Found Collection Data in: /WallpaperBooks/Lemieux et Cie Signature - F18
+      Processing Collection: "Lemieux et Cie Signature - F18" from F18-LemieuxEtCieSignatureData.xlsx
+📂 Scanning: /WallpaperBooks/Lemieux et Cie Signature - F18/Images
+📂 Scanning: /WallpaperBooks/Lili Whitt Whitt
+   💎 Found Collection Data in: /WallpaperBooks/Lili Whitt Whitt
+      Processing Collection: "Lili Whitt Whitt" from LiliWhittWhittData.xlsx
+📂 Scanning: /WallpaperBooks/Lili Whitt Whitt/Images
+📂 Scanning: /WallpaperBooks/Lili Whitt Whitt/Images/300dpi
+📂 Scanning: /WallpaperBooks/Lili Whitt Whitt/Images/72dpi
+📂 Scanning: /WallpaperBooks/Lina - 2932
+   💎 Found Collection Data in: /WallpaperBooks/Lina - 2932
+      Processing Collection: "Lina - 2932" from LinaData.xlsx
+📂 Scanning: /WallpaperBooks/Lina - 2932/Images
+📂 Scanning: /WallpaperBooks/Lina - 2932/Images/300dpi
+📂 Scanning: /WallpaperBooks/Lina - 2932/Images/72dpi
+📂 Scanning: /WallpaperBooks/Lino - 2818
+   💎 Found Collection Data in: /WallpaperBooks/Lino - 2818
+      Processing Collection: "Lino - 2818" from LinoData.xlsx
+📂 Scanning: /WallpaperBooks/Lino - 2818/Images
+📂 Scanning: /WallpaperBooks/Lino - 2818/Images/300dpi
+📂 Scanning: /WallpaperBooks/Lino - 2818/Images/72dpi
+📂 Scanning: /WallpaperBooks/Loom - 2972
+   💎 Found Collection Data in: /WallpaperBooks/Loom - 2972
+      Processing Collection: "Loom - 2972" from LoomData.xlsx
+📂 Scanning: /WallpaperBooks/Loom - 2972/Images
+📂 Scanning: /WallpaperBooks/Loom - 2972/Images/300dpi
+📂 Scanning: /WallpaperBooks/Loom - 2972/Images/72dpi
+📂 Scanning: /WallpaperBooks/Lounge Luxe - 2825
+   💎 Found Collection Data in: /WallpaperBooks/Lounge Luxe - 2825
+      Processing Collection: "Lounge Luxe - 2825" from LoungeLuxeData.xlsx
+📂 Scanning: /WallpaperBooks/Lounge Luxe - 2825/Images
+📂 Scanning: /WallpaperBooks/Lounge Luxe - 2825/Images/300dpi
+📂 Scanning: /WallpaperBooks/Lounge Luxe - 2825/Images/72dpi
+📂 Scanning: /WallpaperBooks/LoveShackFancy
+   💎 Found Collection Data in: /WallpaperBooks/LoveShackFancy
+      Processing Collection: "LoveShackFancy" from LoveShackFancyData.xlsx
+📂 Scanning: /WallpaperBooks/LoveShackFancy/Images
+📂 Scanning: /WallpaperBooks/LoveShackFancy/Images/300dpi
+📂 Scanning: /WallpaperBooks/LoveShackFancy/Images/72dpi
+📂 Scanning: /WallpaperBooks/LoveShackFancy NuWallpaper
+   💎 Found Collection Data in: /WallpaperBooks/LoveShackFancy NuWallpaper
+      Processing Collection: "LoveShackFancy NuWallpaper" from LoveShackFancyNuWallData.xlsx
+📂 Scanning: /WallpaperBooks/LoveShackFancy NuWallpaper/Images
+📂 Scanning: /WallpaperBooks/LoveShackFancy NuWallpaper/Images/300dpi
+📂 Scanning: /WallpaperBooks/LoveShackFancy NuWallpaper/Images/72dpi
+📂 Scanning: /WallpaperBooks/Lumina - 4105
+   💎 Found Collection Data in: /WallpaperBooks/Lumina - 4105
+      Processing Collection: "Lumina - 4105" from LuminaData.xlsx
+📂 Scanning: /WallpaperBooks/Lumina - 4105/Images
+📂 Scanning: /WallpaperBooks/Lumina - 4105/Images/300dpi
+📂 Scanning: /WallpaperBooks/Lumina - 4105/Images/72dpi
+📂 Scanning: /WallpaperBooks/Lustre - 4019
+   💎 Found Collection Data in: /WallpaperBooks/Lustre - 4019
+      Processing Collection: "Lustre - 4019" from LustreData.xlsx
+📂 Scanning: /WallpaperBooks/Lustre - 4019/Images
+📂 Scanning: /WallpaperBooks/Lustre - 4019/Images/300dpi
+📂 Scanning: /WallpaperBooks/Lustre - 4019/Images/72dpi
+📂 Scanning: /WallpaperBooks/Magnolia Home - B65
+   💎 Found Collection Data in: /WallpaperBooks/Magnolia Home - B65
+      Processing Collection: "Magnolia Home - B65" from B65-MagnoliaHomeData.xlsx
+📂 Scanning: /WallpaperBooks/Magnolia Home - B65/Images
+📂 Scanning: /WallpaperBooks/Magnolia Home 2 - C17
+   💎 Found Collection Data in: /WallpaperBooks/Magnolia Home 2 - C17
+      Processing Collection: "Magnolia Home 2 - C17" from C17-MagnoliaHome2Data.xlsx
+📂 Scanning: /WallpaperBooks/Magnolia Home 2 - C17/Images
+📂 Scanning: /WallpaperBooks/Magnolia Home 4 - F14
+   💎 Found Collection Data in: /WallpaperBooks/Magnolia Home 4 - F14
+      Processing Collection: "Magnolia Home 4 - F14" from F14-MagnoliaHome4Data.xlsx
+📂 Scanning: /WallpaperBooks/Magnolia Home 4 - F14/Images
+📂 Scanning: /WallpaperBooks/Magnolia Home Artful Prints & Patterns - C59
+   💎 Found Collection Data in: /WallpaperBooks/Magnolia Home Artful Prints & Patterns - C59
+      Processing Collection: "Magnolia Home Artful Prints & Patterns - C59" from C59-ArtfulPrints&PatternsData.xlsx
+📂 Scanning: /WallpaperBooks/Magnolia Home Artful Prints & Patterns - C59/Images
+📂 Scanning: /WallpaperBooks/Magnolia Home High Performance - F94
+   💎 Found Collection Data in: /WallpaperBooks/Magnolia Home High Performance - F94
+      Processing Collection: "Magnolia Home High Performance - F94" from F94-MagnoliaHomeData.xlsx
+📂 Scanning: /WallpaperBooks/Magnolia Home High Performance - F94/Images
+📂 Scanning: /WallpaperBooks/Manhattan Club - 3114
+   💎 Found Collection Data in: /WallpaperBooks/Manhattan Club - 3114
+      Processing Collection: "Manhattan Club - 3114" from ManhattanClubData.xlsx
+📂 Scanning: /WallpaperBooks/Manhattan Club - 3114/Images
+📂 Scanning: /WallpaperBooks/Manhattan Club - 3114/Images/300dpi
+📂 Scanning: /WallpaperBooks/Manhattan Club - 3114/Images/72dpi
+📂 Scanning: /WallpaperBooks/Manhattan Club - 3114/Images/Cover
+📂 Scanning: /WallpaperBooks/Manhattan Club - 3114/Images/Cover/300dpi
+📂 Scanning: /WallpaperBooks/Manhattan Club - 3114/Images/Cover/72dpi
+📂 Scanning: /WallpaperBooks/Marburg
+   💎 Found Collection Data in: /WallpaperBooks/Marburg
+      Processing Collection: "Marburg" from MarburgData.xlsx
+📂 Scanning: /WallpaperBooks/Marburg/Images
+📂 Scanning: /WallpaperBooks/Marburg/Images/300dpi
+📂 Scanning: /WallpaperBooks/Marburg/Images/72dpi
+📂 Scanning: /WallpaperBooks/Marimekko
+   💎 Found Collection Data in: /WallpaperBooks/Marimekko
+      Processing Collection: "Marimekko" from MarimekkoData.xlsx
+📂 Scanning: /WallpaperBooks/Marimekko/Images
+📂 Scanning: /WallpaperBooks/Marimekko/Images/300dpi
+📂 Scanning: /WallpaperBooks/Marimekko/Images/72dpi
+📂 Scanning: /WallpaperBooks/Mediterranean - E65
+   💎 Found Collection Data in: /WallpaperBooks/Mediterranean - E65
+      Processing Collection: "Mediterranean - E65" from E65-MediterraneanData.xlsx
+📂 Scanning: /WallpaperBooks/Mediterranean - E65/Images
+📂 Scanning: /WallpaperBooks/Medley
+   💎 Found Collection Data in: /WallpaperBooks/Medley
+      Processing Collection: "Medley" from MedleyData.xlsx
+📂 Scanning: /WallpaperBooks/Medley/Images
+📂 Scanning: /WallpaperBooks/Medley/Images/300dpi
+📂 Scanning: /WallpaperBooks/Medley/Images/72dpi
+📂 Scanning: /WallpaperBooks/Megan Carter NuWallpaper
+   💎 Found Collection Data in: /WallpaperBooks/Megan Carter NuWallpaper
+      Processing Collection: "Megan Carter NuWallpaper" from MeganCarterNuWallData.xlsx
+📂 Scanning: /WallpaperBooks/Megan Carter NuWallpaper/Images
+📂 Scanning: /WallpaperBooks/Megan Carter NuWallpaper/Images/300dpi
+📂 Scanning: /WallpaperBooks/Megan Carter NuWallpaper/Images/72dpi
+📂 Scanning: /WallpaperBooks/Midbec
+   💎 Found Collection Data in: /WallpaperBooks/Midbec
+      Processing Collection: "Midbec" from MidbecData.xlsx
+📂 Scanning: /WallpaperBooks/Midbec/Images
+📂 Scanning: /WallpaperBooks/Midbec/Images/300dpi
+📂 Scanning: /WallpaperBooks/Midbec/Images/72dpi
+📂 Scanning: /WallpaperBooks/Middleton - 4120
+   💎 Found Collection Data in: /WallpaperBooks/Middleton - 4120
+      Processing Collection: "Middleton - 4120" from MiddletonData.xlsx
+📂 Scanning: /WallpaperBooks/Middleton - 4120/Images
+📂 Scanning: /WallpaperBooks/Middleton - 4120/Images/300dpi
+📂 Scanning: /WallpaperBooks/Middleton - 4120/Images/72dpi
+📂 Scanning: /WallpaperBooks/Mirabelle - 2702
+   💎 Found Collection Data in: /WallpaperBooks/Mirabelle - 2702
+      Processing Collection: "Mirabelle - 2702" from MirabelleData.xlsx
+📂 Scanning: /WallpaperBooks/Mirabelle - 2702/Images
+📂 Scanning: /WallpaperBooks/Mirabelle - 2702/Images/300dpi
+📂 Scanning: /WallpaperBooks/Mirabelle - 2702/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Mirabelle - 2702/Images/72dpi
+📂 Scanning: /WallpaperBooks/Mirabelle - 2702/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Mirabelle - 2702/Marketing
+📂 Scanning: /WallpaperBooks/Missoni Home 4 - E99
+   💎 Found Collection Data in: /WallpaperBooks/Missoni Home 4 - E99
+      Processing Collection: "Missoni Home 4 - E99" from E99-Home4Data.xlsx
+📂 Scanning: /WallpaperBooks/Missoni Home 4 - E99/Images
+📂 Scanning: /WallpaperBooks/Missoni Home 5 - F73
+   💎 Found Collection Data in: /WallpaperBooks/Missoni Home 5 - F73
+      Processing Collection: "Missoni Home 5 - F73" from F73-MissoniHome5Data.xlsx
+📂 Scanning: /WallpaperBooks/Missoni Home 5 - F73/Images
+📂 Scanning: /WallpaperBooks/Missoni PSWP - F87
+   💎 Found Collection Data in: /WallpaperBooks/Missoni PSWP - F87
+      Processing Collection: "Missoni PSWP - F87" from F87-MissoniPSWPData.xlsx
+📂 Scanning: /WallpaperBooks/Missoni PSWP - F87/Images
+📂 Scanning: /WallpaperBooks/Mistral - 2764
+   💎 Found Collection Data in: /WallpaperBooks/Mistral - 2764
+      Processing Collection: "Mistral - 2764" from MistralData.xlsx
+📂 Scanning: /WallpaperBooks/Mistral - 2764/Images
+📂 Scanning: /WallpaperBooks/Mistral - 2764/Images/300dpi
+📂 Scanning: /WallpaperBooks/Mistral - 2764/Images/72dpi
+📂 Scanning: /WallpaperBooks/Montecito - F56
+   💎 Found Collection Data in: /WallpaperBooks/Montecito - F56
+      Processing Collection: "Montecito - F56" from F56-MontecitoData.xlsx
+📂 Scanning: /WallpaperBooks/Montecito - F56/Images
+📂 Scanning: /WallpaperBooks/Moonlight - 2763
+   💎 Found Collection Data in: /WallpaperBooks/Moonlight - 2763
+      Processing Collection: "Moonlight - 2763" from MoonlightData.xlsx
+📂 Scanning: /WallpaperBooks/Moonlight - 2763/Images
+📂 Scanning: /WallpaperBooks/Moonlight - 2763/Images/300dpi
+📂 Scanning: /WallpaperBooks/Moonlight - 2763/Images/72dpi
+📂 Scanning: /WallpaperBooks/Moonlight - 2763/Images/Cover
+📂 Scanning: /WallpaperBooks/Moonlight - 2763/Images/Cover/300dpi
+📂 Scanning: /WallpaperBooks/Moonlight - 2763/Images/Cover/72dpi
+📂 Scanning: /WallpaperBooks/Moonlight - 2763/Marketing
+📂 Scanning: /WallpaperBooks/Mural Resource Library - D23
+   💎 Found Collection Data in: /WallpaperBooks/Mural Resource Library - D23
+      Processing Collection: "Mural Resource Library - D23" from D23-MuralResourceLibraryData.xlsx
+📂 Scanning: /WallpaperBooks/Mural Resource Library - D23/Images
+📂 Scanning: /WallpaperBooks/Museum - 4033
+   💎 Found Collection Data in: /WallpaperBooks/Museum - 4033
+      Processing Collection: "Museum - 4033" from MuseumData.xlsx
+📂 Scanning: /WallpaperBooks/Museum - 4033/Images
+📂 Scanning: /WallpaperBooks/Museum - 4033/Images/300dpi
+📂 Scanning: /WallpaperBooks/Museum - 4033/Images/72dpi
+📂 Scanning: /WallpaperBooks/Mylos - 4121
+   💎 Found Collection Data in: /WallpaperBooks/Mylos - 4121
+      Processing Collection: "Mylos - 4121" from MylosData.xlsx
+📂 Scanning: /WallpaperBooks/Mylos - 4121/Images
+📂 Scanning: /WallpaperBooks/Mylos - 4121/Images/300dpi
+📂 Scanning: /WallpaperBooks/Mylos - 4121/Images/72dpi
+📂 Scanning: /WallpaperBooks/Nabela Noor Home
+   💎 Found Collection Data in: /WallpaperBooks/Nabela Noor Home
+      Processing Collection: "Nabela Noor Home" from NabelaNoorHomeData.xlsx
+📂 Scanning: /WallpaperBooks/Nabela Noor Home/Images
+📂 Scanning: /WallpaperBooks/Natural Digest - E88
+   💎 Found Collection Data in: /WallpaperBooks/Natural Digest - E88
+      Processing Collection: "Natural Digest - E88" from E88-NaturalDigestData.xlsx
+📂 Scanning: /WallpaperBooks/Natural Digest - E88/Images
+📂 Scanning: /WallpaperBooks/Natural Palette Resource - F93
+   💎 Found Collection Data in: /WallpaperBooks/Natural Palette Resource - F93
+      Processing Collection: "Natural Palette Resource - F93" from F93-NaturalPaletteResourceData.xlsx
+📂 Scanning: /WallpaperBooks/Natural Palette Resource - F93/300dpi
+📂 Scanning: /WallpaperBooks/Natural Palette Resource - F93/72dpi
+📂 Scanning: /WallpaperBooks/New Origins - F06
+   💎 Found Collection Data in: /WallpaperBooks/New Origins - F06
+      Processing Collection: "New Origins - F06" from F06-NewOriginsData.xlsx
+📂 Scanning: /WallpaperBooks/New Origins - F06/Images
+📂 Scanning: /WallpaperBooks/Newport - 2977
+   💎 Found Collection Data in: /WallpaperBooks/Newport - 2977
+      Processing Collection: "Newport - 2977" from NewportData.xlsx
+📂 Scanning: /WallpaperBooks/Newport - 2977/Images
+📂 Scanning: /WallpaperBooks/Newport - 2977/Images/300dpi
+📂 Scanning: /WallpaperBooks/Newport - 2977/Images/72dpi
+📂 Scanning: /WallpaperBooks/Nikki Chu Premium Peel + Stick - F99
+   💎 Found Collection Data in: /WallpaperBooks/Nikki Chu Premium Peel + Stick - F99
+      Processing Collection: "Nikki Chu Premium Peel + Stick - F99" from F99-NikkiChuPSWPData.xlsx
+📂 Scanning: /WallpaperBooks/Nikki Chu Premium Peel + Stick - F99/Images
+📂 Scanning: /WallpaperBooks/NuWallpaper
+   💎 Found Collection Data in: /WallpaperBooks/NuWallpaper
+      Processing Collection: "NuWallpaper" from NuWallpaperData.xlsx
+📂 Scanning: /WallpaperBooks/NuWallpaper/Images
+📂 Scanning: /WallpaperBooks/NuWallpaper/Images/300dpi
+📂 Scanning: /WallpaperBooks/NuWallpaper/Images/72dpi
+📂 Scanning: /WallpaperBooks/Oak & Moss - 4169
+   💎 Found Collection Data in: /WallpaperBooks/Oak & Moss - 4169
+      Processing Collection: "Oak & Moss - 4169" from Oak&MossData.xlsx
+📂 Scanning: /WallpaperBooks/Oak & Moss - 4169/Images
+📂 Scanning: /WallpaperBooks/Oak & Moss - 4169/Images/Images
+📂 Scanning: /WallpaperBooks/Oak & Moss - 4169/Images/Images/300dpi
+📂 Scanning: /WallpaperBooks/Oak & Moss - 4169/Images/Images/72dpi
+📂 Scanning: /WallpaperBooks/Origin Murals
+   💎 Found Collection Data in: /WallpaperBooks/Origin Murals
+      Processing Collection: "Origin Murals" from OriginMurals-April2025.xlsx
+📂 Scanning: /WallpaperBooks/Origin Murals/300dpi
+📂 Scanning: /WallpaperBooks/Origin Murals/72dpi
+📂 Scanning: /WallpaperBooks/Oxford - 2604
+   💎 Found Collection Data in: /WallpaperBooks/Oxford - 2604
+      Processing Collection: "Oxford - 2604" from OxfordData.xlsx
+📂 Scanning: /WallpaperBooks/Oxford - 2604/Images
+📂 Scanning: /WallpaperBooks/Oxford - 2604/Images/300dpi
+📂 Scanning: /WallpaperBooks/Oxford - 2604/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Oxford - 2604/Images/72dpi
+📂 Scanning: /WallpaperBooks/Oxford - 2604/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Oxford - 2604/Marketing
+📂 Scanning: /WallpaperBooks/P+S Mirth Studios - F29
+   💎 Found Collection Data in: /WallpaperBooks/P+S Mirth Studios - F29
+      Processing Collection: "P+S Mirth Studios - F29" from F29-P&SMirthStudiosData.xlsx
+📂 Scanning: /WallpaperBooks/P+S Mirth Studios - F29/Images
+📂 Scanning: /WallpaperBooks/P+S Natural Grasscloth - F66
+   💎 Found Collection Data in: /WallpaperBooks/P+S Natural Grasscloth - F66
+      Processing Collection: "P+S Natural Grasscloth - F66" from F66-P+SNaturalGrassclothData.xlsx
+📂 Scanning: /WallpaperBooks/P+S Natural Grasscloth - F66/Images
+📂 Scanning: /WallpaperBooks/P+S Rifle Paper 3 - F27
+   💎 Found Collection Data in: /WallpaperBooks/P+S Rifle Paper 3 - F27
+      Processing Collection: "P+S Rifle Paper 3 - F27" from F27-P&SRiflePaper3Data.xlsx
+📂 Scanning: /WallpaperBooks/P+S Rifle Paper 3 - F27/Images
+📂 Scanning: /WallpaperBooks/Pacifica - 2969
+   💎 Found Collection Data in: /WallpaperBooks/Pacifica - 2969
+      Processing Collection: "Pacifica - 2969" from PacificaData.xlsx
+📂 Scanning: /WallpaperBooks/Pacifica - 2969/Images
+📂 Scanning: /WallpaperBooks/Pacifica - 2969/Images/300dpi
+📂 Scanning: /WallpaperBooks/Pacifica - 2969/Images/72dpi
+📂 Scanning: /WallpaperBooks/Paintable Solutions IV - 2523
+   💎 Found Collection Data in: /WallpaperBooks/Paintable Solutions IV - 2523
+      Processing Collection: "Paintable Solutions IV - 2523" from PaintableSolutionsIVData.xlsx
+📂 Scanning: /WallpaperBooks/Paintable Solutions IV - 2523/Images
+📂 Scanning: /WallpaperBooks/Paintable Solutions IV - 2523/Images/300dpi
+📂 Scanning: /WallpaperBooks/Paintable Solutions IV - 2523/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Paintable Solutions IV - 2523/Images/72dpi
+📂 Scanning: /WallpaperBooks/Paintable Solutions IV - 2523/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Paintable Solutions V - 2780
+   💎 Found Collection Data in: /WallpaperBooks/Paintable Solutions V - 2780
+      Processing Collection: "Paintable Solutions V - 2780" from PaintableSolutionsVData.xlsx
+📂 Scanning: /WallpaperBooks/Paintable Solutions V - 2780/Images
+📂 Scanning: /WallpaperBooks/Paintable Solutions V - 2780/Images/300dpi
+📂 Scanning: /WallpaperBooks/Paintable Solutions V - 2780/Images/72dpi
+📂 Scanning: /WallpaperBooks/PaintWorks - 4000
+   💎 Found Collection Data in: /WallpaperBooks/PaintWorks - 4000
+      Processing Collection: "PaintWorks - 4000" from PaintWorksData.xlsx
+📂 Scanning: /WallpaperBooks/PaintWorks - 4000/Images
+📂 Scanning: /WallpaperBooks/PaintWorks - 4000/Images/300dpi
+📂 Scanning: /WallpaperBooks/PaintWorks - 4000/Images/72dpi
+📂 Scanning: /WallpaperBooks/Palm Springs - 2754
+   💎 Found Collection Data in: /WallpaperBooks/Palm Springs - 2754
+      Processing Collection: "Palm Springs - 2754" from PalmSpringsData.xlsx
+📂 Scanning: /WallpaperBooks/Palm Springs - 2754/Images
+📂 Scanning: /WallpaperBooks/Palm Springs - 2754/Images/300dpi
+📂 Scanning: /WallpaperBooks/Palm Springs - 2754/Images/72dpi
+📂 Scanning: /WallpaperBooks/Perennial - 2901
+   💎 Found Collection Data in: /WallpaperBooks/Perennial - 2901
+      Processing Collection: "Perennial - 2901" from PerennialData.xlsx
+📂 Scanning: /WallpaperBooks/Perennial - 2901/Images
+📂 Scanning: /WallpaperBooks/Perennial - 2901/Images/300dpi
+📂 Scanning: /WallpaperBooks/Perennial - 2901/Images/72dpi
+📂 Scanning: /WallpaperBooks/Piazza
+   💎 Found Collection Data in: /WallpaperBooks/Piazza
+      Processing Collection: "Piazza" from PiazzaData.xlsx
+📂 Scanning: /WallpaperBooks/Piazza/Images
+📂 Scanning: /WallpaperBooks/Piazza/Images/300dpi
+📂 Scanning: /WallpaperBooks/Piazza/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Piazza/Images/72dpi
+📂 Scanning: /WallpaperBooks/Piazza/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Pip & Lo
+   💎 Found Collection Data in: /WallpaperBooks/Pip & Lo
+      Processing Collection: "Pip & Lo" from Pip&LoData.xlsx
+📂 Scanning: /WallpaperBooks/Pip & Lo/Images
+📂 Scanning: /WallpaperBooks/Pip & Lo/Images/300dpi
+📂 Scanning: /WallpaperBooks/Pip & Lo/Images/72dpi
+📂 Scanning: /WallpaperBooks/Pip III - 2676
+   💎 Found Collection Data in: /WallpaperBooks/Pip III - 2676
+      Processing Collection: "Pip III - 2676" from PipIIIData.xlsx
+📂 Scanning: /WallpaperBooks/Pip III - 2676/Images
+📂 Scanning: /WallpaperBooks/Pip III - 2676/Images/300dpi
+📂 Scanning: /WallpaperBooks/Pip III - 2676/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Pip III - 2676/Images/72dpi
+📂 Scanning: /WallpaperBooks/Pip III - 2676/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Pip Studio - 2806
+   💎 Found Collection Data in: /WallpaperBooks/Pip Studio - 2806
+      Processing Collection: "Pip Studio - 2806" from PipStudioData.xlsx
+📂 Scanning: /WallpaperBooks/Pip Studio - 2806/Images
+📂 Scanning: /WallpaperBooks/Pip Studio - 2806/Images/300dpi
+📂 Scanning: /WallpaperBooks/Pip Studio - 2806/Images/72dpi
+📂 Scanning: /WallpaperBooks/Pip Studio V - 4028
+   💎 Found Collection Data in: /WallpaperBooks/Pip Studio V - 4028
+      Processing Collection: "Pip Studio V - 4028" from Pip5Data.xlsx
+📂 Scanning: /WallpaperBooks/Pip Studio V - 4028/Images
+📂 Scanning: /WallpaperBooks/Pip Studio V - 4028/Images/300dpi
+📂 Scanning: /WallpaperBooks/Pip Studio V - 4028/Images/72dpi
+📂 Scanning: /WallpaperBooks/Polished - 2927
+   💎 Found Collection Data in: /WallpaperBooks/Polished - 2927
+      Processing Collection: "Polished - 2927" from PolishedData.xlsx
+📂 Scanning: /WallpaperBooks/Polished - 2927/Images
+📂 Scanning: /WallpaperBooks/Polished - 2927/Images/300dpi
+📂 Scanning: /WallpaperBooks/Polished - 2927/Images/72dpi
+📂 Scanning: /WallpaperBooks/Portofino - 4193
+   💎 Found Collection Data in: /WallpaperBooks/Portofino - 4193
+      Processing Collection: "Portofino - 4193" from PortofinoData.xlsx
+📂 Scanning: /WallpaperBooks/Portofino - 4193/Images
+📂 Scanning: /WallpaperBooks/Posy - 4037
+   💎 Found Collection Data in: /WallpaperBooks/Posy - 4037
+      Processing Collection: "Posy - 4037" from PosyData.xlsx
+📂 Scanning: /WallpaperBooks/Posy - 4037/Images
+📂 Scanning: /WallpaperBooks/Posy - 4037/Images/300dpi
+📂 Scanning: /WallpaperBooks/Posy - 4037/Images/72dpi
+📂 Scanning: /WallpaperBooks/PrintFresh
+   💎 Found Collection Data in: /WallpaperBooks/PrintFresh
+      Processing Collection: "PrintFresh" from PrintFreshData.xlsx
+📂 Scanning: /WallpaperBooks/PrintFresh/Images
+📂 Scanning: /WallpaperBooks/PrintFresh/Images/300dpi
+📂 Scanning: /WallpaperBooks/PrintFresh/Images/72dpi
+📂 Scanning: /WallpaperBooks/PrintWorks - 4148
+   💎 Found Collection Data in: /WallpaperBooks/PrintWorks - 4148
+      Processing Collection: "PrintWorks - 4148" from PrintWorksData.xlsx
+📂 Scanning: /WallpaperBooks/PrintWorks - 4148/Images
+📂 Scanning: /WallpaperBooks/PrintWorks - 4148/Images/300dpi
+📂 Scanning: /WallpaperBooks/PrintWorks - 4148/Images/72dpi
+📂 Scanning: /WallpaperBooks/Rachel Zoe
+   💎 Found Collection Data in: /WallpaperBooks/Rachel Zoe
+      Processing Collection: "Rachel Zoe" from RachelZoeData.xlsx
+📂 Scanning: /WallpaperBooks/Rachel Zoe/Images
+📂 Scanning: /WallpaperBooks/Rachel Zoe/Images/300dpi
+📂 Scanning: /WallpaperBooks/Rachel Zoe/Images/72dpi
+📂 Scanning: /WallpaperBooks/Rasch
+   💎 Found Collection Data in: /WallpaperBooks/Rasch
+      Processing Collection: "Rasch" from RaschData.xlsx
+📂 Scanning: /WallpaperBooks/Rasch/Images
+📂 Scanning: /WallpaperBooks/Rasch/Images/300dpi
+📂 Scanning: /WallpaperBooks/Rasch/Images/72dpi
+📂 Scanning: /WallpaperBooks/Reclaimed - 2701
+   💎 Found Collection Data in: /WallpaperBooks/Reclaimed - 2701
+      Processing Collection: "Reclaimed - 2701" from ReclaimedData.xlsx
+📂 Scanning: /WallpaperBooks/Reclaimed - 2701/Images
+📂 Scanning: /WallpaperBooks/Reclaimed - 2701/Images/300dpi
+📂 Scanning: /WallpaperBooks/Reclaimed - 2701/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Reclaimed - 2701/Images/72dpi
+📂 Scanning: /WallpaperBooks/Reclaimed - 2701/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Resource - 2756
+   💎 Found Collection Data in: /WallpaperBooks/Resource - 2756
+      Processing Collection: "Resource - 2756" from ResourceData.xlsx
+📂 Scanning: /WallpaperBooks/Resource - 2756/Images
+📂 Scanning: /WallpaperBooks/Resource - 2756/Images/300dpi
+📂 Scanning: /WallpaperBooks/Resource - 2756/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Resource - 2756/Images/72dpi
+📂 Scanning: /WallpaperBooks/Resource - 2756/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Restored - 2540
+   💎 Found Collection Data in: /WallpaperBooks/Restored - 2540
+      Processing Collection: "Restored - 2540" from RestoredData.xlsx
+📂 Scanning: /WallpaperBooks/Restored - 2540/Images
+📂 Scanning: /WallpaperBooks/Restored - 2540/Images/300dpi
+📂 Scanning: /WallpaperBooks/Restored - 2540/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Restored - 2540/Images/72dpi
+📂 Scanning: /WallpaperBooks/Restored - 2540/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Restored - 2540/Marketing
+📂 Scanning: /WallpaperBooks/Revival - 2970
+   💎 Found Collection Data in: /WallpaperBooks/Revival - 2970
+      Processing Collection: "Revival - 2970" from RevivalData.xlsx
+📂 Scanning: /WallpaperBooks/Revival - 2970/Images
+📂 Scanning: /WallpaperBooks/Revival - 2970/Images/300dpi
+📂 Scanning: /WallpaperBooks/Revival - 2970/Images/72dpi
+📂 Scanning: /WallpaperBooks/Rice - 2713
+   💎 Found Collection Data in: /WallpaperBooks/Rice - 2713
+      Processing Collection: "Rice - 2713" from RiceData.xlsx
+📂 Scanning: /WallpaperBooks/Rice - 2713/Images
+📂 Scanning: /WallpaperBooks/Rice - 2713/Images/300dpi
+📂 Scanning: /WallpaperBooks/Rice - 2713/Images/72dpi
+📂 Scanning: /WallpaperBooks/Rifle Paper 3rd Edition - F28
+   💎 Found Collection Data in: /WallpaperBooks/Rifle Paper 3rd Edition - F28
+      Processing Collection: "Rifle Paper 3rd Edition - F28" from F28-Rifle3Data.xlsx
+📂 Scanning: /WallpaperBooks/Rifle Paper 3rd Edition - F28/Images
+📂 Scanning: /WallpaperBooks/Rifle Paper Co - D13
+   💎 Found Collection Data in: /WallpaperBooks/Rifle Paper Co - D13
+      Processing Collection: "Rifle Paper Co - D13" from D13-RiflePaperCoData.xlsx
+📂 Scanning: /WallpaperBooks/Rifle Paper Co - D13/Images
+📂 Scanning: /WallpaperBooks/Rifle Paper Co 2 - E63
+   💎 Found Collection Data in: /WallpaperBooks/Rifle Paper Co 2 - E63
+      Processing Collection: "Rifle Paper Co 2 - E63" from E63-RiflePaperCo2Data.xlsx
+📂 Scanning: /WallpaperBooks/Rifle Paper Co 2 - E63/Images
+📂 Scanning: /WallpaperBooks/Rifle Paper Co P&S 4th Edition - F84
+   💎 Found Collection Data in: /WallpaperBooks/Rifle Paper Co P&S 4th Edition - F84
+      Processing Collection: "Rifle Paper Co P&S 4th Edition - F84" from F84-RifleData.xlsx
+📂 Scanning: /WallpaperBooks/Rifle Paper Co P&S 4th Edition - F84/Images
+📂 Scanning: /WallpaperBooks/Rifle Paper Co P&S 5th Edition - F85
+   💎 Found Collection Data in: /WallpaperBooks/Rifle Paper Co P&S 5th Edition - F85
+      Processing Collection: "Rifle Paper Co P&S 5th Edition - F85" from F85-RiflePSWPData.xlsx
+📂 Scanning: /WallpaperBooks/Rifle Paper Co P&S 5th Edition - F85/Images
+📂 Scanning: /WallpaperBooks/Riva - 2909
+   💎 Found Collection Data in: /WallpaperBooks/Riva - 2909
+      Processing Collection: "Riva - 2909" from RivaData.xlsx
+📂 Scanning: /WallpaperBooks/Riva - 2909/Images
+📂 Scanning: /WallpaperBooks/Riva - 2909/Images/300dpi
+📂 Scanning: /WallpaperBooks/Riva - 2909/Images/72dpi
+📂 Scanning: /WallpaperBooks/Ronald Redding 24 Karat - D81
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding 24 Karat - D81
+      Processing Collection: "Ronald Redding 24 Karat - D81" from D81-24KaratData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding 24 Karat - D81/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Arts & Crafts - E64
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Arts & Crafts - E64
+      Processing Collection: "Ronald Redding Arts & Crafts - E64" from E64-Arts&CraftsData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Arts & Crafts - E64/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Astoria - F57
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Astoria - F57
+      Processing Collection: "Ronald Redding Astoria - F57" from F57-AstoriaData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Astoria - F57/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Classics - F48
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Classics - F48
+      Processing Collection: "Ronald Redding Classics - F48" from F48-ClassicsData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Classics - F48/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Designer Sisals 100 Hues - F47
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Designer Sisals 100 Hues - F47
+      Processing Collection: "Ronald Redding Designer Sisals 100 Hues - F47" from F47-DesignerSisals100HuesData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Designer Sisals 100 Hues - F47/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Grasscloth & Natural Resource - F19
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Grasscloth & Natural Resource - F19
+      Processing Collection: "Ronald Redding Grasscloth & Natural Resource - F19" from F19-Grasscloth&NaturalsResourceData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Grasscloth & Natural Resource - F19/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Grasscloth Resource - B23
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Grasscloth Resource - B23
+      Processing Collection: "Ronald Redding Grasscloth Resource - B23" from B23-GrassclothResourceData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Grasscloth Resource - B23/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Industrial Interiors III - F04
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Industrial Interiors III - F04
+      Processing Collection: "Ronald Redding Industrial Interiors III - F04" from E99-Home4Data.xlsx
+      Processing Collection: "Ronald Redding Industrial Interiors III - F04" from F04-IndustrialInteriorsIIIData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Industrial Interiors III - F04/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Tea Garden Second Edition - F58
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Tea Garden Second Edition - F58
+      Processing Collection: "Ronald Redding Tea Garden Second Edition - F58" from F58-TeaGardenIIData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Tea Garden Second Edition - F58/Images
+📂 Scanning: /WallpaperBooks/Ronald Redding Traveler - D77
+   💎 Found Collection Data in: /WallpaperBooks/Ronald Redding Traveler - D77
+      Processing Collection: "Ronald Redding Traveler - D77" from D77-TravelerData.xlsx
+📂 Scanning: /WallpaperBooks/Ronald Redding Traveler - D77/Images
+📂 Scanning: /WallpaperBooks/RuPaul
+   💎 Found Collection Data in: /WallpaperBooks/RuPaul
+      Processing Collection: "RuPaul" from RuPaulData.xlsx
+📂 Scanning: /WallpaperBooks/RuPaul/Images
+📂 Scanning: /WallpaperBooks/RuPaul/Images/300dpi
+📂 Scanning: /WallpaperBooks/RuPaul/Images/72dpi
+📂 Scanning: /WallpaperBooks/Sage Hill - 3112
+   💎 Found Collection Data in: /WallpaperBooks/Sage Hill - 3112
+      Processing Collection: "Sage Hill - 3112" from SageHillData.xlsx
+📂 Scanning: /WallpaperBooks/Sage Hill - 3112/Images
+📂 Scanning: /WallpaperBooks/Sage Hill - 3112/Images/300dpi
+📂 Scanning: /WallpaperBooks/Sage Hill - 3112/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Sage Hill - 3112/Images/72dpi
+📂 Scanning: /WallpaperBooks/Sage Hill - 3112/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Sandudd
+   💎 Found Collection Data in: /WallpaperBooks/Sandudd
+      Processing Collection: "Sandudd" from SanduddData.xlsx
+📂 Scanning: /WallpaperBooks/Sandudd/Images
+📂 Scanning: /WallpaperBooks/Sandudd/Images/300dpi
+📂 Scanning: /WallpaperBooks/Sandudd/Images/72dpi
+📂 Scanning: /WallpaperBooks/Sanibel - 3120
+   💎 Found Collection Data in: /WallpaperBooks/Sanibel - 3120
+      Processing Collection: "Sanibel - 3120" from SanibelData.xlsx
+📂 Scanning: /WallpaperBooks/Sanibel - 3120/Images
+📂 Scanning: /WallpaperBooks/Sanibel - 3120/Images/300dpi
+📂 Scanning: /WallpaperBooks/Sanibel - 3120/Images/72dpi
+📂 Scanning: /WallpaperBooks/Sarah+Ruby
+   💎 Found Collection Data in: /WallpaperBooks/Sarah+Ruby
+      Processing Collection: "Sarah+Ruby" from Sarah+RubyData.xlsx
+📂 Scanning: /WallpaperBooks/Sarah+Ruby/Images
+📂 Scanning: /WallpaperBooks/Sarah+Ruby/Images/300dpi
+📂 Scanning: /WallpaperBooks/Sarah+Ruby/Images/72dpi
+📂 Scanning: /WallpaperBooks/Savanna - 4201
+   💎 Found Collection Data in: /WallpaperBooks/Savanna - 4201
+      Processing Collection: "Savanna - 4201" from SavannaData.xlsx
+📂 Scanning: /WallpaperBooks/Savanna - 4201/Images
+   💎 Found Collection Data in: /WallpaperBooks/Savanna - 4201/Images
+      Processing Collection: "Images" from ProductsReport 12-22-2025 02.00 AM.xlsx
+      Processing Collection: "Images" from SavannaData.xlsx
+📂 Scanning: /WallpaperBooks/Savor
+   💎 Found Collection Data in: /WallpaperBooks/Savor
+      Processing Collection: "Savor" from SavorData.xlsx
+📂 Scanning: /WallpaperBooks/Savor/Images
+📂 Scanning: /WallpaperBooks/Savor/Images/300dpi
+📂 Scanning: /WallpaperBooks/Savor/Images/72dpi
+📂 Scanning: /WallpaperBooks/Scalamandre
+   💎 Found Collection Data in: /WallpaperBooks/Scalamandre
+      Processing Collection: "Scalamandre" from ScalamandreData.xlsx
+📂 Scanning: /WallpaperBooks/Scalamandre/Images
+📂 Scanning: /WallpaperBooks/Scalamandre/Images/300dpi
+📂 Scanning: /WallpaperBooks/Scalamandre/Images/72dpi
+📂 Scanning: /WallpaperBooks/Scandinavian Designers II - 2784
+   💎 Found Collection Data in: /WallpaperBooks/Scandinavian Designers II - 2784
+      Processing Collection: "Scandinavian Designers II - 2784" from ScandinavianDesignersIIData.xlsx
+📂 Scanning: /WallpaperBooks/Scandinavian Designers II - 2784/Images
+📂 Scanning: /WallpaperBooks/Scandinavian Designers II - 2784/Images/300dpi
+📂 Scanning: /WallpaperBooks/Scandinavian Designers II - 2784/Images/72dpi
+📂 Scanning: /WallpaperBooks/Scandinavian Designers II - 2784/Images/Cover
+📂 Scanning: /WallpaperBooks/Scandinavian Designers II - 2784/Images/Cover/300dpi
+📂 Scanning: /WallpaperBooks/Scandinavian Designers II - 2784/Images/Cover/72dpi
+📂 Scanning: /WallpaperBooks/Scott Living - 2964
+   💎 Found Collection Data in: /WallpaperBooks/Scott Living - 2964
+      Processing Collection: "Scott Living - 2964" from ScottLivingData.xlsx
+📂 Scanning: /WallpaperBooks/Scott Living - 2964/Images
+📂 Scanning: /WallpaperBooks/Scott Living - 2964/Images/300dpi
+📂 Scanning: /WallpaperBooks/Scott Living - 2964/Images/72dpi
+📂 Scanning: /WallpaperBooks/Scott Living II - 2975
+   💎 Found Collection Data in: /WallpaperBooks/Scott Living II - 2975
+      Processing Collection: "Scott Living II - 2975" from ScottLiving2Data.xlsx
+📂 Scanning: /WallpaperBooks/Scott Living II - 2975/Images
+📂 Scanning: /WallpaperBooks/Scott Living II - 2975/Images/300dpi
+📂 Scanning: /WallpaperBooks/Scott Living II - 2975/Images/72dpi
+📂 Scanning: /WallpaperBooks/Scott Living III - 4034
+   💎 Found Collection Data in: /WallpaperBooks/Scott Living III - 4034
+      Processing Collection: "Scott Living III - 4034" from ScottLivingIIIData.xlsx
+📂 Scanning: /WallpaperBooks/Scott Living III - 4034/Images
+📂 Scanning: /WallpaperBooks/Scott Living III - 4034/Images/300dpi
+📂 Scanning: /WallpaperBooks/Scott Living III - 4034/Images/72dpi
+📂 Scanning: /WallpaperBooks/Scott Living NuWallpaper
+   💎 Found Collection Data in: /WallpaperBooks/Scott Living NuWallpaper
+      Processing Collection: "Scott Living NuWallpaper" from ScottLivingNuWallData.xlsx
+📂 Scanning: /WallpaperBooks/Scott Living NuWallpaper/Images
+📂 Scanning: /WallpaperBooks/Scott Living NuWallpaper/Images/300dpi
+📂 Scanning: /WallpaperBooks/Scott Living NuWallpaper/Images/72dpi
+📂 Scanning: /WallpaperBooks/Sea Salt - 4172
+   💎 Found Collection Data in: /WallpaperBooks/Sea Salt - 4172
+      Processing Collection: "Sea Salt - 4172" from SeaSaltData.xlsx
+📂 Scanning: /WallpaperBooks/Sea Salt - 4172/Images
+📂 Scanning: /WallpaperBooks/Sea Salt - 4172/Images/300dpi
+📂 Scanning: /WallpaperBooks/Sea Salt - 4172/Images/72dpi
+📂 Scanning: /WallpaperBooks/Seaside Living - 3113
+   💎 Found Collection Data in: /WallpaperBooks/Seaside Living - 3113
+      Processing Collection: "Seaside Living - 3113" from SeasideLivingData.xlsx
+📂 Scanning: /WallpaperBooks/Seaside Living - 3113/Images
+📂 Scanning: /WallpaperBooks/Seaside Living - 3113/Images/300dpi
+📂 Scanning: /WallpaperBooks/Seaside Living - 3113/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Seaside Living - 3113/Images/72dpi
+📂 Scanning: /WallpaperBooks/Seaside Living - 3113/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Seaside Living - 3113/Marketing
+📂 Scanning: /WallpaperBooks/Selvaggia - 2871
+   💎 Found Collection Data in: /WallpaperBooks/Selvaggia - 2871
+      Processing Collection: "Selvaggia - 2871" from SelvaggiaData.xlsx
+📂 Scanning: /WallpaperBooks/Selvaggia - 2871/Images
+📂 Scanning: /WallpaperBooks/Selvaggia - 2871/Images/300dpi
+📂 Scanning: /WallpaperBooks/Selvaggia - 2871/Images/72dpi
+📂 Scanning: /WallpaperBooks/Seychelles - 4014
+   💎 Found Collection Data in: /WallpaperBooks/Seychelles - 4014
+      Processing Collection: "Seychelles - 4014" from SeychellesData.xlsx
+📂 Scanning: /WallpaperBooks/Seychelles - 4014/Images
+📂 Scanning: /WallpaperBooks/Seychelles - 4014/Images/300dpi
+📂 Scanning: /WallpaperBooks/Seychelles - 4014/Images/72dpi
+📂 Scanning: /WallpaperBooks/Shangri La - 2355
+   💎 Found Collection Data in: /WallpaperBooks/Shangri La - 2355
+      Processing Collection: "Shangri La - 2355" from ShangriLaData.xlsx
+📂 Scanning: /WallpaperBooks/Shangri La - 2355/Images
+📂 Scanning: /WallpaperBooks/Shangri La - 2355/Images/300dpi
+📂 Scanning: /WallpaperBooks/Shangri La - 2355/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Shangri La - 2355/Images/72dpi
+📂 Scanning: /WallpaperBooks/Shangri La - 2355/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Signature by Sarah Richardson - 2785
+   💎 Found Collection Data in: /WallpaperBooks/Signature by Sarah Richardson - 2785
+      Processing Collection: "Signature by Sarah Richardson - 2785" from SignatureData.xlsx
+📂 Scanning: /WallpaperBooks/Signature by Sarah Richardson - 2785/Images
+📂 Scanning: /WallpaperBooks/Signature by Sarah Richardson - 2785/Images/300dpi
+📂 Scanning: /WallpaperBooks/Signature by Sarah Richardson - 2785/Images/72dpi
+📂 Scanning: /WallpaperBooks/Signature Textures - D82
+   💎 Found Collection Data in: /WallpaperBooks/Signature Textures - D82
+      Processing Collection: "Signature Textures - D82" from D82-SignatureTexturesData.xlsx
+📂 Scanning: /WallpaperBooks/Signature Textures - D82/Images
+📂 Scanning: /WallpaperBooks/Signature Textures 3 - F81
+   💎 Found Collection Data in: /WallpaperBooks/Signature Textures 3 - F81
+      Processing Collection: "Signature Textures 3 - F81" from F81-SignatureTextures3Data.xlsx
+📂 Scanning: /WallpaperBooks/Signature Textures 3 - F81/Images
+📂 Scanning: /WallpaperBooks/Signature Textures Resource Library 2 - F37
+   💎 Found Collection Data in: /WallpaperBooks/Signature Textures Resource Library 2 - F37
+      Processing Collection: "Signature Textures Resource Library 2 - F37" from F37-SignatureTextures2Data.xlsx
+📂 Scanning: /WallpaperBooks/Signature Textures Resource Library 2 - F37/Images
+📂 Scanning: /WallpaperBooks/Simple Space II - 2535
+   💎 Found Collection Data in: /WallpaperBooks/Simple Space II - 2535
+      Processing Collection: "Simple Space II - 2535" from SimpleSpace2Data.xlsx
+📂 Scanning: /WallpaperBooks/Simple Space II - 2535/Images
+📂 Scanning: /WallpaperBooks/Simple Space II - 2535/Images/300dpi
+📂 Scanning: /WallpaperBooks/Simple Space II - 2535/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Simple Space II - 2535/Images/72dpi
+📂 Scanning: /WallpaperBooks/Simple Space II - 2535/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Simple Space II - 2535/Marketing
+📂 Scanning: /WallpaperBooks/Simply Candice PSWP - F77
+   💎 Found Collection Data in: /WallpaperBooks/Simply Candice PSWP - F77
+      Processing Collection: "Simply Candice PSWP - F77" from F77-SimplyCandicePSWPData.xlsx
+📂 Scanning: /WallpaperBooks/Simply Candice PSWP - F77/Images
+📂 Scanning: /WallpaperBooks/Simply Farmhouse - D73
+   💎 Found Collection Data in: /WallpaperBooks/Simply Farmhouse - D73
+      Processing Collection: "Simply Farmhouse - D73" from D73-SimplyFarmhouseData.xlsx
+📂 Scanning: /WallpaperBooks/Simply Farmhouse - D73/Images
+📂 Scanning: /WallpaperBooks/Siroc - 2783
+   💎 Found Collection Data in: /WallpaperBooks/Siroc - 2783
+      Processing Collection: "Siroc - 2783" from SirocData.xlsx
+📂 Scanning: /WallpaperBooks/Siroc - 2783/Images
+📂 Scanning: /WallpaperBooks/Siroc - 2783/Images/300dpi
+📂 Scanning: /WallpaperBooks/Siroc - 2783/Images/72dpi
+📂 Scanning: /WallpaperBooks/Sirpi
+   💎 Found Collection Data in: /WallpaperBooks/Sirpi
+      Processing Collection: "Sirpi" from SirpiData.xlsx
+📂 Scanning: /WallpaperBooks/Sirpi/Images
+📂 Scanning: /WallpaperBooks/Sirpi/Images/300dpi
+📂 Scanning: /WallpaperBooks/Sirpi/Images/72dpi
+📂 Scanning: /WallpaperBooks/Skin - 4027
+   💎 Found Collection Data in: /WallpaperBooks/Skin - 4027
+      Processing Collection: "Skin - 4027" from SkinData.xlsx
+📂 Scanning: /WallpaperBooks/Skin - 4027/Images
+📂 Scanning: /WallpaperBooks/Skin - 4027/Images/300dpi
+📂 Scanning: /WallpaperBooks/Skin - 4027/Images/72dpi
+📂 Scanning: /WallpaperBooks/Society Social
+   💎 Found Collection Data in: /WallpaperBooks/Society Social
+      Processing Collection: "Society Social" from SocietySocialData.xlsx
+📂 Scanning: /WallpaperBooks/Society Social/Images
+📂 Scanning: /WallpaperBooks/Society Social/Images/300dpi
+📂 Scanning: /WallpaperBooks/Society Social/Images/72dpi
+📂 Scanning: /WallpaperBooks/Solace - 4141
+   💎 Found Collection Data in: /WallpaperBooks/Solace - 4141
+      Processing Collection: "Solace - 4141" from SolaceData.xlsx
+📂 Scanning: /WallpaperBooks/Solace - 4141/Images
+📂 Scanning: /WallpaperBooks/Solace - 4141/Images/300dpi
+📂 Scanning: /WallpaperBooks/Solace - 4141/Images/72dpi
+📂 Scanning: /WallpaperBooks/Solstice - 2744
+   💎 Found Collection Data in: /WallpaperBooks/Solstice - 2744
+      Processing Collection: "Solstice - 2744" from SolsticeData.xlsx
+📂 Scanning: /WallpaperBooks/Solstice - 2744/Images
+📂 Scanning: /WallpaperBooks/Solstice - 2744/Images/300dpi
+📂 Scanning: /WallpaperBooks/Solstice - 2744/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Solstice - 2744/Images/72dpi
+📂 Scanning: /WallpaperBooks/Solstice - 2744/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Solstice - 2744/Marketing
+📂 Scanning: /WallpaperBooks/Sparkle - 2542
+   💎 Found Collection Data in: /WallpaperBooks/Sparkle - 2542
+      Processing Collection: "Sparkle - 2542" from SparkleData.xlsx
+📂 Scanning: /WallpaperBooks/Sparkle - 2542/Images
+📂 Scanning: /WallpaperBooks/Sparkle - 2542/Images/300dpi
+📂 Scanning: /WallpaperBooks/Sparkle - 2542/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Sparkle - 2542/Images/72dpi
+📂 Scanning: /WallpaperBooks/Sparkle - 2542/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Sparkle - 2542/Marketing
+📂 Scanning: /WallpaperBooks/Spring - 2948
+   💎 Found Collection Data in: /WallpaperBooks/Spring - 2948
+      Processing Collection: "Spring - 2948" from SpringData.xlsx
+📂 Scanning: /WallpaperBooks/Spring - 2948/Images
+📂 Scanning: /WallpaperBooks/Spring - 2948/Images/300dpi
+📂 Scanning: /WallpaperBooks/Spring - 2948/Images/72dpi
+📂 Scanning: /WallpaperBooks/Springhill - 4202
+   💎 Found Collection Data in: /WallpaperBooks/Springhill - 4202
+      Processing Collection: "Springhill - 4202" from SpringhillData.xlsx
+📂 Scanning: /WallpaperBooks/Springhill - 4202/Images
+📂 Scanning: /WallpaperBooks/Stacy Garcia Moderne - D74
+   💎 Found Collection Data in: /WallpaperBooks/Stacy Garcia Moderne - D74
+      Processing Collection: "Stacy Garcia Moderne - D74" from D74-ModerneData.xlsx
+📂 Scanning: /WallpaperBooks/Stacy Garcia Moderne - D74/Images
+📂 Scanning: /WallpaperBooks/Super Value Program
+   💎 Found Collection Data in: /WallpaperBooks/Super Value Program
+      Processing Collection: "Super Value Program" from SuperValueData.xlsx
+📂 Scanning: /WallpaperBooks/Super Value Program/Images
+📂 Scanning: /WallpaperBooks/Symetrie - 2625
+   💎 Found Collection Data in: /WallpaperBooks/Symetrie - 2625
+      Processing Collection: "Symetrie - 2625" from SymetrieData.xlsx
+📂 Scanning: /WallpaperBooks/Symetrie - 2625/Images
+📂 Scanning: /WallpaperBooks/Symetrie - 2625/Images/300dpi
+📂 Scanning: /WallpaperBooks/Symetrie - 2625/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Symetrie - 2625/Images/72dpi
+📂 Scanning: /WallpaperBooks/Symetrie - 2625/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Techniques & Finishes III - 2767
+   💎 Found Collection Data in: /WallpaperBooks/Techniques & Finishes III - 2767
+      Processing Collection: "Techniques & Finishes III - 2767" from Techniques&FinishesIIIData.xlsx
+📂 Scanning: /WallpaperBooks/Techniques & Finishes III - 2767/Images
+📂 Scanning: /WallpaperBooks/Techniques & Finishes III - 2767/Images/300dpi
+📂 Scanning: /WallpaperBooks/Techniques & Finishes III - 2767/Images/72dpi
+📂 Scanning: /WallpaperBooks/Terra - 2930
+   💎 Found Collection Data in: /WallpaperBooks/Terra - 2930
+      Processing Collection: "Terra - 2930" from TerraData.xlsx
+📂 Scanning: /WallpaperBooks/Terra - 2930/Images
+📂 Scanning: /WallpaperBooks/Terra - 2930/Images/300dpi
+📂 Scanning: /WallpaperBooks/Terra - 2930/Images/72dpi
+📂 Scanning: /WallpaperBooks/Terrace - 4122
+   💎 Found Collection Data in: /WallpaperBooks/Terrace - 4122
+      Processing Collection: "Terrace - 4122" from TerraceData.xlsx
+📂 Scanning: /WallpaperBooks/Terrace - 4122/Images
+📂 Scanning: /WallpaperBooks/Terrace - 4122/Images/300dpi
+📂 Scanning: /WallpaperBooks/Terrace - 4122/Images/72dpi
+📂 Scanning: /WallpaperBooks/Textural Essentials - 2959
+   💎 Found Collection Data in: /WallpaperBooks/Textural Essentials - 2959
+      Processing Collection: "Textural Essentials - 2959" from TexturalEssentialsData.xlsx
+📂 Scanning: /WallpaperBooks/Textural Essentials - 2959/Images
+📂 Scanning: /WallpaperBooks/Textural Essentials - 2959/Images/300dpi
+📂 Scanning: /WallpaperBooks/Textural Essentials - 2959/Images/72dpi
+📂 Scanning: /WallpaperBooks/Texturall III - 2741
+   💎 Found Collection Data in: /WallpaperBooks/Texturall III - 2741
+      Processing Collection: "Texturall III - 2741" from Texturall3Data.xlsx
+📂 Scanning: /WallpaperBooks/Texturall III - 2741/Images
+📂 Scanning: /WallpaperBooks/Texturall III - 2741/Images/300dpi
+📂 Scanning: /WallpaperBooks/Texturall III - 2741/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Texturall III - 2741/Images/72dpi
+📂 Scanning: /WallpaperBooks/Texturall III - 2741/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Texture Trends II - 2718
+   💎 Found Collection Data in: /WallpaperBooks/Texture Trends II - 2718
+      Processing Collection: "Texture Trends II - 2718" from TextureTrendsIIData.xlsx
+📂 Scanning: /WallpaperBooks/Texture Trends II - 2718/Images
+📂 Scanning: /WallpaperBooks/Texture Trends II - 2718/Images/300dpi
+📂 Scanning: /WallpaperBooks/Texture Trends II - 2718/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Texture Trends II - 2718/Images/72dpi
+📂 Scanning: /WallpaperBooks/Texture Trends II - 2718/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Textures & Weaves - 2758
+   💎 Found Collection Data in: /WallpaperBooks/Textures & Weaves - 2758
+      Processing Collection: "Textures & Weaves - 2758" from Textures&WeavesData.xlsx
+📂 Scanning: /WallpaperBooks/Textures & Weaves - 2758/Images
+📂 Scanning: /WallpaperBooks/Textures & Weaves - 2758/Images/300dpi
+📂 Scanning: /WallpaperBooks/Textures & Weaves - 2758/Images/72dpi
+📂 Scanning: /WallpaperBooks/Textures & Wovens Resource - 4207
+   💎 Found Collection Data in: /WallpaperBooks/Textures & Wovens Resource - 4207
+      Processing Collection: "Textures & Wovens Resource - 4207" from Textures&WovensResourceData.xlsx
+📂 Scanning: /WallpaperBooks/Textures & Wovens Resource - 4207/Images
+📂 Scanning: /WallpaperBooks/The Cottage - 3100
+   💎 Found Collection Data in: /WallpaperBooks/The Cottage - 3100
+      Processing Collection: "The Cottage - 3100" from TheCottageData.xlsx
+📂 Scanning: /WallpaperBooks/The Cottage - 3100/Images
+📂 Scanning: /WallpaperBooks/The Cottage - 3100/Images/300dpi
+📂 Scanning: /WallpaperBooks/The Cottage - 3100/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/The Cottage - 3100/Images/72dpi
+📂 Scanning: /WallpaperBooks/The Cottage - 3100/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/The Vineyard - 3117
+   💎 Found Collection Data in: /WallpaperBooks/The Vineyard - 3117
+      Processing Collection: "The Vineyard - 3117" from TheVineyardData.xlsx
+📂 Scanning: /WallpaperBooks/The Vineyard - 3117/Images
+📂 Scanning: /WallpaperBooks/The Vineyard - 3117/Images/300dpi
+📂 Scanning: /WallpaperBooks/The Vineyard - 3117/Images/72dpi
+📂 Scanning: /WallpaperBooks/Theory - 2902
+   💎 Found Collection Data in: /WallpaperBooks/Theory - 2902
+      Processing Collection: "Theory - 2902" from TheoryData.xlsx
+📂 Scanning: /WallpaperBooks/Theory - 2902/Images
+📂 Scanning: /WallpaperBooks/Theory - 2902/Images/300dpi
+📂 Scanning: /WallpaperBooks/Theory - 2902/Images/72dpi
+📂 Scanning: /WallpaperBooks/Thoreau - 3124
+   💎 Found Collection Data in: /WallpaperBooks/Thoreau - 3124
+      Processing Collection: "Thoreau - 3124" from ThoreauData.xlsx
+📂 Scanning: /WallpaperBooks/Thoreau - 3124/Images
+📂 Scanning: /WallpaperBooks/Thoreau - 3124/Images/300dpi
+📂 Scanning: /WallpaperBooks/Thoreau - 3124/Images/72dpi
+📂 Scanning: /WallpaperBooks/Toile Resource Library - F17
+   💎 Found Collection Data in: /WallpaperBooks/Toile Resource Library - F17
+      Processing Collection: "Toile Resource Library - F17" from F17-ToileResourceLibraryData.xlsx
+📂 Scanning: /WallpaperBooks/Toile Resource Library - F17/Images
+📂 Scanning: /WallpaperBooks/Trilogy - 2922
+   💎 Found Collection Data in: /WallpaperBooks/Trilogy - 2922
+      Processing Collection: "Trilogy - 2922" from TrilogyData.xlsx
+📂 Scanning: /WallpaperBooks/Trilogy - 2922/Images
+📂 Scanning: /WallpaperBooks/Trilogy - 2922/Images/300dpi
+📂 Scanning: /WallpaperBooks/Trilogy - 2922/Images/72dpi
+📂 Scanning: /WallpaperBooks/Tropics Resource Library - E23
+   💎 Found Collection Data in: /WallpaperBooks/Tropics Resource Library - E23
+      Processing Collection: "Tropics Resource Library - E23" from E23-TropicsResourceLibraryData.xlsx
+📂 Scanning: /WallpaperBooks/Tropics Resource Library - E23/Images
+📂 Scanning: /WallpaperBooks/Twine - 2923
+   💎 Found Collection Data in: /WallpaperBooks/Twine - 2923
+      Processing Collection: "Twine - 2923" from TwineData.xlsx
+📂 Scanning: /WallpaperBooks/Twine - 2923/Images
+📂 Scanning: /WallpaperBooks/Twine - 2923/Images/300dpi
+📂 Scanning: /WallpaperBooks/Twine - 2923/Images/72dpi
+📂 Scanning: /WallpaperBooks/Twist
+   💎 Found Collection Data in: /WallpaperBooks/Twist
+      Processing Collection: "Twist" from TwistData.xlsx
+📂 Scanning: /WallpaperBooks/Twist/Images
+📂 Scanning: /WallpaperBooks/Twist/Images/300dpi
+📂 Scanning: /WallpaperBooks/Twist/Images/72dpi
+📂 Scanning: /WallpaperBooks/Urban Digest - F36
+   💎 Found Collection Data in: /WallpaperBooks/Urban Digest - F36
+      Processing Collection: "Urban Digest - F36" from F36-UrbanDigestData.xlsx
+📂 Scanning: /WallpaperBooks/Urban Digest - F36/Images
+📂 Scanning: /WallpaperBooks/Urban Oasis - D85
+   💎 Found Collection Data in: /WallpaperBooks/Urban Oasis - D85
+      Processing Collection: "Urban Oasis - D85" from D85-UrbanOasisData.xlsx
+📂 Scanning: /WallpaperBooks/Urban Oasis - D85/Images
+📂 Scanning: /WallpaperBooks/Venue - 2675
+   💎 Found Collection Data in: /WallpaperBooks/Venue - 2675
+      Processing Collection: "Venue - 2675" from VenueData.xlsx
+📂 Scanning: /WallpaperBooks/Venue - 2675/Images
+📂 Scanning: /WallpaperBooks/Venue - 2675/Images/300dpi
+📂 Scanning: /WallpaperBooks/Venue - 2675/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Venue - 2675/Images/72dpi
+📂 Scanning: /WallpaperBooks/Venue - 2675/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Vera Bradley
+   💎 Found Collection Data in: /WallpaperBooks/Vera Bradley
+      Processing Collection: "Vera Bradley" from VeraBradleyData.xlsx
+📂 Scanning: /WallpaperBooks/Vera Bradley/Images
+📂 Scanning: /WallpaperBooks/Vera Bradley/Images/300dpi
+📂 Scanning: /WallpaperBooks/Vera Bradley/Images/72dpi
+📂 Scanning: /WallpaperBooks/Via Della Seta
+   💎 Found Collection Data in: /WallpaperBooks/Via Della Seta
+      Processing Collection: "Via Della Seta" from ViaDellaSetaData.xlsx
+📂 Scanning: /WallpaperBooks/Via Della Seta/Images
+📂 Scanning: /WallpaperBooks/Via Della Seta/Images/300dpi
+📂 Scanning: /WallpaperBooks/Via Della Seta/Images/72dpi
+📂 Scanning: /WallpaperBooks/Vintage Florals - E45
+   💎 Found Collection Data in: /WallpaperBooks/Vintage Florals - E45
+      Processing Collection: "Vintage Florals - E45" from E45-VintageFloralsData.xlsx
+📂 Scanning: /WallpaperBooks/Vintage Florals - E45/Images
+📂 Scanning: /WallpaperBooks/Vista - 2838
+   💎 Found Collection Data in: /WallpaperBooks/Vista - 2838
+      Processing Collection: "Vista - 2838" from VistaData.xlsx
+📂 Scanning: /WallpaperBooks/Vista - 2838/Images
+📂 Scanning: /WallpaperBooks/Vista - 2838/Images/300dpi
+📂 Scanning: /WallpaperBooks/Vista - 2838/Images/72dpi
+📂 Scanning: /WallpaperBooks/Wall Vision
+   💎 Found Collection Data in: /WallpaperBooks/Wall Vision
+      Processing Collection: "Wall Vision" from WallVisionData.xlsx
+📂 Scanning: /WallpaperBooks/Wall Vision/Images
+📂 Scanning: /WallpaperBooks/Wall Vision/Images/300dpi
+📂 Scanning: /WallpaperBooks/Wall Vision/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Basics V - 2910
+   💎 Found Collection Data in: /WallpaperBooks/Warner Basics V - 2910
+      Processing Collection: "Warner Basics V - 2910" from WarnerBasicsVData.xlsx
+📂 Scanning: /WallpaperBooks/Warner Basics V - 2910/Images
+📂 Scanning: /WallpaperBooks/Warner Basics V - 2910/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Basics V - 2910/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource - 2807
+   💎 Found Collection Data in: /WallpaperBooks/Warner Grasscloth Resource - 2807
+      Processing Collection: "Warner Grasscloth Resource - 2807" from WarnerGrassclothData.xlsx
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource - 2807/Images
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource - 2807/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource - 2807/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource 2
+   💎 Found Collection Data in: /WallpaperBooks/Warner Grasscloth Resource 2
+      Processing Collection: "Warner Grasscloth Resource 2" from GrassclothResource2Data.xlsx
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource 2/Images
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource 2/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Grasscloth Resource 2/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Infinity - 4181
+   💎 Found Collection Data in: /WallpaperBooks/Warner Infinity - 4181
+      Processing Collection: "Warner Infinity - 4181" from InfinityData.xlsx
+📂 Scanning: /WallpaperBooks/Warner Infinity - 4181/Images
+📂 Scanning: /WallpaperBooks/Warner Infinity - 4181/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Infinity - 4181/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Modern Expressions - 4178
+   💎 Found Collection Data in: /WallpaperBooks/Warner Modern Expressions - 4178
+      Processing Collection: "Warner Modern Expressions - 4178" from ModernExpressionsData.xlsx
+📂 Scanning: /WallpaperBooks/Warner Modern Expressions - 4178/Images
+📂 Scanning: /WallpaperBooks/Warner Modern Expressions - 4178/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Modern Expressions - 4178/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Textures IX Main Street - 2921
+   💎 Found Collection Data in: /WallpaperBooks/Warner Textures IX Main Street - 2921
+      Processing Collection: "Warner Textures IX Main Street - 2921" from MainStreetData.xlsx
+📂 Scanning: /WallpaperBooks/Warner Textures IX Main Street - 2921/Images
+📂 Scanning: /WallpaperBooks/Warner Textures IX Main Street - 2921/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Textures IX Main Street - 2921/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Textures V - 3097
+   💎 Found Collection Data in: /WallpaperBooks/Warner Textures V - 3097
+      Processing Collection: "Warner Textures V - 3097" from WarnerTexturesVData.xlsx
+📂 Scanning: /WallpaperBooks/Warner Textures V - 3097/Images
+📂 Scanning: /WallpaperBooks/Warner Textures V - 3097/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Textures V - 3097/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Warner Textures V - 3097/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner Textures V - 3097/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Warner Textures X - 2945
+   💎 Found Collection Data in: /WallpaperBooks/Warner Textures X - 2945
+      Processing Collection: "Warner Textures X - 2945" from WarnerXData.xlsx
+📂 Scanning: /WallpaperBooks/Warner Textures X - 2945/Images
+📂 Scanning: /WallpaperBooks/Warner Textures X - 2945/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner Textures X - 2945/Images/72dpi
+📂 Scanning: /WallpaperBooks/Warner XI Naturals - 2984
+   💎 Found Collection Data in: /WallpaperBooks/Warner XI Naturals - 2984
+      Processing Collection: "Warner XI Naturals - 2984" from WarnerXIData.xlsx
+📂 Scanning: /WallpaperBooks/Warner XI Naturals - 2984/Images
+📂 Scanning: /WallpaperBooks/Warner XI Naturals - 2984/Images/300dpi
+📂 Scanning: /WallpaperBooks/Warner XI Naturals - 2984/Images/72dpi
+📂 Scanning: /WallpaperBooks/Waters Edge Resource Library - E30
+   💎 Found Collection Data in: /WallpaperBooks/Waters Edge Resource Library - E30
+      Processing Collection: "Waters Edge Resource Library - E30" from E30-WatersEdgeResourceLibraryData.xlsx
+📂 Scanning: /WallpaperBooks/Waters Edge Resource Library - E30/Images
+📂 Scanning: /WallpaperBooks/Waverly
+   💎 Found Collection Data in: /WallpaperBooks/Waverly
+      Processing Collection: "Waverly" from WaverlyData.xlsx
+📂 Scanning: /WallpaperBooks/Waverly/Images
+📂 Scanning: /WallpaperBooks/Web
+📂 Scanning: /WallpaperBooks/Web/P&S Murals
+   💎 Found Collection Data in: /WallpaperBooks/Web/P&S Murals
+      Processing Collection: "P&S Murals" from WebP&SMuralsData.xlsx
+📂 Scanning: /WallpaperBooks/Web/P&S Murals/Images
+📂 Scanning: /WallpaperBooks/Well Suited Accordion Deck - V62
+📂 Scanning: /WallpaperBooks/Whimsy - 4135
+   💎 Found Collection Data in: /WallpaperBooks/Whimsy - 4135
+      Processing Collection: "Whimsy - 4135" from WhimsyData.xlsx
+📂 Scanning: /WallpaperBooks/Whimsy - 4135/Images
+📂 Scanning: /WallpaperBooks/Whimsy - 4135/Images/300dpi
+📂 Scanning: /WallpaperBooks/Whimsy - 4135/Images/72dpi
+📂 Scanning: /WallpaperBooks/Whisper - 2629
+   💎 Found Collection Data in: /WallpaperBooks/Whisper - 2629
+      Processing Collection: "Whisper - 2629" from WhisperData.xlsx
+📂 Scanning: /WallpaperBooks/Whisper - 2629/Images
+📂 Scanning: /WallpaperBooks/Whisper - 2629/Images/300dpi
+📂 Scanning: /WallpaperBooks/Whisper - 2629/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Whisper - 2629/Images/72dpi
+📂 Scanning: /WallpaperBooks/Whisper - 2629/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Wild - 4092
+   💎 Found Collection Data in: /WallpaperBooks/Wild - 4092
+      Processing Collection: "Wild - 4092" from WildData.xlsx
+📂 Scanning: /WallpaperBooks/Wild - 4092/Images
+📂 Scanning: /WallpaperBooks/Wild - 4092/Images/300dpi
+📂 Scanning: /WallpaperBooks/Wild - 4092/Images/72dpi
+📂 Scanning: /WallpaperBooks/Wildflower - 4134
+   💎 Found Collection Data in: /WallpaperBooks/Wildflower - 4134
+      Processing Collection: "Wildflower - 4134" from WildflowerData.xlsx
+📂 Scanning: /WallpaperBooks/Wildflower - 4134/Images
+📂 Scanning: /WallpaperBooks/Wildflower - 4134/Images/300dpi
+📂 Scanning: /WallpaperBooks/Wildflower - 4134/Images/72dpi
+📂 Scanning: /WallpaperBooks/Wonderland - 2714
+   💎 Found Collection Data in: /WallpaperBooks/Wonderland - 2714
+      Processing Collection: "Wonderland - 2714" from WonderlandData.xlsx
+📂 Scanning: /WallpaperBooks/Wonderland - 2714/Images
+📂 Scanning: /WallpaperBooks/Wonderland - 2714/Images/300dpi
+📂 Scanning: /WallpaperBooks/Wonderland - 2714/Images/72dpi
+📂 Scanning: /WallpaperBooks/Wonderland - 2714/Images/Cover
+📂 Scanning: /WallpaperBooks/Wonderland - 2714/Images/Cover/300dpi
+📂 Scanning: /WallpaperBooks/Wonderland - 2714/Images/Cover/72dpi
+📂 Scanning: /WallpaperBooks/Woodnote - F71
+   💎 Found Collection Data in: /WallpaperBooks/Woodnote - F71
+      Processing Collection: "Woodnote - F71" from F71-WoodnoteData.xlsx
+📂 Scanning: /WallpaperBooks/Woodnote - F71/Images
+📂 Scanning: /WallpaperBooks/Yasmin - 2641
+   💎 Found Collection Data in: /WallpaperBooks/Yasmin - 2641
+      Processing Collection: "Yasmin - 2641" from YasminData.xlsx
+📂 Scanning: /WallpaperBooks/Yasmin - 2641/Images
+📂 Scanning: /WallpaperBooks/Yasmin - 2641/Images/300dpi
+📂 Scanning: /WallpaperBooks/Yasmin - 2641/Images/300dpi/Cover
+📂 Scanning: /WallpaperBooks/Yasmin - 2641/Images/72dpi
+📂 Scanning: /WallpaperBooks/Yasmin - 2641/Images/72dpi/Cover
+📂 Scanning: /WallpaperBooks/Yellowstone - 4142
+   💎 Found Collection Data in: /WallpaperBooks/Yellowstone - 4142
+      Processing Collection: "Yellowstone - 4142" from YellowstoneData.xlsx
+📂 Scanning: /WallpaperBooks/Yellowstone - 4142/Images
+📂 Scanning: /WallpaperBooks/Yellowstone - 4142/Images/300dpi
+📂 Scanning: /WallpaperBooks/Yellowstone - 4142/Images/72dpi
+📂 Scanning: /WallpaperBooks/Zen Grasscloth - 2693
+   💎 Found Collection Data in: /WallpaperBooks/Zen Grasscloth - 2693
+      Processing Collection: "Zen Grasscloth - 2693" from ZenData.xlsx
+📂 Scanning: /WallpaperBooks/Zen Grasscloth - 2693/Images
+📂 Scanning: /WallpaperBooks/Zen Grasscloth - 2693/Images/Cover
+📂 Scanning: /WallpaperBooks/Zio and Sons
+   💎 Found Collection Data in: /WallpaperBooks/Zio and Sons
+      Processing Collection: "Zio and Sons" from ZioandSonsData.xlsx
+📂 Scanning: /WallpaperBooks/Zio and Sons/Images
+
+✨ Import Complete!

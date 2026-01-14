@@ -1,0 +1,8 @@
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+🚀 Starting Recursive Import (DRY RUN)...
+   Connected to FTP.
+   🎯 Starting scan at: /WallpaperBooks/Century - 2902
+📂 Scanning: /WallpaperBooks/Century - 2902
+   ❌ Cannot access /WallpaperBooks/Century - 2902: list: No such file. /WallpaperBooks/Century - 2902
+
+✨ Import Complete!

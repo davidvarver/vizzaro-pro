@@ -87,58 +87,65 @@ export default async function handler(req, res) {
           }
 
           if (catalog && Array.isArray(catalog) && catalog.length > 0) {
+
+            // 1. Server-Side Filtering by Collection (Optimization)
+            const targetCollection = req.query.collection;
+            if (targetCollection) {
+              console.log(`[Catalog GET] Filtering by collection: "${targetCollection}"`);
+              // Case-insensitive filtering
+              catalog = catalog.filter(item =>
+                item.collection &&
+                item.collection.toLowerCase() === targetCollection.toLowerCase()
+              );
+              console.log(`[Catalog GET] Found ${catalog.length} items in collection`);
+            }
+
+            const isLite = req.query.lite === 'true';
+            console.log(`[Catalog GET] Processing catalog (Lite Mode: ${isLite})...`);
+
             catalog = catalog.map(item => {
               if (!item || typeof item !== 'object') return null;
 
-              return {
-                ...item,
+              // Base fields needed for Listing
+              const liteItem = {
+                id: item.id?.toString(), // Ensure ID is string
+                name: item.name,
                 price: typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0,
-                imageUrl: item.imageUrl || '',
-                imageUrls: Array.isArray(item.imageUrls) ? item.imageUrls : [],
+                // Ensure imageUrl is a string, not array
+                imageUrl: (typeof item.imageUrl === 'string' ? item.imageUrl : (Array.isArray(item.imageUrls) ? item.imageUrls[0] : '')) || '',
                 category: item.category || 'General',
+                collection: item.collection || '',
+                group: item.group || item.id, // Fallback to ID if no group
                 style: item.style || 'Moderno',
+                inStock: item.inStock !== undefined ? item.inStock : true,
+                // Keep minimal dimensions for sorting/filtering if needed, but strip heavy objects if possible
+                // Actually dimensions are small (width/height numbers). Keep them.
+                dimensions: {
+                  width: typeof item.dimensions?.width === 'number' ? item.dimensions.width : 0.53,
+                  height: typeof item.dimensions?.height === 'number' ? item.dimensions.height : 10.05
+                }
+              };
+
+              if (isLite) {
+                return liteItem;
+              }
+
+              // Full Mode: Add the rest
+              return {
+                ...liteItem,
+                description: item.description || '',
+                imageUrls: Array.isArray(item.imageUrls) ? item.imageUrls : [],
                 colors: Array.isArray(item.colors) ? item.colors : [],
                 dimensions: {
-                  width: typeof item.dimensions?.width === 'number' && !isNaN(item.dimensions.width) ? item.dimensions.width : 0.53,
-                  height: typeof item.dimensions?.height === 'number' && !isNaN(item.dimensions.height) ? item.dimensions.height : 10.05,
-                  coverage: typeof item.dimensions?.coverage === 'number' && !isNaN(item.dimensions.coverage) ? item.dimensions.coverage : 5.33,
+                  ...liteItem.dimensions,
+                  coverage: typeof item.dimensions?.coverage === 'number' ? item.dimensions.coverage : 5.33,
                   weight: item.dimensions?.weight,
                 },
-                specifications: {
-                  material: item.specifications?.material || 'Vinilo',
-                  washable: item.specifications?.washable !== undefined ? item.specifications.washable : true,
-                  removable: item.specifications?.removable !== undefined ? item.specifications.removable : true,
-                  textured: item.specifications?.textured !== undefined ? item.specifications.textured : false,
-                },
-                patternRepeat: (() => {
-                  // 1. Try explicit fields (deep search)
-                  const val = item.patternRepeat ?? item.pattern_repeat ?? item.repetition ??
-                    item.specifications?.patternRepeat ?? item.specifications?.repetition ??
-                    item.dimensions?.patternRepeat ?? item.dimensions?.repetition;
-
-                  if (val !== undefined && val !== null) {
-                    const num = parseFloat(val);
-                    if (!isNaN(num)) return num;
-                  }
-
-                  // 2. Fallback: Try to extract from Description (e.g. "Repeat: 53.5", "Repetición: 64")
-                  if (item.description) {
-                    const regex = /(?:repeat|repetición|repetition|patrón|pattern)\s*[:.]?\s*(\d+(?:\.\d+)?)/i;
-                    const match = item.description.match(regex);
-                    if (match && match[1]) {
-                      const extracted = parseFloat(match[1]);
-                      return !isNaN(extracted) ? extracted : 0;
-                    }
-                  }
-
-                  return 0;
-                })(),
-                patternMatch: item.patternMatch || item.pattern_match || item.match ||
-                  item.specifications?.patternMatch || item.specifications?.match || '',
-                inStock: item.inStock !== undefined ? item.inStock : true,
-                rating: typeof item.rating === 'number' && !isNaN(item.rating) ? item.rating : 0,
-                reviews: typeof item.reviews === 'number' && !isNaN(item.reviews) ? item.reviews : 0,
-                description: item.description || '',
+                specifications: item.specifications || {},
+                patternRepeat: item.patternRepeat || 0,
+                patternMatch: item.patternMatch || '',
+                rating: item.rating || 0,
+                reviews: item.reviews || 0,
               };
             }).filter(item => item !== null && item.id && item.name);
           }

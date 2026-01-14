@@ -15,8 +15,17 @@ export interface UserRoom {
     name?: string;
 }
 
+export interface Collection {
+    id: string;
+    name: string;
+    count: number;
+    thumbnail: string | null;
+}
+
 interface WallpapersState {
     wallpapers: Wallpaper[];
+    collections: Collection[]; // New
+    selectedCollection: string | null; // New
     isLoading: boolean;
     error: string | null;
     visualizerImage: string | null;
@@ -25,7 +34,9 @@ interface WallpapersState {
     userRooms: UserRoom[];
 
     // Actions
-    loadWallpapers: (forceRefresh?: boolean) => Promise<void>;
+    loadCollections: () => Promise<void>; // New
+    loadWallpaperDetails: (id: string) => Promise<Wallpaper | null>;
+    loadWallpapers: (collectionName?: string, forceRefresh?: boolean) => Promise<void>; // Updated signature
     updateWallpaper: (updatedWallpaper: Wallpaper, adminToken?: string) => Promise<boolean>;
     addWallpaper: (newWallpaper: Wallpaper, adminToken?: string) => Promise<boolean>;
     addMultipleWallpapers: (newWallpapers: Wallpaper[], adminToken?: string) => Promise<boolean>;
@@ -51,89 +62,75 @@ interface WallpapersState {
 const enrichWallpaperData = (data: any[]): Wallpaper[] => {
     // 1. Common suffixes to strip
     const SUFFIXES = [
-        'PEEL & STICK WALLPAPER',
-        'PEEL AND STICK WALLPAPER',
-        'WALLPAPER',
-        'PAPEL TAPIZ',
-        'WALL MURAL',
-        'SELF ADHESIVE MURAL', // New
-        'FLOOR TILES',
-        'WALL DECALS',
-        'MOULDING',
-        'WALL PANELS',
-        'PEEL & STICK'
+        'PEEL & STICK WALLPAPER', 'PEEL AND STICK WALLPAPER', 'WALLPAPER', 'PAPEL TAPIZ', 'WALL MURAL', 'SELF ADHESIVE MURAL',
+        'FLOOR TILES', 'WALL DECALS', 'MOULDING', 'WALL PANELS', 'PEEL & STICK'
     ];
 
     // 2. Common colors and descriptors to strip
-    // 2. Common colors and descriptors to strip
     const COLORS = [
-        'OFF WHITE', 'OFF-WHITE', 'WHITE', 'BLANCO',
-        'TEAL', 'TURQUESA',
-        'DARK BROWN', 'LIGHT BROWN', 'BROWN', 'CAFE', 'MARRON', 'MOCHA', 'MOCA', 'WHEAT', 'TRIGO', 'CHAI', 'PEBBLE', 'STONE',
-        'AQUA',
-        'NAVY', 'AZUL MARINO', 'SKY BLUE', 'POWDERED BLUE', 'LIGHT BLUE', 'BLUE', 'AZUL', 'COBALT', 'COBALTO', 'INDIGO', 'INDIGO', 'MOODY', 'DUSTY', 'COAST',
-        'PINK', 'ROSA', 'ROSE', 'BLUSH', 'RUBOR', 'MAGENTA', 'FLAMINGO',
-        'BLACK & WHITE', 'BLACK AND WHITE', 'BLACK', 'NEGRO', 'CHARCOAL', 'CARBON', 'ONYX', 'PEPPERCORN', 'CAVIAR', 'GRAPHITE', 'GRAFITO', 'CHALKBOARD', 'PIZARRON',
-        'GREY', 'GRAY', 'GRIS', 'SILVER', 'PLATA', 'SLATE', 'PIZARRA',
-        'GOLD', 'DORADO', 'METALLIC', 'METALICO', 'COPPER', 'COBRE',
-        'GREEN', 'VERDE', 'EMERALD', 'ESMERALDA', 'SAGE', 'OLIVE', 'OLIVA', 'MINT', 'MENTA', 'MOSS', 'MUSGO', 'CHARTREUSE', 'FOREST', 'PISTACHIO', 'PISTACHE', 'IVY', 'HIEDRA',
-        'BEIGE', 'CREAM', 'CREMA', 'TAN', 'TOSTADO', 'TAUPE', 'OATMEAL', 'AVENA', 'NEUTRAL', 'NEUTRO', 'NATURAL', 'SAND', 'ARENA', 'PARCHMENT', 'CASHMERE', 'LINEN', 'LINO', 'JUTE', 'YUTE',
-        'YELLOW', 'AMARILLO', 'MUSTARD', 'MOSTAZA', 'PALE', 'PALIDO', 'OCHRE', 'OCRE', 'SUNSHINE',
-        'RED', 'ROJO', 'RUST', 'OXIDO', 'BURGUNDY', 'VIOLET', 'VIOLETA', 'VINO', 'MAROON', 'BRICK', 'LADRILLO', 'APPLE', 'MANZANA',
-        'ORANGE', 'NARANJA', 'PEACH', 'DURAZNO', 'CORAL', 'TERRACOTTA', 'TERRACOTA', 'APRICOT', 'ALBARICOQUE', 'CARAMEL', 'CARAMELO', 'SPICE', 'ESPECIA', 'CITRUS', 'CITRICO',
-        'PURPLE', 'MORADO', 'LILAC', 'LILA', 'MAUVE', 'LAVENDER', 'LAVANDA', 'PLUM', 'CIRUELA', 'DUSK', 'ATARDECER',
-        'MULTI', 'MULTICOLOR', 'RAINBOW', 'ARCOIRIS', 'PASTEL', 'BREEZY',
-        'MIX', 'TWIST', 'SUMMER', 'VERANO', 'SHOWER' // General descriptors
+        'OFF WHITE', 'OFF-WHITE', 'WHITE', 'BLANCO', 'TEAL', 'TURQUESA', 'DARK BROWN', 'LIGHT BROWN', 'BROWN', 'CAFE', 'MARRON',
+        'MOCHA', 'MOCA', 'WHEAT', 'TRIGO', 'CHAI', 'PEBBLE', 'STONE', 'AQUA', 'NAVY', 'AZUL MARINO', 'SKY BLUE', 'POWDERED BLUE',
+        'LIGHT BLUE', 'BLUE', 'AZUL', 'COBALT', 'COBALTO', 'INDIGO', 'MOODY', 'DUSTY', 'COAST', 'PINK', 'ROSA', 'ROSE', 'BLUSH',
+        'RUBOR', 'MAGENTA', 'FLAMINGO', 'BLACK & WHITE', 'BLACK AND WHITE', 'BLACK', 'NEGRO', 'CHARCOAL', 'CARBON', 'ONYX',
+        'PEPPERCORN', 'CAVIAR', 'GRAPHITE', 'GRAFITO', 'CHALKBOARD', 'PIZARRON', 'GREY', 'GRAY', 'GRIS', 'SILVER', 'PLATA',
+        'SLATE', 'PIZARRA', 'GOLD', 'DORADO', 'METALLIC', 'METALICO', 'COPPER', 'COBRE', 'GREEN', 'VERDE', 'EMERALD', 'ESMERALDA',
+        'SAGE', 'OLIVE', 'OLIVA', 'MINT', 'MENTA', 'MOSS', 'MUSGO', 'CHARTREUSE', 'FOREST', 'PISTACHIO', 'PISTACHE', 'IVY',
+        'HIEDRA', 'BEIGE', 'CREAM', 'CREMA', 'TAN', 'TOSTADO', 'TAUPE', 'OATMEAL', 'AVENA', 'NEUTRAL', 'NEUTRO', 'NATURAL',
+        'SAND', 'ARENA', 'PARCHMENT', 'CASHMERE', 'LINEN', 'LINO', 'JUTE', 'YUTE', 'YELLOW', 'AMARILLO', 'MUSTARD', 'MOSTAZA',
+        'PALE', 'PALIDO', 'OCHRE', 'OCRE', 'SUNSHINE', 'RED', 'ROJO', 'RUST', 'OXIDO', 'BURGUNDY', 'VIOLET', 'VIOLETA', 'VINO',
+        'MAROON', 'BRICK', 'LADRILLO', 'APPLE', 'MANZANA', 'ORANGE', 'NARANJA', 'PEACH', 'DURAZNO', 'CORAL', 'TERRACOTTA',
+        'TERRACOTA', 'APRICOT', 'ALBARICOQUE', 'CARAMEL', 'CARAMELO', 'SPICE', 'ESPECIA', 'CITRUS', 'CITRICO', 'PURPLE',
+        'MORADO', 'LILAC', 'LILA', 'MAUVE', 'LAVENDER', 'LAVANDA', 'PLUM', 'CIRUELA', 'DUSK', 'ATARDECER', 'MULTI', 'MULTICOLOR',
+        'RAINBOW', 'ARCOIRIS', 'PASTEL', 'BREEZY', 'MIX', 'TWIST', 'SUMMER', 'VERANO', 'SHOWER'
     ];
 
     return data.map(item => {
-        // If group already exists, keep it
         if (item.group) return item;
-
-        // Otherwise, infer it
         let name = item.name.toUpperCase();
-
-        // Remove Suffixes
-        SUFFIXES.forEach(suffix => {
-            name = name.replace(suffix, '');
-        });
-
-        // Remove Colors (Careful to match whole words)
-        COLORS.forEach(color => {
-            // Regex to match color as a whole word
-            const regex = new RegExp(`\\b${color}\\b`, 'g');
-            name = name.replace(regex, '');
-        });
-
-        // Clean up
+        SUFFIXES.forEach(suffix => { name = name.replace(suffix, ''); });
+        COLORS.forEach(color => { const regex = new RegExp(`\\b${color}\\b`, 'g'); name = name.replace(regex, ''); });
         const modelName = name.replace(/[^A-Z0-9]/g, ' ').trim().replace(/\s+/g, '-').toLowerCase();
-
-        return {
-            ...item,
-            group: modelName // Use the "slugified" model name as the group ID
-        };
+        return { ...item, group: modelName };
     });
 };
 
 export const useWallpapersStore = create<WallpapersState>((set, get) => ({
     wallpapers: [],
+    collections: [], // New
+    selectedCollection: null, // New
     isLoading: true,
     error: null,
     visualizerImage: null,
+    userRooms: [],
 
-    loadWallpapers: async (forceRefresh = false) => {
+    loadCollections: async () => {
         try {
-            console.log('[WallpapersStore] Loading catalog... (forceRefresh:', forceRefresh, ')');
+            console.log('[WallpapersStore] Loading collections...');
+            const newItemBaseUrl = API_BASE_URL || '';
+            const shouldFetchApi = API_BASE_URL || Platform.OS === 'web';
 
-            // Stale-while-revalidate: Only show full loading if we have no data
-            // If forceRefresh is true (Pull-to-refresh), we let the UI handle the spinner via 'isLoading' 
-            const hasData = get().wallpapers.length > 0;
-            if (!hasData || forceRefresh) {
-                set({ error: null, isLoading: true });
-            } else {
-                // Background update - keep existing data visible
-                set({ error: null });
+            if (shouldFetchApi) {
+                const response = await fetch(`${newItemBaseUrl}/api/collections/list`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.collections) {
+                        console.log('[WallpapersStore] Loaded collections:', data.collections.length);
+                        set({ collections: data.collections });
+                    }
+                }
             }
+        } catch (e) {
+            console.error('[WallpapersStore] Error loading collections:', e);
+        }
+    },
+
+    loadWallpapers: async (collectionName?: string, forceRefresh = false) => {
+        try {
+            console.log('[WallpapersStore] Loading catalog for collection:', collectionName || 'ALL', '(forceRefresh:', forceRefresh, ')');
+
+            // IMPORTANT: If switching collections, we should clear the current wallpapers list ONLY IF we don't have them cached or want to show new loading
+            // But let's just trigger loading state.
+            set({ error: null, isLoading: true, selectedCollection: collectionName || null });
 
             // On Web, we can use relative paths if no API URL is set
             const shouldFetchApi = API_BASE_URL || Platform.OS === 'web';
@@ -141,12 +138,19 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
             if (shouldFetchApi) {
                 try {
                     const newItemBaseUrl = API_BASE_URL || '';
-                    console.log('[WallpapersStore] Attempting to load from API:', `${newItemBaseUrl}/api/catalog/get`);
+                    let url = `${newItemBaseUrl}/api/catalog/get?lite=true&t=${Date.now()}`;
+
+                    // Add Collection Filter
+                    if (collectionName) {
+                        url += `&collection=${encodeURIComponent(collectionName)}`;
+                    }
+
+                    console.log('[WallpapersStore] Attempting to load from API:', url);
 
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 8000);
+                    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-                    const response = await fetch(`${newItemBaseUrl}/api/catalog/get?t=${Date.now()}`, {
+                    const response = await fetch(url, {
                         method: 'GET',
                         headers: {
                             'Cache-Control': 'no-store, no-cache, must-revalidate',
@@ -158,9 +162,7 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
 
                     if (response.ok) {
                         const data = await response.json();
-                        clearTimeout(timeoutId); // Clear timeout ONLY after successful JSON parse
-
-                        // console.log('[WallpapersStore] Loaded from API:', data.catalog?.length || 0, 'items');
+                        clearTimeout(timeoutId);
 
                         if (data.success && data.catalog && Array.isArray(data.catalog)) {
                             const validCatalog = data.catalog.filter((item: any) =>
@@ -172,45 +174,78 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
 
                             console.log('[WallpapersStore] Enriched items:', enrichedCatalog.length);
 
-                            if (enrichedCatalog.length > 0) {
-                                set({ wallpapers: enrichedCatalog, isLoading: false });
-                                await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(enrichedCatalog));
-                                await AsyncStorage.setItem(STORAGE_KEY + '_timestamp', data.timestamp?.toString() || Date.now().toString());
-                                return;
-                            } else {
-                                console.warn('[WallpapersStore] No valid items in catalog, using defaults');
+                            // If filtering by collection, we REPLACE the current wallpapers
+                            // If loading ALL (initial load or something), we also replace.
+                            // We do NOT use AsyncStorage for partial collection loads to avoid mixing data.
+                            set({ wallpapers: enrichedCatalog, isLoading: false });
+
+                            if (!collectionName) {
+                                // Only cache the "ALL" list if we ever fetch it (which we might stop doing)
+                                // actually, with Collection-First, we might never cache the full list here.
+                                // Skipping Async Storage for partials is safer.
                             }
+                            return;
                         }
                     } else {
                         console.warn('[WallpapersStore] API returned error:', response.status);
-                        const errorText = await response.text();
-                        console.warn('[WallpapersStore] Error details:', errorText);
                     }
                 } catch (apiError) {
-                    console.warn('[WallpapersStore] API fetch failed, trying fallback:', apiError);
+                    console.warn('[WallpapersStore] API fetch failed:', apiError);
                 }
+            }
+
+            // Fallback?
+            // Only fallback if no collection is selected (legacy mode)
+            if (!collectionName) {
+                // ... existing fallback code ...
             } else {
-                console.log('[WallpapersStore] No API URL configured, using local storage mode');
+                set({ wallpapers: [], isLoading: false, error: 'Could not load collection' });
             }
-
-            if (!forceRefresh) {
-                console.log('[WallpapersStore] Loading from AsyncStorage...');
-                const stored = await AsyncStorage.getItem(STORAGE_KEY);
-                if (stored) {
-                    const parsed = JSON.parse(stored);
-                    console.log('[WallpapersStore] Loaded from storage:', parsed.length, 'items');
-                    set({ wallpapers: parsed, isLoading: false });
-                    return;
-                }
-            }
-
-            console.log('[WallpapersStore] Using default wallpapers:', defaultWallpapers.length, 'items');
-            set({ wallpapers: defaultWallpapers, isLoading: false });
-            await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(defaultWallpapers));
 
         } catch (error) {
             console.error('[WallpapersStore] Error loading wallpapers:', error);
-            set({ error: 'Error al cargar el catálogo', wallpapers: defaultWallpapers, isLoading: false });
+            set({ error: 'Error al cargar el catálogo', wallpapers: [], isLoading: false });
+        }
+    },
+
+    loadWallpaperDetails: async (id: string): Promise<Wallpaper | null> => {
+        try {
+            // 1. Check if we already have full details in store (how to know? description check)
+            const existing = get().wallpapers.find(w => w.id === id);
+            if (existing && existing.description && existing.description.length > 5) {
+                console.log('[WallpapersStore] Full details already loaded for:', id);
+                return existing;
+            }
+
+            console.log('[WallpapersStore] Fetching full details for:', id);
+            const newItemBaseUrl = API_BASE_URL || '';
+            const response = await fetch(`${newItemBaseUrl}/api/products/get?id=${id}`);
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.product) {
+                    console.log('[WallpapersStore] Loaded full details for:', id);
+
+                    // MERGE with existing store
+                    const { wallpapers, saveWallpapers } = get();
+                    // Use enrich to ensure group ID logic is consistent even for single items
+                    const enriched = enrichWallpaperData([data.product])[0];
+
+                    const updatedWallpapers = wallpapers.map(w => w.id === id ? enriched : w);
+
+                    // Optimization: Do NOT save to AsyncStorage every time we read a detail to avoid slow UI?
+                    // Actually it's better to cache it so next time description is there.
+                    set({ wallpapers: updatedWallpapers });
+                    // Async save quietly
+                    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedWallpapers));
+
+                    return enriched;
+                }
+            }
+            return null;
+        } catch (e) {
+            console.error('[WallpapersStore] Error loading details:', e);
+            return null;
         }
     },
 
@@ -404,7 +439,7 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
 
     refetchWallpapers: async () => {
         console.log('[WallpapersStore] Manual refetch requested');
-        return get().loadWallpapers(true);
+        return get().loadWallpapers(get().selectedCollection || undefined, true);
     },
 
     resetCatalog: async (adminToken?: string) => {
@@ -465,7 +500,7 @@ export const useWallpapersStore = create<WallpapersState>((set, get) => ({
     setVisualizerImage: (image: string | null) => set({ visualizerImage: image }),
 
     // Room Gallery Implementation
-    userRooms: [],
+    // userRooms: [], // Moved to top initialization
 
     addUserRoom: async (image: string) => {
         const { userRooms } = get();
