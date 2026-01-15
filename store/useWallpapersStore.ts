@@ -96,7 +96,8 @@ const enrichWallpaperData = (data: any[]): Wallpaper[] => {
         'TOILE', 'TRELLIS', 'IKAT', 'DOT', 'DOTS', 'POLKA', 'CHECK', 'PLAID', 'GINGHAM', 'TARTAN',
         'ANIMAL', 'LEOPARD', 'ZEBRA', 'TIGER', 'CHEETAH', 'SKIN', 'HIDE', 'FAUX', 'HEADBOARD', 'MAP',
         'SPACE', 'STAR', 'STARS', 'MOON', 'PLANET', 'PLANETS', 'CELESTIAL', 'DINOSAUR', 'DINOSAURS', 'DINO',
-        'PRINCESS', 'FAIRY', 'FAIRIES', 'UNICORN', 'UNICORNS', 'MERMAID', 'MERMAIDS'
+        'PRINCESS', 'FAIRY', 'FAIRIES', 'UNICORN', 'UNICORNS', 'MERMAID', 'MERMAIDS',
+        'BUTTER', 'SEAFOAM', 'OYSTER', 'PEARL', 'PLATINUM', 'TERRA', 'CLAY', 'COPPER', 'BRONZE'
     ];
 
     return data.map(item => {
