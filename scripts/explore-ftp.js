@@ -23,7 +23,9 @@ async function explore() {
         await sftp.connect(config);
         console.log('Connected! Listing root...');
 
-        const list = await sftp.list('/');
+        const list1 = await sftp.list('/New Products');
+        const list2 = await sftp.list('/WallpaperBooks/1 All Wallpaper Images');
+        const list = [...list1, ...list2];
         console.log(`Found ${list.length} items.`);
 
         // Sort: Directories first

@@ -1,97 +1,125 @@
 
-const testCases = [
-    // New Failures from Screenshots
-    "Gia Metric Black & White Peel & Stick Floor Tiles",
-    "Gia Metric Coral & Blue Peel & Stick Floor Tiles", // "Coral" & "Blue"
-    "Cat Poses Emerald Peel & Stick Wallpaper", // "Emerald"
-    "Cat Poses Pink Peel & Stick Wallpaper",
-    "Whimsical Creatures Cream Peel & Stick Wallpaper", // "Cream"
-    "Pasadena Ikat Breezy Pastel Peel & Stick Wallpaper", // "Breezy Pastel"
-    "Champagne Harbor Pink Dream Peel & Stick Wallpaper", // "Pink Dream"
-    "Champagne Harbor Powdered Blue Peel & Stick Wallpaper", // "Powdered Blue"
-    "Water Lily Blush & Teal Peel & Stick Wallpaper", // "Blush & Teal"
-    "Water Lily Lavender & Green Peel & Stick Wallpaper", // "Lavender & Green"
-    "Amanda Beige Peel & Stick Wallpaper",
-    "Amanda Blue Green Peel & Stick Wallpaper", // "Blue Green" (no separator)
-    "Jesinda Cobalt Peel & Stick Wallpaper", // "Cobalt"
-    // Previous Regression Tests
-    "Townhouse Stripe Ivy Peel and Stick Wallpaper",
-    "Oasis Apple & Rose Peel and Stick Wallpaper",
-    "Paradise Forest Mix Peel and Stick Wallpaper"
+const names = [
+    "Bygga Bo Neutral Woodland Village Wallpaper",
+    "Bygga Bo Light Grey Woodland Village Wallpaper",
+    "Drömma Teal Songbirds and Sunflowers Wallpaper",
+    "Drōmma Light Grey Songbirds and Sunflowers Wallpaper", // Note: Drōmma vs Drömma?
+    "Växa Green Rabbits & Rosehips Wallpaper",
+    "Växa Light Grey Rabbits & Rosehips Wallpaper",
+    "Midsommar Light Green Floral Medley Wallpaper",
+    "Midsommar Sage Floral Medley Wallpaper",
+    "Midsommar Dark Blue Floral Medley Wallpaper",
+    "Flyga Blue Butterfly Bonanza Wallpaper",
+    "Kalas Mustard Diamond Wallpaper",
+    "Kalas Light Grey Diamond Wallpaper",
+    "Aurora Green Geometric Wave Wallpaper",
+    "Descano Exotic Plum Botanical Wallpaper",
+    "Descano Flower Green Botanical Wallpaper",
+    "Descano Flower Golden Green Botanical Wallpaper",
+    "Marilla Blueberry Watercolor Floral Wallpaper",
+    "Marilla Yellow Watercolor Floral Wallpaper",
+    "Marilla Aquamarine Watercolor Floral Wallpaper",
+    "Claressa Apricot Floral Wallpaper",
+    "Claressa Blueberry Large Floral Wallpaper",
+    "Paradise Blue Fronds Wallpaper",
+    "Banning Stripe Green Geometric Wallpaper",
+    "Avalon Green Weave Wallpaper",
+    "Avalon Honey Weave Wallpaper",
+    "Bloom Blue Floral Wallpaper",
+    "Catalina Trail Green Vine Wallpaper",
+    "Catalina Trail Honey Vine Wallpaper",
+    "Harbour Lavender Lattice Wallpaper",
+    "Harbour Golden Green Lattice Wallpaper",
+    "Sanctuary Blueberry Texture Stripe Wallpaper",
+    "Sanctuary Light Grey Texture Stripe Wallpaper",
+    "Sanctuary Aquamarine Ombre Stripe Wallpaper",
+    "Sanctuary Lavender Texture Stripe Wallpaper",
+    "Sanctuary Pink Ombre Stripe Wallpaper",
+    "Star Bay Blueberry Geometric Wallpaper",
+    "Star Bay Gold Geometric Wallpaper",
+    "Willow Blue Leaves Wallpaper",
+    "Arboretum Aqua Fern Wallpaper",
+    "Arboretum Honey Leaves Wallpaper", // Note: Leaves vs Fern? Visuals look different? No, arboretum might differ.
+    "Natural Silver Metallic Grasscloth Wallpaper"
 ];
 
-const colors = [
-    'Off White', 'Dark Brown', 'Light Brown', 'Light Blue', 'Dark Blue',
-    'Black & White', 'Black and White',
-    'Navy', 'Teal', 'Pink', 'Blue', 'Green', 'Red', 'Black', 'White',
-    'Gold', 'Silver', 'Grey', 'Gray', 'Beige', 'Cream', 'Yellow', 'Purple',
-    'Orange', 'Sage', 'Mint', 'Olive', 'Charcoal', 'Ivory', 'Taupe',
-    'Aqua', 'Coral', 'Tan', 'Multi', 'Neutral', 'Metallic', 'Copper', 'Bronze', 'Rose Gold',
-    'Ivy', 'Maroon', 'Dusk', 'Forest', 'Brick', 'Sky', 'Apple', 'Rose', 'Mink', 'Citrus',
-    'Indigo', 'Graphite', 'Clay', 'Sand', 'Earth', 'Stone', 'Moss', 'Rust', 'Slate',
-    'Ochre', 'Mustard', 'Terracotta', 'Blush', 'Peach', 'Lavender', 'Lilac', 'Mauve',
-    // New Additions
-    'Emerald', 'Cobalt', 'Pastel', 'Powdered', 'Breezy', 'Dream', 'Cyan', 'Magenta', 'Lime',
-    'Turquoise', 'Champagne', 'Jet', 'Onyx', 'Ruby', 'Sapphire', 'Topaz', 'Amber', 'Pearl', 'Opal',
-    'Violet', 'Plum', 'Orchid', 'Salmon', 'Crimson', 'Scarlet', 'Saffron', 'Lemon', 'Citron',
-    'Hunter', 'Pine', 'Seafoam', 'Azure', 'Cerulean', 'Midnight', 'Ink'
+// MOCK COLORS from Store (Basic set + recent additions assumed)
+// I will copy a representative set here for testing.
+const COLORS = [
+    // BASICS
+    'RED', 'BLUE', 'GREEN', 'YELLOW', 'ORANGE', 'PURPLE', 'PINK', 'BROWN', 'BLACK', 'WHITE', 'GRAY', 'GREY',
+    'BEIGE', 'CREAM', 'IVORY', 'GOLD', 'SILVER', 'COPPER', 'BRONZE', 'ROSE', 'TEAL', 'TURQUOISE', 'AQUA', 'NAVY',
+    'INDIGO', 'VIOLET', 'LILAC', 'MAGENTA', 'FUCHSIA', 'MAROON', 'BURGUNDY', 'CRIMSON', 'SCARLET', 'CORAL', 'PEACH',
+    'APRICOT', 'SALMON', 'MUSTARD', 'OCHRE', 'OLIVE', 'LIME', 'MINT', 'SAGE', 'EMERALD', 'JADE', 'CYAN', 'AZURE',
+    'SKY', 'PERIWINKLE', 'LAVENDER', 'PLUM', 'MAUVE', 'TAUPE', 'TAN', 'KHAKI', 'SAND', 'RUST', 'TERRACOTTA',
+    'CHARCOAL', 'SLATE', 'STEEL', 'CHAMPAGNE', 'PLATINUM', 'PEARL', 'ALABASTER', 'SNOW', 'JET', 'INK', 'MIDNIGHT',
+    
+    // TEXTURES (From previous update)
+    'TEXTURE', 'TEXTURED', 'OGEE', 'FLORAL', 'DAMASK', 'STRIPE', 'GEOMETRIC', 'GRASSCLOTH', 'SISAL', 'WOVEN',
+    'BASKETWEAVE', 'CANVAS', 'TWILL', 'DENIM', 'MARBLE', 'CONCRETE', 'MOSAIC', 'HEXAGON', 'TOILE', 'TRELLIS',
+    'IKAT', 'DOT', 'CHECK', 'PLAID', 'GINGHAM', 'TARTAN',
+
+    // NEW ADDITIONS (simulated from recent tasks)
+    'BUTTER', 'SEAFOAM', 'OYSTER', 'TERRA', 'CLAY', 'DOVE', 'ESPRESSO', 'CLARET', 'VANILLA', 'EGG SHELL',
+    'LICORICE', 'COLORFUL', 'GIANT', 'DECAL', 'MURAL', 'ADHESIVE', 'FILM', 'BACKSPLASH',
+    'UNPASTED', 'PREPASTED', 'IRONWORK', 'SCROLL', 'ANIMAL', 'LEOPARD', 'ZEBRA', 'TIGER', 'CHEETAH',
+    'PRINCESS', 'FAIRY', 'UNICORN', 'MERMAID', 'DINOSAUR', 'SPACE', 'STAR', 'MOON', 'PLANET', 'CELESTIAL',
+    
+    // MISSING SUSPECTS (Hypothesis)
+    'BLUEBERRY', 'HONEY', 'EXOTIC', 'AQUAMARINE', 'GOLDEN'
 ];
 
-// Combine colors and descriptors into one "removable" list for the end
-// "Breezy", "Dream", "Powdered" are technically descriptors but can be treated same way.
-const removables = [
-    ...colors,
-    'Twist', 'Mix', 'Bloom', 'Haze', 'Mist', 'Glow', 'Dream', 'Breezy', 'Powdered'
-];
-
-function getBaseName(name) {
-    // 1. Remove common suffixes
-    let cleanName = name
-        .replace(/Peel & Stick Floor Tiles/i, '')
-        .replace(/Peel & Stick Floor Tile/i, '')
-        .replace(/Peel & Stick Wallpaper/i, '')
-        .replace(/Peel and Stick Wallpaper/i, '')
-        .replace(/Peel & Stick/i, '')
-        .replace(/Wallpaper/i, '')
-        .replace(/ - .*/, '')
-        .replace(/ \(.*/, '')
-        .trim();
-
-    // 2. Iterative Stripping from End
-    // We loop until the name stops changing.
-    // In each iteration, we check if the string ENDS with a "Separator + Removable" 
-    // or just "Removable" (if space is separator).
-
-    let changed = true;
-    while (changed) {
-        changed = false;
-
-        // Create regex for ONE removable at the end
-        // Matches: SPACE + (Removable) + END
-        // OR:      SPACE + (&|and|\+) + SPACE + (Removable) + END
-
-        // optimization: join is expensive, do it once outside/cached if possible, but for this test it's fine.
-        const safeRemovables = removables.map(c => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-
-        const pattern = new RegExp(`\\s+(?:(?:&|and|\\+)\\s+)?(${safeRemovables})$`, 'i');
-
-        if (pattern.test(cleanName)) {
-            // Check to ensure we don't strip the WHOLE name (e.g. if product is just "Cream")
-            const match = cleanName.match(pattern);
-            const toRemove = match[0]; // e.g. " & Teal" or " Green"
-
-            // If stripping would leave empty string, stop.
-            if (cleanName.length - toRemove.length > 0) {
-                cleanName = cleanName.substring(0, cleanName.length - toRemove.length).trim();
-                changed = true;
-            }
-        }
-    }
-
-    return cleanName;
+function normalize(str) {
+    if (!str) return '';
+    return str.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
 }
 
-console.log("--- Testing FINAL Iterative Logic ---");
-testCases.forEach(name => {
-    console.log(`Original: "${name}"\n  -> Base: "${getBaseName(name)}"`);
+function getGroupCurrent(name) {
+    let cleanName = name.toUpperCase();
+    
+    // Remove "Wallpaper" suffix first
+    cleanName = cleanName.replace(/\s*WALLPAPER\s*$/i, '');
+
+    // Strip COLORS
+    COLORS.forEach(color => {
+        const regex = new RegExp(`\\b${color}\\b`, 'gi');
+        cleanName = cleanName.replace(regex, '');
+    });
+
+    // Remove extra spaces
+    cleanName = cleanName.replace(/\s+/g, ' ').trim();
+    
+    return normalize(cleanName);
+}
+
+function getGroupUserStrategy(name) {
+    // "Everything before the first color"
+    const words = name.toUpperCase().replace(/\s*WALLPAPER\s*$/i, '').split(/\s+/);
+    let prefixWords = [];
+    
+    for (const word of words) {
+        if (COLORS.includes(word)) {
+            break; // Stop at first color
+        }
+        prefixWords.push(word);
+    }
+    
+    if (prefixWords.length === 0) return normalize(name); // Fallback
+    
+    return normalize(prefixWords.join(' '));
+}
+
+console.log('--- ANALYSIS ---');
+const groupsCurrent = {};
+const groupsUser = {};
+
+names.forEach(name => {
+    const start = name.split(' ')[0]; // Group roughly by first word for display
+    
+    const gC = getGroupCurrent(name);
+    const gU = getGroupUserStrategy(name);
+    
+    console.log(`\nName: "${name}"`);
+    console.log(`   Current ID: ${gC}`);
+    console.log(`   User ID:    ${gU}`);
 });

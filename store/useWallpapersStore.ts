@@ -97,20 +97,55 @@ const enrichWallpaperData = (data: any[]): Wallpaper[] => {
         'ANIMAL', 'LEOPARD', 'ZEBRA', 'TIGER', 'CHEETAH', 'SKIN', 'HIDE', 'FAUX', 'HEADBOARD', 'MAP',
         'SPACE', 'STAR', 'STARS', 'MOON', 'PLANET', 'PLANETS', 'CELESTIAL', 'DINOSAUR', 'DINOSAURS', 'DINO',
         'PRINCESS', 'FAIRY', 'FAIRIES', 'UNICORN', 'UNICORNS', 'MERMAID', 'MERMAIDS',
-        'BUTTER', 'SEAFOAM', 'OYSTER', 'PEARL', 'PLATINUM', 'TERRA', 'CLAY', 'COPPER', 'BRONZE'
+        'BUTTER', 'SEAFOAM', 'OYSTER', 'PEARL', 'PLATINUM', 'TERRA', 'CLAY', 'COPPER', 'BRONZE',
+        // Modifiers (Stop words for prefixing)
+        'LIGHT', 'DARK', 'PALE', 'DEEP', 'SOFT', 'BRIGHT', 'MATTE', 'GLOSSY', 'METALLIC', 'NEUTRAL', 'PASTEL', 'VIBRANT', 'RICH', 'WARM', 'COOL', 'DUSTY', 'MUTED', 'SHEER',
+        // New Missing Colors/Descriptors
+        'BLUEBERRY', 'HONEY', 'EXOTIC', 'AQUAMARINE', 'GOLDEN', 'APRICOT', 'MUSTARD'
     ];
 
     return data.map(item => {
-        // FORCE RECALCULATION: The API defaults group=id, which defeats this logic.
-        // We always recalculate to ensure "Rodney White" and "Rodney Grey" get the same group.
+        // FORCE RECALCULATION
+        const nameUpper = item.name.toUpperCase().replace(/\s*WALLPAPER\s*$/i, '').trim();
+        const words = nameUpper.split(/[\s-]+/); // Split by space or dash
 
-        let name = item.name.toUpperCase();
-        SUFFIXES.forEach(suffix => { name = name.replace(suffix, ''); });
-        COLORS.forEach(color => { const regex = new RegExp(`\\b${color}\\b`, 'g'); name = name.replace(regex, ''); });
-        const modelName = name.replace(/[^A-Z0-9]/g, ' ').trim().replace(/\s+/g, '-').toLowerCase();
+        let prefixWords: string[] = [];
+        // let stopFound = false;
 
-        // Use the calculated model name as the group
-        return { ...item, group: modelName };
+        for (const word of words) {
+            // Check if word is a color/modifier AND strict match
+            if (COLORS.includes(word)) {
+                break;
+            }
+            prefixWords.push(word);
+        }
+
+        let groupID = '';
+
+        // STRATEGY A: PREFIX
+        if (prefixWords.length > 0) {
+            groupID = prefixWords.join(' ');
+        }
+
+        // STRATEGY B: FALLBACK if prefix is empty or too short (likely started with color)
+        if (!groupID || groupID.length < 3) {
+            let strippedName = nameUpper;
+            COLORS.forEach(color => {
+                const regex = new RegExp(`\\b${color}\\b`, 'gi');
+                strippedName = strippedName.replace(regex, '');
+            });
+            groupID = strippedName.replace(/\s+/g, ' ').trim();
+        }
+
+        // NORMALIZE
+        groupID = groupID.replace(/[^A-Z0-9]/g, '');
+
+        // Final Fallback
+        if (groupID.length < 3) {
+            groupID = item.id;
+        }
+
+        return { ...item, group: groupID };
     });
 };
 

@@ -1,0 +1,3260 @@
+[
+  {
+    "group1": "",
+    "name1": "Stone Wall Mural",
+    "group2": "20-5-in-unpasted-liner",
+    "name2": "20.5-in Unpasted Liner"
+  },
+  {
+    "group1": "20-5-in-unpasted-liner",
+    "name1": "20.5-in Unpasted Liner",
+    "group2": "26-in-unpasted-liner",
+    "name2": "26-in Unpasted Liner"
+  },
+  {
+    "group1": "4walls-texture",
+    "name1": "4Walls Cream Texture Wallpaper",
+    "group2": "4walls-textures",
+    "name2": "4Walls Brown Textures Wallpaper"
+  },
+  {
+    "group1": "abra",
+    "name1": "Abra Peel & Stick Wallpaper",
+    "group2": "abra-ogee",
+    "name2": "Abra Grey Ogee Wallpaper"
+  },
+  {
+    "group1": "abstract",
+    "name1": "Forest Abstract Wall Mural",
+    "group2": "abstract-blooms",
+    "name2": "Abstract Blooms Wall Mural"
+  },
+  {
+    "group1": "abstract-floral",
+    "name1": "Neutral Abstract Floral Wall Mural",
+    "group2": "abstract-floral-printed-corkboard",
+    "name2": "Abstract Floral White Printed Corkboard "
+  },
+  {
+    "group1": "acanthus",
+    "name1": "Lilac Lilac Acanthus Wallpaper",
+    "group2": "acanthus-leaf-cameo",
+    "name2": "Yellow Acanthus Leaf Cameo Wallpaper"
+  },
+  {
+    "group1": "acoustic-slat-wood",
+    "name1": "Acoustic Slat Wood Natural Wall Panels ",
+    "group2": "acoustic-slat-wood-tile",
+    "name2": "Acoustic Slat Wood Tile Natural Wall Panels "
+  },
+  {
+    "group1": "adam",
+    "name1": "Black Adam Wall Decals",
+    "group2": "adam-giant",
+    "name2": "Black Adam Giant Wall Decals"
+  },
+  {
+    "group1": "adelaide",
+    "name1": "Adelaide Teal Peel & Stick Wallpaper",
+    "group2": "adelaide-ogee-floral",
+    "name2": "Adelaide Lavender Ogee Floral Wallpaper"
+  },
+  {
+    "group1": "agata",
+    "name1": "Agata Blue Linen Wallpaper",
+    "group2": "agata-coffee",
+    "name2": "Agata Coffee Linen Wallpaper"
+  },
+  {
+    "group1": "aiko-sisal",
+    "name1": "Aiko Slate Sisal Wallpaper",
+    "group2": "aiko-sisal-grasscloth",
+    "name2": "Aiko Blue Sisal Grasscloth Wallpaper"
+  },
+  {
+    "group1": "akira",
+    "name1": "Akira Black Peel & Stick Wallpaper",
+    "group2": "akira-dove-leaf",
+    "name2": "Akira Dove Leaf Wallpaper"
+  },
+  {
+    "group1": "alcott",
+    "name1": "Alcott Slate Peel & Stick Wallpaper",
+    "group2": "alcott-claret",
+    "name2": "Alcott Claret Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "alden",
+    "name1": "Grey Blue Alden Peel & Stick Wallpaper",
+    "group2": "alden-stained-glass-decal",
+    "name2": "Blue Alden Stained Glass Decal"
+  },
+  {
+    "group1": "alder",
+    "name1": "Alder Sage Peel & Stick Wallpaper",
+    "group2": "alder-adhesive-film",
+    "name2": "Alder Adhesive Film"
+  },
+  {
+    "group1": "alice-s-wonderland-bakery",
+    "name1": "Alice’s Wonderland Bakery Wall Decals",
+    "group2": "alice-s-wonderland-bakery-giant-with-alphabet",
+    "name2": "Alice’s Wonderland Bakery Giant Wall Decals With Alphabet"
+  },
+  {
+    "group1": "aliviya",
+    "name1": "Aliviya Mint Peel and Stick Wallpaper",
+    "group2": "aliviya-cha",
+    "name2": "Aliviya Cha Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "alix",
+    "name1": "Alix Grey Peel & Stick Wallpaper",
+    "group2": "alix-denim-twill",
+    "name2": "Alix Denim Twill Wallpaper"
+  },
+  {
+    "group1": "altair",
+    "name1": "Altair Peel & Stick Floor Tiles ",
+    "group2": "alto",
+    "name2": "Alto Navy Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "amsterdam",
+    "name1": "Amsterdam Black Brick Peel & Stick Wallpaper",
+    "group2": "amsterdam-flowers",
+    "name2": "Amsterdam Flowers Wall Mural"
+  },
+  {
+    "group1": "and",
+    "name1": "Grey and White Brick Peel & Stick Wallpaper",
+    "group2": "and-azulejos-backsplash",
+    "name2": "Black and White Azulejos Backsplash"
+  },
+  {
+    "group1": "annie-floral",
+    "name1": "Annie Blue Floral Wallpaper",
+    "group2": "anouk-floral",
+    "name2": "Anouk Sage Floral Wallpaper"
+  },
+  {
+    "group1": "anya",
+    "name1": "Grey Anya Peel & Stick Wallpaper",
+    "group2": "anya-celadon-paper-weave",
+    "name2": "Anya Celadon Paper Weave Wallpaper"
+  },
+  {
+    "group1": "arbor",
+    "name1": "Arbor Peel & Stick Floor Tiles",
+    "group2": "arboretum-fern",
+    "name2": "Arboretum Aqua Fern Wallpaper"
+  },
+  {
+    "group1": "ariel",
+    "name1": "Ariel Grey Peel & Stick Wallpaper",
+    "group2": "ariel-damask",
+    "name2": "Ariel Black & White Damask Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "atlas",
+    "name1": "Atlas Peel & Stick Floor Tiles",
+    "group2": "atlas-tile-decal-kit",
+    "name2": "Atlas Tile Decal Kit"
+  },
+  {
+    "group1": "aura",
+    "name1": "Blue Aura Wall Mural",
+    "group2": "aura-honeycomb",
+    "name2": "Aura Teal Honeycomb Wallpaper"
+  },
+  {
+    "group1": "aurora",
+    "name1": "Aurora Wall Mural",
+    "group2": "aurora-borealis-northern-lights",
+    "name2": "Aurora Borealis/ Northern Lights Wall Mural"
+  },
+  {
+    "group1": "axelle",
+    "name1": "Axelle White Stone Wallpaper",
+    "group2": "axelle-light",
+    "name2": "Axelle Light Grey Stone Wallpaper"
+  },
+  {
+    "group1": "aya",
+    "name1": "Aya Peel & Stick Wallpaper",
+    "group2": "aya-eggshell-floral",
+    "name2": "Aya Eggshell Floral Wallpaper"
+  },
+  {
+    "group1": "ayako-grasscloth",
+    "name1": "Ayako Sage Grasscloth Wallpaper",
+    "group2": "ayano-grasscloth",
+    "name2": "Ayano Beige Grasscloth Wallpaper"
+  },
+  {
+    "group1": "aztec",
+    "name1": "Aztec Orange Peel & Stick Wallpaper",
+    "group2": "aztec-stripe-geometric",
+    "name2": "Aztec Stripe Cream Geometric Wall Mural"
+  },
+  {
+    "group1": "azure",
+    "name1": "Azure Peel & Stick Floor Tiles",
+    "group2": "azure-fleur",
+    "name2": "Azure Fleur Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "baby-shark",
+    "name1": "Baby Shark Wall Decals",
+    "group2": "baby-shark-giant-with-alphabet",
+    "name2": "Baby Shark Giant Wall Decals With Alphabet"
+  },
+  {
+    "group1": "bad-batch",
+    "name1": "Bad Batch Wall Decals",
+    "group2": "bad-batch-helmets-giant-wall-decal",
+    "name2": "Bad Batch Helmets Peel & Stick Giant Wall Decal"
+  },
+  {
+    "group1": "bamboo",
+    "name1": "Bamboo Brown Peel & Stick Wallpaper",
+    "group2": "bamboo-door-privacy-film",
+    "name2": "Bamboo Door Privacy Film"
+  },
+  {
+    "group1": "basketweave",
+    "name1": "Caviar Taupe Basketweave Wallpaper",
+    "group2": "basketweave-carrara-backsplash-tiles",
+    "name2": "Basketweave Carrara Peel & Stick Backsplash Tiles"
+  },
+  {
+    "group1": "bataan-grasscloth",
+    "name1": "Bataan Wheat Grasscloth Wallpaper",
+    "group2": "batad-grasscloth",
+    "name2": "Batad Green Grasscloth Wallpaper"
+  },
+  {
+    "group1": "batna",
+    "name1": "Batna Taupe Brick Wallpaper",
+    "group2": "batna-champagne",
+    "name2": "Batna Champagne Brick Wallpaper"
+  },
+  {
+    "group1": "beach",
+    "name1": "Beach Wall Decals",
+    "group2": "beach-bound-wall-art-kit",
+    "name2": "Beach Bound Wall Art Kit"
+  },
+  {
+    "group1": "beadboard",
+    "name1": "Beadboard Navy Peel & Stick Wallpaper",
+    "group2": "beadboard-aster",
+    "name2": "Beadboard Peach Aster Wallpaper"
+  },
+  {
+    "group1": "beauty",
+    "name1": "Black Beauty Peel & Stick Wallpaper",
+    "group2": "beauty-dry-erase-calendar",
+    "name2": "Blush Beauty Dry Erase Calendar Wall Decals"
+  },
+  {
+    "group1": "bedrock",
+    "name1": "Bedrock Teal Green Wall Mural",
+    "group2": "bedrock-earth",
+    "name2": "Bedrock Earth Wall Mural"
+  },
+  {
+    "group1": "bee",
+    "name1": "Bee Wall Decals",
+    "group2": "beech-nature-adhesive-film",
+    "name2": "Beech Pale Nature Adhesive Film"
+  },
+  {
+    "group1": "belle-jardin-damask",
+    "name1": "Belle Jardin Beige Damask Wallpaper",
+    "group2": "belle-jardin-damask-damask",
+    "name2": "Belle Jardin Damask Lilac Damask Wallpaper"
+  },
+  {
+    "group1": "belleek-ironwork",
+    "name1": "Belleek Ironwork Grey Wallpaper",
+    "group2": "belleek-ironwork-bronze",
+    "name2": "Belleek Ironwork Bronze Wallpaper"
+  },
+  {
+    "group1": "big",
+    "name1": "Big Apple Black Peel & Stick Wallpaper",
+    "group2": "big-birds",
+    "name2": "Big Birds Grey Wall Mural"
+  },
+  {
+    "group1": "birch",
+    "name1": "Birch Forest Wall Mural",
+    "group2": "birch-grove",
+    "name2": "Birch Grove Green Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "birch-grove",
+    "name1": "Birch Grove Grey Peel & Stick Wallpaper",
+    "group2": "birch-tree",
+    "name2": "Birch Tree Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "birch-tree",
+    "name1": "Birch Tree Peel & Stick Wallpaper",
+    "group2": "birch-trees",
+    "name2": "Birch Trees Brown Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "bless-this-home",
+    "name1": "Grey Bless This Home Wall Decals",
+    "group2": "bless-this-home-country-quote",
+    "name2": "Bless This Home Country Quote Wall Decals"
+  },
+  {
+    "group1": "block-party-iv",
+    "name1": "Block Party IV Wall Mural",
+    "group2": "block-party-vi",
+    "name2": "Block Party VI Wall Mural"
+  },
+  {
+    "group1": "blooming-damask",
+    "name1": "Blooming Damask Taupe Peel & Stick Wallpaper",
+    "group2": "blooming-damask-deep",
+    "name2": "Blooming Damask Deep Green Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "blooming-hills",
+    "name1": "Blooming Hills Wall Mural",
+    "group2": "blooming-villa",
+    "name2": "Blooming Villa Black Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "blooming-villa",
+    "name1": "Blooming Villa Linen & Olive Peel & Stick Wallpaper",
+    "group2": "blooming-villa-jade",
+    "name2": "Blooming Villa Jade & Pink Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "blossom",
+    "name1": "Orange Blossom Orange Peel & Stick Wallpaper",
+    "group2": "blossom-branch-giant-with-flower-embellishments",
+    "name2": "Beige White Blossom Branch Giant Wall Decals with Flower Embellishments"
+  },
+  {
+    "group1": "blythe",
+    "name1": "Blythe Grey Peel & Stick Wallpaper",
+    "group2": "blythe-damask",
+    "name2": "Blythe Neutral Damask Wallpaper"
+  },
+  {
+    "group1": "bohemian",
+    "name1": "Bohemian Orange Peel & Stick Wallpaper",
+    "group2": "bohemian-bling-basketweave",
+    "name2": "Bohemian Bling Gold Basketweave Wallpaper"
+  },
+  {
+    "group1": "bonneville",
+    "name1": "Bonneville Beige Peel & Stick Floor Tiles",
+    "group2": "bonneville-jade",
+    "name2": "Bonneville Jade Peel & Stick Floor Tiles"
+  },
+  {
+    "group1": "borneo",
+    "name1": "Indigo Borneo Peel & Stick Wallpaper",
+    "group2": "borneo-geometric-grasscloth",
+    "name2": "Borneo Blue Geometric Grasscloth Wallpaper"
+  },
+  {
+    "group1": "botanica",
+    "name1": "Botanica Wall Mural",
+    "group2": "botanical-fleur",
+    "name2": "Botanical Fleur Wall Mural"
+  },
+  {
+    "group1": "bramble",
+    "name1": "Bramble Forest Peel & Stick Wallpaper",
+    "group2": "bramble-wintergreen",
+    "name2": "Bramble Wintergreen Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "branches",
+    "name1": "Blush Branches Wall Mural",
+    "group2": "branches-platinum-trees",
+    "name2": "Branches Platinum Trees Wallpaper"
+  },
+  {
+    "group1": "breath",
+    "name1": "Summer Breath Wall Mural",
+    "group2": "breeze",
+    "name2": "Breeze Wall Mural"
+  },
+  {
+    "group1": "breeze",
+    "name1": "Breeze Wall Mural",
+    "group2": "breeze-brass-woven-texture",
+    "name2": "Breeze Brass Woven Texture Wallpaper"
+  },
+  {
+    "group1": "brooklyn",
+    "name1": "Brooklyn Black & White Wall Mural",
+    "group2": "brooklyn-bridge",
+    "name2": "Brooklyn Bridge Wall Mural"
+  },
+  {
+    "group1": "brownstone-blooms",
+    "name1": "Brownstone Blooms Ochre Peel and Stick Wallpaper",
+    "group2": "brownstone-blooms-and-sky",
+    "name2": "Brownstone Blooms Brick and Sky Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "brushstroke",
+    "name1": "Brushstroke Neutral Peel & Stick Wallpaper",
+    "group2": "brushstroke-leopard",
+    "name2": "Brushstroke Leopard Red Multi Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "brushstrokes",
+    "name1": "Brushstrokes Charcoal Grey Wall Mural",
+    "group2": "brushstrokes-door-premium-film",
+    "name2": "Brushstrokes Door Premium Film"
+  },
+  {
+    "group1": "building-blocks",
+    "name1": "Building Blocks Grey Wall Mural",
+    "group2": "building-blocks-honey",
+    "name2": "Building Blocks' Honey Wall Mural"
+  },
+  {
+    "group1": "butterfly",
+    "name1": "Butterfly Wall Decals",
+    "group2": "butterfly-blie",
+    "name2": "Butterfly Blie Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "capri",
+    "name1": "Capri Peel & Stick Floor Tiles",
+    "group2": "capri-floral-scroll",
+    "name2": "Capri Aqua Floral Scroll Wallpaper"
+  },
+  {
+    "group1": "caribbean",
+    "name1": "Caribbean Blue Peel & Stick Wallpaper",
+    "group2": "caribbean-sea-ombre",
+    "name2": "Caribbean Sea Teal Blue Ombre Wall Mural"
+  },
+  {
+    "group1": "carrara-marble",
+    "name1": "Carrara Marble Peel & Stick Wallpaper",
+    "group2": "carrara-marble-hexagon-backsplash",
+    "name2": "Carrara Marble White & Black Hexagon Peel & Stick Backsplash"
+  },
+  {
+    "group1": "cars-2",
+    "name1": "Cars 2 Wall Decals",
+    "group2": "cars-3",
+    "name2": "Red Cars 3 Wall Decals"
+  },
+  {
+    "group1": "cars-3",
+    "name1": "Red Cars 3 Wall Decals",
+    "group2": "cars-3-racing",
+    "name2": "Cars 3 Racing Wall Decals"
+  },
+  {
+    "group1": "cars-friends-to-the-finish",
+    "name1": "Red Cars Friends To The Finish Wall Decals",
+    "group2": "cars-friends-to-the-finish-xl-chair-rail",
+    "name2": "Cars Friends To The Finish XL Chair Rail Wall Mural"
+  },
+  {
+    "group1": "casablanca",
+    "name1": "Casablanca White Stone Wallpaper",
+    "group2": "casablanca-ivory",
+    "name2": "Casablanca Ivory Stone Wallpaper"
+  },
+  {
+    "group1": "cascade",
+    "name1": "Cascade Wall Mural",
+    "group2": "cascade-plaster-texture-paintable",
+    "name2": "Cascade Plaster Texture Paintable Wallpaper"
+  },
+  {
+    "group1": "castaway",
+    "name1": "Castaway Wall Mural",
+    "group2": "castaway-ocean",
+    "name2": "Castaway Ocean Blue Wall Mural"
+  },
+  {
+    "group1": "cat-coquillette-gingko",
+    "name1": "Cat Coquillette Gingko Neutral Peel & Stick Wallpaper",
+    "group2": "cat-coquillette-gingko-almond",
+    "name2": "Cat Coquillette Gingko Almond Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "cats",
+    "name1": "Multicolor Cats Wall Decals",
+    "group2": "cats-meow-3d-foam-wall-art",
+    "name2": "Cats Meow 3D Foam Wall Art"
+  },
+  {
+    "group1": "cecilia",
+    "name1": "Cecilia Peel & Stick Floor Tiles",
+    "group2": "cecilia-fruit",
+    "name2": "Cecilia Blue Fruit Wallpaper"
+  },
+  {
+    "group1": "celestial",
+    "name1": "White Celestial Wall Decals",
+    "group2": "celestial-feathers-wall-art-kit",
+    "name2": "Celestial Feathers Wall Art Kit"
+  },
+  {
+    "group1": "celestial-floral",
+    "name1": "Celestial Grey Floral Wallpaper",
+    "group2": "celestine-floral",
+    "name2": "Celestine Mustard Floral Wallpaper"
+  },
+  {
+    "group1": "champagne-harbor",
+    "name1": "Champagne Harbor Powdered Blue Peel & Stick Wallpaper",
+    "group2": "champagne-harbor-dream",
+    "name2": "Champagne Harbor Pink Dream Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "chandelier",
+    "name1": "Gold Chandelier Wallpaper",
+    "group2": "chandelier-foil-stickers",
+    "name2": "Chandelier Silver Foil Stickers"
+  },
+  {
+    "group1": "changzhou-grasscloth",
+    "name1": "Changzhou Beige Grasscloth Wallpaper",
+    "group2": "changzou-grasscloth",
+    "name2": "Changzou Beige Grasscloth Wallpaper"
+  },
+  {
+    "group1": "chelsea",
+    "name1": "Chelsea Grey Brick Wallpaper",
+    "group2": "chelsea-antique-tin-tiles",
+    "name2": "Chelsea Antique White Peel & Stick Tin Tiles"
+  },
+  {
+    "group1": "cherry-blossom",
+    "name1": "Cherry Blossom Blue Peel & Stick Wallpaper",
+    "group2": "cherry-blossom-light-trail",
+    "name2": "Cherry Blossom Light Green Trail Wallpaper"
+  },
+  {
+    "group1": "cherry-blossom-pearl",
+    "name1": "Cherry Blossom Pearl Peel & Stick Wallpaper",
+    "group2": "cherry-blossom-trail",
+    "name2": "Cherry Blossom Sage Trail Wallpaper"
+  },
+  {
+    "group1": "cherry-wood",
+    "name1": "Cherry Wood Grey Peel & Stick Wallpaper",
+    "group2": "cherry-wood-oyster",
+    "name2": "Cherry Wood Oyster Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "chinoiserie",
+    "name1": "Chinoiserie Wall Mural",
+    "group2": "chinoiserie-floral-tree",
+    "name2": "Pink Chinoiserie Floral Tree Wall Mural"
+  },
+  {
+    "group1": "chinoiserie-garden",
+    "name1": "Chinoiserie Garden Pink Peel & Stick Wallpaper",
+    "group2": "chinoiserie-garden-robins-egg",
+    "name2": "Chinoiserie Garden Robins Egg Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "choose-kindness",
+    "name1": "Black Choose Kindness Wall Decals",
+    "group2": "choose-kindness-giant-wall-decal",
+    "name2": "Rainbow Choose Kindness Giant Peel & Stick Wall Decal"
+  },
+  {
+    "group1": "cibola",
+    "name1": "Cibola Gold Stone Wallpaper",
+    "group2": "cibola-bronze",
+    "name2": "Cibola Bronze Stone Wallpaper"
+  },
+  {
+    "group1": "cibola-pewter",
+    "name1": "Cibola Pewter Stone Wallpaper",
+    "group2": "cibola-pewter-pebbled",
+    "name2": "Cibola Pewter Pebbled Wallpaper"
+  },
+  {
+    "group1": "clara-jean-april-showers",
+    "name1": "Clara Jean April Showers Pink Peel & Stick Wallpaper",
+    "group2": "clara-jean-april-showers-flowers-xl-giant",
+    "name2": "Blue Clara Jean April Showers Flowers XL Giant Wall Decals"
+  },
+  {
+    "group1": "clara-jean-folklore",
+    "name1": "Clara Jean Folklore Forest",
+    "group2": "clara-jean-folklore-almond",
+    "name2": "Clara Jean Folklore Forest Almond Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "classic-monsters",
+    "name1": "Classic Monsters Wall Decals",
+    "group2": "classic-monsters-bride-of-frankenstein-giant",
+    "name2": "Classic Monsters Bride Of Frankenstein Giant Wall Decals"
+  },
+  {
+    "group1": "cloud",
+    "name1": "Cloud Pink Peel & Stick Wallpaper",
+    "group2": "cloud-decowave",
+    "name2": "Cloud Decowave Wallpaper"
+  },
+  {
+    "group1": "clouds",
+    "name1": "White Clouds Wall Decals",
+    "group2": "clouds-self-adhesive-window-film",
+    "name2": "Clouds Self Adhesive Window Film"
+  },
+  {
+    "group1": "coco",
+    "name1": "Coco Wall Mural",
+    "group2": "cocomelon",
+    "name2": "CoComelon Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "cocomelon",
+    "name1": "Cocomelon Wall Decals",
+    "group2": "cocomelon-cody-giant",
+    "name2": "Cocomelon Cody Giant Wall Decals"
+  },
+  {
+    "group1": "colleen-dove-washed-boards",
+    "name1": "Colleen Dove Washed Boards Wallpaper",
+    "group2": "colleen-honey-washed-boards",
+    "name2": "Colleen Honey Washed Boards Wallpaper"
+  },
+  {
+    "group1": "colorful",
+    "name1": "Colorful Stone Wall Mural",
+    "group2": "colorful-lowercase-alphabet-giant",
+    "name2": "Colorful Lowercase Alphabet Giant Wall Decals"
+  },
+  {
+    "group1": "concrete",
+    "name1": "Concrete Wall Mural",
+    "group2": "concrete-adhesive-film",
+    "name2": "Concrete Adhesive Film"
+  },
+  {
+    "group1": "confetti",
+    "name1": "Confetti Pink Peel & Stick Wallpaper",
+    "group2": "confetti-dots",
+    "name2": "Gold Confetti Dots Wall Decals"
+  },
+  {
+    "group1": "cornelius-tin-ceiling-tile",
+    "name1": "Cornelius Teal Tin Ceiling Tile Wallpaper",
+    "group2": "cornelius-tin-celing-tile",
+    "name2": "Cornelius Grey Tin Celing Tile Wallpaper"
+  },
+  {
+    "group1": "dallas",
+    "name1": "Dallas Beige Peel & Stick Wallpaper",
+    "group2": "dalton",
+    "name2": "Dalton Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "damask",
+    "name1": "Black Damask Peel & Stick Wallpaper",
+    "group2": "damask-adhesive-film",
+    "name2": "Black & White Damask Adhesive Film"
+  },
+  {
+    "group1": "danson",
+    "name1": "Green Danson Peel & Stick Wallpaper",
+    "group2": "danton",
+    "name2": "Danton Charcoal Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "daphne",
+    "name1": "Pink Daphne Peel & Stick Floor Tiles",
+    "group2": "daphne-limewash",
+    "name2": "Daphne Limewash Mocha Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "davis",
+    "name1": "Davis White Brick Wallpaper",
+    "group2": "davis-dark-exposed",
+    "name2": "Davis Dark Red Exposed Brick Wallpaper"
+  },
+  {
+    "group1": "decal",
+    "name1": "Chalkboard Decal",
+    "group2": "declan",
+    "name2": "Declan Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "declan",
+    "name1": "Declan Blue Peel & Stick Wallpaper",
+    "group2": "declan-light",
+    "name2": "Declan Light Grey Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "decora",
+    "name1": "Decora Blue Peel & Stick Floor Tiles",
+    "group2": "decorative-giant",
+    "name2": "Black Decorative Chalkboard Giant Wall Decals"
+  },
+  {
+    "group1": "dinosaurs",
+    "name1": "Dinosaurs Wall Mural",
+    "group2": "dinosaurs-lifelike",
+    "name2": "Dinosaurs (Lifelike) Wall Decals"
+  },
+  {
+    "group1": "disney-fairies",
+    "name1": "Disney Fairies Wall Decals",
+    "group2": "disney-fairies-vintage-tinkbell-xl-chair-rail",
+    "name2": "Grey Disney Fairies - Vintage Tinkbell XL Chair Rail Wall Mural"
+  },
+  {
+    "group1": "disney-princess",
+    "name1": "Disney Princess Pink Peel & Stick Wall Mural",
+    "group2": "disney-princess-aladdin-a-whole-new-world-xl-chair-rail",
+    "name2": "Disney Princess - Aladdin 'A Whole New World' XL Chair Rail Wall Mural"
+  },
+  {
+    "group1": "disney-tim-burton-s-the-nightmare-before-christmas",
+    "name1": "Disney Tim Burton's The Nightmare Before Christmas Black Forest Peel & Stick Wallpaper",
+    "group2": "disney-tim-burton-s-the-nightmare-before-christmas-sepia",
+    "name2": "Disney Tim Burton's The Nightmare Before Christmas Sepia Forest Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "distressed",
+    "name1": "Distressed Brick Wall Mural",
+    "group2": "distressed-barn-wood-plank-giant",
+    "name2": "Brown Distressed Barn Wood Plank Giant Wall Decals"
+  },
+  {
+    "group1": "distressed-wood",
+    "name1": "Distressed Wood Blue Peel & Stick Wallpaper",
+    "group2": "distressed-wood-subway-tiles",
+    "name2": "Brown Distressed Wood Subway Tiles"
+  },
+  {
+    "group1": "donmei",
+    "name1": "Donmei Grey Linen Wallpaper",
+    "group2": "donmei-light",
+    "name2": "Donmei Light Grey Linen Wallpaper"
+  },
+  {
+    "group1": "dot",
+    "name1": "Dot Wall Decals",
+    "group2": "dots",
+    "name2": "Gold Dots Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "dots",
+    "name1": "Gold Dots Peel & Stick Wallpaper",
+    "group2": "dots-adhesive-film",
+    "name2": "Aqua Dots Adhesive Film"
+  },
+  {
+    "group1": "dry-erase",
+    "name1": "Dry Erase White Peel & Stick Wallpaper",
+    "group2": "dry-erase-calendar",
+    "name2": "Black & White Dry Erase Calendar"
+  },
+  {
+    "group1": "dry-erase-calendar",
+    "name1": "Black & White Dry Erase Calendar",
+    "group2": "dry-erase-calendar-giant-wall-decal-set",
+    "name2": "Dry Erase Calendar Peel & Stick Giant Wall Decal Set"
+  },
+  {
+    "group1": "dungeons-dragons",
+    "name1": "Dungeons & Dragons Wall Decals",
+    "group2": "dungeons-dragons-dungeon-master-giant-wall-decal-with-alphabet",
+    "name2": "Dungeons & Dragons Dungeon Master Giant Peel & Stick Wall Decal With Alphabet"
+  },
+  {
+    "group1": "earth",
+    "name1": "Earth Wall Mural",
+    "group2": "earth-map",
+    "name2": "Earth Map Wall Mural"
+  },
+  {
+    "group1": "eiffel-tower",
+    "name1": "Eiffel Tower Wall Mural",
+    "group2": "eiffel-tower-abstract",
+    "name2": "Eiffel Tower Abstract Wall Mural"
+  },
+  {
+    "group1": "elias",
+    "name1": "Elias Black Peel & Stick Wallpaper",
+    "group2": "elias-vintage",
+    "name2": "Elias Black Vintage Chalkboard Wallpaper"
+  },
+  {
+    "group1": "ellis-geometric",
+    "name1": "Ellis Multicolor Geometric Wallpaper",
+    "group2": "ellison-geometric",
+    "name2": "Ellison Blue Geometric Wallpaper"
+  },
+  {
+    "group1": "eloise",
+    "name1": "Eloise Charcoal Peel & Stick Wallpaper",
+    "group2": "eloise-damask",
+    "name2": "Eloise Lavender Damask Wallpaper"
+  },
+  {
+    "group1": "emerson",
+    "name1": "Emerson Sage Peel & Stick Wallpaper",
+    "group2": "emerson-crimson",
+    "name2": "Emerson Crimson Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "encanto",
+    "name1": "Encanto Wall Decals",
+    "group2": "encanto-casa-madrigal-tapestry",
+    "name2": "Encanto Casa Madrigal Tapestry"
+  },
+  {
+    "group1": "enchanted",
+    "name1": "Enchanted Emerald Peel & Stick Wallpaper",
+    "group2": "enchanted-damask",
+    "name2": "Enchanted Forest Damask Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "espalier",
+    "name1": "Grey Espalier Peel & Stick Wallpaper",
+    "group2": "espalier-champagne-chevron-stripe",
+    "name2": "Espalier Champagne Chevron Stripe Wallpaper"
+  },
+  {
+    "group1": "estate",
+    "name1": "Estate Peel & Stick Floor Tiles",
+    "group2": "estate-illustration",
+    "name2": "Estate Grey Illustration Wallpaper"
+  },
+  {
+    "group1": "eucalyptus",
+    "name1": "Eucalyptus Wall Mural",
+    "group2": "eucalyptus-wall-art-kit",
+    "name2": "Eucalyptus Wall Art Kit "
+  },
+  {
+    "group1": "evergreen",
+    "name1": "Green Evergreen Ivy Wall Decals",
+    "group2": "evergreen-pinecones",
+    "name2": "Evergreen Taupe Pinecones Wallpaper"
+  },
+  {
+    "group1": "ezra",
+    "name1": "Yellow Ezra Peel & Stick Floor Tiles",
+    "group2": "ezra-satin-texture",
+    "name2": "Ezra Purple Satin Texture Wallpaper"
+  },
+  {
+    "group1": "fa-ade",
+    "name1": "Façade Off-White Brick Wallpaper",
+    "group2": "fa-ade-dove",
+    "name2": "Façade Dove Brick Wallpaper"
+  },
+  {
+    "group1": "fable",
+    "name1": "Fable Wall Mural",
+    "group2": "fable-leaf",
+    "name2": "Fable Leaf Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "falcon-the-winter-soldier",
+    "name1": "Falcon & The Winter Soldier Wall Decals",
+    "group2": "falcon-the-winter-soldier-winter-soldier-giant-wall-decal",
+    "name2": "Falcon & The Winter Soldier Winter Soldier Peel & Stick Giant Wall Decal"
+  },
+  {
+    "group1": "faux-bamboo-grasscloth",
+    "name1": "Faux Bamboo Grasscloth Taupe Peel & Stick Wallpaper",
+    "group2": "faux-bamboo-grasscloth-dark",
+    "name2": "Faux Bamboo Grasscloth Dark Grey Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "faux-grass",
+    "name1": "Graphite Faux Grass Wallpaper",
+    "group2": "faux-grasscloth",
+    "name2": "Faux Grasscloth Brown Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "faux-grasscloth",
+    "name1": "Faux Grasscloth Taupe Peel & Stick Wallpaper",
+    "group2": "faux-grasscloth-jayde",
+    "name2": "Faux Grasscloth Light Brown Jayde Wallpaper"
+  },
+  {
+    "group1": "felsic-platinum-studded",
+    "name1": "Felsic Platinum Studded Wallpaper",
+    "group2": "felsic-platinum-studded-cube",
+    "name2": "Felsic Platinum Studded Cube Wallpaper"
+  },
+  {
+    "group1": "felsic-studded",
+    "name1": "Felsic Silver Studded Wallpaper",
+    "group2": "felsic-studded-cube",
+    "name2": "Felsic Silver Studded Cube Wallpaper"
+  },
+  {
+    "group1": "fera",
+    "name1": "Fera Peel & Stick Wallpaper",
+    "group2": "fern",
+    "name2": "Green Fern Forest Wall Mural"
+  },
+  {
+    "group1": "fern",
+    "name1": "Green Fern Forest Wall Mural",
+    "group2": "fern-cottage-leaf-toss",
+    "name2": "Fern Cottage Cream Leaf Toss Wallpaper"
+  },
+  {
+    "group1": "filippa-tulip",
+    "name1": "Filippa Navy Tulip Wallpaper",
+    "group2": "fillippa-tulip",
+    "name2": "Fillippa Green Tulip Wallpaper"
+  },
+  {
+    "group1": "finding-nemo",
+    "name1": "Finding Nemo Wall Mural",
+    "group2": "finding-nemo-giant",
+    "name2": "Finding Nemo Giant Wall Decals"
+  },
+  {
+    "group1": "fleur",
+    "name1": "Black Fleur Peel & Stick Wallpaper",
+    "group2": "fleur-adhesive-film",
+    "name2": "Fleur Grey Adhesive Film"
+  },
+  {
+    "group1": "floral",
+    "name1": "Floral Cream Peel & Stick Wall Mural",
+    "group2": "floral-agatha",
+    "name2": "Floral Pink Agatha Wallpaper"
+  },
+  {
+    "group1": "floral-bazaar",
+    "name1": "Floral Bazaar Ochre Peel & Stick Wallpaper",
+    "group2": "floral-bazaar-and",
+    "name2": "Floral Bazaar Green and Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "floral-gia",
+    "name1": "Floral Taupe Gia Wallpaper",
+    "group2": "floral-ice",
+    "name2": "Pink Floral Ice Cream Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "floral-ice",
+    "name1": "Orange Floral Ice Cream Peel & Stick Wallpaper",
+    "group2": "floral-jace",
+    "name2": "Floral Blue Jace Wallpaper"
+  },
+  {
+    "group1": "floret-flora",
+    "name1": "Floret Green Flora Wallpaper",
+    "group2": "floret-floral",
+    "name2": "Floret Blue Floral Wallpaper"
+  },
+  {
+    "group1": "flower-circle",
+    "name1": "Flower Circle Light Blue Wall Mural",
+    "group2": "flower-circle-light",
+    "name2": "Flower Circle Light Yellow Wall Mural"
+  },
+  {
+    "group1": "foliage",
+    "name1": "Foliage Peel & Stick Floor Tiles",
+    "group2": "foliage-floral",
+    "name2": "Foliage Grey Floral Wallpaper"
+  },
+  {
+    "group1": "foliate",
+    "name1": "Green Foliate Peel & Stick Wallpaper",
+    "group2": "foliole",
+    "name2": "Yellow Foliole Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "fontaine",
+    "name1": "Fontaine Peel & Stick Floor Tiles",
+    "group2": "fontaine-damask",
+    "name2": "Fontaine Teal Damask Wallpaper"
+  },
+  {
+    "group1": "framework",
+    "name1": "Framework Neutral Peel & Stick Wallpaper",
+    "group2": "framework-auburn",
+    "name2": "Framework Auburn Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "french-nightingale-toile",
+    "name1": "French Nightingale Cream Toile Wallpaper",
+    "group2": "french-nightingale-trail",
+    "name2": "French Nightingale Blue Trail Wallpaper"
+  },
+  {
+    "group1": "frey",
+    "name1": "Neutral Frey Peel & Stick Floor Tiles",
+    "group2": "frey-coffee-geometric",
+    "name2": "Frey Coffee Geometric Wallpaper"
+  },
+  {
+    "group1": "friends",
+    "name1": "Forest Friends Wall Decals",
+    "group2": "friends-giant",
+    "name2": "Forest Friends Giant Wall Decals"
+  },
+  {
+    "group1": "frozen",
+    "name1": "Frozen Wall Decals",
+    "group2": "frozen-2-border",
+    "name2": "Frozen 2 Blue Peel & Stick Border"
+  },
+  {
+    "group1": "frozen-ii",
+    "name1": "Frozen Ii Wall Decals",
+    "group2": "frozen-ii-elsa-anna-giant",
+    "name2": "Frozen II Elsa & Anna Giant Wall Decals"
+  },
+  {
+    "group1": "gabby-s-dollhouse",
+    "name1": "Gabby's Dollhouse Wall Decals",
+    "group2": "gabby-s-dollhouse-character-giant",
+    "name2": "Gabby's Dollhouse Character Giant Wall Decals"
+  },
+  {
+    "group1": "galley-subway-tile",
+    "name1": "Galley Light Blue Subway Tile Wallpaper",
+    "group2": "galley-subway-tile-paintable",
+    "name2": "Galley White Subway Tile Paintable Wallpaper"
+  },
+  {
+    "group1": "garden",
+    "name1": "Rose Garden Wall Mural",
+    "group2": "garden-aviary",
+    "name2": "Garden Aviary Sky Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "garden-aviary",
+    "name1": "Garden Aviary Black Peel & Stick Wallpaper",
+    "group2": "garden-aviary-jewel",
+    "name2": "Garden Aviary Jewel Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "geometric",
+    "name1": "Twist Pink Geometric Wallpaper",
+    "group2": "geometric-apothem",
+    "name2": "Geometric Green Apothem Wallpaper"
+  },
+  {
+    "group1": "geometrix",
+    "name1": "Geometrix Wall Mural",
+    "group2": "geometry",
+    "name2": "Geometry Wall Mural"
+  },
+  {
+    "group1": "georgio-jacobean",
+    "name1": "Georgio Light Brown Jacobean Wallpaper",
+    "group2": "georgio-jacobean-plain-ways",
+    "name2": "Georgio Cream Jacobean-Plain Ways Wallpaper"
+  },
+  {
+    "group1": "gilded-floral",
+    "name1": "Gilded Floral Navy Peel & Stick Wallpaper",
+    "group2": "gilded-floral-oxblood",
+    "name2": "Gilded Floral Oxblood Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "giraffe",
+    "name1": "Giraffe Grey Wall Mural",
+    "group2": "giraffe-growth-chart",
+    "name2": "Giraffe Growth Chart Grey Wall Decals"
+  },
+  {
+    "group1": "glinda-floral",
+    "name1": "Glinda Sage Floral Wallpaper",
+    "group2": "glinda-floral-trail",
+    "name2": "Glinda Rose Floral Trail Wallpaper"
+  },
+  {
+    "group1": "gothic",
+    "name1": "Gothic Peel & Stick Floor Tiles",
+    "group2": "gothic-arches",
+    "name2": "Gothic Arches Wall Mural"
+  },
+  {
+    "group1": "graffiti",
+    "name1": "Graffiti Wall Mural",
+    "group2": "graffiti-art",
+    "name2": "Graffiti Art Wall Mural"
+  },
+  {
+    "group1": "gramercy",
+    "name1": "Gramercy Blue Linen Wallpaper",
+    "group2": "gramercy-park-leaf",
+    "name2": "Gramercy Park Red Leaf Wallpaper"
+  },
+  {
+    "group1": "graphic",
+    "name1": "Graphic Wall Mural",
+    "group2": "graphic-barolo",
+    "name2": "Graphic Light Brown Barolo Wallpaper"
+  },
+  {
+    "group1": "greer",
+    "name1": "Silver Greer Peel & Stick Wallpaper",
+    "group2": "greer-gingham-check",
+    "name2": "Greer Blue Gingham Check Wallpaper"
+  },
+  {
+    "group1": "groovy-checker",
+    "name1": "Groovy Checker Purple Peel & Stick Wallpaper",
+    "group2": "groovy-checker-headboard-wall-decal",
+    "name2": "Groovy Checker Headboard Wall Decal"
+  },
+  {
+    "group1": "grove",
+    "name1": "Sky Blue Orange Grove Peel & Stick Wallpaper",
+    "group2": "grove-tree",
+    "name2": "Grove Green Tree Wallpaper"
+  },
+  {
+    "group1": "guardians-of-the-galaxy-3",
+    "name1": "Guardians of the Galaxy 3 Wall Decals",
+    "group2": "guardians-of-the-galaxy-3-star-lord-quill-giant",
+    "name2": "Guardians of the Galaxy 3 Star-Lord Quill Giant Wall Decals"
+  },
+  {
+    "group1": "hadrian",
+    "name1": "Hadrian Stone Brown Peel & Stick Wallpaper",
+    "group2": "hadrian-wall",
+    "name2": "Hadrian Stone Wall Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "halcyon",
+    "name1": "Pink Halcyon Peel & Stick Wallpaper",
+    "group2": "halcyon-geometric",
+    "name2": "Halcyon Lilac Geometric Wallpaper"
+  },
+  {
+    "group1": "hamlet",
+    "name1": "Hamlet Wall Mural",
+    "group2": "hamsa",
+    "name2": "Hamsa Purple Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "hamsa",
+    "name1": "Hamsa Purple Peel & Stick Wallpaper",
+    "group2": "hamsa-hand-wall-art-kit",
+    "name2": "Hamsa Hand Wall Art Kit"
+  },
+  {
+    "group1": "hanami",
+    "name1": "Hanami Wall Mural",
+    "group2": "hanami-light-grasscloth",
+    "name2": "Hanami Light Green Grasscloth Wallpaper"
+  },
+  {
+    "group1": "harmony",
+    "name1": "Cream Harmony Peel & Stick Wallpaper",
+    "group2": "harmony-ogee",
+    "name2": "Harmony Green Ogee Wallpaper"
+  },
+  {
+    "group1": "harry-potter",
+    "name1": "Harry Potter Wall Decals",
+    "group2": "harry-potter-crest-giant-wall-decal",
+    "name2": "Harry Potter - Crest Peel & Stick Giant Wall Decal"
+  },
+  {
+    "group1": "harry-potter-marauder-s-map",
+    "name1": "Harry Potter Marauder's Map Grey Peel & Stick Wallpaper",
+    "group2": "harry-potter-marauder-s-map-quote-giant",
+    "name2": "Brown Harry Potter Marauder's Map Quote Giant Wall Decals"
+  },
+  {
+    "group1": "haruki-sisal-grasscloth",
+    "name1": "Haruki Light Blue Sisal Grasscloth Wallpaper",
+    "group2": "haruko-sisal-grasscloth",
+    "name2": "Haruko Light Brown Sisal Grasscloth Wallpaper"
+  },
+  {
+    "group1": "hera-dove-textured",
+    "name1": "Hera Dove Textured Wallpaper",
+    "group2": "hera-honey-textured",
+    "name2": "Hera Honey Textured Wallpaper"
+  },
+  {
+    "group1": "herbarium",
+    "name1": "Herbarium White Wall Mural",
+    "group2": "herbarium-floral-motif",
+    "name2": "Herbarium White Floral Motif Wallpaper"
+  },
+  {
+    "group1": "herringbone",
+    "name1": "Herringbone Tan Peel & Stick Wallpaper",
+    "group2": "herringbone-weave",
+    "name2": "Herringbone Weave Beige Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "holden",
+    "name1": "Indigo Holden Peel & Stick Wallpaper",
+    "group2": "holden-chevron-faux",
+    "name2": "Holden Aqua Chevron Faux Linen Wallpaper"
+  },
+  {
+    "group1": "honey",
+    "name1": "Pink Flamingo Honey Wall Mural",
+    "group2": "honey-bee",
+    "name2": "Honey Bee Gold Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "hoppet-folk",
+    "name1": "Hoppet Grey Folk Wallpaper",
+    "group2": "hoppet-folk-scandinavian",
+    "name2": "Hoppet Folk Multicolor Scandinavian Wallpaper"
+  },
+  {
+    "group1": "hotaka-grasscloth",
+    "name1": "Hotaka Sage Grasscloth Wallpaper",
+    "group2": "hotaru-grasscloth",
+    "name2": "Hotaru Peach Grasscloth Wallpaper"
+  },
+  {
+    "group1": "house-of-the-dragon",
+    "name1": "House of the Dragon Wall Decals",
+    "group2": "house-of-the-dragon-with-personalization",
+    "name2": "Gold House of the Dragon Wall Decals with Personalization"
+  },
+  {
+    "group1": "hudson",
+    "name1": "Hudson Peel & Stick Floor Tiles",
+    "group2": "hudson-bay-ivory-nautical",
+    "name2": "Hudson Bay Ivory Nautical Wallpaper"
+  },
+  {
+    "group1": "hui-paper-weave",
+    "name1": "Hui Beige Paper Weave Wallpaper",
+    "group2": "hui-paper-weave-grasscloth",
+    "name2": "Hui Light Brown Paper Weave Grasscloth Wallpaper"
+  },
+  {
+    "group1": "hydrangea",
+    "name1": "Hydrangea Green Peel & Stick Wallpaper",
+    "group2": "hydrangea-halcyon-birds",
+    "name2": "Hydrangea Halcyon Birds Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "illusion",
+    "name1": "Illusion Black Wall Mural",
+    "group2": "illusion-dove-wood",
+    "name2": "Illusion Dove Wood Wallpaper"
+  },
+  {
+    "group1": "in-the-clouds",
+    "name1": "In The Clouds Sky Blue Wall Mural",
+    "group2": "in-the-clouds-dove",
+    "name2": "In the Clouds Dove Grey Wall Mural"
+  },
+  {
+    "group1": "ink",
+    "name1": "Black Ink Peel & Stick Wallpaper",
+    "group2": "ink-grove",
+    "name2": "Ink Orange Grove Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "into-the-wild",
+    "name1": "Into the Wild Grey Wall Mural",
+    "group2": "into-the-wild-sunset",
+    "name2": "Into the Wild Sunset Wall Mural"
+  },
+  {
+    "group1": "iris",
+    "name1": "Iris Grey Peel & Stick Wallpaper",
+    "group2": "iris-shibori",
+    "name2": "Iris Green Shibori Wallpaper"
+  },
+  {
+    "group1": "isami-grasscloth",
+    "name1": "Isami Light Blue Grasscloth Wallpaper",
+    "group2": "isamu-grasscloth",
+    "name2": "Isamu Cream Grasscloth Wallpaper"
+  },
+  {
+    "group1": "jacobean-ellie",
+    "name1": "Jacobean Gold Ellie Wallpaper",
+    "group2": "jacobean-jamie",
+    "name2": "Jacobean Purple Jamie Wallpaper"
+  },
+  {
+    "group1": "jane",
+    "name1": "Navy Jane Peel & Stick Wallpaper",
+    "group2": "jane-dixon-floral",
+    "name2": "Jane Dixon Floral Wall Decals"
+  },
+  {
+    "group1": "jardin",
+    "name1": "Jardin Wall Mural",
+    "group2": "jardin-de-pip",
+    "name2": "  Jardin De Pip Wall Mural"
+  },
+  {
+    "group1": "java",
+    "name1": "Grey Java Peel & Stick Wallpaper",
+    "group2": "java-balinese-peacock-scalamandre-self-adhesive",
+    "name2": "Java Balinese Peacock Scalamandre Self Adhesive Wallpaper"
+  },
+  {
+    "group1": "jhalana",
+    "name1": "Jhalana Rose Peel & Stick Wallpaper",
+    "group2": "jhalana-lime",
+    "name2": "Jhalana Teal Lime Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "jiali-grasscloth",
+    "name1": "Jiali Brown Grasscloth Wallpaper",
+    "group2": "jiangli-grasscloth",
+    "name2": "Jiangli Taupe Grasscloth Wallpaper"
+  },
+  {
+    "group1": "jolene",
+    "name1": "Jolene Cream Peel & Stick Wallpaper",
+    "group2": "joli",
+    "name2": "Joli Wall Mural"
+  },
+  {
+    "group1": "joli",
+    "name1": "Joli Wall Mural",
+    "group2": "joliet-floral",
+    "name2": "Joliet Lavender Floral Wallpaper"
+  },
+  {
+    "group1": "joss",
+    "name1": "Joss Teal Rainbow Wallpaper",
+    "group2": "joss-honey",
+    "name2": "Joss Honey Rainbow Wallpaper"
+  },
+  {
+    "group1": "jungle-toile",
+    "name1": "Jungle Toile Black Peel & Stick Wallpaper",
+    "group2": "jungle-trail",
+    "name2": "Jungle Trail Wall Mural"
+  },
+  {
+    "group1": "jungle-trail",
+    "name1": "Jungle Trail Wall Mural",
+    "group2": "jungle-trees",
+    "name2": "Jungle Trees Black Wall Mural"
+  },
+  {
+    "group1": "jurassic-world-2",
+    "name1": "Jurassic World 2 Wall Decals",
+    "group2": "jurassic-world-2-t-rex-giant-wall-decal",
+    "name2": "Jurassic World 2 T-Rex Giant Wall Decal"
+  },
+  {
+    "group1": "jurassic-world-dominion",
+    "name1": "Jurassic World: Dominion Wall Decals",
+    "group2": "jurassic-world-dominion-giant-wall-decal-with-alphabet",
+    "name2": "Jurassic World: Dominion Peel & Stick Giant Wall Decal with Alphabet"
+  },
+  {
+    "group1": "justice-league-giant",
+    "name1": "Justice League Giant Wall Decals",
+    "group2": "justice-league-giant-with-alphabet",
+    "name2": "Justice League Giant Wall Decals With Alphabet​"
+  },
+  {
+    "group1": "kamen",
+    "name1": "Kamen Brown Stone Wallpaper",
+    "group2": "kamen-light",
+    "name2": "Kamen Light Grey Stone Wallpaper"
+  },
+  {
+    "group1": "karma",
+    "name1": "Karma Wall Mural",
+    "group2": "karma-herringhone-weave",
+    "name2": "Karma Brown Herringhone Weave Wallpaper"
+  },
+  {
+    "group1": "kasumi-grasscloth",
+    "name1": "Kasumi Slate Grasscloth Wallpaper",
+    "group2": "katsu-grasscloth",
+    "name2": "Katsu Light Brown Grasscloth Wallpaper"
+  },
+  {
+    "group1": "kazue-grasscloth",
+    "name1": "Kazue Neutral Grasscloth Wallpaper",
+    "group2": "kazuki-grasscloth",
+    "name2": "Kazuki Lavender Grasscloth Wallpaper"
+  },
+  {
+    "group1": "kensington-damask",
+    "name1": "Kensington Damask Blue Peel & Stick Wallpaper",
+    "group2": "kensington-damask-stripe",
+    "name2": "Kensington Light Blue Damask Stripe Wallpaper"
+  },
+  {
+    "group1": "key-west-fish",
+    "name1": "Key West Green Fish Wallpaper",
+    "group2": "key-west-fish-border",
+    "name2": "Key West Orange Fish Border"
+  },
+  {
+    "group1": "kimiko-grasscloth",
+    "name1": "Kimiko Cream Grasscloth Wallpaper",
+    "group2": "kimiyo-grasscloth",
+    "name2": "Kimiyo Aqua Grasscloth Wallpaper"
+  },
+  {
+    "group1": "kingsley",
+    "name1": "Kingsley Natural Peel & Stick Floor Tiles",
+    "group2": "kingston",
+    "name2": "Kingston Grey Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "kira-hemp",
+    "name1": "Kira Beige Hemp Wallpaper",
+    "group2": "kira-hemp-grasscloth",
+    "name2": "Kira Teal Hemp Grasscloth Wallpaper"
+  },
+  {
+    "group1": "korall",
+    "name1": "Korall Wall Mural",
+    "group2": "korall-meadow",
+    "name2": "Korall Teal Meadow Wallpaper"
+  },
+  {
+    "group1": "kordofan-bone-giraffe",
+    "name1": "Kordofan Bone Giraffe Wallpaper",
+    "group2": "kordofan-bronze-giraffe",
+    "name2": "Kordofan Bronze Giraffe Wallpaper"
+  },
+  {
+    "group1": "kowloon-sisal",
+    "name1": "Kowloon Charcoal Sisal Wallpaper",
+    "group2": "kowloon-sisal-grasscloth",
+    "name2": "Kowloon Charcoal Sisal Grasscloth Wallpaper"
+  },
+  {
+    "group1": "kulta-cement",
+    "name1": "Kulta Silver Cement Wallpaper",
+    "group2": "kulta-cemented",
+    "name2": "Kulta Gold Cemented Wallpaper"
+  },
+  {
+    "group1": "kumi-grasscloth",
+    "name1": "Kumi Green Grasscloth Wallpaper",
+    "group2": "kumiko-grasscloth",
+    "name2": "Kumiko Green Grasscloth Wallpaper"
+  },
+  {
+    "group1": "kylver",
+    "name1": "Blue Kylver Peel & Stick Wallpaper",
+    "group2": "kylver-seafoam",
+    "name2": "Kylver Seafoam Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "kyodo-grasscloth",
+    "name1": "Kyodo Neutral Grasscloth Wallpaper",
+    "group2": "kyou-grasscloth",
+    "name2": "Kyou Taupe Grasscloth Wallpaper"
+  },
+  {
+    "group1": "lace",
+    "name1": "Lace Wall Mural",
+    "group2": "lace-damask",
+    "name2": "Neutral Lace Damask Wallpaper"
+  },
+  {
+    "group1": "lagoon-watercolor",
+    "name1": "Lagoon Teal Watercolor Wallpaper",
+    "group2": "lagoon-watercolor-border",
+    "name2": "Lagoon Green Watercolor Border"
+  },
+  {
+    "group1": "lake",
+    "name1": "Green Lake Wall Mural",
+    "group2": "lakely-enchanted",
+    "name2": "Lakely Black Enchanted Forest Wallpaper"
+  },
+  {
+    "group1": "landmark",
+    "name1": "Landmark Peel & Stick Wallpaper",
+    "group2": "landmark-travelers-toille-novelty",
+    "name2": "Landmark Navy Travelers Toille Novelty Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "landscape",
+    "name1": "Grey Stone Landscape Wall Mural",
+    "group2": "landscape-of-dinosaurs",
+    "name2": "Landscape of Dinosaurs Wall Mural"
+  },
+  {
+    "group1": "laos",
+    "name1": "Laos Green Peel & Stick Wallpaper",
+    "group2": "laos-ivory",
+    "name2": "Laos Ivory Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "last-or-first-day-of-school",
+    "name1": "Last or First Day of School Rainbow Chalkboard",
+    "group2": "last-or-first-day-of-school-banner",
+    "name2": "Last or First Day of School Banner Chalkboard"
+  },
+  {
+    "group1": "latigo-bone-leather",
+    "name1": "Latigo Bone Leather Wallpaper",
+    "group2": "latigo-dove-leather",
+    "name2": "Latigo Dove Leather Wallpaper"
+  },
+  {
+    "group1": "lattice",
+    "name1": "Lattice Peel & Stick Floor Tiles ",
+    "group2": "lattice-ardelle",
+    "name2": "Lattice Blush Ardelle Wallpaper"
+  },
+  {
+    "group1": "leaf",
+    "name1": "Leaf Gold Peel & Stick Wallpaper",
+    "group2": "leaf-boogie-denim-tropical",
+    "name2": "Leaf Boogie Denim Tropical Mix Wallpaper"
+  },
+  {
+    "group1": "lei-leaf",
+    "name1": "Lei Wheat Leaf Wallpaper",
+    "group2": "lei-lei",
+    "name2": "Lei Silver Lei Wallpaper"
+  },
+  {
+    "group1": "lele-gems",
+    "name1": "Lele Gems Navy Peel & Stick Wallpaper",
+    "group2": "lele-gems-ivory",
+    "name2": "Lele Gems Ivory Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "lemon",
+    "name1": "Lemon Wall Decals",
+    "group2": "lemon-drop",
+    "name2": "Lemon Drop Yellow Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "leopard",
+    "name1": "Leopard Gold Peel & Stick Wallpaper",
+    "group2": "leopard-adhesive-film",
+    "name2": "Leopard Adhesive Film"
+  },
+  {
+    "group1": "li-mei-grasscloth",
+    "name1": "Li Mei Beige Grasscloth Wallpaper",
+    "group2": "li-ming-grasscloth",
+    "name2": "Li Ming Beige Grasscloth Wallpaper"
+  },
+  {
+    "group1": "li-ming-grasscloth",
+    "name1": "Li Ming Beige Grasscloth Wallpaper",
+    "group2": "li-na-grasscloth",
+    "name2": "Li Na Light Brown Grasscloth Wallpaper"
+  },
+  {
+    "group1": "li-na-grasscloth",
+    "name1": "Li Na Light Brown Grasscloth Wallpaper",
+    "group2": "li-qin-grasscloth",
+    "name2": "Li Qin Beige Grasscloth Wallpaper"
+  },
+  {
+    "group1": "li-qin-grasscloth",
+    "name1": "Li Qin Beige Grasscloth Wallpaper",
+    "group2": "li-wei-grasscloth",
+    "name2": "Li Wei Beige Grasscloth Wallpaper"
+  },
+  {
+    "group1": "lindo-pressed-petals",
+    "name1": "Rose Lindo Pressed Petals Taupe Peel & Stick Wallpaper",
+    "group2": "lindo-pressed-petals-denim",
+    "name2": "Rose Lindo Pressed Petals Denim Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "loretto",
+    "name1": "Loretto Teal Citrus Wallpaper",
+    "group2": "loretto-lime",
+    "name2": "Loretto Lime Citrus Wallpaper"
+  },
+  {
+    "group1": "louis-dove-distressed-texture",
+    "name1": "Louis Dove Distressed Texture Wallpaper",
+    "group2": "louis-honey-distressed-texture",
+    "name2": "Louis Honey Distressed Texture Wallpaper"
+  },
+  {
+    "group1": "love",
+    "name1": "Grey Summer Love Peel & Stick Wallpaper",
+    "group2": "love-2-travel-wall-art-kit",
+    "name2": "Love 2 Travel Wall Art Kit"
+  },
+  {
+    "group1": "love-letters",
+    "name1": "Love Letters Parchment Peel & Stick Wallpaper",
+    "group2": "love-letters-ink",
+    "name2": "Love Letters Ink Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "luminary",
+    "name1": "Luminary Peel & Stick Floor Tiles",
+    "group2": "luminary-ogee",
+    "name2": "Luminary Blue Ogee Wallpaper"
+  },
+  {
+    "group1": "lummig-fox",
+    "name1": "Lummig Mint Fox Wallpaper",
+    "group2": "lummig-fox-seafoam-botanical",
+    "name2": "Lummig Fox Seafoam Botanical Wallpaper"
+  },
+  {
+    "group1": "luxe-silk-pearl-texture-stripe",
+    "name1": "Luxe Silk Pearl Texture Stripe Wallpaper",
+    "group2": "luxe-silk-sea-texture-stripe",
+    "name2": "Luxe Silk Sea Green Texture Stripe Wallpaper"
+  },
+  {
+    "group1": "madeleine",
+    "name1": "Madeleine Blue Linen Wallpaper",
+    "group2": "madeleine-bordeaux-texture",
+    "name2": "Madeleine Charcoal Bordeaux Texture Wallpaper"
+  },
+  {
+    "group1": "magical-unicorn",
+    "name1": "Magical Unicorn Wall Mural",
+    "group2": "magical-unicorn-border",
+    "name2": "Magical Unicorn Pink Peel & Stick Border"
+  },
+  {
+    "group1": "magisk",
+    "name1": "Magisk Wall Mural",
+    "group2": "magisk-oasis",
+    "name2": "Magisk Beige Oasis Wallpaper"
+  },
+  {
+    "group1": "magnolia",
+    "name1": "Magnolia Wall Mural",
+    "group2": "magnolia-hydrangea-trail",
+    "name2": "Magnolia Hydrangea Cream Trail Wallpaper"
+  },
+  {
+    "group1": "main-squeeze",
+    "name1": "Main Squeeze Peach Peel & Stick Wallpaper",
+    "group2": "main-squeeze-wall-art-kit",
+    "name2": "Main Squeeze Wall Art Kit"
+  },
+  {
+    "group1": "manila",
+    "name1": "Blue Manila Peel & Stick Wallpaper",
+    "group2": "manila-geometric",
+    "name2": "Manila Brown Geometric Wallpaper"
+  },
+  {
+    "group1": "mapleton-beach-faux-wood-texture",
+    "name1": "Mapleton Beach Faux Wood Texture Wallpaper",
+    "group2": "mapleton-birch-faux-wood-texture",
+    "name2": "Mapleton Birch Faux Wood Texture Wallpaper"
+  },
+  {
+    "group1": "mapleton-faux-wood",
+    "name1": "Mapleton Taupe Faux Wood Wallpaper",
+    "group2": "mapleton-faux-wood-texture",
+    "name2": "Mapleton Brick Faux Wood Texture Wallpaper"
+  },
+  {
+    "group1": "marble",
+    "name1": "Black Marble Wall Mural",
+    "group2": "marble-adhesive-film",
+    "name2": "Light Blue Marble Adhesive Film"
+  },
+  {
+    "group1": "marble-backsplash",
+    "name1": "Grey Marble Peel & Stick Backsplash",
+    "group2": "marble-backsplash-tiles",
+    "name2": "Marble Black Peel & Stick Backsplash Tiles"
+  },
+  {
+    "group1": "mario",
+    "name1": "Mario Red Peel & Stick Wallpaper",
+    "group2": "mario-scene-border",
+    "name2": "Mario Scene Red Peel & Stick Border"
+  },
+  {
+    "group1": "marisol",
+    "name1": "Marisol Wall Mural",
+    "group2": "marisol-chocolate-fractal",
+    "name2": "Marisol Chocolate Fractal Wallpaper"
+  },
+  {
+    "group1": "marlowe",
+    "name1": "Black Marlowe Peel & Stick Wallpaper",
+    "group2": "marlowe-texture",
+    "name2": "Marlowe Silver Texture Wallpaper"
+  },
+  {
+    "group1": "marrakesh",
+    "name1": "Marrakesh Peel & Stick Floor Tiles",
+    "group2": "marrakesh-global-tiles",
+    "name2": "Marrakesh Multicolor Global Tiles Wallpaper"
+  },
+  {
+    "group1": "marrakesh-tile",
+    "name1": "Marrakesh Tile Blue Peel & Stick Wallpaper",
+    "group2": "marrakesh-tile-clay",
+    "name2": "Marrakesh Tile Clay Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "marvel-spider-man",
+    "name1": "Marvel Spider-Man Blue Peel & Stick Wall Mural",
+    "group2": "marvel-spider-man-border",
+    "name2": "Marvel Spider-Man Peel & Stick Border"
+  },
+  {
+    "group1": "matias",
+    "name1": "Terracotta Matias Peel & Stick Floor Tiles",
+    "group2": "matieres",
+    "name2": "Matieres Multicolor Stone Wallpaper"
+  },
+  {
+    "group1": "matrix",
+    "name1": "Matrix Wall Mural",
+    "group2": "matrix-geometric",
+    "name2": "Matrix Black Geometric Wallpaper"
+  },
+  {
+    "group1": "maui",
+    "name1": "Coral Maui Peel & Stick Wallpaper",
+    "group2": "maui-botanical",
+    "name2": "Maui White Botanical Wallpaper"
+  },
+  {
+    "group1": "mayu-grasscloth",
+    "name1": "Mayu Taupe Grasscloth Wallpaper",
+    "group2": "mayumi-grasscloth",
+    "name2": "Mayumi Aqua Grasscloth Wallpaper"
+  },
+  {
+    "group1": "meadow",
+    "name1": "Meadow Blue Peel & Stick Wallpaper",
+    "group2": "meadow-animals",
+    "name2": "Meadow Charcoal Animals Wallpaper"
+  },
+  {
+    "group1": "medali",
+    "name1": "Medali Taupe Peel & Stick Wallpaper",
+    "group2": "medallion",
+    "name2": "Twist Grey Medallion Wallpaper"
+  },
+  {
+    "group1": "medallion",
+    "name1": "Twist Brown Medallion Wallpaper",
+    "group2": "medallion-floral",
+    "name2": "Medallion Floral Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "mediterranean-tile",
+    "name1": "Mediterranean Tile Black Peel & Stick Wallpaper",
+    "group2": "mediterranian-tile",
+    "name2": "Mediterranian Tile Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "meho-grasscloth",
+    "name1": "Meho Neutral Grasscloth Wallpaper",
+    "group2": "mei-grasscloth",
+    "name2": "Mei Cream Grasscloth Wallpaper"
+  },
+  {
+    "group1": "melograno",
+    "name1": "Melograno Wheat Peel & Stick Wallpaper",
+    "group2": "melograno-cinder",
+    "name2": "Melograno Cinder Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "mendocino",
+    "name1": "Mendocino Blue Linen Wallpaper",
+    "group2": "mendocino-eggshell",
+    "name2": "Mendocino Eggshell Linen Wallpaper"
+  },
+  {
+    "group1": "meowing-mermaids",
+    "name1": "Meowing Mermaids Blue Peel & Stick Wallpaper",
+    "group2": "meowing-mermaids-lime",
+    "name2": "Meowing Mermaids Lime Green Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "mercury-glass",
+    "name1": "Silver Mercury Glass Wallpaper",
+    "group2": "mercury-glass-distressed",
+    "name2": "Mercury Glass Gold Distressed Metallic Wallpaper"
+  },
+  {
+    "group1": "merian",
+    "name1": "Merian Blue Wall Mural",
+    "group2": "merian-architectural",
+    "name2": "Merian Multicolor Architectural Wallpaper"
+  },
+  {
+    "group1": "mia",
+    "name1": "Mia Peel & Stick Wallpaper",
+    "group2": "mia-floral",
+    "name2": "Mia Blush Floral Wallpaper"
+  },
+  {
+    "group1": "midcentury-modern",
+    "name1": "Midcentury Modern White Brick Wallpaper",
+    "group2": "midcentury-modern-bone",
+    "name2": "Midcentury Modern Bone Brick Wallpaper"
+  },
+  {
+    "group1": "millie",
+    "name1": "Millie Blue Peel & Stick Wallpaper",
+    "group2": "millie-floral",
+    "name2": "Millie Pink Floral Wallpaper"
+  },
+  {
+    "group1": "minecraft",
+    "name1": "Minecraft Wall Decals",
+    "group2": "minecraft-block-strips",
+    "name2": "Minecraft Block Strips Wall Decals"
+  },
+  {
+    "group1": "minecraft-blocks",
+    "name1": "Minecraft Blocks Green Peel & Stick Wall Mural",
+    "group2": "minecraft-blocks-build-your-own",
+    "name2": "Minecraft Blocks Build Your Own Wall Decals"
+  },
+  {
+    "group1": "minecraft-hostile-mobs-peel-and-stick",
+    "name1": "Minecraft Hostile Mobs Peel and Stick Wall Decals",
+    "group2": "minecraft-hostile-mobs-peel-and-stick-border",
+    "name2": " Minecraft Hostile Mobs Peel and Stick Border"
+  },
+  {
+    "group1": "minions-2",
+    "name1": "Minions 2 Wall Decals",
+    "group2": "minions-2-giant",
+    "name2": "Minions 2 Giant Wall Decals"
+  },
+  {
+    "group1": "minnie-bow-tique",
+    "name1": "Minnie Bow-Tique Wall Decals",
+    "group2": "minnie-bow-tique-giant-wall-decal",
+    "name2": "Minnie Bow-Tique Peel & Stick Giant Wall Decal"
+  },
+  {
+    "group1": "mira",
+    "name1": "Mira Blue & Orange Peel & Stick Wallpaper",
+    "group2": "mira-berry",
+    "name2": "Mira Berry Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "mira-royal-detective",
+    "name1": "Mira: Royal Detective Wall Decals",
+    "group2": "mira-royal-detective-giant",
+    "name2": "Mira: Royal Detective Giant Wall Decals"
+  },
+  {
+    "group1": "miraculous-tales-of-ladybug-cat-noir",
+    "name1": "Miraculous: Tales Of Ladybug & Cat Noir Wall Decals",
+    "group2": "miraculous-tales-of-ladybug-cat-noir-giant",
+    "name2": "Miraculous: Tales Of Ladybug & Cat Noir Giant Wall Decals"
+  },
+  {
+    "group1": "mirage",
+    "name1": "Aqua Mirage Wallpaper",
+    "group2": "mirage-oasis",
+    "name2": "Mirage Oasis Multicolor Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "mirei",
+    "name1": "Grey Mirei Peel & Stick Wallpaper",
+    "group2": "mirei-light-grasscloth",
+    "name2": "Mirei Light Green Grasscloth Wallpaper"
+  },
+  {
+    "group1": "miyo-grasscloth",
+    "name1": "Miyo Green Grasscloth Wallpaper",
+    "group2": "miyoko-grasscloth",
+    "name2": "Miyoko Green Grasscloth Wallpaper"
+  },
+  {
+    "group1": "moana",
+    "name1": "Moana Peel & Stick Wall Mural",
+    "group2": "moana-giant",
+    "name2": "Brown Moana Giant Wall Decals"
+  },
+  {
+    "group1": "modern-crescent-moon",
+    "name1": "Modern Crescent Moon Cream Peel & Stick Wallpaper",
+    "group2": "modern-crescent-moon-frosty",
+    "name2": "Modern Crescent Moon Frosty Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "modern-geometric",
+    "name1": "Modern Blue Geometric Peel & Stick Wallpaper",
+    "group2": "modern-geometric-dark",
+    "name2": "Modern Geometric Dark Grey Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "molly",
+    "name1": "Molly Beige Twist Wallpaper",
+    "group2": "molly-light",
+    "name2": "Molly Light Green Twist Wallpaper"
+  },
+  {
+    "group1": "monumental",
+    "name1": "Monumental Beige Peel & Stick Wallpaper",
+    "group2": "monumental-ivory",
+    "name2": "Monumental Ivory Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "moonlit",
+    "name1": "Moonlit Wall Mural",
+    "group2": "moonlit-garden",
+    "name2": "Moonlit Garden Black Peel & Stick Wall Mural"
+  },
+  {
+    "group1": "morris",
+    "name1": "Morris Peel & Stick Floor Tiles",
+    "group2": "morris-dark-leaf",
+    "name2": "Morris Dark Grey Leaf Wallpaper"
+  },
+  {
+    "group1": "mosaic",
+    "name1": "Red Mosaic Wall Mural",
+    "group2": "mosaic-adhesive-film",
+    "name2": "Mosaic Blue Adhesive Film"
+  },
+  {
+    "group1": "ms-marvel",
+    "name1": "Ms Marvel Wall Decals",
+    "group2": "ms-marvel-giant",
+    "name2": "Ms Marvel Giant Wall Decals"
+  },
+  {
+    "group1": "my-hero-academia",
+    "name1": "My Hero Academia Wall Decals",
+    "group2": "my-hero-academia-deku",
+    "name2": "My Hero Academia Deku Wall Decals"
+  },
+  {
+    "group1": "mystical",
+    "name1": "Mystical Navy Peel & Stick Wallpaper",
+    "group2": "mystical-boho-collage",
+    "name2": "Mystical Boho Collage Wall Decals"
+  },
+  {
+    "group1": "naupaka",
+    "name1": "Naupaka Plum Ochre Peel & Stick Wallpaper",
+    "group2": "naupaka-brights",
+    "name2": "Naupaka Brights Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "niko",
+    "name1": "Niko Grey Peel & Stick Wallpaper",
+    "group2": "nikolai-bronze-optical",
+    "name2": "Nikolai Bronze Optical Wallpaper"
+  },
+  {
+    "group1": "nintendo-mario-kart-8",
+    "name1": "Nintendo - Mario Kart 8 Wall Decals",
+    "group2": "nintendo-mario-kart-8-xl-chair-rail",
+    "name2": "Nintendo - Mario Kart 8 XL Chair Rail Wall Mural"
+  },
+  {
+    "group1": "nocturnum-leaf",
+    "name1": "Nocturnum Maroon Leaf Wallpaper",
+    "group2": "nocturnum-leaves",
+    "name2": "Nocturnum Green Leaves Wallpaper"
+  },
+  {
+    "group1": "noelia-stria",
+    "name1": "Noelia Blue Stria Wallpaper",
+    "group2": "noelia-stria-stripe",
+    "name2": "Noelia Mauve Stria Stripe Wallpaper"
+  },
+  {
+    "group1": "nolan",
+    "name1": "Nolan Pink Peel & Stick Wallpaper",
+    "group2": "noland-champagne-small-zig-zag-texture",
+    "name2": "Noland Champagne Small Zig Zag Texture Wallpaper"
+  },
+  {
+    "group1": "nordic",
+    "name1": "Nordic Peel & Stick Floor Tiles",
+    "group2": "nordic-night",
+    "name2": "Nordic Night Wall Mural"
+  },
+  {
+    "group1": "oak",
+    "name1": "Oak Wall Mural",
+    "group2": "oak-adhesive-film",
+    "name2": "Natural Oak Adhesive Film"
+  },
+  {
+    "group1": "oasis",
+    "name1": "Oasis Red Linen Wallpaper",
+    "group2": "oasis-mink",
+    "name2": "Oasis Mink & Sage Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "oh-deer",
+    "name1": "  Oh Deer Wall Mural",
+    "group2": "oh-deer-animal",
+    "name2": "Oh, Deer White Animal Wallpaper"
+  },
+  {
+    "group1": "old-town",
+    "name1": "Old Town Brick Peel & Stick Wallpaper",
+    "group2": "old-town-wall-stickers",
+    "name2": "Old Town Wall Stickers"
+  },
+  {
+    "group1": "opaline",
+    "name1": "Opaline Peel & Stick Floor Tiles",
+    "group2": "opaline-raven-floor-tile-bundle",
+    "name2": "Opaline Raven Peel & Stick Floor Tile Bundle"
+  },
+  {
+    "group1": "open-geometric",
+    "name1": "Open Blue Geometric Peel & Stick Wallpaper",
+    "group2": "opera-geometric",
+    "name2": "Opera Cream Geometric Wallpaper"
+  },
+  {
+    "group1": "otis",
+    "name1": "Otis Emerald Multi Peel & Stick Wallpaper",
+    "group2": "otis-ivory",
+    "name2": "Otis Ivory Multi Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "painterly",
+    "name1": "Green Painterly Ivy Wall Decals",
+    "group2": "painterly-shelf-stories-novelty",
+    "name2": "Painterly Pink Shelf Stories Novelty Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "palm",
+    "name1": "Palm Blue Peel & Stick Wallpaper",
+    "group2": "palm-dark-tropical",
+    "name2": "Summer Palm Dark Green Tropical Wallpaper"
+  },
+  {
+    "group1": "palm-lake",
+    "name1": "Palm Lake Wall Mural",
+    "group2": "palm-leaf",
+    "name2": "Palm Leaf Green Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "palm-leaf",
+    "name1": "Palm Leaf Green Peel & Stick Wallpaper",
+    "group2": "palm-leaves",
+    "name2": "Green Palm Leaves Wall Decals"
+  },
+  {
+    "group1": "panama",
+    "name1": "Panama Rainbow Peel & Stick Wallpaper",
+    "group2": "panama-deep",
+    "name2": "Panama Deep Green Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "papillon",
+    "name1": "Papillon Blue Peel & Stick Wallpaper",
+    "group2": "papillon-flutter",
+    "name2": "Blue Grey Papillon Flutter Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "paradise",
+    "name1": "Paradise Indigo & Pink Peel and Stick Wallpaper",
+    "group2": "paradise-beach",
+    "name2": "Paradise Beach Wall Mural"
+  },
+  {
+    "group1": "pattaya-grasscloth",
+    "name1": "Pattaya Blue Grasscloth Wallpaper",
+    "group2": "pattini-grasscloth",
+    "name2": "Pattini Indigo Grasscloth Wallpaper"
+  },
+  {
+    "group1": "paw-patrol",
+    "name1": "Paw Patrol Wall Decals",
+    "group2": "paw-patrol-border",
+    "name2": "Paw Patrol Peel & Stick Border"
+  },
+  {
+    "group1": "paw-patrol-movie",
+    "name1": "Paw Patrol Movie Wall Decals",
+    "group2": "paw-patrol-movie-giant",
+    "name2": "Paw Patrol Movie Giant Wall Decals"
+  },
+  {
+    "group1": "peacock",
+    "name1": "Peacock Grey Wallpaper",
+    "group2": "peacock-ashwile",
+    "name2": "Peacock Silver Ashwile Wallpaper"
+  },
+  {
+    "group1": "pearl",
+    "name1": "Pearl Wall Mural",
+    "group2": "pearl-boat",
+    "name2": "Pearl Off-White Boat Wallpaper"
+  },
+  {
+    "group1": "peninsula-sisal",
+    "name1": "Peninsula Navy Sisal Wallpaper",
+    "group2": "peninsula-sisal-grasscloth",
+    "name2": "Peninsula Navy Sisal Grasscloth Wallpaper"
+  },
+  {
+    "group1": "penthouse",
+    "name1": "Penthouse Wall Mural",
+    "group2": "penthouse-mural",
+    "name2": "Penthouse Mural"
+  },
+  {
+    "group1": "peonies",
+    "name1": "Peonies Wall Mural",
+    "group2": "peonies-giant",
+    "name2": "Peonies Black Giant Wall Decals"
+  },
+  {
+    "group1": "peony",
+    "name1": "Peony Wall Mural",
+    "group2": "peony-floral",
+    "name2": "Peony Slate Floral Wallpaper"
+  },
+  {
+    "group1": "peppa-the-pig",
+    "name1": "Peppa The Pig Wall Decals",
+    "group2": "peppa-the-pig-peppa-george-playtime-giant",
+    "name2": "Peppa The Pig - Peppa/George Playtime Giant Wall Decals"
+  },
+  {
+    "group1": "persimone-floral",
+    "name1": "Persimone Red Floral Wallpaper",
+    "group2": "persimone-floral-vine",
+    "name2": "Persimone Blue Floral Vine Wallpaper"
+  },
+  {
+    "group1": "petals",
+    "name1": "Grey Petals Wall Mural",
+    "group2": "petals-beaded-ogee",
+    "name2": "Petals Taupe Beaded Ogee Wallpaper"
+  },
+  {
+    "group1": "phoebe-leaf",
+    "name1": "Phoebe Blue Rose Leaf Wallpaper",
+    "group2": "phoebe-leaf-trail",
+    "name2": "Phoebe Purple Rose Leaf Trail Wallpaper"
+  },
+  {
+    "group1": "pixar-luca",
+    "name1": "Pixar Luca Wall Decals",
+    "group2": "pixar-luca-sea-monster-giant",
+    "name2": "Pixar Luca Sea Monster Giant Wall Decals"
+  },
+  {
+    "group1": "pj-masks",
+    "name1": "Pj Masks Wall Decals",
+    "group2": "pj-masks-superheroes-giant",
+    "name2": "Pj Masks Superheroes Giant Wall Decals"
+  },
+  {
+    "group1": "platinum",
+    "name1": "Platinum Peel & Stick Floor Tiles",
+    "group2": "platinum-basketweave",
+    "name2": "Caviar Platinum Basketweave Wallpaper"
+  },
+  {
+    "group1": "pok-mon",
+    "name1": "Pokémon Black Peel & Stick Wallpaper",
+    "group2": "pok-mon-character-faces",
+    "name2": "Pokémon Character Faces Multicolor Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "pok-mon-pikachu",
+    "name1": "Pokémon Pikachu Wall Decals",
+    "group2": "pok-mon-pikachu-floral",
+    "name2": "Pokémon Pikachu Floral Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "polished",
+    "name1": "Polished Peel & Stick Floor Tiles",
+    "group2": "polished-concrete-geometric",
+    "name2": "Polished Concrete Grey Geometric Wallpaper"
+  },
+  {
+    "group1": "poplin",
+    "name1": "Blue Poplin Wallpaper",
+    "group2": "poplin-texture",
+    "name2": "Grey Poplin Texture Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "poppy-field",
+    "name1": "Poppy Field Navy Pink Peel & Stick Wallpaper",
+    "group2": "poppy-fields",
+    "name2": "Poppy Fields Charcoal Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "porter",
+    "name1": "Porter Charcoal Peel & Stick Wallpaper",
+    "group2": "porter-coffee-weathered-plank",
+    "name2": "Porter Coffee Weathered Plank Wallpaper"
+  },
+  {
+    "group1": "posey",
+    "name1": "Teal Posey Peel & Stick Floor Tiles",
+    "group2": "posey-light-vines",
+    "name2": "Posey Light Green Vines Wallpaper"
+  },
+  {
+    "group1": "powerpuff-girls",
+    "name1": "Powerpuff Girls Wall Decals",
+    "group2": "powerpuff-girls-giant-alphabet-personalization",
+    "name2": "Powerpuff Girls Giant Peel & Stick Alphabet Personalization Wall Decals"
+  },
+  {
+    "group1": "prague",
+    "name1": "Prague Wall Mural",
+    "group2": "prague-khaki-texture",
+    "name2": "Prague Khaki Texture Wallpaper"
+  },
+  {
+    "group1": "provincial-tile",
+    "name1": "Provincial Tile Cream Peel & Stick Wallpaper",
+    "group2": "provincial-tile-sea",
+    "name2": "Provincial Tile Cobalt Sea Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "quartz",
+    "name1": "Quartz Peel & Stick Floor Tiles",
+    "group2": "quartz-bronze-floral",
+    "name2": "Quartz Bronze Floral Wallpaper"
+  },
+  {
+    "group1": "quinn",
+    "name1": "Quinn Brown Twist Wallpaper",
+    "group2": "quinn-bouquet-floral",
+    "name2": "Quinn Pink Bouquet Floral Wallpaper"
+  },
+  {
+    "group1": "rainforest",
+    "name1": "Rainforest Wall Mural",
+    "group2": "rainforest-leaves",
+    "name2": "Rainforest Leaves Green Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "rajah",
+    "name1": "Rajah Peel & Stick Floor Tiles",
+    "group2": "rajah-stripes",
+    "name2": "Rajah Taupe Stripes Wallpaper"
+  },
+  {
+    "group1": "raven",
+    "name1": "Raven Peel & Stick Floor Tiles",
+    "group2": "ravenswood-wood-panel",
+    "name2": "Ravenswood Grey Wood Panel Wallpaper"
+  },
+  {
+    "group1": "raya-the-last-dragon",
+    "name1": "Raya & The Last Dragon Wall Decals",
+    "group2": "raya-the-last-dragon-headboard",
+    "name2": "Raya & The Last Dragon Headboard Wall Decals"
+  },
+  {
+    "group1": "reading-corner",
+    "name1": "Reading Corner Wall Decals",
+    "group2": "reading-corner-wall-quote-decals",
+    "name2": "Reading Corner Multicolor Wall Quote Decals"
+  },
+  {
+    "group1": "reale",
+    "name1": "Reale Cream Stone Wallpaper",
+    "group2": "reale-bronze",
+    "name2": "Reale Bronze Stone Wallpaper"
+  },
+  {
+    "group1": "reclaimed",
+    "name1": "Reclaimed Brick Peel & Stick Wallpaper",
+    "group2": "reclaimed-bricks-rustic",
+    "name2": "Reclaimed Bricks Orange Rustic Wallpaper"
+  },
+  {
+    "group1": "reclaimed-tin",
+    "name1": "Reclaimed Tin Peel & Stick Wallpaper",
+    "group2": "reclaimed-tin-diamond",
+    "name2": "Reclaimed Tin Diamond Beige Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "reflection",
+    "name1": "Reflection Wall Mural",
+    "group2": "reflection-dark-texture",
+    "name2": "Reflection Dark Grey Texture Wallpaper"
+  },
+  {
+    "group1": "remy",
+    "name1": "Remy Peel & Stick Floor Tiles ",
+    "group2": "remy-fleur-tile",
+    "name2": "Remy Black Fleur Tile Wallpaper"
+  },
+  {
+    "group1": "retro",
+    "name1": "Retro Rainbow Wall Decals",
+    "group2": "retro-arch",
+    "name2": "Retro Arch Cream Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "retro-arch",
+    "name1": "Retro Arch Blush Pink Peel and Stick Wallpaper",
+    "group2": "retro-archway-decal",
+    "name2": "Retro Rainbow Archway Decal"
+  },
+  {
+    "group1": "retro-floral",
+    "name1": "Retro Floral Pink & Green Peel & Stick Wallpaper",
+    "group2": "retro-flower",
+    "name2": "Retro Flower Apricot Mix Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "rigel",
+    "name1": "Rigel Peel & Stick Floor Tiles",
+    "group2": "rigel-blueberry-geometric",
+    "name2": "Rigel Blueberry Geometric Wallpaper"
+  },
+  {
+    "group1": "riko-grasscloth",
+    "name1": "Riko Beige Grasscloth Wallpaper",
+    "group2": "riku-grasscloth",
+    "name2": "Riku Beige Grasscloth Wallpaper"
+  },
+  {
+    "group1": "road-trip",
+    "name1": "Road Trip Wall Mural",
+    "group2": "road-trip-antique-cars",
+    "name2": "Road Trip Multicolor Antique Cars Wallpaper"
+  },
+  {
+    "group1": "roses",
+    "name1": "Blue Roses Wall Mural",
+    "group2": "roses-adhesive-film",
+    "name2": "Roses Adhesive Film"
+  },
+  {
+    "group1": "roux",
+    "name1": "Roux Blue Peel & Stick Wallpaper",
+    "group2": "rowan",
+    "name2": "Rowan Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "rowan",
+    "name1": "Rowan Olive Peel & Stick Wallpaper",
+    "group2": "rowan-artichoke",
+    "name2": "Rowan Artichoke Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "rudeco",
+    "name1": "RuDeco Black Peel & Stick Wallpaper",
+    "group2": "rudeco-ghost",
+    "name2": "RuDeco Ghost Grey Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "rujardin",
+    "name1": "RuJardin Black Peel & Stick Wallpaper",
+    "group2": "rujardin-azure",
+    "name2": "RuJardin Azure Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "ruleopard",
+    "name1": "RuLeopard Brown Peel & Stick Wallpaper",
+    "group2": "ruleopard-l",
+    "name2": "RuLeopard l'Orange Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "rusuede",
+    "name1": "RuSuede Olive Green Peel & Stick Wallpaper",
+    "group2": "rusuede-azure",
+    "name2": "RuSuede Azure Blue Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "sadie",
+    "name1": "Sadie Teal Peel & Stick Wallpaper",
+    "group2": "sadie-cottage-plaid",
+    "name2": "Sadie Blue Cottage Plaid Wallpaper"
+  },
+  {
+    "group1": "sahara",
+    "name1": "Sahara Indigo Peel & Stick Wallpaper",
+    "group2": "sahara-moon-ivory-geometric",
+    "name2": "Sahara Moon Ivory Geometric Wallpaper"
+  },
+  {
+    "group1": "sakura",
+    "name1": "Sakura Wall Mural",
+    "group2": "sakura-dark-floral",
+    "name2": "Sakura Dark Grey Floral Wallpaper"
+  },
+  {
+    "group1": "salvaged-wood",
+    "name1": "Salvaged Beige Wood Wallpaper",
+    "group2": "salvaged-wood-plank",
+    "name2": "Salvaged Wood Grey Plank Wallpaper"
+  },
+  {
+    "group1": "samara-monstera-leaf",
+    "name1": "Samara Orange Monstera Leaf Wallpaper",
+    "group2": "samara-monstrera-leaf",
+    "name2": "Samara Stone Monstrera Leaf Wallpaper"
+  },
+  {
+    "group1": "sampson",
+    "name1": "Blue Sampson Peel & Stick Wallpaper",
+    "group2": "sampson-dark-oasis",
+    "name2": "Sampson Dark Blue Oasis Wallpaper"
+  },
+  {
+    "group1": "sanctuary",
+    "name1": "Sanctuary Blue Peel & Stick Wallpaper",
+    "group2": "sanctuary-aquamarine-ombre-stripe",
+    "name2": "Sanctuary Aquamarine Ombre Stripe Wallpaper"
+  },
+  {
+    "group1": "sanibel",
+    "name1": "Sanibel Taupe Flamingo Wallpaper",
+    "group2": "sanibel-dark",
+    "name2": "Sanibel Dark Grey Flamingo Wallpaper"
+  },
+  {
+    "group1": "santiago-of-the-seas",
+    "name1": "Santiago Of The Seas Wall Decals",
+    "group2": "santiago-of-the-seas-giant-with-alphabet",
+    "name2": "Santiago Of The Seas Giant Wall Decals With Alphabet"
+  },
+  {
+    "group1": "sanya",
+    "name1": "Sanya Green Peel and Stick Wallpaper",
+    "group2": "sanya-salmon",
+    "name2": "Sanya Salmon Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "sarafina-floral",
+    "name1": "Sarafina Pink Floral Wallpaper",
+    "group2": "sarafina-floral-scroll",
+    "name2": "Sarafina Magenta Floral Scroll Wallpaper"
+  },
+  {
+    "group1": "sausalito",
+    "name1": "Sausalito Taupe/Yellow Peel & Stick Wallpaper",
+    "group2": "sausalito-champagne-beaded-lattice",
+    "name2": "Sausalito Champagne Beaded Lattice Wallpaper"
+  },
+  {
+    "group1": "scrap-wood",
+    "name1": "Scrap Wood Beige Peel & Stick Wallpaper",
+    "group2": "scrap-wood-turquoise-weathered-texture",
+    "name2": "Scrap Wood Turquoise Weathered Texture Wallpaper"
+  },
+  {
+    "group1": "scroll",
+    "name1": "Gold Silver Scroll Wallpaper",
+    "group2": "scroll-flower-static-window-film",
+    "name2": "Scroll Flower Static Window Film"
+  },
+  {
+    "group1": "sea-fern",
+    "name1": "Sea Fern Slate Blue Peel & Stick Wallpaper",
+    "group2": "sea-fern-driftwood",
+    "name2": "Sea Fern Driftwood Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "serafina",
+    "name1": "Serafina Wall Mural",
+    "group2": "seraphina",
+    "name2": "Gold Seraphina Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "set-sail",
+    "name1": "Set Sail Blue Peel and Stick Wallpaper",
+    "group2": "set-sail-boat",
+    "name2": "Set Sail Wheat Boat Wallpaper"
+  },
+  {
+    "group1": "set-sail-boat",
+    "name1": "Set Sail Wheat Boat Wallpaper",
+    "group2": "set-sail-boat-border",
+    "name2": "Set Sail Grey Boat Border"
+  },
+  {
+    "group1": "set-sail-wood",
+    "name1": "Set Sail Beige Wood Wallpaper",
+    "group2": "set-sail-wood-border",
+    "name2": "Set Sail Beige Wood Border"
+  },
+  {
+    "group1": "skog",
+    "name1": "Skog White Forest Wallpaper",
+    "group2": "skog-woodland",
+    "name2": "Skog Forest Neutral Woodland Wallpaper"
+  },
+  {
+    "group1": "sol",
+    "name1": "Sol Wall Mural",
+    "group2": "sol-espresso-medallion",
+    "name2": "Sol Espresso Medallion Wallpaper"
+  },
+  {
+    "group1": "solemn-lines",
+    "name1": "Solemn Lines Pale Pink Wall Mural",
+    "group2": "solemn-lines-dark",
+    "name2": "Solemn Lines Dark Green Wall Mural"
+  },
+  {
+    "group1": "solstice-opal-cloud",
+    "name1": "Solstice Opal Cloud Wallpaper",
+    "group2": "solstice-pearl-cloud",
+    "name2": "Solstice Pearl Cloud Wallpaper"
+  },
+  {
+    "group1": "southern-charm",
+    "name1": "Southern Charm Sage Peel & Stick Wallpaper",
+    "group2": "southern-charm-pineapple",
+    "name2": "Southern Charm Beige Pineapple Wallpaper"
+  },
+  {
+    "group1": "spider-man-miles-morales",
+    "name1": "Spider-Man Miles Morales Wall Decals",
+    "group2": "spider-man-miles-morales-giant",
+    "name2": "Spider-Man Miles Morales Giant Wall Decals"
+  },
+  {
+    "group1": "spidey-his-amazing-friends",
+    "name1": "Spidey & His Amazing Friends Wall Decals",
+    "group2": "spidey-his-amazing-friends-giant",
+    "name2": "Spidey & His Amazing Friends Giant Wall Decals"
+  },
+  {
+    "group1": "spongebob-squarepants-pineapple",
+    "name1": "SpongeBob SquarePants Pineapple Yellow Peel and Stick Wallpaper",
+    "group2": "spongebob-squarepants-pineapple-toss",
+    "name2": "SpongeBob SquarePants Pineapple Toss Yellow Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "stacked",
+    "name1": "Natural Grey Stacked Stone Peel & Stick Wallpaper",
+    "group2": "stacked-industrial",
+    "name2": "Stacked Slate Green Industrial Wallpaper"
+  },
+  {
+    "group1": "star",
+    "name1": "Star Grey Peel & Stick Wallpaper",
+    "group2": "star-bay-blueberry-geometric",
+    "name2": "Star Bay Blueberry Geometric Wallpaper"
+  },
+  {
+    "group1": "star-wars-classic",
+    "name1": "Star Wars Classic Wall Decals",
+    "group2": "star-wars-classic-may-the-force",
+    "name2": "Star Wars Classic May The Force Wall Decals"
+  },
+  {
+    "group1": "star-wars-the-dark-side",
+    "name1": "Star Wars The Dark Side Black Peel & Stick Wallpaper",
+    "group2": "star-wars-the-dark-side-damask",
+    "name2": "Star Wars The Dark Side Damask Charcoal Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "star-wars-the-force-awakens-ep-vii",
+    "name1": "Star Wars The Force Awakens Ep Vii Wall Mural",
+    "group2": "star-wars-the-force-awakens-ep-vii-bb-8-giant-wall-decal",
+    "name2": "Star Wars The Force Awakens Ep VII Bb-8 Peel & Stick Giant Wall Decal"
+  },
+  {
+    "group1": "starlight",
+    "name1": "Starlight Peel & Stick Floor Tiles",
+    "group2": "starlight-diamond",
+    "name2": "Starlight Neutral Diamond Wallpaper"
+  },
+  {
+    "group1": "stelios-grasscloth",
+    "name1": "Stelios Grey Grasscloth Wallpaper",
+    "group2": "stella-grasscloth",
+    "name2": "Stella Cream Grasscloth Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "stephen",
+    "name1": "Stephen Neutral Linen Wallpaper",
+    "group2": "stephen-light",
+    "name2": "Stephen Light Green Linen Wallpaper"
+  },
+  {
+    "group1": "storybook",
+    "name1": "Storybook Forest Charcoal Grey Wall Mural",
+    "group2": "storybook-denim",
+    "name2": "Storybook Forest Denim Blue Wall Mural"
+  },
+  {
+    "group1": "stranger-things",
+    "name1": "Stranger Things Wall Decals",
+    "group2": "stranger-things-creel-house-window-xl-giant-wall-decal",
+    "name2": "Stranger Things Creel House Rose Window Xl Giant Peel & Stick Wall Decal"
+  },
+  {
+    "group1": "stranger-things-hellfire-club",
+    "name1": "Stranger Things Hellfire Club Black Peel & Stick Wallpaper",
+    "group2": "stranger-things-hellfire-club-giant",
+    "name2": "Stranger Things Hellfire Club Giant Wall Decals"
+  },
+  {
+    "group1": "strawflower",
+    "name1": "StrawFlower Mustard Grey Peel & Stick Wallpaper",
+    "group2": "strawflower-sienna",
+    "name2": "StrawFlower Lilac Sienna Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "stripe",
+    "name1": "Linen Multi Stripe Wallpaper",
+    "group2": "stripe-ang",
+    "name2": "Stripe Blue Ang Wallpaper"
+  },
+  {
+    "group1": "stripe-diane",
+    "name1": "Stripe Beige Diane Wallpaper",
+    "group2": "stripe-gia",
+    "name2": "Stripe Blue Gia Wallpaper"
+  },
+  {
+    "group1": "striped-hexagon",
+    "name1": "Striped Hexagon Green Peel & Stick Wallpaper",
+    "group2": "stripped-hexagon",
+    "name2": "Stripped Hexagon White Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "stuccoed",
+    "name1": "Stuccoed Brick White Peel & Stick Wallpaper",
+    "group2": "stuccoed-dark",
+    "name2": "Stuccoed Brick Dark Red Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "subway-backsplash",
+    "name1": "Grey Subway Peel & Stick Backsplash",
+    "group2": "subway-backsplash-tiles",
+    "name2": "Subway Peel & Stick Backsplash Tiles"
+  },
+  {
+    "group1": "sun",
+    "name1": "Sun Wall Decals",
+    "group2": "suna-woodgrain",
+    "name2": "Suna Silver Woodgrain Wallpaper"
+  },
+  {
+    "group1": "sunburst",
+    "name1": "Emerald Green Sunburst Peel & Stick Wallpaper",
+    "group2": "sunburst-with-circle-mirror",
+    "name2": "Sunburst Wall Decals With Circle Mirror"
+  },
+  {
+    "group1": "sunrise",
+    "name1": "Sunrise Wall Decals",
+    "group2": "sunrise-ombre",
+    "name2": "Sunrise Orange & Blue Ombre Wall Mural"
+  },
+  {
+    "group1": "superbloom",
+    "name1": "Superbloom Mustard Peel & Stick Wallpaper",
+    "group2": "superbloom-chocolate",
+    "name2": "Superbloom Aqua Chocolate Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "suzu-grasscloth",
+    "name1": "Suzu Peach Grasscloth Wallpaper",
+    "group2": "suzume-grasscloth",
+    "name2": "Suzume Cream Grasscloth Wallpaper"
+  },
+  {
+    "group1": "sybil-string",
+    "name1": "Sybil Silver String Wallpaper",
+    "group2": "sybill-stripe",
+    "name2": "Sybill Pink Stripe Wallpaper"
+  },
+  {
+    "group1": "sycamore-paisley",
+    "name1": "Sycamore Brown Paisley Wallpaper",
+    "group2": "sycamore-paisley-floral",
+    "name2": "Sycamore Sage Paisley Floral Wallpaper"
+  },
+  {
+    "group1": "teen-titans-go",
+    "name1": "Teen Titans Go! Wall Decals",
+    "group2": "teen-titans-go-robin-giant",
+    "name2": "Teen Titans Go! Robin Giant Wall Decals"
+  },
+  {
+    "group1": "terrace",
+    "name1": "Cafe Terrace Wall Mural",
+    "group2": "terrace-champagne-leaf-silhouette",
+    "name2": "Terrace Champagne Leaf Silhouette Wallpaper"
+  },
+  {
+    "group1": "terrain",
+    "name1": "Terrain Peel & Stick Wallpaper",
+    "group2": "terrain-khaki-gilded-texture",
+    "name2": "Terrain Khaki Gilded Texture Wallpaper"
+  },
+  {
+    "group1": "terrazzo",
+    "name1": "Terrazzo Tan Peel & Stick Wallpaper",
+    "group2": "terrazzo-adhesive-film",
+    "name2": "Terrazzo Adhesive Film"
+  },
+  {
+    "group1": "texture",
+    "name1": "Texture Wheat Linen Wallpaper",
+    "group2": "texture-ash-raffia",
+    "name2": "Texture Ash Raffia Wallpaper"
+  },
+  {
+    "group1": "texture-star",
+    "name1": "Texture Plum Star Wallpaper",
+    "group2": "texture-stria",
+    "name2": "Texture Taupe Stria Wallpaper"
+  },
+  {
+    "group1": "that-girl-lay-lay",
+    "name1": "That Girl Lay Lay Wall Decals",
+    "group2": "that-girl-lay-lay-giant",
+    "name2": "That Girl Lay Lay Giant Wall Decals"
+  },
+  {
+    "group1": "thatcher-wood",
+    "name1": "Thatcher Off-White Wood Wallpaper",
+    "group2": "thatcher-wood-texture",
+    "name2": "Thatcher Brown Wood Texture Wallpaper"
+  },
+  {
+    "group1": "the-book-of-boba-fett",
+    "name1": "The Book Of Boba Fett Brown Peel & Stick Wall Mural",
+    "group2": "the-book-of-boba-fett-fennec-shand-giant",
+    "name2": "The Book Of Boba Fett Fennec Shand Giant Wall Decals"
+  },
+  {
+    "group1": "the-flash",
+    "name1": "The Flash Wall Decals",
+    "group2": "the-flash-movie-super-heroes-set",
+    "name2": "The Flash Movie Super Heroes Set Wall Decals"
+  },
+  {
+    "group1": "the-lion-king",
+    "name1": "The Lion King Wall Decals",
+    "group2": "the-lion-king-character",
+    "name2": "Brown The Lion King Character Wall Decals"
+  },
+  {
+    "group1": "the-little-mermaid",
+    "name1": "The Little Mermaid Wall Decals",
+    "group2": "the-little-mermaid-giant",
+    "name2": "The Little Mermaid Giant Wall Decals"
+  },
+  {
+    "group1": "the-mandalorian-the-child",
+    "name1": "The Mandalorian The Child Wall Decals",
+    "group2": "the-mandalorian-the-child-giant",
+    "name2": "The Mandalorian: The Child Giant Wall Decals"
+  },
+  {
+    "group1": "the-nightmare-before-christmas",
+    "name1": "The Nightmare Before Christmas Wall Decals",
+    "group2": "the-nightmare-before-christmas-jack-giant",
+    "name2": "The Nightmare Before Christmas Jack Giant Wall Decals"
+  },
+  {
+    "group1": "the-proud-family",
+    "name1": "The Proud Family Wall Decals",
+    "group2": "the-proud-family-penny-giant",
+    "name2": "Red The Proud Family Penny Giant Wall Decals"
+  },
+  {
+    "group1": "thor-love-thunder",
+    "name1": "Thor: Love & Thunder Wall Decals",
+    "group2": "thor-love-thunder-giant",
+    "name2": "Thor: Love & Thunder Giant Wall Decals"
+  },
+  {
+    "group1": "tick-mark",
+    "name1": "Tick Mark Grey Peel & Stick Wallpaper",
+    "group2": "tick-marks",
+    "name2": "Tick Marks Gold Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "tiger",
+    "name1": "Tiger Grey Wall Mural",
+    "group2": "tiger-floral-patchwork",
+    "name2": "Tiger Blush Floral Patchwork Wall Mural"
+  },
+  {
+    "group1": "timber",
+    "name1": "Timber Grey Peel & Stick Wallpaper",
+    "group2": "timber-cove-bone-woven-texture",
+    "name2": "Timber Cove Bone Woven Texture Wallpaper"
+  },
+  {
+    "group1": "tin-tile",
+    "name1": "Copper Tin Tile Copper Peel & Stick Wallpaper",
+    "group2": "tin-tile-backsplash",
+    "name2": "Silver Tin Tile Peel & Stick Backsplash"
+  },
+  {
+    "group1": "tin-tile-backsplash",
+    "name1": "Tin Tile Copper Peel & Stick Backsplash",
+    "group2": "tin-tile-backsplash-giant",
+    "name2": "White White Tin Tile Backsplash Giant Wall Decals"
+  },
+  {
+    "group1": "tiverton-bone-faux-grasscloth",
+    "name1": "Tiverton Bone Faux Grasscloth Wallpaper",
+    "group2": "tiverton-dove-faux-grasscloth",
+    "name2": "Tiverton Dove Faux Grasscloth Wallpaper"
+  },
+  {
+    "group1": "toile",
+    "name1": "Sage Grey Toile Wallpaper",
+    "group2": "toile-de-new-york",
+    "name2": "Toile de New York Navy Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "townhouse",
+    "name1": "Townhouse Peel & Stick Floor Tiles",
+    "group2": "townhouse-stripe",
+    "name2": "Townhouse Stripe Ivy Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "toy-story",
+    "name1": "Toy Story Peel & Stick Wall Mural",
+    "group2": "toy-story-3",
+    "name2": "Toy Story 3 Wall Decals"
+  },
+  {
+    "group1": "toy-story-3",
+    "name1": "Toy Story 3 Wall Decals",
+    "group2": "toy-story-3-chair-rail",
+    "name2": "Toy Story 3 Chair Rail Wall Mural"
+  },
+  {
+    "group1": "tranquil",
+    "name1": "Tranquil Forest Wall Mural",
+    "group2": "tranquility-panoramic",
+    "name2": "Tranquility Panoramic Wall Mural"
+  },
+  {
+    "group1": "traverse",
+    "name1": "Black Traverse Peel & Stick Wallpaper",
+    "group2": "traverse-dark-trellis",
+    "name2": "Traverse Dark Green Trellis Wallpaper"
+  },
+  {
+    "group1": "travertine",
+    "name1": "Travertine Wall Mural",
+    "group2": "travertine-dark-patina-texture",
+    "name2": "Travertine Dark Grey Patina Texture Wallpaper"
+  },
+  {
+    "group1": "tree-branches",
+    "name1": "Tree Branches Blue Peel & Stick Wallpaper",
+    "group2": "tree-branches-giant",
+    "name2": "Black Tree Branches Giant Wall Decals"
+  },
+  {
+    "group1": "trees",
+    "name1": "Trees Grey Peel & Stick Wallpaper",
+    "group2": "trees-woodland",
+    "name2": "Trees Brown Woodland Wallpaper"
+  },
+  {
+    "group1": "trellis",
+    "name1": "Trellis Gold Peel & Stick Wallpaper",
+    "group2": "trellis-montauk",
+    "name2": "Trellis Blue Montauk Wallpaper"
+  },
+  {
+    "group1": "triangular-geometric",
+    "name1": "Triangular Off-White Geometric Wallpaper",
+    "group2": "triangular-geometric-pattern",
+    "name2": "Triangular Geometric Pattern Wall Mural"
+  },
+  {
+    "group1": "tribal",
+    "name1": "Tribal Teal Peel & Stick Wallpaper",
+    "group2": "tribal-dark-graphic",
+    "name2": "Tribal Dark Black Graphic Wall Mural"
+  },
+  {
+    "group1": "trolls",
+    "name1": "Trolls Wall Decals",
+    "group2": "trolls-3-band-together",
+    "name2": "Trolls 3 Band Together Wall Decals"
+  },
+  {
+    "group1": "tropic",
+    "name1": "Teal Tropic Wall Mural",
+    "group2": "tropical",
+    "name2": "Tropical Green Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "tropical",
+    "name1": "Tropical Green Peel & Stick Wallpaper",
+    "group2": "tropical-color-block",
+    "name2": "Terracotta Tropical Color Block Wall Mural"
+  },
+  {
+    "group1": "tropical-leaves",
+    "name1": "Tropical Leaves Wall Mural",
+    "group2": "tropical-leaves-sketch",
+    "name2": "Tropical Leaves Sketch Navy Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "tropical-oasis",
+    "name1": "Sand Tropical Oasis Peel & Stick Wallpaper",
+    "group2": "tropical-oasis-archway-decal",
+    "name2": "Tropical Oasis Archway Decal"
+  },
+  {
+    "group1": "turning",
+    "name1": "Turning Red Wall Decals",
+    "group2": "turning-giant",
+    "name2": "Turning Red Giant Wall Decals"
+  },
+  {
+    "group1": "tuscan",
+    "name1": "Tuscan Peel & Stick Floor Tiles",
+    "group2": "tuscan-stripe",
+    "name2": "Tuscan Grey Stripe Wallpaper"
+  },
+  {
+    "group1": "tweed",
+    "name1": "Tweed Grey Peel & Stick Wallpaper",
+    "group2": "tweed-light-texture",
+    "name2": "Tweed Light Grey Texture Wallpaper"
+  },
+  {
+    "group1": "under-the-sea",
+    "name1": "Under the Sea Coral Peel and Stick Wallpaper",
+    "group2": "under-the-sea-window-film-stickers",
+    "name2": "Under the Sea Window Film Stickers"
+  },
+  {
+    "group1": "unicorn",
+    "name1": "Unicorn Wall Mural",
+    "group2": "unicorn-kingdom-wall-stickers",
+    "name2": "Unicorn Kingdom Wall Stickers"
+  },
+  {
+    "group1": "unicorn-magic",
+    "name1": "Unicorn Magic Wall Decals",
+    "group2": "unicorn-magic-giant",
+    "name2": "Unicorn Magic Giant Wall Decals"
+  },
+  {
+    "group1": "urban",
+    "name1": "Urban Beige Peel & Stick Floor Tiles",
+    "group2": "urban-concrete-self-adhesive",
+    "name2": "White Urban Concrete Self Adhesive Wallpaper"
+  },
+  {
+    "group1": "urbana-texture",
+    "name1": "Urbana Beige Texture Wallpaper",
+    "group2": "urbania-texture",
+    "name2": "Urbania Brick Red Brick Texture Wallpaper"
+  },
+  {
+    "group1": "valencia",
+    "name1": "Valencia Charcoal Peel & Stick Floor Tiles",
+    "group2": "valencia-ikat-floral",
+    "name2": "Valencia Taupe Ikat Floral Wallpaper"
+  },
+  {
+    "group1": "vanora",
+    "name1": "Vanora Pink Linen Wallpaper",
+    "group2": "vanora-dark",
+    "name2": "Vanora Dark Grey Linen Wallpaper"
+  },
+  {
+    "group1": "velvet",
+    "name1": "Velvet Wall Mural",
+    "group2": "velvet-swirls",
+    "name2": "Cream Velvet Swirls Wallpaper"
+  },
+  {
+    "group1": "victoria-sisal",
+    "name1": "Victoria Indigo Sisal Wallpaper",
+    "group2": "victoria-sisal-grasscloth",
+    "name2": "Victoria Indigo Sisal Grasscloth Wallpaper"
+  },
+  {
+    "group1": "villa",
+    "name1": "Villa Peel & Stick Floor Tiles",
+    "group2": "villa-bone-embellished-ogee",
+    "name2": "Villa Bone Embellished Ogee Wallpaper"
+  },
+  {
+    "group1": "vintage",
+    "name1": "Vintage Chalkboard Peel & Stick Wallpaper",
+    "group2": "vintage-2-eggplant-bohemian-floral",
+    "name2": "Vintage Mix 2 Eggplant Bohemian Floral Wall Mural"
+  },
+  {
+    "group1": "vintage-p-o-boxes",
+    "name1": "Charcoal Vintage P.O. Boxes Wallpaper",
+    "group2": "vintage-p-o-boxes-brass-distressed-metal",
+    "name2": "Vintage P.O. Boxes Brass Distressed Metal Wallpaper"
+  },
+  {
+    "group1": "vintage-poppy",
+    "name1": "Vintage Poppy Orange Peel & Stick Wallpaper",
+    "group2": "vintage-poppy-floral-xl-giant",
+    "name2": "Vintage Poppy Floral XL Giant Wall Decals"
+  },
+  {
+    "group1": "wailea",
+    "name1": "Wailea Coast Green Peel & Stick Wallpaper",
+    "group2": "wailea-tropical-school",
+    "name2": "Wailea Black Tropical School Wallpaper"
+  },
+  {
+    "group1": "wakanda-forever",
+    "name1": "Wakanda Forever Wall Decals",
+    "group2": "wakanda-forever-giant",
+    "name2": "Wakanda Forever Giant Wall Decals"
+  },
+  {
+    "group1": "wall",
+    "name1": "Stone Wall Wall Mural",
+    "group2": "wall-adhesive-film",
+    "name2": "Brick Wall Adhesive Film"
+  },
+  {
+    "group1": "wancahi-grasscloth",
+    "name1": "Wancahi Grey Grasscloth Wallpaper",
+    "group2": "wanchai-grasscloth",
+    "name2": "Wanchai Metallic Grasscloth Wallpaper"
+  },
+  {
+    "group1": "warehouse",
+    "name1": "Warehouse Brick Wall Mural",
+    "group2": "warehouse-windows-industrial-texture",
+    "name2": "Warehouse Windows Charcoal Industrial Texture Wall Mural"
+  },
+  {
+    "group1": "washed",
+    "name1": "Brick White Washed Peel & Stick Wallpaper",
+    "group2": "washed-boards-honey-shiplap",
+    "name2": "White Washed Boards Honey Shiplap Wallpaper"
+  },
+  {
+    "group1": "watercolor",
+    "name1": "Watercolor Pink Peel & Stick Wall Mural",
+    "group2": "watercolor-animals-wall-stickers",
+    "name2": "Watercolor Animals Wall Stickers"
+  },
+  {
+    "group1": "watercolor-floral",
+    "name1": "Watercolor Floral Pink Peel & Stick Wall Mural",
+    "group2": "watercolor-floral-arrangement",
+    "name2": "Watercolor Green Floral Arrangement Wall Decals"
+  },
+  {
+    "group1": "watercolor-glass",
+    "name1": "Watercolor Glass Blue Peel & Stick Wallpaper",
+    "group2": "watercolor-glass-dark",
+    "name2": "Watercolor Glass Dark Blue Peel and Stick Wallpaper"
+  },
+  {
+    "group1": "waves",
+    "name1": "Waves Grey Wall Mural",
+    "group2": "waves-ocean",
+    "name2": "Waves Ocean Blue Wall Mural"
+  },
+  {
+    "group1": "weathered",
+    "name1": "Blue Grey Weathered Wall Mural",
+    "group2": "weathered-almond",
+    "name2": "Weathered Almond Stone Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "weathered-plank",
+    "name1": "Weathered Plank Multicolor Peel & Stick Wallpaper",
+    "group2": "weathered-plank-barn",
+    "name2": "Weathered Plank Barn Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "weathered-wood",
+    "name1": "Weathered Brown Wood Wallpaper",
+    "group2": "weathered-wood-plank",
+    "name2": "Weathered Wood Plank Black Black Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "whimsical",
+    "name1": "Forest Whimsical Wall Mural",
+    "group2": "whimsical-creatures",
+    "name2": "Whimsical Creatures Cream Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "whitney",
+    "name1": "Whitney Peel & Stick Floor Tiles",
+    "group2": "whitney-toile",
+    "name2": "Whitney Yellow Toile Wallpaper"
+  },
+  {
+    "group1": "wicked-elphaba",
+    "name1": "Wicked Elphaba Green Wall Decals",
+    "group2": "wicked-elphaba-and-glinda",
+    "name2": "Wicked Elphaba and Glinda Peel & Stick Wall Mural"
+  },
+  {
+    "group1": "wilde",
+    "name1": "Wilde Pink Wall Mural",
+    "group2": "wilder",
+    "name2": "Wilder Grey Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "wilder",
+    "name1": "Wilder Grey Peel & Stick Wallpaper",
+    "group2": "wilderness",
+    "name2": "Wilderness Wall Mural"
+  },
+  {
+    "group1": "willa",
+    "name1": "Grey Willa Peel & Stick Wallpaper",
+    "group2": "willa-dots",
+    "name2": "Willa Moss Dots Wallpaper"
+  },
+  {
+    "group1": "window-film",
+    "name1": "Sand Window Film",
+    "group2": "window-film-stickers",
+    "name2": "Forest Window Film Stickers"
+  },
+  {
+    "group1": "winnie-the-pooh-toddler",
+    "name1": "Winnie The Pooh - Toddler Wall Decals",
+    "group2": "winnie-the-pooh-toile",
+    "name2": "Winnie The Pooh Beige Toile Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "wish",
+    "name1": "Wish Wall Mural",
+    "group2": "wish-asha-friends",
+    "name2": "Wish Asha & Friends Wall Decals"
+  },
+  {
+    "group1": "wood-crates",
+    "name1": "Grey Wood Crates Wallpaper",
+    "group2": "wood-crates-dark-wood-distressed-wood",
+    "name2": "Wood Crates Dark Wood Distressed Wood Wallpaper"
+  },
+  {
+    "group1": "wood-plank",
+    "name1": "Wood Plank Grey Peel & Stick Wallpaper",
+    "group2": "wood-planks-wall-art-kit",
+    "name2": "Brown Wood Planks Wall Art Kit"
+  },
+  {
+    "group1": "world-map",
+    "name1": "World Map Blue Peel & Stick Wall Mural",
+    "group2": "world-map-mural",
+    "name2": "World Map Mural"
+  },
+  {
+    "group1": "wreath",
+    "name1": "Sky Blue Wreath Peel & Stick Wallpaper",
+    "group2": "wren",
+    "name2": "Wren Grey Peel & Stick Wallpaper"
+  },
+  {
+    "group1": "xia-grasscloth",
+    "name1": "Xia Beige Grasscloth Wallpaper",
+    "group2": "xia-he-grasscloth",
+    "name2": "Xia He Beige Grasscloth Wallpaper"
+  },
+  {
+    "group1": "xia-he-grasscloth",
+    "name1": "Xia He Beige Grasscloth Wallpaper",
+    "group2": "xiang-grasscloth",
+    "name2": "Xiang Silver Grasscloth Wallpaper"
+  },
+  {
+    "group1": "xiao-chen-grasscloth",
+    "name1": "Xiao Chen Silver Grasscloth Wallpaper",
+    "group2": "xiao-hong-grasscloth",
+    "name2": "Xiao Hong Light Brown Grasscloth Wallpaper"
+  },
+  {
+    "group1": "yanyu-paper-weave",
+    "name1": "Yanyu Sage Paper Weave Wallpaper",
+    "group2": "yanyu-paper-weave-grasscloth",
+    "name2": "Yanyu Sage Paper Weave Grasscloth Wallpaper"
+  },
+  {
+    "group1": "yara",
+    "name1": "Yara Charcoal Peel & Stick Wallpaper",
+    "group2": "yara-floral",
+    "name2": "Yara Red Floral Wallpaper"
+  },
+  {
+    "group1": "yi-min-grasscloth",
+    "name1": "Yi Min Red Grasscloth Wallpaper",
+    "group2": "yi-ze-grasscloth",
+    "name2": "Yi Ze Brown Grasscloth Wallpaper"
+  },
+  {
+    "group1": "yue-wan-grasscloth",
+    "name1": "Yue Wan Beige Grasscloth Wallpaper",
+    "group2": "yue-yan-grasscloth",
+    "name2": "Yue Yan Olive Grasscloth Wallpaper"
+  },
+  {
+    "group1": "yue-yan-grasscloth",
+    "name1": "Yue Yan Olive Grasscloth Wallpaper",
+    "group2": "yue-ying-grasscloth",
+    "name2": "Yue Ying Light Brown Grasscloth Wallpaper"
+  },
+  {
+    "group1": "zebra",
+    "name1": "Zebra Olive Wall Mural",
+    "group2": "zebra-adhesive-film",
+    "name2": "Zebra Adhesive Film"
+  },
+  {
+    "group1": "zebra-safari",
+    "name1": "Aqua Zebra Safari Peel & Stick Wallpaper",
+    "group2": "zebra-safari-scalamandre-self-adhesive",
+    "name2": "Grey Zebra Safari Scalamandre Self Adhesive Wallpaper"
+  },
+  {
+    "group1": "zen-garden",
+    "name1": "Zen Garden Pink Peel & Stick Wallpaper",
+    "group2": "zen-garden-sapphire-toile",
+    "name2": "Zen Garden Sapphire Toile Wallpaper"
+  },
+  {
+    "group1": "zhen-grasscloth",
+    "name1": "Zhen Beige Grasscloth Wallpaper",
+    "group2": "zhilan-grasscloth",
+    "name2": "Zhilan Olive Grasscloth Wallpaper"
+  },
+  {
+    "group1": "zion",
+    "name1": "Charcoal Zion Peel & Stick Wallpaper",
+    "group2": "zion-champagne-starburst",
+    "name2": "Zion Champagne Starburst Wallpaper"
+  }
+]

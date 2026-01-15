@@ -52,15 +52,45 @@ async function addWatermark(imageBuffer) {
     }
 }
 
+const filesMap = new Map(); // filename.toLowerCase() -> fullPath
+
+async function preCacheFiles() {
+    console.log('📂 Pre-caching file lists from image directories...');
+
+    for (const dir of IMAGE_DIRS) {
+        try {
+            console.log(`   Listing ${dir}...`);
+            const items = await sftp.list(dir);
+            let count = 0;
+            for (const item of items) {
+                if (item.type === '-') {
+                    const lowerName = item.name.toLowerCase();
+                    // Store strict path. If duplicates, first one wins (or last, doesn't matter much)
+                    if (!filesMap.has(lowerName)) {
+                        filesMap.set(lowerName, { dir, name: item.name });
+                        count++;
+                    }
+                }
+            }
+            console.log(`   ✅ Cached ${count} files from ${dir}`);
+        } catch (e) {
+            console.warn(`   ⚠️ Could not list ${dir}: ${e.message}`);
+        }
+    }
+    console.log(`📚 Total cached files: ${filesMap.size}`);
+}
+
 async function main() {
     try {
         console.log('🔌 Connecting to SFTP...');
         await sftp.connect(FTP_CONFIG);
         console.log('✅ Connected.');
 
+        // PRE-CACHE
+        await preCacheFiles();
+
         console.log('💾 Fetching Catalog from KV (Repair Mode)...');
         let existingCatalog = await kv.get('wallpapers_catalog') || [];
-
         console.log(`📊 Catalog size: ${existingCatalog.length} items.`);
 
         // REPAIR ALL MISSING IMAGES
@@ -87,45 +117,40 @@ async function main() {
             const pattern = item.id;
             console.log(`\n[${processedCount}/${pendingItems.length}] 🔎 Processing ${pattern} (REPAIR MODE)`);
 
-            let foundImageDir = null;
-            let foundRoomDir = null;
+            // LOOKUP IN CACHE
+            // Try exact pattern + .jpg
+            const mainCandidates = [`${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`];
+            const roomCandidates = [`${pattern}_Room.jpg`, `${pattern}_room.jpg`];
 
-            // Check MAIN IMAGE
-            for (const dir of IMAGE_DIRS) {
-                const checkPath = `${dir}/${pattern}.jpg`;
-                // console.log(`      ? Checking Main: ${checkPath}`); // Reduce log spam
-                try {
-                    const exists = await sftp.exists(checkPath);
-                    if (exists) {
-                        console.log(`      ✅ FOUND Main in: ${dir}`);
-                        foundImageDir = dir;
-                        break;
-                    }
-                } catch (e) { }
+            let foundImage = null;
+            let foundRoom = null;
+
+            for (const cand of mainCandidates) {
+                const match = filesMap.get(cand.toLowerCase());
+                if (match) {
+                    foundImage = match;
+                    console.log(`      ✅ FOUND Main: ${match.dir}/${match.name}`);
+                    break;
+                }
             }
 
-            // Check ROOM IMAGE
-            for (const dir of IMAGE_DIRS) {
-                const checkPath = `${dir}/${pattern}_Room.jpg`;
-                // console.log(`      ? Checking Room: ${checkPath}`);
-                try {
-                    const exists = await sftp.exists(checkPath);
-                    if (exists) {
-                        console.log(`      ✅ FOUND Room in: ${dir}`);
-                        foundRoomDir = dir;
-                        break;
-                    }
-                } catch (e) { }
+            for (const cand of roomCandidates) {
+                const match = filesMap.get(cand.toLowerCase());
+                if (match) {
+                    foundRoom = match;
+                    console.log(`      ✅ FOUND Room: ${match.dir}/${match.name}`);
+                    break;
+                }
             }
 
             let imageUrl = item.imageUrl || '';
             let imageUrls = item.imageUrls || [];
             let updated = false;
 
-            if (foundImageDir) {
+            if (foundImage) {
                 console.log(`⬇️ Downloading Main...`);
                 try {
-                    let imgBuffer = await sftp.get(`${foundImageDir}/${pattern}.jpg`);
+                    let imgBuffer = await sftp.get(`${foundImage.dir}/${foundImage.name}`);
                     imgBuffer = await addWatermark(imgBuffer);
                     const blob = await put(`products/${pattern}.jpg`, imgBuffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, allowOverwrite: true });
                     imageUrl = blob.url;
@@ -135,10 +160,10 @@ async function main() {
                 } catch (err) { console.error('   ❌ Upload failed:', err.message); }
             }
 
-            if (foundRoomDir) {
+            if (foundRoom) {
                 console.log(`⬇️ Downloading Room...`);
                 try {
-                    let roomBuffer = await sftp.get(`${foundRoomDir}/${pattern}_Room.jpg`);
+                    let roomBuffer = await sftp.get(`${foundRoom.dir}/${foundRoom.name}`);
                     const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, allowOverwrite: true });
                     if (!imageUrls.includes(blobRoom.url)) imageUrls.push(blobRoom.url);
                     console.log(`🚀 Uploaded Room: ${blobRoom.url}`);
@@ -147,22 +172,17 @@ async function main() {
             }
 
             if (updated) {
-                // Update Item
                 item.imageUrl = imageUrl;
                 item.imageUrls = imageUrls;
                 item.timestamp = Date.now();
-
                 catalogMap.set(pattern, item);
 
-                // IMMEDIATE SAVE
-                // Save regularly to avoid data loss, but maybe not EVERY item to speed up?
-                // Actually safer to save every item for now.
                 console.log('💾 Saving to KV immediately...');
                 const finalBranch = Array.from(catalogMap.values());
                 await kv.set('wallpapers_catalog', finalBranch);
                 console.log('✅ Saved.');
             } else {
-                console.log('   ⏭️ No images found, skipping.');
+                console.log('   ⏭️ No images found in cached paths, skipping.');
             }
         }
 
