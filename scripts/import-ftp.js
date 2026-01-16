@@ -118,13 +118,9 @@ async function main() {
             console.log(`\n[${processedCount}/${pendingItems.length}] 🔎 Processing ${pattern} (REPAIR MODE)`);
 
             // LOOKUP IN CACHE
-            // Try exact pattern + .jpg
+            // 1. Main Image
             const mainCandidates = [`${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`];
-            const roomCandidates = [`${pattern}_Room.jpg`, `${pattern}_room.jpg`];
-
             let foundImage = null;
-            let foundRoom = null;
-
             for (const cand of mainCandidates) {
                 const match = filesMap.get(cand.toLowerCase());
                 if (match) {
@@ -134,12 +130,35 @@ async function main() {
                 }
             }
 
-            for (const cand of roomCandidates) {
-                const match = filesMap.get(cand.toLowerCase());
+            // 2. Extra Variants (Room, Detail, Numbered)
+            // We search for these patterns and add them to the gallery
+            const variantsToCheck = [
+                { suffix: '_Room', label: 'Room' },
+                { suffix: '_room', label: 'Room' },
+                { suffix: '_Detail', label: 'Detail' },
+                { suffix: '_detail', label: 'Detail' },
+                { suffix: '_Alt', label: 'Alt' },
+                { suffix: '_alt', label: 'Alt' },
+                { suffix: '_2', label: 'Var 2' },
+                { suffix: '_3', label: 'Var 3' },
+                { suffix: '_4', label: 'Var 4' },
+                { suffix: '_5', label: 'Var 5' },
+                { suffix: '-2', label: 'Var 2' }, // sometimes dash?
+                { suffix: '-3', label: 'Var 3' },
+                { suffix: ' Folder', label: 'Folder' } // rare
+            ];
+
+            let foundVariants = [];
+
+            for (const v of variantsToCheck) {
+                const candName = `${pattern}${v.suffix}.jpg`; // Try jpg only for now variants usually jpg
+                const match = filesMap.get(candName.toLowerCase());
                 if (match) {
-                    foundRoom = match;
-                    console.log(`      ✅ FOUND Room: ${match.dir}/${match.name}`);
-                    break;
+                    // Check if already found (case insensitivity might cause duplicates otherwise)
+                    if (!foundVariants.some(fv => fv.match.name === match.name)) {
+                        foundVariants.push({ match, label: v.label });
+                        console.log(`      ✅ FOUND ${v.label}: ${match.dir}/${match.name}`);
+                    }
                 }
             }
 
@@ -147,28 +166,48 @@ async function main() {
             let imageUrls = item.imageUrls || [];
             let updated = false;
 
+            // Upload Main
             if (foundImage) {
+                // If main image is missing or valid
                 console.log(`⬇️ Downloading Main...`);
                 try {
                     let imgBuffer = await sftp.get(`${foundImage.dir}/${foundImage.name}`);
                     imgBuffer = await addWatermark(imgBuffer);
                     const blob = await put(`products/${pattern}.jpg`, imgBuffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, allowOverwrite: true });
+
+                    // Update Main URL
                     imageUrl = blob.url;
+
+                    // Add to gallery if not present
                     if (!imageUrls.includes(imageUrl)) imageUrls.unshift(imageUrl);
+
                     console.log(`🚀 Uploaded Main: ${blob.url}`);
                     updated = true;
-                } catch (err) { console.error('   ❌ Upload failed:', err.message); }
+
+                } catch (err) { console.error('   ❌ Upload Main failed:', err.message); }
             }
 
-            if (foundRoom) {
-                console.log(`⬇️ Downloading Room...`);
+            // Upload Variants
+            for (const v of foundVariants) {
+                console.log(`⬇️ Downloading ${v.label}...`);
                 try {
-                    let roomBuffer = await sftp.get(`${foundRoom.dir}/${foundRoom.name}`);
-                    const blobRoom = await put(`products/${pattern}_Room.jpg`, roomBuffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, allowOverwrite: true });
-                    if (!imageUrls.includes(blobRoom.url)) imageUrls.push(blobRoom.url);
-                    console.log(`🚀 Uploaded Room: ${blobRoom.url}`);
-                    updated = true;
-                } catch (err) { console.error('   ❌ Upload failed:', err.message); }
+                    // Start download
+                    let vBuffer = await sftp.get(`${v.match.dir}/${v.match.name}`);
+                    // Only watermark if it's large? Let's watermark all for consistency
+                    if (v.label !== 'Detail') { // Maybe skip watermark for tiny details? No, safe to add.
+                        // vBuffer = await addWatermark(vBuffer); // Optional: Watermark everything
+                    }
+
+                    const blobName = `products/${v.match.name}`; // Use original filename for variants to avoid collisions
+                    const blobV = await put(blobName, vBuffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, allowOverwrite: true });
+
+                    if (!imageUrls.includes(blobV.url)) {
+                        imageUrls.push(blobV.url);
+                        updated = true;
+                    }
+                    console.log(`🚀 Uploaded ${v.label}: ${blobV.url}`);
+
+                } catch (err) { console.error(`   ❌ Upload ${v.label} failed:`, err.message); }
             }
 
             if (updated) {
