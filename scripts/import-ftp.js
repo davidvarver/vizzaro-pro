@@ -90,7 +90,19 @@ async function main() {
         await preCacheFiles();
 
         console.log('💾 Fetching Catalog from KV (Repair Mode)...');
-        let existingCatalog = await kv.get('wallpapers_catalog') || [];
+
+        let existingCatalog = [];
+        // Try Hash first (New System)
+        const hashData = await kv.hgetall('wallpapers_catalog_hash');
+        if (hashData) {
+            console.log('📦 Found hash catalog.');
+            existingCatalog = Object.values(hashData);
+        } else {
+            // Fallback to old array
+            console.log('⚠️ No hash found, looking for legacy array...');
+            existingCatalog = await kv.get('wallpapers_catalog') || [];
+        }
+
         console.log(`📊 Catalog size: ${existingCatalog.length} items.`);
 
         // REPAIR ALL MISSING IMAGES
@@ -107,9 +119,7 @@ async function main() {
             return;
         }
 
-        const catalogMap = new Map();
-        existingCatalog.forEach(item => catalogMap.set(item.id, item));
-
+        // We don't need catalogMap for full rewrite anymore, we update individually
         let processedCount = 0;
 
         for (const item of pendingItems) {
@@ -214,12 +224,16 @@ async function main() {
                 item.imageUrl = imageUrl;
                 item.imageUrls = imageUrls;
                 item.timestamp = Date.now();
-                catalogMap.set(pattern, item);
 
-                console.log('💾 Saving to KV immediately...');
-                const finalBranch = Array.from(catalogMap.values());
-                await kv.set('wallpapers_catalog', finalBranch);
-                console.log('✅ Saved.');
+                // OPTIMIZATION: Use Hash for incremental updates
+                // This avoids the 10MB limit of the free tier by updating only 1 item at a time
+                console.log(`💾 Saving ${pattern} to Hash...`);
+                try {
+                    await kv.hset('wallpapers_catalog_hash', { [pattern]: item });
+                    console.log('✅ Saved.');
+                } catch (saveErr) {
+                    console.error('❌ Error saving to Hash:', saveErr.message);
+                }
             } else {
                 console.log('   ⏭️ No images found in cached paths, skipping.');
             }
