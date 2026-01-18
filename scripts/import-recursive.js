@@ -188,26 +188,44 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
     for (const row of validRows) {
         const pattern = row['Pattern'];
 
-        // Find Image in SAME folder (or assume typical naming)
-        // Checks: Pattern.jpg, Pattern_Room.jpg
-        const mainImgName = itemsFindFirst(filesInFolder, [
-            `${pattern}.jpg`, `${pattern}.jpeg`,
-            `${pattern}.png`, `MD${pattern}.jpg` // Some providers prefix
-        ]);
+        // 2a. Find Main Image
+        const mainCandidates = [`${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`];
+        const mainImgName = itemsFindFirst(filesInFolder, mainCandidates);
 
-        const roomImgName = itemsFindFirst(filesInFolder, [
-            `${pattern}_Room.jpg`, `${pattern}_room.jpg`
-        ]);
+        // 2b. Find Extra Variants (Room, Detail, Numbered)
+        const variantsToCheck = [
+            { suffix: '_Room', label: 'Room' },
+            { suffix: '_room', label: 'Room' },
+            { suffix: '_Detail', label: 'Detail' },
+            { suffix: '_detail', label: 'Detail' },
+            { suffix: '_Alt', label: 'Alt' },
+            { suffix: '_alt', label: 'Alt' },
+            { suffix: '_2', label: 'Var 2' },
+            { suffix: '_3', label: 'Var 3' },
+            { suffix: '_4', label: 'Var 4' },
+            { suffix: '_5', label: 'Var 5' },
+            { suffix: '-2', label: 'Var 2' },
+            { suffix: '-3', label: 'Var 3' }
+        ];
+
+        let foundVariants = [];
+        for (const v of variantsToCheck) {
+            const candName = `${pattern}${v.suffix}.jpg`;
+            const matchName = itemsFindFirst(filesInFolder, [candName]); // Reuse itemFinder
+            if (matchName) {
+                // Avoid duplicates if multiple suffixes match same file (unlikely but safe)
+                if (!foundVariants.some(fv => fv.name === matchName)) {
+                    foundVariants.push({ name: matchName, label: v.label });
+                }
+            }
+        }
 
         let imageUrl = '';
         let imageUrls = [];
 
-        // Upload Logic
+        // Upload Main
         if (mainImgName && !IS_DRY_RUN) {
-            // Check if already uploaded (optimization: skip if blob exists? No, hard to check efficiently without map. 
-            // We'll trust Vercel Blob dedup or just overwrite for now to be safe)
             try {
-                // Download from FTP
                 let imgBuf = await sftp.get(`${dirPath}/${mainImgName}`);
                 imgBuf = await addWatermark(imgBuf);
                 const blob = await put(`products/${collectionName}/${pattern}.jpg`, imgBuf, {
@@ -221,14 +239,24 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
             }
         }
 
-        if (roomImgName && !IS_DRY_RUN) {
-            try {
-                let roomBuf = await sftp.get(`${dirPath}/${roomImgName}`);
-                const blob = await put(`products/${collectionName}/${pattern}_room.jpg`, roomBuf, {
-                    access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, addRandomSuffix: false
-                });
-                imageUrls.push(blob.url);
-            } catch (e) { }
+        // Upload Variants
+        if (!IS_DRY_RUN) {
+            for (const v of foundVariants) {
+                try {
+                    let vBuf = await sftp.get(`${dirPath}/${v.name}`);
+                    // Optional: Add watermark to room scenes? Yes.
+                    // if (v.label === 'Room') vBuf = await addWatermark(vBuf); 
+
+                    const blob = await put(`products/${collectionName}/${v.name}`, vBuf, {
+                        access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, addRandomSuffix: false
+                    });
+                    if (!imageUrls.includes(blob.url)) {
+                        imageUrls.push(blob.url);
+                    }
+                } catch (e) {
+                    console.warn(`         ⚠️ Variant upload failed for ${v.name}: ${e.message}`);
+                }
+            }
         }
 
         // Build Product
