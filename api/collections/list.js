@@ -53,9 +53,8 @@ export default async function handler(request, response) {
 
             const collectionName = item.collection.trim();
 
-            // Filter out system folders/artifacts or empty names
+            // Filter out system folders/artifacts or empty names (Removed ALL DATA as it is a valid imported collection)
             if (!collectionName ||
-                collectionName.toUpperCase() === 'ALL DATA' ||
                 collectionName.toUpperCase() === '300DPI' ||
                 collectionName.toUpperCase() === 'HI-RES' ||
                 collectionName.includes('.')) {
