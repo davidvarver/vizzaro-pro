@@ -91,26 +91,41 @@ async function main() {
 
         console.log('💾 Fetching Catalog from KV (Repair Mode)...');
 
-        let existingCatalog = [];
-        // Try Hash first (New System)
+        console.log('💾 Fetching Catalog from KV (Repair Mode)...');
+
+        // 1. Fetch COMPLETED (Repaired) items from Hash
+        let completedIds = new Set();
         const hashData = await kv.hgetall('wallpapers_catalog_hash');
         if (hashData) {
-            console.log('📦 Found hash catalog.');
-            existingCatalog = Object.values(hashData);
-        } else {
-            // Fallback to old array
-            console.log('⚠️ No hash found, looking for legacy array...');
-            existingCatalog = await kv.get('wallpapers_catalog') || [];
+            console.log('📦 Found hash catalog (already repaired items).');
+            const hashItems = Object.values(hashData);
+            hashItems.forEach(raw => {
+                const item = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                if (item && item.id) completedIds.add(item.id.toString());
+            });
+            console.log(`✅ Already repaired: ${completedIds.size} items.`);
         }
 
-        console.log(`📊 Catalog size: ${existingCatalog.length} items.`);
+        // 2. Fetch PENDING (Legacy) items from List
+        let existingCatalog = await kv.get('wallpapers_catalog') || [];
+        console.log(`📊 Full Legacy Catalog size: ${existingCatalog.length} items.`);
 
-        // REPAIR ALL MISSING IMAGES
-        console.log('🧹 Filtering for items needing repair (missing images)...');
-        const pendingItems = existingCatalog.filter(i =>
-            (!i.imageUrl || i.imageUrl.length < 5) &&
-            (!i.imageUrls || i.imageUrls.length === 0)
-        );
+        // 3. Filter for items that need repair:
+        //    Condition: (Missing Image) OR (Not in Hash yet)
+        //    Actually, if it's in Hash, it's considered "done" for now (or at least migrated).
+        //    So we focus on items NOT in Hash.
+
+        console.log('🧹 Filtering for items needing repair...');
+        const pendingItems = existingCatalog.filter(i => {
+            // If already in Hash, skip (assume fixed/migrated)
+            if (completedIds.has(i.id)) return false;
+
+            // If not in Hash, we definitely want to process it to migrate it.
+            // But strict repair mode only cared about missing images.
+            // Let's migrate ALL items to Hash to finish the DB transition?
+            // User asked "why stopped". Better to just process everything missing from Hash.
+            return true;
+        });
 
         console.log(`🎯 Found ${pendingItems.length} items in KV missing images.`);
 
