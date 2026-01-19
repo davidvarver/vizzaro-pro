@@ -176,7 +176,7 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
 
     // 1. List ALL files in folder (including subdirectories) to check for /Images
     let allItems = await sftp.list(dirPath);
-    let filesInFolder = allItems; // Default to current folder items
+    filesInFolder = allItems; // Default to current folder items (REASSIGN PARAMETER)
 
     // CHECK: If folder has no images but has a subfolder named 'Images', switch to it!
     const hasImages = allItems.some(f => f.name.toLowerCase().endsWith('.jpg'));
