@@ -176,61 +176,56 @@ export default async function handler(req, res) {
 
         console.log('[Catalog GET] KV fetch successful, catalog exists:', !!catalog);
         console.log('[Catalog GET] Catalog items count:', Array.isArray(catalog) ? catalog.length : 0);
-      } else {
-        const errorText = await kvResponse.text();
-        console.warn('[Catalog GET] KV returned error:', kvResponse.status, errorText);
+      } catch (kvError) {
+        console.error('[Catalog GET] KV error, using fallback:', kvError);
         catalog = null;
       }
-    } catch (kvError) {
-      console.error('[Catalog GET] KV error, using fallback:', kvError);
-      catalog = null;
-    }
 
-    if (!catalog || !Array.isArray(catalog) || catalog.length === 0) {
-      console.log('[Catalog GET] No catalog found or empty, initializing with default data');
-      catalog = initialWallpapers;
+      if (!catalog || !Array.isArray(catalog) || catalog.length === 0) {
+        console.log('[Catalog GET] No catalog found or empty, initializing with default data');
+        catalog = initialWallpapers;
 
-      try {
-        console.log('[Catalog GET] Saving default catalog to KV...');
-        const saveResponse = await fetch(`${kvUrl}/set/wallpapers_catalog`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${kvToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(catalog),
-        });
+        try {
+          console.log('[Catalog GET] Saving default catalog to KV...');
+          const saveResponse = await fetch(`${kvUrl}/set/wallpapers_catalog`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${kvToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(catalog),
+          });
 
-        if (saveResponse.ok) {
-          console.log('[Catalog GET] Default catalog saved to KV');
-        } else {
-          console.error('[Catalog GET] Could not save to KV:', saveResponse.status);
+          if (saveResponse.ok) {
+            console.log('[Catalog GET] Default catalog saved to KV');
+          } else {
+            console.error('[Catalog GET] Could not save to KV:', saveResponse.status);
+          }
+        } catch (kvError) {
+          console.error('[Catalog GET] Could not save to KV, continuing with default:', kvError);
         }
-      } catch (kvError) {
-        console.error('[Catalog GET] Could not save to KV, continuing with default:', kvError);
       }
     }
-  }
 
     console.log('[Catalog GET] Returning catalog with', Array.isArray(catalog) ? catalog.length : 0, 'items');
 
-  return res.status(200).json({
-    success: true,
-    catalog,
-    timestamp: Date.now(),
-    usingKV: kvConfigured,
-    debug_info: {
-      kv_url_prefix: kvUrl ? kvUrl.substring(0, 15) + '...' : 'undefined',
-      kv_token_prefix: kvToken ? kvToken.substring(0, 5) + '...' : 'undefined',
-      raw_item_count: catalog ? catalog.length : 0
-    }
-  });
-} catch (error) {
-  console.error('[Catalog GET] Error fetching catalog:', error);
-  return res.status(500).json({
-    success: false,
-    error: 'Error al obtener el catálogo',
-    details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
-  });
-}
+    return res.status(200).json({
+      success: true,
+      catalog,
+      timestamp: Date.now(),
+      usingKV: kvConfigured,
+      debug_info: {
+        kv_url_prefix: kvUrl ? kvUrl.substring(0, 15) + '...' : 'undefined',
+        kv_token_prefix: kvToken ? kvToken.substring(0, 5) + '...' : 'undefined',
+        raw_item_count: catalog ? catalog.length : 0
+      }
+    });
+  } catch (error) {
+    console.error('[Catalog GET] Error fetching catalog:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Error al obtener el catálogo',
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
+    });
+  }
 }
