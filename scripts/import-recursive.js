@@ -32,8 +32,19 @@ const kv = createClient({
 
 // --- STATE MANAGEMENT ---
 function loadState() {
+    // If user wants to force rescan, return empty state
+    if (process.env.FORCE_RESCAN === 'true') {
+        console.log('⚠️ FORCE_RESCAN enabled: Ignoring previous state.');
+        return { processedFolders: [], processedItems: 0 };
+    }
+
     if (fs.existsSync(STATE_FILE)) {
-        return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+        try {
+            return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+        } catch (e) {
+            console.warn('⚠️ Corrupt state file, starting fresh.');
+            return { processedFolders: [], processedItems: 0 };
+        }
     }
     return { processedFolders: [], processedItems: 0 };
 }
@@ -292,29 +303,31 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
             console.log(`      [DRY RUN] Would save ${newItems.length} items to KV.`);
             return;
         }
-        // Save to KV (Append/Merge mode)
-        // We fetch current catalog, merge, and save back. 
-        // LOCKING ISSUE: If we do this for every collection, it might be slow.
-        // BETTER: Use a separate key per collection? No, catalog must be unified.
-        // STRATEGY: Fetch, Map, Merge, Save.
+
+        // Save to KV (ATOMIC HASH UPDATE)
+        // We write each item to the Hash map 'wallpapers_catalog_hash'
+        // This avoids the 10MB request limit.
         try {
-            const currentCatalog = (await kv.get('wallpapers_catalog')) || [];
-            const catalogMap = new Map(currentCatalog.map(i => [i.id, i]));
+            console.log(`      💾 Saving ${newItems.length} items to Hash...`);
+            let savedCount = 0;
 
-            let addedCount = 0;
-            newItems.forEach(item => {
-                catalogMap.set(item.id, item); // Overwrite/Update
-                addedCount++;
-            });
+            for (const item of newItems) {
+                // Determine if we need to update
+                // Optional: Check if hash already has it? 
+                // For now, we overwrite to ensure latest data from FTP.
 
-            await kv.set('wallpapers_catalog', Array.from(catalogMap.values()));
-            console.log(`\n      ✅ Saved ${addedCount} items to Catalog from ${collectionName}`);
+                await kv.hset('wallpapers_catalog_hash', { [item.id]: item });
+                savedCount++;
+                process.stdout.write('+'); // Progress indicator
+            }
 
-            state.processedItems += addedCount;
+            console.log(`\n      ✅ Saved ${savedCount} items from ${collectionName}`);
+
+            state.processedItems += savedCount;
             saveState(state);
 
         } catch (e) {
-            console.error('      ❌ KV Verification Failed:', e.message);
+            console.error('      ❌ KV Hash Save Failed:', e.message);
         }
     }
 }
