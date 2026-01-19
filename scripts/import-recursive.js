@@ -205,6 +205,15 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
         const mainCandidates = [`${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`];
         const mainImgName = itemsFindFirst(filesInFolder, mainCandidates);
 
+        if (!mainImgName) {
+            console.log(`\n⚠️  [${pattern}] Image NOT found. Candidates: ${mainCandidates.join(', ')}`);
+            if (filesInFolder.length > 0) {
+                console.log(`    Available files (first 5): ${filesInFolder.slice(0, 5).map(f => f.name).join(', ')}`);
+            } else {
+                console.log('    Folder is EMPTY.');
+            }
+        }
+
         // 2b. Find Extra Variants (Room, Detail, Numbered)
         const variantsToCheck = [
             { suffix: '_Room', label: 'Room' },
