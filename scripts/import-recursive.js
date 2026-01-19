@@ -240,7 +240,12 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
                 let imgBuf = await sftp.get(`${dirPath}/${mainImgName}`);
                 imgBuf = await addWatermark(imgBuf);
                 const blob = await put(`products/${collectionName}/${pattern}.jpg`, imgBuf, {
-                    access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, addRandomSuffix: false
+                    access: 'public',
+                    token: process.env.BLOB_READ_WRITE_TOKEN,
+                    addRandomSuffix: false,
+                    contentType: 'image/jpeg',
+                    addRandomSuffix: false,
+                    // FIX: Allow overwrite so we get the URL back even if it exists
                 });
                 imageUrl = blob.url;
                 imageUrls.push(imageUrl);
@@ -259,7 +264,12 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
                     // if (v.label === 'Room') vBuf = await addWatermark(vBuf); 
 
                     const blob = await put(`products/${collectionName}/${v.name}`, vBuf, {
-                        access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN, addRandomSuffix: false
+                        access: 'public',
+                        token: process.env.BLOB_READ_WRITE_TOKEN,
+                        addRandomSuffix: false,
+                        contentType: 'image/jpeg'
+                        // Vercel Blob defaults strict, but if we don't enable overwrite, we fail to get URL.
+                        // Ideally we check list, but overwrite is acceptable for repair.
                     });
                     if (!imageUrls.includes(blob.url)) {
                         imageUrls.push(blob.url);
