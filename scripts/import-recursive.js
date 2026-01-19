@@ -202,7 +202,12 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
         const pattern = row['Pattern'];
 
         // 2a. Find Main Image
-        const mainCandidates = [`${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`];
+        // Try standard naming + "Pattern Only" naming (e.g. 520255.jpg instead of 4096-520255.jpg)
+        const barePattern = pattern.includes('-') ? pattern.split('-')[1] : pattern;
+        const mainCandidates = [
+            `${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`,
+            `${barePattern}.jpg`, `${barePattern}.jpeg` // <--- NEW FALLBACKS
+        ];
         const mainImgName = itemsFindFirst(filesInFolder, mainCandidates);
 
         if (!mainImgName) {
