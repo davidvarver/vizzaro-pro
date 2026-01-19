@@ -170,223 +170,248 @@ async function traverse(currentPath, state) {
 }
 
 async function processCollection(dirPath, fileName, collectionName, filesInFolder, state) {
-    console.log(`      Processing Collection: "${collectionName}" from ${fileName}`);
-    // if (IS_DRY_RUN) return; // Allow reading for debug
+    async function processCollection(dirPath, fileName, collectionName, filesInFolderParam, state) {
+        console.log(`      Processing Collection: "${collectionName}" from ${fileName}`);
+        // if (IS_DRY_RUN) return; // Allow reading for debug
 
-    // 1. Download Excel
-    let data = [];
-    try {
-        const filePath = `${dirPath}/${fileName}`;
-        const buffer = await sftp.get(filePath);
-        const workbook = XLSX.read(buffer, { type: 'buffer' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        data = XLSX.utils.sheet_to_json(sheet);
-    } catch (e) {
-        console.error(`      ❌ Failed to read excel ${fileName}: ${e.message}`);
-        return;
-    }
+        // 1. List files in folder
+        let filesInFolder = await itemsList(dirPath);
 
-    // DEBUG: Log headers
-    if (data.length > 0) {
-        console.log('      📊 Headers:', Object.keys(data[0]).join(', '));
-        console.log('      👀 First Row:', JSON.stringify(data[0]));
-    }
+        // CHECK: If folder has no images but has a subfolder named 'Images', switch to it!
+        const hasImages = filesInFolder.some(f => f.name.toLowerCase().endsWith('.jpg'));
+        const imagesSubfolder = filesInFolder.find(f => f.name.toLowerCase() === 'images' && f.type === 'd');
 
-    const validRows = data.filter(r => r['Pattern'] && r['Name']);
-    console.log(`      Found ${validRows.length} valid items (out of ${data.length} total rows).`);
+        if (!hasImages && imagesSubfolder) {
+            console.log(`    📂 Switching to scan subfolder: ${dirPath}/Images`);
+            // Update directory path to the subfolder for image searching
+            // Note: We keeping 'dirPath' as base, but we'll fetch files from subfolder
+            const subPath = `${dirPath}/${imagesSubfolder.name}`;
+            const subFiles = await itemsList(subPath);
 
-    // 2. Process Items
-    const newItems = [];
+            // Merge files (prioritize subfolder images)
+            // Ideally we just want to look there for images.
+            console.log(`    Found ${subFiles.length} items in /Images subfolder.`);
 
-    for (const row of validRows) {
-        let pattern = String(row['Pattern']); // Force string to avoid .includes crashes
-
-        // 2a. Find Main Image
-        // Try standard naming + "Pattern Only" naming (e.g. 520255.jpg instead of 4096-520255.jpg)
-        const barePattern = pattern.includes('-') ? pattern.split('-')[1] : pattern;
-        const mainCandidates = [
-            `${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`,
-            `${barePattern}.jpg`, `${barePattern}.jpeg` // <--- NEW FALLBACKS
-        ];
-        const mainImgName = itemsFindFirst(filesInFolder, mainCandidates);
-
-        if (!mainImgName) {
-            console.log(`\n⚠️  [${pattern}] Image NOT found. Candidates: ${mainCandidates.join(', ')}`);
-            if (filesInFolder.length > 0) {
-                console.log(`    Available files (first 5): ${filesInFolder.slice(0, 5).map(f => f.name).join(', ')}`);
-            } else {
-                console.log('    Folder is EMPTY.');
-            }
+            // We'll trust the subfolder list for image finding
+            filesInFolder = subFiles;
+            // Update dirPath for sftp.get() calls later
+            dirPath = subPath;
         }
 
-        // 2b. Find Extra Variants (Room, Detail, Numbered)
-        const variantsToCheck = [
-            { suffix: '_Room', label: 'Room' },
-            { suffix: '_room', label: 'Room' },
-            { suffix: '_Detail', label: 'Detail' },
-            { suffix: '_detail', label: 'Detail' },
-            { suffix: '_Alt', label: 'Alt' },
-            { suffix: '_alt', label: 'Alt' },
-            { suffix: '_2', label: 'Var 2' },
-            { suffix: '_3', label: 'Var 3' },
-            { suffix: '_4', label: 'Var 4' },
-            { suffix: '_5', label: 'Var 5' },
-            { suffix: '-2', label: 'Var 2' },
-            { suffix: '-3', label: 'Var 3' }
-        ];
+        // 1. Download Excel
+        let data = [];
+        try {
+            const filePath = `${dirPath}/${fileName}`;
+            const buffer = await sftp.get(filePath);
+            const workbook = XLSX.read(buffer, { type: 'buffer' });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            data = XLSX.utils.sheet_to_json(sheet);
+        } catch (e) {
+            console.error(`      ❌ Failed to read excel ${fileName}: ${e.message}`);
+            return;
+        }
 
-        let foundVariants = [];
-        for (const v of variantsToCheck) {
-            const candName = `${pattern}${v.suffix}.jpg`;
-            const matchName = itemsFindFirst(filesInFolder, [candName]); // Reuse itemFinder
-            if (matchName) {
-                // Avoid duplicates if multiple suffixes match same file (unlikely but safe)
-                if (!foundVariants.some(fv => fv.name === matchName)) {
-                    foundVariants.push({ name: matchName, label: v.label });
+        // DEBUG: Log headers
+        if (data.length > 0) {
+            console.log('      📊 Headers:', Object.keys(data[0]).join(', '));
+            console.log('      👀 First Row:', JSON.stringify(data[0]));
+        }
+
+        const validRows = data.filter(r => r['Pattern'] && r['Name']);
+        console.log(`      Found ${validRows.length} valid items (out of ${data.length} total rows).`);
+
+        // 2. Process Items
+        const newItems = [];
+
+        for (const row of validRows) {
+            let pattern = String(row['Pattern']); // Force string to avoid .includes crashes
+
+            // 2a. Find Main Image
+            // Try standard naming + "Pattern Only" naming (e.g. 520255.jpg instead of 4096-520255.jpg)
+            const barePattern = pattern.includes('-') ? pattern.split('-')[1] : pattern;
+            const mainCandidates = [
+                `${pattern}.jpg`, `${pattern}.jpeg`, `${pattern}.png`, `MD${pattern}.jpg`,
+                `${barePattern}.jpg`, `${barePattern}.jpeg` // <--- NEW FALLBACKS
+            ];
+            const mainImgName = itemsFindFirst(filesInFolder, mainCandidates);
+
+            if (!mainImgName) {
+                console.log(`\n⚠️  [${pattern}] Image NOT found. Candidates: ${mainCandidates.join(', ')}`);
+                if (filesInFolder.length > 0) {
+                    console.log(`    Available files (first 5): ${filesInFolder.slice(0, 5).map(f => f.name).join(', ')}`);
+                } else {
+                    console.log('    Folder is EMPTY.');
                 }
             }
-        }
 
-        let imageUrl = '';
-        let imageUrls = [];
+            // 2b. Find Extra Variants (Room, Detail, Numbered)
+            const variantsToCheck = [
+                { suffix: '_Room', label: 'Room' },
+                { suffix: '_room', label: 'Room' },
+                { suffix: '_Detail', label: 'Detail' },
+                { suffix: '_detail', label: 'Detail' },
+                { suffix: '_Alt', label: 'Alt' },
+                { suffix: '_alt', label: 'Alt' },
+                { suffix: '_2', label: 'Var 2' },
+                { suffix: '_3', label: 'Var 3' },
+                { suffix: '_4', label: 'Var 4' },
+                { suffix: '_5', label: 'Var 5' },
+                { suffix: '-2', label: 'Var 2' },
+                { suffix: '-3', label: 'Var 3' }
+            ];
 
-        // Upload Main
-        if (mainImgName && !IS_DRY_RUN) {
-            try {
-                let imgBuf = await sftp.get(`${dirPath}/${mainImgName}`);
-                imgBuf = await addWatermark(imgBuf);
-                const blob = await put(`products/${collectionName}/${pattern}.jpg`, imgBuf, {
-                    access: 'public',
-                    token: process.env.BLOB_READ_WRITE_TOKEN,
-                    addRandomSuffix: false,
-                    contentType: 'image/jpeg',
-                    allowOverwrite: true, // Fix: Actually enabled now
-                });
-                imageUrl = blob.url;
-                imageUrls.push(imageUrl);
-                process.stdout.write('.');
-            } catch (e) {
-                console.warn(`         ⚠️ Image upload failed for ${pattern}: ${e.message}`);
+            let foundVariants = [];
+            for (const v of variantsToCheck) {
+                const candName = `${pattern}${v.suffix}.jpg`;
+                const matchName = itemsFindFirst(filesInFolder, [candName]); // Reuse itemFinder
+                if (matchName) {
+                    // Avoid duplicates if multiple suffixes match same file (unlikely but safe)
+                    if (!foundVariants.some(fv => fv.name === matchName)) {
+                        foundVariants.push({ name: matchName, label: v.label });
+                    }
+                }
             }
-        }
 
-        // Upload Variants
-        if (!IS_DRY_RUN) {
-            for (const v of foundVariants) {
+            let imageUrl = '';
+            let imageUrls = [];
+
+            // Upload Main
+            if (mainImgName && !IS_DRY_RUN) {
                 try {
-                    let vBuf = await sftp.get(`${dirPath}/${v.name}`);
-                    // Optional: Add watermark to room scenes? Yes.
-                    // if (v.label === 'Room') vBuf = await addWatermark(vBuf); 
-
-                    const blob = await put(`products/${collectionName}/${v.name}`, vBuf, {
+                    let imgBuf = await sftp.get(`${dirPath}/${mainImgName}`);
+                    imgBuf = await addWatermark(imgBuf);
+                    const blob = await put(`products/${collectionName}/${pattern}.jpg`, imgBuf, {
                         access: 'public',
                         token: process.env.BLOB_READ_WRITE_TOKEN,
                         addRandomSuffix: false,
                         contentType: 'image/jpeg',
                         allowOverwrite: true, // Fix: Actually enabled now
                     });
-                    if (!imageUrls.includes(blob.url)) {
-                        imageUrls.push(blob.url);
-                    }
+                    imageUrl = blob.url;
+                    imageUrls.push(imageUrl);
+                    process.stdout.write('.');
                 } catch (e) {
-                    console.warn(`         ⚠️ Variant upload failed for ${v.name}: ${e.message}`);
+                    console.warn(`         ⚠️ Image upload failed for ${pattern}: ${e.message}`);
                 }
             }
-        }
 
-        // Build Product
-        const widthMeters = inchToMeter(row['Product Width']);
-        const lengthMeters = inchToMeter(row['Product Length']);
+            // Upload Variants
+            if (!IS_DRY_RUN) {
+                for (const v of foundVariants) {
+                    try {
+                        let vBuf = await sftp.get(`${dirPath}/${v.name}`);
+                        // Optional: Add watermark to room scenes? Yes.
+                        // if (v.label === 'Room') vBuf = await addWatermark(vBuf); 
 
-        const product = {
-            id: pattern.toString(),
-            name: row['Name'],
-            description: row['Description'] || '',
-            price: cleanPrice(row['MSRP']),
-            category: determineCategory(row, collectionName),
-            collection: collectionName, // <--- NEW FIELD
-            style: row['Style'] || 'General',
-            dimensions: {
-                width: widthMeters,
-                height: lengthMeters,
-                weight: parseFloat(row['Weight'] || 0)
-            },
-            imageUrl: imageUrl,
-            imageUrls: imageUrls,
-            inStock: true,
-            publicSku: `VIZ-${pattern}`,
-            patternRepeat: cleanPrice(row['Repeat']),
-            timestamp: Date.now()
-        };
-
-        newItems.push(product);
-    }
-
-    if (newItems.length > 0) {
-        if (IS_DRY_RUN) {
-            console.log(`      [DRY RUN] Would save ${newItems.length} items to KV.`);
-            return;
-        }
-
-        // Save to KV (ATOMIC HASH UPDATE)
-        // We write each item to the Hash map 'wallpapers_catalog_hash'
-        // This avoids the 10MB request limit.
-        try {
-            console.log(`      💾 Saving ${newItems.length} items to Hash...`);
-            let savedCount = 0;
-
-            for (const item of newItems) {
-                // Determine if we need to update
-                // Optional: Check if hash already has it? 
-                // For now, we overwrite to ensure latest data from FTP.
-
-                await kv.hset('wallpapers_catalog_hash', { [item.id]: item });
-                savedCount++;
-                process.stdout.write('+'); // Progress indicator
+                        const blob = await put(`products/${collectionName}/${v.name}`, vBuf, {
+                            access: 'public',
+                            token: process.env.BLOB_READ_WRITE_TOKEN,
+                            addRandomSuffix: false,
+                            contentType: 'image/jpeg',
+                            allowOverwrite: true, // Fix: Actually enabled now
+                        });
+                        if (!imageUrls.includes(blob.url)) {
+                            imageUrls.push(blob.url);
+                        }
+                    } catch (e) {
+                        console.warn(`         ⚠️ Variant upload failed for ${v.name}: ${e.message}`);
+                    }
+                }
             }
 
-            console.log(`\n      ✅ Saved ${savedCount} items from ${collectionName}`);
+            // Build Product
+            const widthMeters = inchToMeter(row['Product Width']);
+            const lengthMeters = inchToMeter(row['Product Length']);
 
-            state.processedItems += savedCount;
-            saveState(state);
+            const product = {
+                id: pattern.toString(),
+                name: row['Name'],
+                description: row['Description'] || '',
+                price: cleanPrice(row['MSRP']),
+                category: determineCategory(row, collectionName),
+                collection: collectionName, // <--- NEW FIELD
+                style: row['Style'] || 'General',
+                dimensions: {
+                    width: widthMeters,
+                    height: lengthMeters,
+                    weight: parseFloat(row['Weight'] || 0)
+                },
+                imageUrl: imageUrl,
+                imageUrls: imageUrls,
+                inStock: true,
+                publicSku: `VIZ-${pattern}`,
+                patternRepeat: cleanPrice(row['Repeat']),
+                timestamp: Date.now()
+            };
 
-        } catch (e) {
-            console.error('      ❌ KV Hash Save Failed:', e.message);
+            newItems.push(product);
+        }
+
+        if (newItems.length > 0) {
+            if (IS_DRY_RUN) {
+                console.log(`      [DRY RUN] Would save ${newItems.length} items to KV.`);
+                return;
+            }
+
+            // Save to KV (ATOMIC HASH UPDATE)
+            // We write each item to the Hash map 'wallpapers_catalog_hash'
+            // This avoids the 10MB request limit.
+            try {
+                console.log(`      💾 Saving ${newItems.length} items to Hash...`);
+                let savedCount = 0;
+
+                for (const item of newItems) {
+                    // Determine if we need to update
+                    // Optional: Check if hash already has it? 
+                    // For now, we overwrite to ensure latest data from FTP.
+
+                    await kv.hset('wallpapers_catalog_hash', { [item.id]: item });
+                    savedCount++;
+                    process.stdout.write('+'); // Progress indicator
+                }
+
+                console.log(`\n      ✅ Saved ${savedCount} items from ${collectionName}`);
+
+                state.processedItems += savedCount;
+                saveState(state);
+
+            } catch (e) {
+                console.error('      ❌ KV Hash Save Failed:', e.message);
+            }
         }
     }
-}
 
-function itemsFindFirst(files, searchNames) {
-    for (const name of searchNames) {
-        const found = files.find(f => f.name.toLowerCase() === name.toLowerCase());
-        if (found) return found.name;
-    }
-    return null;
-}
-
-// Start
-async function main() {
-    console.log(`🚀 Starting Recursive Import (${IS_DRY_RUN ? 'DRY RUN' : 'LIVE'})...`);
-    if (!IS_DRY_RUN) {
-        const state = loadState();
-        console.log(`   Resuming from: ${state.processedFolders.length} folders processed.`);
+    function itemsFindFirst(files, searchNames) {
+        for (const name of searchNames) {
+            const found = files.find(f => f.name.toLowerCase() === name.toLowerCase());
+            if (found) return found.name;
+        }
+        return null;
     }
 
-    try {
-        await sftp.connect(FTP_CONFIG);
-        console.log('   Connected to FTP.');
+    // Start
+    async function main() {
+        console.log(`🚀 Starting Recursive Import (${IS_DRY_RUN ? 'DRY RUN' : 'LIVE'})...`);
+        if (!IS_DRY_RUN) {
+            const state = loadState();
+            console.log(`   Resuming from: ${state.processedFolders.length} folders processed.`);
+        }
 
-        const state = IS_DRY_RUN ? { processedFolders: [], processedItems: 0 } : loadState();
-        const startPath = process.env.TARGET_FOLDER || '/';
-        console.log(`   🎯 Starting scan at: ${startPath}`);
-        await traverse(startPath, state);
+        try {
+            await sftp.connect(FTP_CONFIG);
+            console.log('   Connected to FTP.');
 
-        console.log('\n✨ Import Complete!');
-    } catch (e) {
-        console.error('\n❌ Fatal Error:', e.message);
-    } finally {
-        sftp.end();
+            const state = IS_DRY_RUN ? { processedFolders: [], processedItems: 0 } : loadState();
+            const startPath = process.env.TARGET_FOLDER || '/';
+            console.log(`   🎯 Starting scan at: ${startPath}`);
+            await traverse(startPath, state);
+
+            console.log('\n✨ Import Complete!');
+        } catch (e) {
+            console.error('\n❌ Fatal Error:', e.message);
+        } finally {
+            sftp.end();
+        }
     }
-}
 
-main();
+    main();
