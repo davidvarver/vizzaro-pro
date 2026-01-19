@@ -97,7 +97,8 @@ async function addWatermark(imageBuffer) {
               fill: rgba(255, 255, 255, 0.5); 
               font-size: ${fontSize}px; 
               font-weight: bold; 
-              font-family: sans-serif;
+              font-family: 'Georgia', 'Times New Roman', serif;
+              font-style: italic;
               stroke: rgba(0, 0, 0, 0.4);
               stroke-width: ${Math.max(1, fontSize * 0.03)}px;
               paint-order: stroke;
