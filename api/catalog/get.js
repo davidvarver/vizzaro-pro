@@ -55,13 +55,40 @@ export default async function handler(req, res) {
     } else {
       try {
         console.log('[Catalog GET] Fetching from KV REST API...');
-        console.log('[Catalog GET] KV URL:', kvUrl);
-        const kvResponse = await fetch(`${kvUrl}/get/wallpapers_catalog`, {
+
+        // TRY HASH FIRST (New Storage Strategy)
+        const kvResponseHash = await fetch(`${kvUrl}/hgetall/wallpapers_catalog_hash`, {
           method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${kvToken}`,
-          },
+          headers: { 'Authorization': `Bearer ${kvToken}` }
         });
+
+        if (kvResponseHash.ok) {
+          const hashData = await kvResponseHash.json();
+          if (hashData.result) {
+            console.log('[Catalog GET] Found Hash Catalog.');
+            // Convert Hash values (JSON strings or objects) to Array
+            catalog = Object.values(hashData.result).map(item => {
+              // Handle potential double-encoding if saved as string
+              return typeof item === 'string' ? JSON.parse(item) : item;
+            });
+          }
+        }
+
+        // FALLBACK TO LEGACY LIST if Hash failed or empty
+        if (!catalog || catalog.length === 0) {
+          console.log('[Catalog GET] Hash empty, checking legacy List...');
+          const kvResponse = await fetch(`${kvUrl}/get/wallpapers_catalog`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${kvToken}` }
+          });
+          // ... existing list parsing logic ...
+          if (kvResponse.ok) {
+            const kvData = await kvResponse.json();
+            catalog = kvData.result;
+          }
+        }
+
+        // Continue with normal processing...
 
         if (kvResponse.ok) {
           const kvData = await kvResponse.json();

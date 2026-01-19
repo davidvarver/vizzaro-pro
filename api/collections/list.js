@@ -16,8 +16,18 @@ export default async function handler(request, response) {
             return;
         }
 
-        // Fetch the full catalog associated with 'wallpapers_catalog' key
-        const catalog = await kv.get('wallpapers_catalog');
+        let catalog = [];
+
+        // TRY HASH FIRST
+        const kvResponseHash = await kv.hgetall('wallpapers_catalog_hash');
+        if (kvResponseHash) {
+            catalog = Object.values(kvResponseHash).map(item => typeof item === 'string' ? JSON.parse(item) : item);
+        }
+
+        // FALLBACK TO LEGACY
+        if (!catalog || catalog.length === 0) {
+            catalog = await kv.get('wallpapers_catalog');
+        }
 
         if (!catalog || !Array.isArray(catalog)) {
             return response.status(200).json({
