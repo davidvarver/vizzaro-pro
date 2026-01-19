@@ -187,7 +187,7 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
         // Update directory path to the subfolder for image searching
         // Note: We keeping 'dirPath' as base, but we'll fetch files from subfolder
         const subPath = `${dirPath}/${imagesSubfolder.name}`;
-        const subFiles = await itemsList(subPath);
+        const subFiles = await sftp.list(subPath); // Fix: Use sftp.list directly
 
         // Merge files (prioritize subfolder images)
         // Ideally we just want to look there for images.
