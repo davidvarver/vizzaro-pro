@@ -174,12 +174,13 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
     console.log(`      Processing Collection: "${collectionName}" from ${fileName}`);
     // if (IS_DRY_RUN) return; // Allow reading for debug
 
-    // 1. List files in folder
-
+    // 1. List ALL files in folder (including subdirectories) to check for /Images
+    let allItems = await sftp.list(dirPath);
+    let filesInFolder = allItems; // Default to current folder items
 
     // CHECK: If folder has no images but has a subfolder named 'Images', switch to it!
-    const hasImages = filesInFolder.some(f => f.name.toLowerCase().endsWith('.jpg'));
-    const imagesSubfolder = filesInFolder.find(f => f.name.toLowerCase() === 'images' && f.type === 'd');
+    const hasImages = allItems.some(f => f.name.toLowerCase().endsWith('.jpg'));
+    const imagesSubfolder = allItems.find(f => f.name.toLowerCase() === 'images' && f.type === 'd');
 
     if (!hasImages && imagesSubfolder) {
         console.log(`    📂 Switching to scan subfolder: ${dirPath}/Images`);
