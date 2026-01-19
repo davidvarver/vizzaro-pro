@@ -246,8 +246,7 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
                     token: process.env.BLOB_READ_WRITE_TOKEN,
                     addRandomSuffix: false,
                     contentType: 'image/jpeg',
-                    addRandomSuffix: false,
-                    // FIX: Allow overwrite so we get the URL back even if it exists
+                    allowOverwrite: true, // Fix: Actually enabled now
                 });
                 imageUrl = blob.url;
                 imageUrls.push(imageUrl);
@@ -269,9 +268,8 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
                         access: 'public',
                         token: process.env.BLOB_READ_WRITE_TOKEN,
                         addRandomSuffix: false,
-                        contentType: 'image/jpeg'
-                        // Vercel Blob defaults strict, but if we don't enable overwrite, we fail to get URL.
-                        // Ideally we check list, but overwrite is acceptable for repair.
+                        contentType: 'image/jpeg',
+                        allowOverwrite: true, // Fix: Actually enabled now
                     });
                     if (!imageUrls.includes(blob.url)) {
                         imageUrls.push(blob.url);
