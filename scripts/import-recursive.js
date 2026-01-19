@@ -199,7 +199,7 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
     const newItems = [];
 
     for (const row of validRows) {
-        const pattern = row['Pattern'];
+        let pattern = String(row['Pattern']); // Force string to avoid .includes crashes
 
         // 2a. Find Main Image
         // Try standard naming + "Pattern Only" naming (e.g. 520255.jpg instead of 4096-520255.jpg)
