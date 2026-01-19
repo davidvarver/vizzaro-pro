@@ -16,20 +16,31 @@ export default async function handler(request, response) {
             return;
         }
 
-        let catalog = [];
+        // Initialize map to merge data sources (Hash takes priority)
+        const combinedCatalogMap = new Map();
 
-        // TRY HASH FIRST
-        const kvResponseHash = await kv.hgetall('wallpapers_catalog_hash');
-        if (kvResponseHash) {
-            catalog = Object.values(kvResponseHash).map(item => typeof item === 'string' ? JSON.parse(item) : item);
+        // 1. Fetch Legacy Data (Background/Base)
+        const legacyCatalog = await kv.get('wallpapers_catalog');
+        if (Array.isArray(legacyCatalog)) {
+            legacyCatalog.forEach(item => {
+                if (item && item.id) combinedCatalogMap.set(item.id.toString(), item);
+            });
         }
 
-        // FALLBACK TO LEGACY
-        if (!catalog || catalog.length === 0) {
-            catalog = await kv.get('wallpapers_catalog');
+        // 2. Fetch Hash Data (Updates/Repairs)
+        const hashData = await kv.hgetall('wallpapers_catalog_hash');
+        if (hashData) {
+            Object.values(hashData).forEach(rawItem => {
+                const item = typeof rawItem === 'string' ? JSON.parse(rawItem) : rawItem;
+                if (item && item.id) {
+                    combinedCatalogMap.set(item.id.toString(), item); // Overwrites legacy
+                }
+            });
         }
 
-        if (!catalog || !Array.isArray(catalog)) {
+        const catalog = Array.from(combinedCatalogMap.values());
+
+        if (catalog.length === 0) {
             return response.status(200).json({
                 success: true,
                 collections: []
