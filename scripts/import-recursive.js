@@ -175,7 +175,7 @@ async function processCollection(dirPath, fileName, collectionName, filesInFolde
     // if (IS_DRY_RUN) return; // Allow reading for debug
 
     // 1. List files in folder
-    let filesInFolder = await itemsList(dirPath);
+
 
     // CHECK: If folder has no images but has a subfolder named 'Images', switch to it!
     const hasImages = filesInFolder.some(f => f.name.toLowerCase().endsWith('.jpg'));
