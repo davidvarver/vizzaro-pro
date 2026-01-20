@@ -1,0 +1,23 @@
+{
+  "key": "8801",
+  "value": {
+    "id": "8801",
+    "name": "Orbit Navy Celestial Wallpaper",
+    "description": "Marbled turquoise and gold planets shimmer amongst metallic stars and orbit paths in this chic celestial wallpaper. A rich navy hue serves as the perfect backdrop for this space inspired print. Orbit is an unpasted, non woven blend wallpaper.",
+    "price": 139.98,
+    "category": "Lujo",
+    "collection": "Graphic World",
+    "style": "Eclectic",
+    "dimensions": {
+      "width": 0,
+      "height": 0,
+      "weight": 0
+    },
+    "imageUrl": "",
+    "imageUrls": [],
+    "inStock": true,
+    "publicSku": "VIZ-8801",
+    "patternRepeat": 0,
+    "timestamp": 1768855046692
+  }
+}

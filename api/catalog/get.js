@@ -37,6 +37,12 @@ export default async function handler(req, res) {
   }
 
   try {
+    const { createClient } = require('@vercel/kv');
+    const kv = createClient({
+      url: process.env.KV_REST_API_URL,
+      token: process.env.KV_REST_API_TOKEN,
+    });
+
     console.log('[Catalog GET] Fetching catalog from KV...');
 
     const kvUrl = process.env.KV_REST_API_URL;
@@ -59,44 +65,44 @@ export default async function handler(req, res) {
         // Initialize merging map
         const mergedCatalog = new Map();
 
-        // 1. Fetch Legacy Array
-        try {
-          const kvResponse = await fetch(`${kvUrl}/get/wallpapers_catalog`, {
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${kvToken}` }
-          });
-          if (kvResponse.ok) {
-            const kvData = await kvResponse.json();
-            if (Array.isArray(kvData.result)) {
-              console.log(`[Catalog GET] Loaded ${kvData.result.length} legacy items.`);
-              kvData.result.forEach(item => {
-                if (item && item.id) mergedCatalog.set(item.id.toString(), item);
-              });
-            }
+        // CHECK: Are we filtering by collection?
+        // Optimization: If ?collection=X is present, TRY to fetch "collection:X" key directly.
+        const targetCollection = req.query.collection;
+        let diffItems = [];
+
+        if (targetCollection) {
+          const cleanCol = targetCollection.trim();
+          console.log(`[Catalog GET] Optimized Fetch for Collection: "${cleanCol}"`);
+          const colItems = await kv.get(`collection:${cleanCol}`);
+          if (Array.isArray(colItems) && colItems.length > 0) {
+            console.log(`[Catalog GET] Hit Cache! Loaded ${colItems.length} items from collection:${cleanCol}`);
+            diffItems = colItems;
           }
-        } catch (e) {
-          console.warn('[Catalog GET] Legacy fetch warning:', e.message);
         }
 
-        // 2. Fetch Hash Data (Overlays/Repairs)
-        try {
-          const kvResponseHash = await fetch(`${kvUrl}/hgetall/wallpapers_catalog_hash`, {
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${kvToken}` }
+        // If we didn't find specific collection items, OR if we need full catalog (search/all):
+        // We must fetch full catalog (legacy + hash) or maybe just return empty if too big?
+        // STARTUP FIX: If we have diffItems, we USE them as the base.
+
+        if (diffItems.length > 0) {
+          diffItems.forEach(item => {
+            if (item && item.id) mergedCatalog.set(item.id.toString(), item);
           });
-          if (kvResponseHash.ok) {
-            const hashData = await kvResponseHash.json();
-            if (hashData.result) {
-              const hashItems = Object.values(hashData.result);
-              console.log(`[Catalog GET] Loaded ${hashItems.length} hash items (merging...).`);
-              hashItems.forEach(raw => {
+        } else {
+          // FALLBACK TO FULL LOAD (Warning: Might crash if >10MB, but necessary for global search)
+          // Ideally global search should use a search index too.
+          // For now, let's try HGETALL only if NO collection specified.
+          // ... (keep legacy logic if needed, or skip to avoid crash)
+          console.log('[Catalog GET] Full Catalog Fetch (Risk of 10MB limit)...');
+          try {
+            const hashData = await kv.hgetall('wallpapers_catalog_hash');
+            if (hashData) {
+              Object.values(hashData).forEach(raw => {
                 const item = typeof raw === 'string' ? JSON.parse(raw) : raw;
                 if (item && item.id) mergedCatalog.set(item.id.toString(), item);
               });
             }
-          }
-        } catch (e) {
-          console.warn('[Catalog GET] Hash fetch warning:', e.message);
+          } catch (e) { console.warn('Full fetch failed:', e.message); }
         }
 
         catalog = Array.from(mergedCatalog.values());

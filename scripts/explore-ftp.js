@@ -1,48 +1,50 @@
+require('dotenv').config();
 const Client = require('ssh2-sftp-client');
 const fs = require('fs');
+
 const sftp = new Client();
 
-const config = {
-    host: 'ftpimages.brewsterhomefashions.com',
-    username: 'dealers',
-    password: 'Brewster#1',
-    port: 22,
+const FTP_CONFIG = {
+    host: process.env.FTP_HOST,
+    port: process.env.FTP_PORT || 22,
+    username: process.env.FTP_USER,
+    password: process.env.FTP_PASSWORD,
+    // Add debug if needed
 };
 
-function formatSize(bytes) {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-async function explore() {
+async function main() {
     try {
-        console.log(`Connecting to ${config.host}...`);
-        await sftp.connect(config);
-        console.log('Connected! Listing root...');
+        console.log('🔌 Connecting to SFTP...');
+        await sftp.connect(FTP_CONFIG);
+        console.log('✅ Connected.');
 
-        const list1 = await sftp.list('/New Products');
-        const list2 = await sftp.list('/WallpaperBooks/1 All Wallpaper Images');
-        const list = [...list1, ...list2];
-        console.log(`Found ${list.length} items.`);
+        // Target Folder from logs
+        const targetPath = '/WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images';
+        // Check if 72dpi exists
 
-        // Sort: Directories first
-        list.sort((a, b) => {
-            if (a.type === b.type) return a.name.localeCompare(b.name);
-            return a.type === 'd' ? -1 : 1;
-        });
+        console.log(`📂 Listing ${targetPath}...`);
 
-        // Write to file to avoid encoding issues
-        fs.writeFileSync('ftp_dir.json', JSON.stringify(list, null, 2));
-        console.log('Successfully saved to ftp_dir.json');
+        try {
+            const list = await sftp.list(targetPath);
+            console.log(`✅ Found ${list.length} items.`);
+            fs.writeFileSync('ftp_listing_bali.json', JSON.stringify(list, null, 2));
+            console.log('💾 Saved to ftp_listing_bali.json');
+        } catch (e) {
+            console.warn(`⚠️ Could not list ${targetDir}: ${e.message}`);
+
+            // Try parent
+            const parentDir = '/WallpaperBooks/Advantage Bali - 2814';
+            console.log(`📂 Trying parent: ${parentDir}...`);
+            const list2 = await sftp.list(parentDir);
+            console.log(`✅ Found ${list2.length} items.`);
+            fs.writeFileSync('ftp_listing_bali.json', JSON.stringify(list2, null, 2));
+        }
 
     } catch (err) {
-        console.error('SFTP Error:', err.message);
+        console.error('❌ Fatal Error:', err);
     } finally {
         sftp.end();
     }
 }
 
-explore();
+main();

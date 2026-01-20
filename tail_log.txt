@@ -1,0 +1,100 @@
+
+ÔÜá´©Å  [MCS6621] Image NOT found. Candidates: MCS6621.jpg, MCS6621.jpeg, MCS6621.png, MDMCS6621.jpg, MCS6621.jpg, MCS6621.jpeg
+    Available files (first 5): All_NewProduct_Data.xlsx, Thumbs.db
+      ­ƒÆ¥ Saving 343 items to Hash...
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      Ô£à Saved 343 items from All Data
+­ƒôé Scanning: /New Products/All Images
+­ƒôé Scanning: /WallpaperBooks
+­ƒôé Scanning: /WallpaperBooks/1 All Wallpaper Images
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021
+   ­ƒÆÄ Found Collection Data in: /WallpaperBooks/A-Street Select - 4021
+      Processing Collection: "A-Street Select - 4021" from A-StreetSelectData.xlsx
+    ­ƒôé Switching to scan subfolder: /WallpaperBooks/A-Street Select - 4021/Images
+    Found 2 items in /Images subfolder.
+node :       ÔØî 
+Failed to read 
+excel A-StreetSelect
+Data.xlsx: get: No 
+such file. /Wallpape
+rBooks/A-Street 
+Select - 4021/Images
+/A-StreetSelectData.
+xlsx
+En línea: 1 
+Carácter: 1
++ node scripts/impor
+t-recursive.js > 
+import_log_v2.txt 
+2>&1
++ ~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo  
+            : 
+NotSpecified:     ( 
+     ÔØî Faile...S  
+  electData.xlsx:Str
+in    g) [], 
+RemoteExcepti    on
+    + 
+FullyQualifiedErro  
+  rId : 
+NativeCommandE    
+rror
+ 
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali
+   ­ƒÆÄ Found Collection Data in: /WallpaperBooks/A-Street Select - 4021/Advantage Bali
+      Processing Collection: "Advantage Bali" from BaliData.xlsx
+    ­ƒôé Switching to scan subfolder: /WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images
+    Found 3 items in /Images subfolder.
+      ÔØî Failed to 
+read excel 
+BaliData.xlsx: get: 
+No such file. /Wallp
+aperBooks/A-Street 
+Select - 
+4021/Advantage Bali/
+Images/BaliData.xlsx
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images/300dpi
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021/Advantage Bali/Images/72dpi
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021/Images
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021/Images/300dpi
+­ƒôé Scanning: /WallpaperBooks/A-Street Select - 4021/Images/72dpi
+­ƒôé Scanning: /WallpaperBooks/Advantage Bath - 2814
+   ­ƒÆÄ Found Collection Data in: /WallpaperBooks/Advantage Bath - 2814
+      Processing Collection: "Advantage Bath - 2814" from BathData.xlsx
+    ­ƒôé Switching to scan subfolder: /WallpaperBooks/Advantage Bath - 2814/Images
+    Found 135 items in /Images subfolder.
+      ÔØî Failed to 
+read excel 
+BathData.xlsx: get: 
+No such file. /Wallp
+aperBooks/Advantage 
+Bath - 2814/Images/B
+athData.xlsx
+­ƒôé Scanning: /WallpaperBooks/Advantage Bath - 2814/Images
+­ƒôé Scanning: /WallpaperBooks/Advantage Beyond Textures - 4015
+   ­ƒÆÄ Found Collection Data in: /WallpaperBooks/Advantage Beyond Textures - 4015
+      Processing Collection: "Advantage Beyond Textures - 4015" from BeyondTexturesData.xlsx
+    ­ƒôé Switching to scan subfolder: /WallpaperBooks/Advantage Beyond Textures - 4015/Images
+    Found 228 items in /Images subfolder.
+      ÔØî Failed to 
+read excel BeyondTex
+turesData.xlsx: 
+get: No such file. /
+WallpaperBooks/Advan
+tage Beyond 
+Textures - 4015/Imag
+es/BeyondTexturesDat
+a.xlsx
+­ƒôé Scanning: /WallpaperBooks/Advantage Beyond Textures - 4015/Images
+­ƒôé Scanning: /WallpaperBooks/Advantage Concrete - 4096
+   ­ƒÆÄ Found Collection Data in: /WallpaperBooks/Advantage Concrete - 4096
+      Processing Collection: "Advantage Concrete - 4096" from ConcreteData.xlsx
+    ­ƒôé Switching to scan subfolder: /WallpaperBooks/Advantage Concrete - 4096/Images
+    Found 153 items in /Images subfolder.
+      ­ƒôè Headers: Book #, Book Name, Brand, Pattern, Page, Name, Product Type, Description, Code, MSRP, Barcode, Width (in), Length (ft), Coverage, Unit Weight, Repeat (in), Match, Paste, Material, Washability, Removability, Colorway, Color Family, Style, Pattern_1, Theme, Country of Origin, HTS Code
+      ­ƒæÇ First Row: {"Book #":4096,"Book Name":"Concrete","Brand":"Advantage","Pattern":"4096-554564","Page":37,"Name":"Dale Dark Grey Texture Wallpaper","Product Type":"Sidewall","Description":"Add subtle dimension to your walls with this textured wallpaper. The rough, pock-marked texture of concrete is elevated by two contrasting shades of grey accented with delicate hints of silver. Dale is an unpasted, non woven wallpaper.","Code":"A","MSRP":86,"Barcode":"4000441554564","Width (in)":20.9,"Length (ft)":33,"Coverage":"About 57.5 square feet","Unit Weight":2.8,"Repeat (in)":0,"Match":"Random","Paste":"Unpasted","Material":"Non Woven","Washability":"Washable","Removability":"Strippable","Colorway":"Dark Grey","Color Family":"Greys","Style":"Modern","Pattern_1":"Distressed Textures","Theme":"Abstract","Country of Origin":"Germany","HTS Code":"4814.20.0000"}
+      Found 50 valid items (out of 50 total rows).

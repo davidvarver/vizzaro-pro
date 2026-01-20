@@ -80,9 +80,7 @@ export default function HomeScreen() {
             <StatusBar barStyle="dark-content" />
             <SafeAreaView edges={['top']} style={styles.safeArea}>
                 <View style={styles.navBar}>
-                    <TouchableOpacity onPress={() => { }}>
-                        <Ionicons name="menu-outline" size={28} color="black" />
-                    </TouchableOpacity>
+
                     <Image
                         source={require('@/assets/images/logo-header.png')}
                         style={{ width: 140, height: 40 }}

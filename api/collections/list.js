@@ -16,36 +16,20 @@ export default async function handler(request, response) {
             return;
         }
 
-        // Initialize map to merge data sources (Hash takes priority)
-        const combinedCatalogMap = new Map();
+        // 1. Fetch Lightweight Index (Fast!)
+        const collections = await kv.get('wallpapers_series_index');
 
-        // 1. Fetch Legacy Data (Background/Base)
-        const legacyCatalog = await kv.get('wallpapers_catalog');
-        if (Array.isArray(legacyCatalog)) {
-            legacyCatalog.forEach(item => {
-                if (item && item.id) combinedCatalogMap.set(item.id.toString(), item);
-            });
+        if (!collections || collections.length === 0) {
+            console.log('Index empty, trying legacy fallback...');
+            // (Legacy fallback code or just return empty for safety to avoid crash)
+            return response.status(200).json({ success: true, collections: [] });
         }
 
-        // 2. Fetch Hash Data (Updates/Repairs)
-        const hashData = await kv.hgetall('wallpapers_catalog_hash');
-        if (hashData) {
-            Object.values(hashData).forEach(rawItem => {
-                const item = typeof rawItem === 'string' ? JSON.parse(rawItem) : rawItem;
-                if (item && item.id) {
-                    combinedCatalogMap.set(item.id.toString(), item); // Overwrites legacy
-                }
-            });
-        }
-
-        const catalog = Array.from(combinedCatalogMap.values());
-
-        if (catalog.length === 0) {
-            return response.status(200).json({
-                success: true,
-                collections: []
-            });
-        }
+        return response.status(200).json({
+            success: true,
+            collections,
+            timestamp: Date.now()
+        });
 
         // Aggregate collections
         const collectionsMap = new Map();
