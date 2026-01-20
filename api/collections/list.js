@@ -1,6 +1,10 @@
 export default async function handler(request, response) {
     try {
-        const { kv } = require('@vercel/kv');
+        const { createClient } = require('@vercel/kv');
+        const kv = createClient({
+            url: process.env.KV_REST_API_URL,
+            token: process.env.KV_REST_API_TOKEN,
+        });
 
         // Enable CORS
         response.setHeader('Access-Control-Allow-Credentials', true);
