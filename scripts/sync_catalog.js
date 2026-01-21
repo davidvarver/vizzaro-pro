@@ -29,10 +29,10 @@ const CONFIG = {
     SAVE_CHECKPOINT_EVERY: 5,
     WATERMARK: {
         enabled: true,
-        logoPath: process.env.WATERMARK_LOGO_PATH || './assets/images/vizzaro-logo-watermark.png',
+        logoPath: process.env.WATERMARK_LOGO_PATH || './assets/images/logo-header.png',
         position: 'center', // 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'center'
-        opacity: 0.3, // 0-1 (0 = transparente, 1 = opaco) - 30% como tienes actualmente
-        scale: 0.25, // Tamaño relativo a la imagen (25% del ancho para centro)
+        opacity: 0.4, // Increased slightly for visibility
+        scale: 0.3, // Increased size slightly
         margin: 20 // Margen desde el borde en píxeles (no aplica en center)
     }
 };

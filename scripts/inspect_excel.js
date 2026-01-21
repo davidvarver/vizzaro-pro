@@ -46,8 +46,14 @@ async function main() {
 
         const fs = require('fs');
         if (data.length > 0) {
-            console.log('--- WRITING HEADERS TO FILE ---');
-            fs.writeFileSync('headers.json', JSON.stringify(Object.keys(data[0]), null, 2));
+            console.log('--- WRITING SAMPLE DATA TO FILE ---');
+            const sample = data.slice(0, 5).map(row => ({
+                id: row.Pattern,
+                name: row.Name,
+                desc: row.Description,
+                prodName: row['Product Name']
+            }));
+            fs.writeFileSync('sample_data.json', JSON.stringify(sample, null, 2));
             console.log('--- DONE ---');
         } else {
             console.log('⚠️ Excel is empty');
