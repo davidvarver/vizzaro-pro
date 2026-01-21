@@ -200,6 +200,17 @@ export default function WallpaperResultScreen() {
                         <ActivityIndicator color={Colors.light.tint} />
                     </View>
                 )}
+
+                {/* Watermark Overlay */}
+                {(showProcessedImage || (shouldUseOverlay && room)) && (
+                    <View style={styles.watermarkContainer}>
+                        <Image
+                            source={require('../../assets/images/vizzaro-logo-watermark.png')}
+                            style={styles.watermarkLogo}
+                            resizeMode="contain"
+                        />
+                    </View>
+                )}
             </View>
 
             {/* --- Controls Area (Enhanced) --- */}
@@ -426,4 +437,18 @@ const styles = StyleSheet.create({
         elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 3.84,
     },
     generateButtonText: { color: 'white', fontWeight: 'bold', fontSize: 14 },
+    watermarkContainer: {
+        position: 'absolute',
+        bottom: 20,
+        alignSelf: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent black Frame
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        zIndex: 10,
+    },
+    watermarkLogo: {
+        width: 100,
+        height: 30,
+    }
 });

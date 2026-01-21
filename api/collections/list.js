@@ -29,9 +29,22 @@ export default async function handler(request, response) {
             return response.status(200).json({ success: true, collections: [] });
         }
 
+        // HYDRATE: Convert strings to objects to prevent frontend crash
+        const hydratedCollections = collections.map(c => {
+            if (typeof c === 'string') {
+                return {
+                    id: c,
+                    name: c,
+                    count: 0, // To do: Sync real count
+                    thumbnail: null // To do: Sync real thumbnail
+                };
+            }
+            return c;
+        });
+
         return response.status(200).json({
             success: true,
-            collections,
+            collections: hydratedCollections,
             timestamp: Date.now()
         });
 

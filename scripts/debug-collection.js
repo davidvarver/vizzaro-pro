@@ -8,20 +8,16 @@ const kv = createClient({
 
 async function run() {
     console.log('Fetching catalog...');
-    // Fetch from Hash (New Storage)
-    const hashData = await kv.hgetall('wallpapers_catalog_hash');
+    const targetCollection = 'Advantage Bali';
+    console.log(`Fetching collection: ${targetCollection}...`);
 
-    let catalog = [];
-    if (hashData) {
-        catalog = Object.values(hashData).map(v => (typeof v === 'string' ? JSON.parse(v) : v));
-    } else {
-        // Fallback to old array if hash is empty (unlikely now)
-        catalog = await kv.get('wallpapers_catalog') || [];
+    // Fetch specifically from the collection key to avoid memory crash
+    const items = await kv.get(`collection:${targetCollection}`);
+
+    if (!items || items.length === 0) {
+        console.log('❌ Collection not found or empty in KV.');
+        return;
     }
-    console.log(`Total items: ${catalog.length}`);
-
-    const targetCollection = 'Advantage Concrete';
-    const items = catalog.filter(i => i.collection && i.collection.toUpperCase().includes(targetCollection.toUpperCase()));
 
     console.log(`Found ${items.length} items for collection "${targetCollection}"`);
 
