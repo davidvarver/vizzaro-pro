@@ -26,9 +26,9 @@ async function main() {
             const products = await kv.get(`collection:${collectionName}`);
 
             if (products && Array.isArray(products) && products.length > 0) {
-                // Find first product with a thumbnail
-                const thumbProduct = products.find(p => p.thumbnail);
-                const thumbnail = thumbProduct ? thumbProduct.thumbnail : null;
+                // Find first product with a thumbnail or image
+                const thumbProduct = products.find(p => p.thumbnail || p.imageUrl || p.image);
+                const thumbnail = thumbProduct ? (thumbProduct.thumbnail || thumbProduct.imageUrl || thumbProduct.image) : null;
 
                 newIndex.push({
                     id: collectionName,

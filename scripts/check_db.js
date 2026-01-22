@@ -10,7 +10,7 @@ async function main() {
     console.log('🔍 Checking Database State...');
 
     // 1. Check Collection Data
-    const collectionKey = 'collection:Advantage Bath';
+    const collectionKey = 'collection:Advantage Cuba - 4044';
     const collectionData = await kv.get(collectionKey);
     console.log(`\n📂 ${collectionKey}: ${collectionData ? collectionData.length + ' items' : 'MISSING'}`);
 
@@ -21,6 +21,14 @@ async function main() {
     // 3. Check Series Index (Home Page)
     const seriesIndex = await kv.get('wallpapers_series_index');
     console.log(`📚 wallpapers_series_index: ${seriesIndex ? seriesIndex.length + ' collections' : 'MISSING'}`);
+
+    if (seriesIndex && seriesIndex.length > 0) {
+        console.log('\n📋 Sample Series Index Item:');
+        console.log(JSON.stringify(seriesIndex[0], null, 2));
+    }
+
+    // EXIT EARLY FOR CLEAR OUTPUT
+    process.exit(0);
 
     if (collectionData && collectionData.length > 0) {
         console.log('\n📋 Sample Product from Collection:');

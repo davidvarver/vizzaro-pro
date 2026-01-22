@@ -11,16 +11,13 @@ const FTP_CONFIG = {
 async function main() {
     const sftp = new Client();
     await sftp.connect(FTP_CONFIG);
-    const path = '/WallpaperBooks/A-Street Select - 4021';
+    const path = '/WallpaperBooks';
+    console.log('📂 Listing root directory...');
     const list = await sftp.list(path);
-    const excelFiles = list.filter(f => f.name.endsWith('.xlsx') || f.name.endsWith('.xls') || f.name.endsWith('.csv'));
+    const directories = list.filter(f => f.type === 'd');
 
-    if (excelFiles.length > 0) {
-        console.log('✅ FOUND EXCEL FILES:', JSON.stringify(excelFiles, null, 2));
-    } else {
-        console.log('❌ NO EXCEL FILES FOUND in this folder.');
-        console.log('   All files:', list.map(f => f.name).join(', '));
-    }
+    console.log(`✅ TOTAL COLLECTIONS DETECTED: ${directories.length}`);
+    console.log('-----------------------------------');
     sftp.end();
 }
 main();
