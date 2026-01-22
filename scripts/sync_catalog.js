@@ -303,12 +303,20 @@ async function processProductBatch(products, allImages, collectionName, startInd
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        // Find match (Single Image Logic - per user request)
-        // We use collectionImages which contains RECURSIVE scan results
-        const match = collectionImages.find(img =>
+        // Find match (Smart Single Image Logic)
+        // 1. Filter ALL recursive candidates
+        const candidates = collectionImages.filter(img =>
             img.name.toLowerCase().includes(product.id.toLowerCase()) ||
             img.name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.id.toLowerCase().replace(/[^a-z0-9]/g, ''))
         );
+
+        let match = null;
+        if (candidates.length > 0) {
+            // 2. Sort by length to prefer "4044.jpg" over "4044_Room.jpg"
+            candidates.sort((a, b) => a.name.length - b.name.length);
+            match = candidates[0]; // Pick the shortest (Best "Main" candidate)
+            console.log(`   🎯 Selected '${match.name}' from ${candidates.length} candidates`);
+        }
 
         if (match) {
             console.log(`   🖼️ Found image: ${match.name} (${(match.size / 1024).toFixed(2)} KB)`);
