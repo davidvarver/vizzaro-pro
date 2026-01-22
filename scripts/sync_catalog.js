@@ -303,42 +303,30 @@ async function processProductBatch(products, allImages, collectionName, startInd
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        // Find ALL matching images (variants)
-        // Logic: specific start match to avoid partial collisions (e.g. 4044 matching 40441)
-        const variants = allImages.filter(img =>
-            img.name.startsWith(product.id) ||
-            img.name.toLowerCase().startsWith(product.id.toLowerCase())
+        // Find match (Single Image Logic - per user request)
+        // We use collectionImages which contains RECURSIVE scan results
+        const match = collectionImages.find(img =>
+            img.name.toLowerCase().includes(product.id.toLowerCase()) ||
+            img.name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.id.toLowerCase().replace(/[^a-z0-9]/g, ''))
         );
 
-        if (variants.length > 0) {
-            console.log(`   🖼️ Found ${variants.length} images for pattern ${product.id}`);
+        if (match) {
+            console.log(`   🖼️ Found image: ${match.name} (${(match.size / 1024).toFixed(2)} KB)`);
+            const imageUrl = await uploadImageWithRetry(
+                match.path,
+                `wallpapers/${collectionName}/${match.name}`
+            );
 
-            // Upload all variants
-            const uploadedUrls = [];
-            for (const variant of variants) {
-                const url = await uploadImageWithRetry(
-                    variant.path,
-                    `wallpapers/${collectionName}/${variant.name}`
-                );
-                if (url) uploadedUrls.push(url);
-            }
-
-            if (uploadedUrls.length > 0) {
-                // Heuristic: Shortest name is usually the main image (e.g. "1234.jpg" vs "1234_Room.jpg")
-                // Or looking for specific suffixes if available
-                uploadedUrls.sort((a, b) => a.length - b.length);
-
-                product.imageUrl = uploadedUrls[0]; // Shortest is main
-                product.imageUrls = uploadedUrls;   // All variants
+            if (imageUrl) {
+                product.imageUrl = imageUrl;
                 product.hasImage = true;
-
-                console.log(`   ✅ Uploaded ${uploadedUrls.length} images (Main: ${product.imageUrl})`);
+                console.log(`   ✅ Upload successful: ${imageUrl}`);
             } else {
                 product.hasImage = false;
-                console.log(`   ❌ Uploads failed`);
+                console.log(`   ❌ Upload failed`);
             }
         } else {
-            console.log(`   ⚠️ No images found for pattern ${product.id}`);
+            console.log(`   ⚠️ No image found for pattern ${product.id}`);
             product.hasImage = false;
         }
 
