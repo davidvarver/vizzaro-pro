@@ -124,25 +124,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function scanRecursive(dirPath, fileList = []) {
-    try {
-        const items = await sftp.list(dirPath);
-        for (const item of items) {
-            if (item.type === 'd' && item.name !== '.' && item.name !== '..') {
-                await scanRecursive(`${dirPath}/${item.name}`, fileList);
-            } else if (item.name.match(/\.(jpg|jpeg|png)$/i)) {
-                fileList.push({
-                    name: item.name,
-                    path: `${dirPath}/${item.name}`,
-                    size: item.size
-                });
-            }
-        }
-    } catch (e) {
-        console.warn(`⚠️ Error scanning ${dirPath}: ${e.message}`);
-    }
-    return fileList;
-}
+
 
 // --- WATERMARK SYSTEM ---
 let watermarkBuffer = null;
@@ -303,20 +285,12 @@ async function processProductBatch(products, allImages, collectionName, startInd
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        // Find match (Smart Single Image Logic)
-        // 1. Filter ALL recursive candidates
-        const candidates = collectionImages.filter(img =>
+        // Find match (Single Image - Root Only)
+        // We use allImages which is just the root folder now
+        const match = allImages.find(img =>
             img.name.toLowerCase().includes(product.id.toLowerCase()) ||
             img.name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.id.toLowerCase().replace(/[^a-z0-9]/g, ''))
         );
-
-        let match = null;
-        if (candidates.length > 0) {
-            // 2. Sort by length to prefer "4044.jpg" over "4044_Room.jpg"
-            candidates.sort((a, b) => a.name.length - b.name.length);
-            match = candidates[0]; // Pick the shortest (Best "Main" candidate)
-            console.log(`   🎯 Selected '${match.name}' from ${candidates.length} candidates`);
-        }
 
         if (match) {
             console.log(`   🖼️ Found image: ${match.name} (${(match.size / 1024).toFixed(2)} KB)`);
@@ -394,27 +368,16 @@ async function processCollection(collectionName, rootPath) {
             }
         }
 
-        // 1. RECURSIVE SCAN to find ALL images (including subfolders)
-        console.log('📂 Scanning for images recursively...');
-        let collectionImages = [];
+        // 1. Scan images in the root folder only (as requested)
+        console.log('📂 Scanning images in root folder...');
+        const fileList = await sftp.list(rootPath);
+        const allImages = fileList.filter(f => f.name.match(/\.(jpg|jpeg|png)$/i)).map(items => ({
+            name: items.name,
+            path: `${rootPath}/${items.name}`,
+            size: items.size
+        }));
 
-        async function scanDir(path) {
-            const items = await sftp.list(path);
-            for (const item of items) {
-                if (item.type === 'd' && item.name !== '.' && item.name !== '..') {
-                    await scanDir(`${path}/${item.name}`);
-                } else if (item.name.match(/\.(jpg|jpeg|png)$/i)) {
-                    collectionImages.push({
-                        name: item.name,
-                        path: `${path}/${item.name}`,
-                        size: item.size
-                    });
-                }
-            }
-        }
-
-        await scanDir(rootPath);
-        console.log(`✅ Found ${collectionImages.length} total images in collection tree.`);
+        console.log(`✅ Found ${allImages.length} images in root.`);
 
         // Find Excel in the root
         const rootItems = await sftp.list(rootPath);
@@ -486,7 +449,7 @@ async function processCollection(collectionName, rootPath) {
 
         // Procesar productos (con resume si aplica)
         console.log(`\n📤 Starting image processing & upload...`);
-        const processedProducts = await processProductBatch(products, collectionImages, collectionName, resumeIndex);
+        const processedProducts = await processProductBatch(products, allImages, collectionName, resumeIndex);
 
         // Estadísticas
         const withImages = processedProducts.filter(p => p.hasImage).length;
