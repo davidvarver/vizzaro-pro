@@ -80,10 +80,9 @@ export default function HomeScreen() {
             <StatusBar barStyle="dark-content" />
             <SafeAreaView edges={['top']} style={styles.safeArea}>
                 <View style={styles.navBar}>
-
                     <Image
                         source={require('@/assets/images/logo-header.png')}
-                        style={{ width: 140, height: 40 }}
+                        style={styles.logoImage}
                         resizeMode="contain"
                     />
                     <View style={styles.navIcons}>
@@ -128,11 +127,16 @@ const styles = StyleSheet.create({
     navBar: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center', // Center logo
         paddingHorizontal: 20,
         paddingVertical: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#f7f7f7',
+        position: 'relative',
+    },
+    logoImage: {
+        width: 180, // Increased size
+        height: 50,
     },
     logoText: {
         fontSize: 20,
@@ -142,6 +146,8 @@ const styles = StyleSheet.create({
     },
     navIcons: {
         flexDirection: 'row',
+        position: 'absolute',
+        right: 20,
     },
     centered: {
         flex: 1,
