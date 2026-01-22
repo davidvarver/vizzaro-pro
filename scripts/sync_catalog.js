@@ -30,10 +30,10 @@ const CONFIG = {
     WATERMARK: {
         enabled: true,
         logoPath: process.env.WATERMARK_LOGO_PATH || './assets/images/logo-header.png',
-        position: 'center', // 'bottom-right', 'bottom-left', 'top-right', 'top-left', 'center'
-        opacity: 0.4, // Increased slightly for visibility
-        scale: 0.3, // Increased size slightly
-        margin: 20 // Margen desde el borde en píxeles (no aplica en center)
+        position: 'center',
+        opacity: 0.4,
+        scale: 0.3,
+        margin: 20
     }
 };
 
@@ -110,21 +110,17 @@ function cleanPrice(priceStr) {
 
 function cleanDimensions(dimStr) {
     if (!dimStr) return null;
-    // Normalizar formato: "20.5 x 33" o "20.5" x 33'" etc
     return String(dimStr).trim();
 }
 
 function cleanRepeat(repeatStr) {
     if (!repeatStr) return null;
-    // Normalizar formato de repetición
     return String(repeatStr).trim();
 }
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-
 
 // --- WATERMARK SYSTEM ---
 let watermarkBuffer = null;
@@ -162,7 +158,7 @@ async function addWatermark(imageBuffer) {
         // Redimensionar y aplicar opacidad al watermark
         const resizedWatermark = await sharp(watermarkBuffer)
             .resize(watermarkWidth, null, { fit: 'inside' })
-            .png() // Asegurar que sea PNG para transparencia
+            .png()
             .toBuffer();
 
         // Crear overlay con opacidad
@@ -213,9 +209,9 @@ async function addWatermark(imageBuffer) {
                 input: watermarkWithOpacity,
                 left: left,
                 top: top,
-                blend: 'over' // Blend mode para mejor integración
+                blend: 'over'
             }])
-            .jpeg({ quality: 90 }) // Alta calidad para producto
+            .jpeg({ quality: 90 })
             .toBuffer();
 
         console.log(`   ✨ Watermark applied (${CONFIG.WATERMARK.position}, ${CONFIG.WATERMARK.opacity * 100}% opacity)`);
@@ -244,8 +240,7 @@ async function uploadImageWithRetry(imagePath, remotePath, retries = CONFIG.MAX_
             const blob = await put(remotePath, processedBuffer, {
                 access: 'public',
                 token: process.env.BLOB_READ_WRITE_TOKEN,
-                addRandomSuffix: false,
-                allowOverwrite: true
+                addRandomSuffix: false
             });
 
             return blob.url;
@@ -285,8 +280,7 @@ async function processProductBatch(products, allImages, collectionName, startInd
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        // Find match (Single Image - Root Only)
-        // We use allImages which is just the root folder now
+        // Buscar imagen que coincida con el patrón
         const match = allImages.find(img =>
             img.name.toLowerCase().includes(product.id.toLowerCase()) ||
             img.name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.id.toLowerCase().replace(/[^a-z0-9]/g, ''))
@@ -368,20 +362,21 @@ async function processCollection(collectionName, rootPath) {
             }
         }
 
-        // 1. Scan images in the root folder only (as requested)
+        // 1. Escanear imágenes solo en carpeta raíz
         console.log('📂 Scanning images in root folder...');
         const fileList = await sftp.list(rootPath);
-        const allImages = fileList.filter(f => f.name.match(/\.(jpg|jpeg|png)$/i)).map(items => ({
-            name: items.name,
-            path: `${rootPath}/${items.name}`,
-            size: items.size
-        }));
+        const allImages = fileList
+            .filter(f => f.name.match(/\.(jpg|jpeg|png)$/i))
+            .map(item => ({
+                name: item.name,
+                path: `${rootPath}/${item.name}`,
+                size: item.size
+            }));
 
-        console.log(`✅ Found ${allImages.length} images in root.`);
+        console.log(`✅ Found ${allImages.length} images in root folder`);
 
-        // Find Excel in the root
-        const rootItems = await sftp.list(rootPath);
-        const excelFile = rootItems.find(f => f.name.match(/\.xlsx?$/i));
+        // 2. Buscar archivo Excel
+        const excelFile = fileList.find(f => f.name.match(/\.xlsx?$/i));
         let products = [];
 
         if (excelFile) {
@@ -393,7 +388,7 @@ async function processCollection(collectionName, rootPath) {
                 const sheet = workbook.Sheets[workbook.SheetNames[0]];
                 const rawData = XLSX.utils.sheet_to_json(sheet);
 
-                // Mapeo flexible de columnas (busca variaciones comunes)
+                // Mapeo flexible de columnas
                 products = rawData
                     .filter(r => r.Pattern && String(r.Pattern).trim())
                     .map(r => ({
@@ -405,7 +400,7 @@ async function processCollection(collectionName, rootPath) {
                         dimensions: cleanDimensions(
                             r.Dimensions || r.Size || r.Dimension || r['Roll Size'] ||
                             ((r.Width || r['Roll Width'] || r['Width (in)']) && (r.Length || r['Roll Length'] || r['Length (ft)']) ?
-                                `${r.Width || r['Roll Width'] || r['Width (in)']} ${r['Width (in)'] ? 'in' : ''} x ${r.Length || r['Roll Length'] || r['Length (ft)']} ${r['Length (ft)'] ? 'ft' : ''}` : null)
+                                `${r.Width || r['Roll Width'] || r['Width (in)']} ${r['Width (in)'] ? 'in' : ''} x ${r.Length || r['Roll Length'] || r['Length (ft)']} ${r['Length (ft)'] ? 'ft' : ''}`.trim() : null)
                         ),
                         repeat: cleanRepeat(
                             r.Repeat || r['Pattern Repeat'] || r['Vertical Repeat'] || r['Repeat (in)'] ||
@@ -442,16 +437,11 @@ async function processCollection(collectionName, rootPath) {
             return { skipped: true, reason: 'No metadata file' };
         }
 
-        // Escanear imágenes
-        console.log(`\n🔍 Scanning images...`);
-        const allImages = await scanRecursive(rootPath);
-        console.log(`✅ Found ${allImages.length} images`);
-
-        // Procesar productos (con resume si aplica)
+        // 3. Procesar productos y subir imágenes
         console.log(`\n📤 Starting image processing & upload...`);
         const processedProducts = await processProductBatch(products, allImages, collectionName, resumeIndex);
 
-        // Estadísticas
+        // 4. Estadísticas
         const withImages = processedProducts.filter(p => p.hasImage).length;
         const withoutImages = processedProducts.filter(p => !p.hasImage).length;
         const withPrice = processedProducts.filter(p => p.price > 0).length;
@@ -468,18 +458,18 @@ async function processCollection(collectionName, rootPath) {
         console.log(`   📏 With Dimensions: ${withDimensions}`);
         console.log(`   🔄 With Repeat: ${withRepeat}`);
 
-        // Guardar en KV (versión final)
+        // 5. Guardar en KV
         if (processedProducts.length > 0) {
             await kv.set(`collection:${collectionName}`, processedProducts);
 
-            // --- RESTORED INDEX UPDATE LOGIC ---
-            // 1. Update Global Hash (for search/lookup)
+            // Actualizar hash global (para búsqueda)
             let hashUpdates = {};
             for (const p of processedProducts) {
                 if (p.hasImage && p.imageUrl) {
                     hashUpdates[p.id] = JSON.stringify(p);
                 }
             }
+
             if (Object.keys(hashUpdates).length > 0) {
                 const CHUNK_SIZE = 1000;
                 const entries = Object.entries(hashUpdates);
@@ -490,31 +480,31 @@ async function processCollection(collectionName, rootPath) {
                 console.log(`   🔗 Updated Main Catalog Hash (${Object.keys(hashUpdates).length} items)`);
             }
 
-            // Actualizar índice de series (para home page) - RICH METADATA
+            // Actualizar índice de series (para home page)
             const seriesIndex = await kv.get('wallpapers_series_index') || [];
+
+            // Buscar primer producto con imagen para thumbnail
+            const firstWithImage = processedProducts.find(p => p.hasImage && p.imageUrl);
 
             const metaEntry = {
                 id: collectionName,
                 name: collectionName,
                 count: processedProducts.length,
-                thumbnail: (withImages.length > 0) ? withImages[0].thumbnail : null
+                thumbnail: firstWithImage ? firstWithImage.imageUrl : null
             };
 
-            // Check if exists (by string or object id)
+            // Verificar si ya existe
             const existingIdx = seriesIndex.findIndex(i => (typeof i === 'string' ? i : i.id) === collectionName);
 
             if (existingIdx >= 0) {
-                // Update existing
                 seriesIndex[existingIdx] = metaEntry;
                 console.log(`   📚 Updated Series Index: ${collectionName} (${metaEntry.count} items)`);
             } else {
-                // Add new
                 seriesIndex.push(metaEntry);
                 console.log(`   📚 Added to Series Index: ${collectionName} (${metaEntry.count} items)`);
             }
 
             await kv.set('wallpapers_series_index', seriesIndex);
-            // -----------------------------------
 
             console.log(`✅ Saved to database: collection:${collectionName}`);
         }
