@@ -1,5 +1,5 @@
-const { createClient } = require('@vercel/kv');
 require('dotenv').config();
+const { createClient } = require('@vercel/kv');
 
 const kv = createClient({
     url: process.env.KV_REST_API_URL,
@@ -7,70 +7,57 @@ const kv = createClient({
 });
 
 async function main() {
-    console.log('🚀 Starting Thumbnail Fix...');
-    const index = await kv.get('wallpapers_series_index');
+    console.log('🖼️  FIX THUMBNAILS TOOL');
+    console.log('-----------------------');
 
-    if (!index) {
-        console.log('No index found.');
-        return;
-    }
+    try {
+        // 1. Get current index
+        const index = await kv.get('wallpapers_series_index') || [];
+        console.log(`📚 Found ${index.length} collections in index.`);
 
-    let updates = 0;
+        const newIndex = [];
+        let updatedCount = 0;
 
-    for (const item of index) {
-        // Only fix if thumbnail is missing
-        if (!item.thumbnail || item.thumbnail.length < 5) {
-            console.log(`🔍 Checking ${item.name} (${item.id})...`);
+        for (const item of index) {
+            const collectionName = typeof item === 'string' ? item : item.id;
+            console.log(`🔎 Processing: ${collectionName}...`);
 
-            // Fetch products for this collection to get an image
-            // We'll try the direct ID. If that fails, we might miss some, but this is a broad sweep.
-            let colKey = `collection:${item.id}`;
+            // Fetch collection data to find a thumbnail
+            const products = await kv.get(`collection:${collectionName}`);
 
-            // Manual overrides for tricky names we saw earlier, just in case
-            if (item.name.includes('Advantage Bali')) colKey = 'collection:Advantage Bali';
-            if (item.name.includes('A-Street Select')) colKey = 'collection:A-Street Select - 4021';
-            if (item.name.includes('Creation') && item.name.includes('AS')) colKey = 'collection:AS Creation - 4022';
+            if (products && Array.isArray(products) && products.length > 0) {
+                // Find first product with a thumbnail
+                const thumbProduct = products.find(p => p.thumbnail);
+                const thumbnail = thumbProduct ? thumbProduct.thumbnail : null;
 
-            // Also try to be smart about ' - ####' suffixes in the ID if direct look up fails
-            if (!await kv.exists(colKey)) {
-                // 1. Try Name
-                if (await kv.exists(`collection:${item.name}`)) {
-                    colKey = `collection:${item.name}`;
-                } else {
-                    // 2. Try Name without Suffix (common pattern: "Name - ####")
-                    const simpleName = item.name.split(' - ')[0];
-                    if (await kv.exists(`collection:${simpleName}`)) {
-                        colKey = `collection:${simpleName}`;
-                    }
-                }
-            }
-
-            const products = await kv.get(colKey);
-
-            if (products && products.length > 0) {
-                // Find first valid image that isn't a placeholder (if any)
-                // Prefer blobs, then anything http
-                const valid = products.find(p => p.imageUrl && (p.imageUrl.includes('blob') || p.imageUrl.startsWith('http')));
-
-                if (valid) {
-                    item.thumbnail = valid.imageUrl;
-                    updates++;
-                    console.log(`   ✅ Set thumbnail for ${item.name}: ${valid.imageUrl.substring(0, 50)}...`);
-                } else {
-                    console.log(`   ⚠️ Products found but no image for ${item.name}`);
-                }
+                newIndex.push({
+                    id: collectionName,
+                    name: collectionName,
+                    count: products.length,
+                    thumbnail: thumbnail
+                });
+                console.log(`   ✅ Found thumbnail: ${thumbnail ? 'Yes' : 'No'} (${products.length} items)`);
+                updatedCount++;
             } else {
-                console.log(`   ⚠️ Collection key ${colKey} not found or empty.`);
+                console.log(`   ⚠️ No data found for collection, keeping original entry.`);
+                // Keep original or create empty object? 
+                // Better to keep object structure consistent
+                newIndex.push(typeof item === 'object' ? item : {
+                    id: collectionName,
+                    name: collectionName,
+                    count: 0,
+                    thumbnail: null
+                });
             }
         }
-    }
 
-    if (updates > 0) {
-        console.log(`💾 Saving ${updates} thumbnail updates to index...`);
-        await kv.set('wallpapers_series_index', index);
-        console.log('✅ Done.');
-    } else {
-        console.log('✨ No updates needed.');
+        // 2. Save updated index
+        console.log('\n💾 Saving updated index...');
+        await kv.set('wallpapers_series_index', newIndex);
+        console.log('✨ Done! Index upgraded.');
+
+    } catch (error) {
+        console.error('❌ Error:', error);
     }
 }
 

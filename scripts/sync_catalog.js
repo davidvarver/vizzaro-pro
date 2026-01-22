@@ -495,13 +495,30 @@ async function processCollection(collectionName, rootPath) {
                 console.log(`   🔗 Updated Main Catalog Hash (${Object.keys(hashUpdates).length} items)`);
             }
 
-            // 2. Update Series Index (Home Page)
+            // Actualizar índice de series (para home page) - RICH METADATA
             const seriesIndex = await kv.get('wallpapers_series_index') || [];
-            if (!seriesIndex.includes(collectionName)) {
-                seriesIndex.push(collectionName);
-                await kv.set('wallpapers_series_index', seriesIndex);
-                console.log(`   📚 Added to Series Index: ${collectionName}`);
+
+            const metaEntry = {
+                id: collectionName,
+                name: collectionName,
+                count: processedProducts.length,
+                thumbnail: (withImages.length > 0) ? withImages[0].thumbnail : null
+            };
+
+            // Check if exists (by string or object id)
+            const existingIdx = seriesIndex.findIndex(i => (typeof i === 'string' ? i : i.id) === collectionName);
+
+            if (existingIdx >= 0) {
+                // Update existing
+                seriesIndex[existingIdx] = metaEntry;
+                console.log(`   📚 Updated Series Index: ${collectionName} (${metaEntry.count} items)`);
+            } else {
+                // Add new
+                seriesIndex.push(metaEntry);
+                console.log(`   📚 Added to Series Index: ${collectionName} (${metaEntry.count} items)`);
             }
+
+            await kv.set('wallpapers_series_index', seriesIndex);
             // -----------------------------------
 
             console.log(`✅ Saved to database: collection:${collectionName}`);
