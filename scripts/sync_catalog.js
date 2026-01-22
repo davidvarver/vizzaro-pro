@@ -303,28 +303,42 @@ async function processProductBatch(products, allImages, collectionName, startInd
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        const match = allImages.find(img =>
-            img.name.toLowerCase().includes(product.id.toLowerCase()) ||
-            img.name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.id.toLowerCase().replace(/[^a-z0-9]/g, ''))
+        // Find ALL matching images (variants)
+        // Logic: specific start match to avoid partial collisions (e.g. 4044 matching 40441)
+        const variants = allImages.filter(img =>
+            img.name.startsWith(product.id) ||
+            img.name.toLowerCase().startsWith(product.id.toLowerCase())
         );
 
-        if (match) {
-            console.log(`   🖼️ Found image: ${match.name} (${(match.size / 1024).toFixed(2)} KB)`);
-            const imageUrl = await uploadImageWithRetry(
-                match.path,
-                `wallpapers/${collectionName}/${match.name}`
-            );
+        if (variants.length > 0) {
+            console.log(`   🖼️ Found ${variants.length} images for pattern ${product.id}`);
 
-            if (imageUrl) {
-                product.imageUrl = imageUrl;
+            // Upload all variants
+            const uploadedUrls = [];
+            for (const variant of variants) {
+                const url = await uploadImageWithRetry(
+                    variant.path,
+                    `wallpapers/${collectionName}/${variant.name}`
+                );
+                if (url) uploadedUrls.push(url);
+            }
+
+            if (uploadedUrls.length > 0) {
+                // Heuristic: Shortest name is usually the main image (e.g. "1234.jpg" vs "1234_Room.jpg")
+                // Or looking for specific suffixes if available
+                uploadedUrls.sort((a, b) => a.length - b.length);
+
+                product.imageUrl = uploadedUrls[0]; // Shortest is main
+                product.imageUrls = uploadedUrls;   // All variants
                 product.hasImage = true;
-                console.log(`   ✅ Upload successful: ${imageUrl}`);
+
+                console.log(`   ✅ Uploaded ${uploadedUrls.length} images (Main: ${product.imageUrl})`);
             } else {
                 product.hasImage = false;
-                console.log(`   ❌ Upload failed`);
+                console.log(`   ❌ Uploads failed`);
             }
         } else {
-            console.log(`   ⚠️ No image found for pattern ${product.id}`);
+            console.log(`   ⚠️ No images found for pattern ${product.id}`);
             product.hasImage = false;
         }
 
@@ -384,7 +398,29 @@ async function processCollection(collectionName, rootPath) {
             }
         }
 
-        // Buscar archivo Excel
+        // 1. RECURSIVE SCAN to find ALL images (including subfolders)
+        console.log('📂 Scanning for images recursively...');
+        let collectionImages = [];
+
+        async function scanDir(path) {
+            const items = await sftp.list(path);
+            for (const item of items) {
+                if (item.type === 'd' && item.name !== '.' && item.name !== '..') {
+                    await scanDir(`${path}/${item.name}`);
+                } else if (item.name.match(/\.(jpg|jpeg|png)$/i)) {
+                    collectionImages.push({
+                        name: item.name,
+                        path: `${path}/${item.name}`,
+                        size: item.size
+                    });
+                }
+            }
+        }
+
+        await scanDir(rootPath);
+        console.log(`✅ Found ${collectionImages.length} total images in collection tree.`);
+
+        // Find Excel in the root
         const rootItems = await sftp.list(rootPath);
         const excelFile = rootItems.find(f => f.name.match(/\.xlsx?$/i));
         let products = [];
@@ -454,7 +490,7 @@ async function processCollection(collectionName, rootPath) {
 
         // Procesar productos (con resume si aplica)
         console.log(`\n📤 Starting image processing & upload...`);
-        const processedProducts = await processProductBatch(products, allImages, collectionName, resumeIndex);
+        const processedProducts = await processProductBatch(products, collectionImages, collectionName, resumeIndex);
 
         // Estadísticas
         const withImages = processedProducts.filter(p => p.hasImage).length;

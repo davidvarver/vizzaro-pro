@@ -27,8 +27,7 @@ async function main() {
         console.log(JSON.stringify(seriesIndex[0], null, 2));
     }
 
-    // EXIT EARLY FOR CLEAR OUTPUT
-    process.exit(0);
+    // process.exit(0);
 
     if (collectionData && collectionData.length > 0) {
         console.log('\n📋 Sample Product from Collection:');
