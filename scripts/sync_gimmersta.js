@@ -449,12 +449,14 @@ async function main() {
 
             collectionMap[collectionName].push({
                 id: String(row['Pattern No']).trim(),
-                name: row['Name'] || `${collectionName} - ${row['Pattern No']}`,
-                price: cleanPrice(row['MSRP'] || row['Price']),
+                name: row['Product Name'] || row['Name'] || `${collectionName} - ${row['Pattern No']}`,
+                price: cleanPrice(row['Retail Price'] || row['MSRP'] || row['Price']),
                 collection: collectionName,
-                sku: row['Pattern No'],
-                dimensions: cleanDimensions(row['Dimensions'] || row['Size']),
-                repeat: cleanRepeat(row['Repeat']),
+                sku: row['Product No'] || row['Pattern No'],
+                dimensions: (row['Roll Width'] && row['Roll Length'])
+                    ? `${row['Roll Width']}cm x ${row['Roll Length']}m`
+                    : cleanDimensions(row['Dimensions'] || row['Size']),
+                repeat: cleanRepeat(row['Vertical Repeat'] || row['Repeat']),
                 material: row['Material'] || row['Type'] || null,
                 hasImage: false,
                 images: []
