@@ -449,8 +449,12 @@ async function main() {
                 sku: row['Product No'] || row['Pattern No'],
                 dimensions: (row['Roll Width'] && row['Roll Length'])
                     ? `${row['Roll Width']}cm x ${row['Roll Length']}m`
-                    : cleanDimensions(row['Dimensions'] || row['Size']),
-                repeat: cleanRepeat(row['Vertical Repeat'] || row['Repeat']),
+                    : (row['Pattern Width'] && row['Pattern Height'])
+                        ? `${row['Pattern Width']}m x ${row['Pattern Height']}m`
+                        : cleanDimensions(row['Dimensions'] || row['Size']),
+                repeat: ((String(row['Vertical Repeat'] || '').toUpperCase().includes('YES') || String(row['Repeat'] || '').toUpperCase().includes('YES')) && row['Pattern Height'])
+                    ? `${row['Pattern Height']}m`
+                    : cleanRepeat(row['Vertical Repeat'] || row['Repeat']),
                 material: row['Material'] || row['Type'] || null,
                 hasImage: false,
                 images: []
