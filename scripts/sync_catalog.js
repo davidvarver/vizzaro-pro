@@ -384,7 +384,9 @@ async function processCollection(collectionName, rootPath) {
 
         // 1. Escanear imágenes RECURSIVAMENTE (Restored per user request)
         console.log('📂 Scanning images in folder tree (RECURSIVE)...');
-        // const fileList = await sftp.list(rootPath); // OLD FLAT SCAN
+
+        // We still need the root file list to find the Excel file!
+        const fileList = await sftp.list(rootPath);
         const allImages = await scanRecursive(rootPath);
 
         console.log(`✅ Found ${allImages.length} images in tree.`);
