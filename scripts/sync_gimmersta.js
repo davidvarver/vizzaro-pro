@@ -259,20 +259,14 @@ async function processProducts(products, allImages, collectionName, startIndex =
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        // Buscar TODAS las imágenes que coincidan con SKU (Match exacto o con separadores)
+        // Buscar TODAS las imágenes que coincidan con SKU
         const matches = allImages.filter(img => {
             const imgName = img.name.toLowerCase();
-            // Escapar caracteres especiales de regex en el ID por si acaso
-            const pattern = product.id.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const pattern = product.id.toLowerCase();
 
-            // Regex: 
-            // - Inicio de string O caracter no alfanulérico (separator)
-            // - ID del producto
-            // - Fin de string O caracter no alfanumérico
-            // Esto evita que "101" coincida con "S10176"
-            const regex = new RegExp(`(^|[^a-z0-9])${pattern}([^a-z0-9]|$)`, 'i');
-
-            return regex.test(imgName);
+            // Should contain the ID. 
+            // example: id="444-66", img="444-66_interior.jpg" -> MATCH
+            return imgName.includes(pattern);
         });
 
         if (matches.length > 0) {
@@ -448,7 +442,7 @@ async function main() {
             }
 
             collectionMap[collectionName].push({
-                id: String(row['Pattern No']).trim(),
+                id: String(row['Product No'] || row['Pattern No']).trim(),
                 name: row['Product Name'] || row['Name'] || `${collectionName} - ${row['Pattern No']}`,
                 price: cleanPrice(row['Retail Price'] || row['MSRP'] || row['Price']),
                 collection: collectionName,
