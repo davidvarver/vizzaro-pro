@@ -8,8 +8,10 @@ const sharp = require('sharp');
 
 // --- CONFIG ---
 const CONFIG = {
-    EXCEL_FILE: 'GW Products 1010262.xlsx', // Nombre del archivo Excel en la raíz
-    IMAGES_DIR: './imagenes gimmersta',     // Carpeta de imágenes relativa a la raíz
+    EXCEL_FILE: './GW Products 1010262.xlsx',
+    IMAGES_DIR: './imagenes gimmersta',
+    CHECKPOINT_FILE: './sync_gimmersta_progress.json',
+    SAVE_CHECKPOINT_EVERY: 5,
     MAX_RETRIES: 3,
     UPLOAD_DELAY: 500,
     WATERMARK: {
@@ -22,10 +24,55 @@ const CONFIG = {
     }
 };
 
+const args = process.argv.slice(2);
+const FORCE_UPDATE = args.includes('--force');
+const RESET_PROGRESS = args.includes('--reset');
+const SKIP_WATERMARK = args.includes('--no-watermark');
+const TARGET_COLLECTION = args.find(arg => !arg.startsWith('--')) || null;
+
 const kv = createClient({
     url: process.env.KV_REST_API_URL,
     token: process.env.KV_REST_API_TOKEN,
 });
+
+// --- CHECKPOINT SYSTEM ---
+let checkpoint = {
+    lastCollection: null,
+    lastProductIndex: 0,
+    completedCollections: [],
+    timestamp: null
+};
+
+async function loadCheckpoint() {
+    try {
+        const data = await fs.readFile(CONFIG.CHECKPOINT_FILE, 'utf8');
+        checkpoint = JSON.parse(data);
+        console.log(`\n📌 Checkpoint loaded:`);
+        console.log(`   Last collection: ${checkpoint.lastCollection || 'none'}`);
+        console.log(`   Last product index: ${checkpoint.lastProductIndex}`);
+        console.log(`   Completed collections: ${checkpoint.completedCollections.length}`);
+        return true;
+    } catch (e) {
+        console.log(`ℹ️ No checkpoint found, starting fresh`);
+        return false;
+    }
+}
+
+async function saveCheckpoint() {
+    checkpoint.timestamp = Date.now();
+    try {
+        await fs.writeFile(CONFIG.CHECKPOINT_FILE, JSON.stringify(checkpoint, null, 2));
+    } catch (e) {
+        console.error(`⚠️ Failed to save checkpoint: ${e.message}`);
+    }
+}
+
+async function clearCheckpoint() {
+    try {
+        await fs.unlink(CONFIG.CHECKPOINT_FILE);
+        console.log('✅ Checkpoint cleared');
+    } catch (e) { }
+}
 
 // --- UTILS ---
 function sleep(ms) {
@@ -37,7 +84,17 @@ function cleanPrice(price) {
     return parseFloat(String(price).replace(/[^0-9.]/g, '')) || 0;
 }
 
-// Escaneo recursivo de carpetas locales
+function cleanDimensions(dimStr) {
+    if (!dimStr) return null;
+    return String(dimStr).trim();
+}
+
+function cleanRepeat(repeatStr) {
+    if (!repeatStr) return null;
+    return String(repeatStr).trim();
+}
+
+// Escaneo recursivo de imágenes locales
 async function scanLocalImagesRecursive(dirPath, fileList = []) {
     try {
         const files = await fs.readdir(dirPath, { withFileTypes: true });
@@ -46,15 +103,16 @@ async function scanLocalImagesRecursive(dirPath, fileList = []) {
             if (file.isDirectory()) {
                 await scanLocalImagesRecursive(resPath, fileList);
             } else if (file.name.match(/\.(jpg|jpeg|png|webp)$/i)) {
+                const stats = await fs.stat(resPath);
                 fileList.push({
                     name: file.name,
                     path: resPath,
-                    size: 0 // Podríamos leer stats si fuera necesario
+                    size: stats.size
                 });
             }
         }
     } catch (e) {
-        console.warn(`    ⚠️ Error scanning local directory ${dirPath}: ${e.message}`);
+        console.warn(`⚠️ Error scanning ${dirPath}: ${e.message}`);
     }
     return fileList;
 }
@@ -63,23 +121,32 @@ async function scanLocalImagesRecursive(dirPath, fileList = []) {
 let watermarkBuffer = null;
 
 async function loadWatermark() {
+    if (!CONFIG.WATERMARK.enabled || SKIP_WATERMARK) {
+        console.log('ℹ️ Watermark disabled');
+        return false;
+    }
+
     try {
         watermarkBuffer = await fs.readFile(CONFIG.WATERMARK.logoPath);
-        console.log(`✅ Watermark logo loaded: ${CONFIG.WATERMARK.logoPath}`);
+        console.log(`✅ Watermark logo loaded`);
         return true;
     } catch (e) {
         console.warn(`⚠️ Could not load watermark: ${e.message}`);
-        console.warn(`   Images will be uploaded without watermark`);
+        CONFIG.WATERMARK.enabled = false;
         return false;
     }
 }
 
 async function addWatermark(imageBuffer) {
-    if (!CONFIG.WATERMARK.enabled || !watermarkBuffer) return imageBuffer;
+    if (!CONFIG.WATERMARK.enabled || !watermarkBuffer) {
+        return imageBuffer;
+    }
+
     try {
         const image = sharp(imageBuffer);
         const metadata = await image.metadata();
         const watermarkWidth = Math.floor(metadata.width * CONFIG.WATERMARK.scale);
+
         const resizedWatermark = await sharp(watermarkBuffer)
             .resize(watermarkWidth, null, { fit: 'inside' })
             .png()
@@ -95,20 +162,42 @@ async function addWatermark(imageBuffer) {
             .toBuffer();
 
         const watermarkMetadata = await sharp(watermarkWithOpacity).metadata();
-        const left = Math.floor((metadata.width - watermarkMetadata.width) / 2);
-        const top = Math.floor((metadata.height - watermarkMetadata.height) / 2);
+        let left, top;
+        const margin = CONFIG.WATERMARK.margin;
 
-        return await image
-            .composite([{ input: watermarkWithOpacity, left, top, blend: 'over' }])
+        switch (CONFIG.WATERMARK.position) {
+            case 'center':
+                left = Math.floor((metadata.width - watermarkMetadata.width) / 2);
+                top = Math.floor((metadata.height - watermarkMetadata.height) / 2);
+                break;
+            case 'bottom-right':
+                left = metadata.width - watermarkMetadata.width - margin;
+                top = metadata.height - watermarkMetadata.height - margin;
+                break;
+            default:
+                left = Math.floor((metadata.width - watermarkMetadata.width) / 2);
+                top = Math.floor((metadata.height - watermarkMetadata.height) / 2);
+        }
+
+        const watermarkedBuffer = await image
+            .composite([{
+                input: watermarkWithOpacity,
+                left: left,
+                top: top,
+                blend: 'over'
+            }])
             .jpeg({ quality: 90 })
             .toBuffer();
+
+        return watermarkedBuffer;
     } catch (e) {
+        console.warn(`   ⚠️ Watermark failed: ${e.message}`);
         return imageBuffer;
     }
 }
 
-async function uploadImageWithRetry(localPath, remotePath) {
-    // 0. Verificar existencia
+async function uploadImageWithRetry(localPath, remotePath, retries = CONFIG.MAX_RETRIES) {
+    // Verificar si ya existe
     try {
         const { blobs } = await list({
             prefix: remotePath,
@@ -116,36 +205,32 @@ async function uploadImageWithRetry(localPath, remotePath) {
             token: process.env.BLOB_READ_WRITE_TOKEN
         });
         if (blobs.length > 0) {
-            console.log(`      ✅ Image exists (Skipping): ${blobs[0].url}`);
+            console.log(`      ✅ Already exists: ${blobs[0].url}`);
             return blobs[0].url;
         }
-    } catch (e) {
-        console.warn(`      ⚠️ Warning checking blob existence: ${e.message}`);
-    }
+    } catch (e) { }
 
-    for (let attempt = 1; attempt <= CONFIG.MAX_RETRIES; attempt++) {
+    for (let attempt = 1; attempt <= retries; attempt++) {
         try {
-            console.log(`      📥 Reading & Processing...`);
+            console.log(`      📥 Reading local file...`);
             const buffer = await fs.readFile(localPath);
+
+            console.log(`      🎨 Processing watermark...`);
             const processedBuffer = await addWatermark(buffer);
-            console.log(`      📤 Uploading to Vercel Pool...`);
+
+            console.log(`      📤 Uploading to Vercel Blob...`);
             const blob = await put(remotePath, processedBuffer, {
                 access: 'public',
                 token: process.env.BLOB_READ_WRITE_TOKEN,
                 addRandomSuffix: false
             });
+
             return blob.url;
         } catch (e) {
-            if (e.message.includes('already exists')) {
-                try {
-                    const { blobs } = await list({ prefix: remotePath, limit: 1, token: process.env.BLOB_READ_WRITE_TOKEN });
-                    if (blobs.length > 0) return blobs[0].url;
-                } catch (ex) { }
-                return null;
-            }
-
-            if (attempt < CONFIG.MAX_RETRIES) {
-                await sleep(1000 * attempt);
+            if (attempt < retries) {
+                const delay = attempt * 2000;
+                console.log(`      ⏳ Retry ${attempt}/${retries} in ${delay}ms...`);
+                await sleep(delay);
             } else {
                 console.error(`      💀 Upload failed: ${e.message}`);
                 return null;
@@ -154,155 +239,263 @@ async function uploadImageWithRetry(localPath, remotePath) {
     }
 }
 
+async function processProducts(products, allImages, collectionName, startIndex = 0) {
+    const results = [];
+
+    if (startIndex > 0) {
+        console.log(`\n🔄 Resuming from product ${startIndex}`);
+        const existingData = await kv.get(`collection:${collectionName}`);
+        if (existingData && Array.isArray(existingData)) {
+            results.push(...existingData.slice(0, startIndex));
+        }
+    }
+
+    for (let i = startIndex; i < products.length; i++) {
+        const product = products[i];
+
+        console.log(`\n${'─'.repeat(60)}`);
+        console.log(`[${i + 1}/${products.length}] ${product.id} - ${product.name}`);
+        console.log(`   💰 Price: $${product.price}`);
+        console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
+        console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
+
+        // Buscar TODAS las imágenes que coincidan con el pattern
+        const matches = allImages.filter(img => {
+            const imgNameClean = img.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const patternClean = product.id.toLowerCase().replace(/[^a-z0-9]/g, '');
+            return imgNameClean.includes(patternClean);
+        });
+
+        if (matches.length > 0) {
+            console.log(`   🖼️ Found ${matches.length} image(s)`);
+            const imageUrls = [];
+
+            for (const match of matches) {
+                console.log(`      Processing: ${match.name} (${(match.size / 1024).toFixed(2)} KB)`);
+                const url = await uploadImageWithRetry(
+                    match.path,
+                    `wallpapers/gimmersta/${collectionName}/${match.name}`
+                );
+
+                if (url) imageUrls.push(url);
+                await sleep(CONFIG.UPLOAD_DELAY);
+            }
+
+            product.images = imageUrls;
+            product.imageUrl = imageUrls[0] || null; // Primary image
+            product.hasImage = imageUrls.length > 0;
+            console.log(`   ✅ Uploaded ${imageUrls.length}/${matches.length} images`);
+        } else {
+            console.log(`   ⚠️ No images found for pattern ${product.id}`);
+            product.images = [];
+            product.imageUrl = null;
+            product.hasImage = false;
+        }
+
+        results.push(product);
+
+        // Checkpoint
+        if ((i + 1) % CONFIG.SAVE_CHECKPOINT_EVERY === 0) {
+            checkpoint.lastCollection = collectionName;
+            checkpoint.lastProductIndex = i + 1;
+            await saveCheckpoint();
+            await kv.set(`collection:${collectionName}`, results);
+            console.log(`   💾 Checkpoint saved (${i + 1}/${products.length})`);
+        }
+    }
+
+    return results;
+}
+
+async function processCollection(collectionName, products) {
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`🎨 Collection: ${collectionName}`);
+    console.log(`${'='.repeat(60)}`);
+
+    if (checkpoint.completedCollections.includes(collectionName)) {
+        console.log(`✅ Already completed, skipping...`);
+        return { skipped: true };
+    }
+
+    const resumeIndex = (checkpoint.lastCollection === collectionName)
+        ? checkpoint.lastProductIndex
+        : 0;
+
+    if (resumeIndex === 0) {
+        const existingData = await kv.get(`collection:${collectionName}`);
+        if (existingData && !FORCE_UPDATE) {
+            console.log(`⚠️ Already exists in database (${existingData.length} products)`);
+            console.log(`ℹ️ Use --force to overwrite`);
+            checkpoint.completedCollections.push(collectionName);
+            await saveCheckpoint();
+            return { skipped: true };
+        }
+    }
+
+    // Indexar imágenes
+    console.log(`📂 Indexing images from: ${CONFIG.IMAGES_DIR}`);
+    const allImages = await scanLocalImagesRecursive(CONFIG.IMAGES_DIR);
+    console.log(`✅ Found ${allImages.length} local images`);
+
+    // Procesar productos
+    const processedProducts = await processProducts(products, allImages, collectionName, resumeIndex);
+
+    // Estadísticas
+    const withImages = processedProducts.filter(p => p.hasImage).length;
+    const totalImagesUploaded = processedProducts.reduce((sum, p) => sum + (p.images?.length || 0), 0);
+
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`📊 Statistics:`);
+    console.log(`   Total Products: ${processedProducts.length}`);
+    console.log(`   With Images: ${withImages}`);
+    console.log(`   Total Images Uploaded: ${totalImagesUploaded}`);
+    console.log(`${'='.repeat(60)}`);
+
+    // Guardar en KV
+    if (processedProducts.length > 0) {
+        await kv.set(`collection:${collectionName}`, processedProducts);
+
+        // Actualizar hash global
+        let hashUpdates = {};
+        for (const p of processedProducts) {
+            if (p.hasImage) {
+                hashUpdates[p.id] = JSON.stringify(p);
+            }
+        }
+
+        if (Object.keys(hashUpdates).length > 0) {
+            const CHUNK_SIZE = 1000;
+            const entries = Object.entries(hashUpdates);
+            for (let i = 0; i < entries.length; i += CHUNK_SIZE) {
+                const chunk = Object.fromEntries(entries.slice(i, i + CHUNK_SIZE));
+                await kv.hset('wallpapers_catalog_hash', chunk);
+            }
+            console.log(`🔗 Updated catalog hash (${Object.keys(hashUpdates).length} items)`);
+        }
+
+        // Actualizar índice de series
+        const seriesIndex = await kv.get('wallpapers_series_index') || [];
+        const firstWithImage = processedProducts.find(p => p.hasImage && p.imageUrl);
+
+        const metaEntry = {
+            id: collectionName,
+            name: collectionName,
+            count: processedProducts.length,
+            thumbnail: firstWithImage ? firstWithImage.imageUrl : null,
+            provider: 'Gimmersta'
+        };
+
+        const existingIdx = seriesIndex.findIndex(i =>
+            (typeof i === 'string' ? i : i.id) === collectionName
+        );
+
+        if (existingIdx >= 0) {
+            seriesIndex[existingIdx] = metaEntry;
+        } else {
+            seriesIndex.push(metaEntry);
+        }
+
+        await kv.set('wallpapers_series_index', seriesIndex);
+        console.log(`📚 Updated series index`);
+    }
+
+    checkpoint.completedCollections.push(collectionName);
+    checkpoint.lastCollection = null;
+    checkpoint.lastProductIndex = 0;
+    await saveCheckpoint();
+
+    return { success: true, total: processedProducts.length, withImages };
+}
+
 async function main() {
-    console.log(`🚀 GIMMERSTA SYNC TOOL (Excel + Local Images)`);
+    console.log(`🚀 GIMMERSTA SYNC TOOL v1.0`);
     console.log(`📅 ${new Date().toLocaleString()}\n`);
 
     await loadWatermark();
 
-    // 1. Indexar imágenes locales
-    console.log(`📂 Indexing local images in: ${CONFIG.IMAGES_DIR}`);
-    const allImages = await scanLocalImagesRecursive(CONFIG.IMAGES_DIR);
-    console.log(`✅ Found ${allImages.length} images.`);
-
-    if (allImages.length === 0) {
-        console.error('❌ No images found! Check path.');
-        return;
+    if (RESET_PROGRESS) {
+        await clearCheckpoint();
+        console.log('🔄 Progress reset\n');
+    } else {
+        await loadCheckpoint();
     }
 
-    // 2. Leer Excel
-    console.log(`📊 Reading Excel: ${CONFIG.EXCEL_FILE}`);
-    let rawData = [];
     try {
+        // Leer Excel
+        console.log(`📊 Reading Excel: ${CONFIG.EXCEL_FILE}`);
         const workbook = XLSX.readFile(CONFIG.EXCEL_FILE);
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        rawData = XLSX.utils.sheet_to_json(sheet);
-        console.log(`✅ Loaded ${rawData.length} rows.`);
-    } catch (e) {
-        console.error(`❌ Error reading Excel: ${e.message}`);
-        return;
-    }
+        const rawData = XLSX.utils.sheet_to_json(sheet);
+        console.log(`✅ Found ${rawData.length} rows in Excel`);
 
-    // 3. Agrupar por Colección
-    const collections = {};
-    rawData.forEach(row => {
-        const colName = row['Collection Name'] || 'Gimmersta Misc';
-        if (!collections[colName]) collections[colName] = [];
+        // Agrupar por Collection Name
+        const collectionMap = {};
+        for (const row of rawData) {
+            if (!row['Pattern No'] || !row['Collection Name']) continue;
 
-        // Mapeo de columnas Gimmersta
-        const product = {
-            id: String(row['Pattern No']).trim(),
-            name: row['Product Name'],
-            price: cleanPrice(row['Retail Price']),
-            collection: colName,
-            sku: row['Pattern No'], // Usamos Pattern No como SKU también
-            dimensions: `${row['Roll Width'] || ''} cm x ${row['Roll Length'] || ''} m`.trim(),
-            repeat: row['Vertical Repeat'] ? `${row['Vertical Repeat']} cm` : null,
-            brand: 'Gimmersta',
-            hasImage: false,
-            images: [],
-            imageUrl: null
-        };
+            const collectionName = String(row['Collection Name']).trim();
+            if (!collectionMap[collectionName]) {
+                collectionMap[collectionName] = [];
+            }
 
-        // Filtrar filas vacías o inválidas
-        if (product.id && product.price > 0) {
-            collections[colName].push(product);
+            collectionMap[collectionName].push({
+                id: String(row['Pattern No']).trim(),
+                name: row['Name'] || `${collectionName} - ${row['Pattern No']}`,
+                price: cleanPrice(row['MSRP'] || row['Price']),
+                collection: collectionName,
+                sku: row['Pattern No'],
+                dimensions: cleanDimensions(row['Dimensions'] || row['Size']),
+                repeat: cleanRepeat(row['Repeat']),
+                material: row['Material'] || row['Type'] || null,
+                hasImage: false,
+                images: []
+            });
         }
-    });
 
-    console.log(`📦 Found ${Object.keys(collections).length} collections.`);
+        const collections = Object.entries(collectionMap);
+        console.log(`✅ Grouped into ${collections.length} collections\n`);
 
-    // 4. Procesar Colecciones
-    const collectionNames = Object.keys(collections);
-    let totalProcessed = 0;
+        const summary = { total: collections.length, success: 0, skipped: 0, errors: 0 };
 
-    for (const colName of collectionNames) {
+        // Procesar colecciones
+        for (const [collectionName, products] of collections) {
+            if (TARGET_COLLECTION && collectionName !== TARGET_COLLECTION) continue;
+
+            const result = await processCollection(collectionName, products);
+
+            if (result.success) summary.success++;
+            else if (result.skipped) summary.skipped++;
+            else summary.errors++;
+
+            await sleep(1000);
+        }
+
+        if (summary.success + summary.skipped === summary.total) {
+            console.log(`\n🎉 All collections processed! Clearing checkpoint...`);
+            await clearCheckpoint();
+        }
+
         console.log(`\n${'='.repeat(60)}`);
-        console.log(`🎨 Processing Collection: ${colName}`);
+        console.log(`📊 FINAL SUMMARY`);
         console.log(`${'='.repeat(60)}`);
+        console.log(`Total Collections: ${summary.total}`);
+        console.log(`✅ Successful: ${summary.success}`);
+        console.log(`⏭️ Skipped: ${summary.skipped}`);
+        console.log(`❌ Errors: ${summary.errors}`);
+        console.log(`\n✨ Sync Complete!`);
 
-        const products = collections[colName];
-        const processedProducts = [];
-
-        // Verificar si ya existe en KV (Opcional: saltar si ya está completo)
-        // Por ahora sobrescribimos/actualizamos para asegurar integridad
-
-        for (const product of products) {
-            console.log(`   Processing: ${product.id} - ${product.name}`);
-
-            // Buscar imágenes que coincidan
-            // Lógica: nombre de archivo contiene ID
-            const cleanId = product.id.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const matches = allImages.filter(img => {
-                const cleanName = img.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-                return img.name.toLowerCase().includes(product.id.toLowerCase()) || cleanName.includes(cleanId);
-            }).slice(0, 3); // Max 3 imágenes
-
-            if (matches.length > 0) {
-                console.log(`      📸 Found ${matches.length} matches.`);
-                for (let i = 0; i < matches.length; i++) {
-                    const match = matches[i];
-                    // Subir archivo local -> Vercel Blob
-                    const url = await uploadImageWithRetry(match.path, `wallpapers/gimmersta/${colName}/${match.name}`);
-
-                    if (url) {
-                        product.images.push(url);
-                    }
-                }
-                if (product.images.length > 0) {
-                    product.imageUrl = product.images[0];
-                    product.hasImage = true;
-                }
-            } else {
-                console.log(`      ⚠️ No images found locally.`);
-            }
-
-            processedProducts.push(product);
-            await sleep(100); // Pequeña pausa
-        }
-
-        // 5. Guardar en KV
-        if (processedProducts.length > 0) {
-            // A. Guardar productos de la colección
-            await kv.set(`collection:${colName}`, processedProducts);
-
-            // B. Actualizar Hash Global
-            let hashUpdates = {};
-            for (const p of processedProducts) {
-                if (p.hasImage) hashUpdates[p.id] = JSON.stringify(p);
-            }
-            if (Object.keys(hashUpdates).length > 0) {
-                const CHUNK_SIZE = 1000;
-                const entries = Object.entries(hashUpdates);
-                for (let i = 0; i < entries.length; i += CHUNK_SIZE) {
-                    const chunk = Object.fromEntries(entries.slice(i, i + CHUNK_SIZE));
-                    await kv.hset('wallpapers_catalog_hash', chunk);
-                }
-                console.log(`      🔗 Updated Global Hash.`);
-            }
-
-            // C. Actualizar Índice de Series
-            const seriesIndex = await kv.get('wallpapers_series_index') || [];
-            const firstWithImage = processedProducts.find(p => p.hasImage && p.imageUrl);
-
-            const metaEntry = {
-                id: colName,
-                name: colName,
-                count: processedProducts.length,
-                thumbnail: firstWithImage ? firstWithImage.imageUrl : null,
-                provider: 'Gimmersta'
-            };
-
-            const existingIdx = seriesIndex.findIndex(i => (typeof i === 'string' ? i : i.id) === colName);
-            if (existingIdx >= 0) seriesIndex[existingIdx] = metaEntry;
-            else seriesIndex.push(metaEntry);
-
-            await kv.set('wallpapers_series_index', seriesIndex);
-            console.log(`      📚 Updated Series Index.`);
-        }
+    } catch (e) {
+        console.error('💀 FATAL ERROR:', e.message);
+        console.error(e.stack);
     }
-
-    console.log(`\n🎉 Gimmersta Sync Complete!`);
 }
+
+process.on('SIGINT', async () => {
+    console.log('\n\n⚠️ Interrupted (Ctrl+C)');
+    console.log('💾 Saving progress...');
+    await saveCheckpoint();
+    console.log('✅ Progress saved!');
+    process.exit(0);
+});
 
 main();
