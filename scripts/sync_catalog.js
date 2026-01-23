@@ -300,29 +300,43 @@ async function processProductBatch(products, allImages, collectionName, startInd
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        // Buscar imagen que coincida con el patrón
-        const match = allImages.find(img =>
-            img.name.toLowerCase().includes(product.id.toLowerCase()) ||
-            img.name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.id.toLowerCase().replace(/[^a-z0-9]/g, ''))
-        );
+        // Buscar imágenes que coincidan con el patrón (Max 3)
+        // La lógica estricta requiere que el nombre del archivo contenga el ID del producto
+        const cleanId = product.id.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const matches = allImages.filter(img => {
+            const cleanName = img.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            return img.name.toLowerCase().includes(product.id.toLowerCase()) || cleanName.includes(cleanId);
+        }).slice(0, 3); // Límite de 3 imágenes
 
-        if (match) {
-            console.log(`   🖼️ Found image: ${match.name} (${(match.size / 1024).toFixed(2)} KB)`);
-            const imageUrl = await uploadImageWithRetry(
-                match.path,
-                `wallpapers/${collectionName}/${match.name}`
-            );
+        product.images = []; // Array para soportar múltiples imágenes
 
-            if (imageUrl) {
-                product.imageUrl = imageUrl;
-                product.hasImage = true;
-                console.log(`   ✅ Upload successful: ${imageUrl}`);
-            } else {
-                product.hasImage = false;
-                console.log(`   ❌ Upload failed`);
+        if (matches.length > 0) {
+            console.log(`   🖼️ Found ${matches.length} images for ${product.id}`);
+
+            for (let idx = 0; idx < matches.length; idx++) {
+                const match = matches[idx];
+                const isPrimary = (idx === 0);
+
+                console.log(`      [${idx + 1}/${matches.length}] Uploading: ${match.name} (${(match.size / 1024).toFixed(2)} KB)`);
+
+                const imageUrl = await uploadImageWithRetry(
+                    match.path,
+                    `wallpapers/${collectionName}/${match.name}`
+                );
+
+                if (imageUrl) {
+                    product.images.push(imageUrl);
+                    if (isPrimary) {
+                        product.imageUrl = imageUrl;
+                        product.hasImage = true;
+                    }
+                    console.log(`      ✅ Uploaded: ${imageUrl}`);
+                } else {
+                    console.log(`      ❌ Upload failed for ${match.name}`);
+                }
             }
         } else {
-            console.log(`   ⚠️ No image found for pattern ${product.id}`);
+            console.log(`   ⚠️ No images found for pattern ${product.id}`);
             product.hasImage = false;
         }
 
