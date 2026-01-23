@@ -259,11 +259,20 @@ async function processProducts(products, allImages, collectionName, startIndex =
         console.log(`   📏 Dimensions: ${product.dimensions || 'N/A'}`);
         console.log(`   🔄 Repeat: ${product.repeat || 'N/A'}`);
 
-        // Buscar TODAS las imágenes que coincidan con el pattern
+        // Buscar TODAS las imágenes que coincidan con SKU (Match exacto o con separadores)
         const matches = allImages.filter(img => {
-            const imgNameClean = img.name.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const patternClean = product.id.toLowerCase().replace(/[^a-z0-9]/g, '');
-            return imgNameClean.includes(patternClean);
+            const imgName = img.name.toLowerCase();
+            // Escapar caracteres especiales de regex en el ID por si acaso
+            const pattern = product.id.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+            // Regex: 
+            // - Inicio de string O caracter no alfanulérico (separator)
+            // - ID del producto
+            // - Fin de string O caracter no alfanumérico
+            // Esto evita que "101" coincida con "S10176"
+            const regex = new RegExp(`(^|[^a-z0-9])${pattern}([^a-z0-9]|$)`, 'i');
+
+            return regex.test(imgName);
         });
 
         if (matches.length > 0) {
