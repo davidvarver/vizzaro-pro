@@ -20,11 +20,17 @@ try {
     console.log('--- HEADERS FOUND ---');
     console.log(JSON.stringify(headers, null, 2));
 
-    // Print first row of data to see values
+    // Print first 5 rows of data to see values and if Pattern ID repeats
     const data = XLSX.utils.sheet_to_json(sheet);
     if (data.length > 0) {
-        console.log('\n--- FIRST ROW DATA ---');
-        console.log(JSON.stringify(data[0], null, 2));
+        console.log('\n--- FIRST 5 ROWS DATA ---');
+        console.log(JSON.stringify(data.slice(0, 5), null, 2));
+
+        const patterns = data.map(d => d['Pattern No']);
+        const uniquePatterns = new Set(patterns);
+        console.log(`\nTotal Rows: ${data.length}`);
+        console.log(`Unique Patterns: ${uniquePatterns.size}`);
+        console.log(`Is Product No Unique? ${new Set(data.map(d => d['Product No'])).size === data.length}`);
     }
 
 } catch (e) {
