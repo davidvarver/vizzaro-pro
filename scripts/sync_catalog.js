@@ -1,6 +1,70 @@
 require('dotenv').config();
 const Client = require('ssh2-sftp-client');
-const { put } = require('@vercel/blob');
+const { put, list } = require('@vercel/blob');
+
+// ... (previous code)
+
+async function uploadImageWithRetry(imagePath, remotePath, retries = CONFIG.MAX_RETRIES) {
+    // 0. Verificar si ya existe en Blob (Optimización crítica para re-intentos)
+    try {
+        const { blobs } = await list({
+            prefix: remotePath,
+            limit: 1,
+            token: process.env.BLOB_READ_WRITE_TOKEN
+        });
+        if (blobs.length > 0) {
+            console.log(`   ✅ Image already exists in Blob (Skipping Upload): ${blobs[0].url}`);
+            return blobs[0].url;
+        }
+    } catch (e) {
+        // Si falla el listado, continuamos con el intento de subida
+        console.warn(`   ⚠️ Warning checking blob existence: ${e.message}`);
+    }
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            // 1. Descargar imagen del FTP
+            console.log(`   📥 Downloading from FTP...`);
+            const buffer = await sftp.get(imagePath);
+
+            // 2. Aplicar marca de agua
+            console.log(`   🎨 Processing image...`);
+            const processedBuffer = await addWatermark(buffer);
+
+            // 3. Subir a Vercel Blob
+            console.log(`   📤 Uploading to Vercel Blob...`);
+            const blob = await put(remotePath, processedBuffer, {
+                access: 'public',
+                token: process.env.BLOB_READ_WRITE_TOKEN,
+                addRandomSuffix: false
+            });
+
+            return blob.url;
+        } catch (e) {
+            if (e.message.includes('already exists')) {
+                // Fallback por si la comprobación de lista falló pero el put confirmó que existe
+                console.log(`   ⚠️ Blob exists error caught. Returning null to skip without failing batch.`);
+                // Idealmente deberíamos retornar la URL, pero si no la tenemos, null hará que no se guarde 
+                // (o podríamos hacer un segundo list aquí).
+                // Mejor estrategia: Si falla por "exists", intentamos listar de nuevo para recuperar la URL.
+                try {
+                    const { blobs } = await list({ prefix: remotePath, limit: 1, token: process.env.BLOB_READ_WRITE_TOKEN });
+                    if (blobs.length > 0) return blobs[0].url;
+                } catch (ex) { }
+                return null;
+            }
+
+            if (attempt < retries) {
+                const delay = attempt * 2000;
+                console.log(`   ⏳ Retry ${attempt}/${retries} in ${delay}ms...`);
+                await sleep(delay);
+            } else {
+                console.error(`   💀 Upload failed after ${retries} attempts: ${e.message}`);
+                return null;
+            }
+        }
+    }
+}
 const { createClient } = require('@vercel/kv');
 const XLSX = require('xlsx');
 const path = require('path');
