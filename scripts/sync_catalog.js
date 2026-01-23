@@ -122,6 +122,26 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+async function scanRecursive(dirPath, fileList = []) {
+    try {
+        const items = await sftp.list(dirPath);
+        for (const item of items) {
+            if (item.type === 'd' && item.name !== '.' && item.name !== '..') {
+                await scanRecursive(`${dirPath}/${item.name}`, fileList);
+            } else if (item.name.match(/\.(jpg|jpeg|png)$/i)) {
+                fileList.push({
+                    name: item.name,
+                    path: `${dirPath}/${item.name}`,
+                    size: item.size
+                });
+            }
+        }
+    } catch (e) {
+        console.warn(`    ⚠️ Error scanning subdirectory ${dirPath}: ${e.message}`);
+    }
+    return fileList;
+}
+
 // --- WATERMARK SYSTEM ---
 let watermarkBuffer = null;
 
@@ -362,18 +382,12 @@ async function processCollection(collectionName, rootPath) {
             }
         }
 
-        // 1. Escanear imágenes solo en carpeta raíz
-        console.log('📂 Scanning images in root folder...');
-        const fileList = await sftp.list(rootPath);
-        const allImages = fileList
-            .filter(f => f.name.match(/\.(jpg|jpeg|png)$/i))
-            .map(item => ({
-                name: item.name,
-                path: `${rootPath}/${item.name}`,
-                size: item.size
-            }));
+        // 1. Escanear imágenes RECURSIVAMENTE (Restored per user request)
+        console.log('📂 Scanning images in folder tree (RECURSIVE)...');
+        // const fileList = await sftp.list(rootPath); // OLD FLAT SCAN
+        const allImages = await scanRecursive(rootPath);
 
-        console.log(`✅ Found ${allImages.length} images in root folder`);
+        console.log(`✅ Found ${allImages.length} images in tree.`);
 
         // 2. Buscar archivo Excel
         const excelFile = fileList.find(f => f.name.match(/\.xlsx?$/i));
