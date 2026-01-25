@@ -14,54 +14,61 @@ export default function TermsOfSaleScreen() {
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <ArrowLeft size={24} color={Colors.light.text} />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Terms of Sale</Text>
+                <Text style={styles.headerTitle}>Terms & Conditions of Sale</Text>
             </View>
 
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>1. Return and Refund Policy</Text>
-                    <Text style={styles.paragraph}>
-                        Due to the personalized nature of our products (wallpaper printed on demand or cut to size), <Text style={styles.bold}>WE DO NOT ACCEPT RETURNS OR EXCHANGES</Text> once the order has been processed or delivered, except in cases of proven manufacturing defects.
-                    </Text>
-                    <Text style={styles.paragraph}>
-                        Please ensure you order a sample before making your final purchase to verify color and texture, as device screens may alter the perception of the actual color.
+
+                <View style={styles.alertBox}>
+                    <Text style={styles.alertText}>
+                        <Text style={styles.bold}>Essential Policy:</Text> Please inspect all merchandise immediately upon receipt. No claims for damages or defects will be accepted once the wallpaper has been cut or installed.
                     </Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>2. Color Variations (Batches)</Text>
+                    <Text style={styles.sectionTitle}>1. Return Policy (All Sales Final)</Text>
                     <Text style={styles.paragraph}>
-                        Wallpaper is produced in batches. There may be slight color variations between different printing batches.
+                        <Text style={styles.bold}>ALL SALES ARE FINAL.</Text> We do not accept returns, exchanges, or refunds for any product, even if unopened or in original condition.
                     </Text>
                     <Text style={styles.paragraph}>
-                        <Text style={styles.bold}>Important:</Text> We strongly recommend buying all the necessary wallpaper for a project in a single order to ensure it comes from the same batch. We do not guarantee color matching for separate orders placed at different times.
-                    </Text>
-                </View>
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>3. Measurement Responsibility</Text>
-                    <Text style={styles.paragraph}>
-                        The customer is solely responsible for providing the correct wall measurements. Vizzaro is not responsible for material shortages due to incorrect measurements or errors in calculating the required quantity by the customer.
+                        Please ensure you verify your measurements and order a sample before purchasing to confirm color and texture.
                     </Text>
                     <Text style={styles.paragraph}>
-                        We suggest always adding an extra 10-15% to the total calculated to cover pattern wastage (repeat) and potential installation errors.
+                        Exceptions are made <Text style={styles.bold}>ONLY</Text> in the case of proven manufacturing defects or shipping damage (see Section 2).
                     </Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>4. Defects and Damages</Text>
+                    <Text style={styles.sectionTitle}>2. Inspection & Defects</Text>
                     <Text style={styles.paragraph}>
-                        Inspect your order immediately upon receipt. If you detect any visible defect or shipping damage, you must notify us within 48 hours of receipt, sending photos of the packaging and the damaged product.
+                        Customers must inspect all rolls for defects, correct pattern, and batch number consistency <Text style={styles.bold}>BEFORE</Text> cutting or hanging.
                     </Text>
                     <Text style={styles.paragraph}>
-                        Claims for defects will not be accepted after the wallpaper has been cut or installed. It is the installer's responsibility to verify the material quality before installation. Installing the product constitutes acceptance of its quality.
+                        If you receive defective merchandise, please notify Vizzaro immediately (within 48 hours). We will replace defective rolls at no charge. However, <Text style={styles.bold}>no claims for labor costs or consequential damages will be accepted.</Text> Hanging the wallpaper constitutes acceptance of the product's condition.
                     </Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>5. Installation</Text>
+                    <Text style={styles.sectionTitle}>3. Color Variations & Batches</Text>
                     <Text style={styles.paragraph}>
-                        Vizzaro is only the material supplier. We assume no responsibility for installation errors, improper surface preparation, or labor costs.
+                        Wallpaper is produced in dye lots (batches). We cannot guarantee color matching for orders placed at different times.
+                    </Text>
+                    <Text style={styles.paragraph}>
+                        <Text style={styles.bold}>Strong Recommendation:</Text> Always order enough material to complete your entire project, plus 10-15% extra for waste and pattern matching. We cannot guarantee availability of the same batch for future add-on orders.
+                    </Text>
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>4. Cancellations</Text>
+                    <Text style={styles.paragraph}>
+                        Orders for stock items may be cancelled only if they have not yet been processed or shipped. Custom orders (Murals/Digital) cannot be cancelled once production has begun.
+                    </Text>
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>5. Samples</Text>
+                    <Text style={styles.paragraph}>
+                        We strongly encourage ordering samples to verify color and texture. Computer screens do not accurately represent physical colors. Sample costs are non-refundable.
                     </Text>
                 </View>
 
@@ -89,13 +96,26 @@ const styles = StyleSheet.create({
         padding: 4,
     },
     headerTitle: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         color: Colors.light.text,
     },
     content: {
         flex: 1,
         padding: 24,
+    },
+    alertBox: {
+        backgroundColor: '#FFF4F4',
+        borderColor: '#FFD7D7',
+        borderWidth: 1,
+        padding: 16,
+        borderRadius: 8,
+        marginBottom: 32,
+    },
+    alertText: {
+        fontSize: 14,
+        color: '#D8000C',
+        lineHeight: 20,
     },
     section: {
         marginBottom: 32,
@@ -107,11 +127,21 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     paragraph: {
-        fontSize: 16,
+        fontSize: 15,
         color: Colors.light.textSecondary,
         lineHeight: 24,
         marginBottom: 12,
         textAlign: 'justify',
+    },
+    list: {
+        marginBottom: 16,
+        paddingLeft: 8,
+    },
+    listItem: {
+        fontSize: 15,
+        color: Colors.light.textSecondary,
+        lineHeight: 24,
+        marginBottom: 8,
     },
     bold: {
         fontWeight: 'bold',

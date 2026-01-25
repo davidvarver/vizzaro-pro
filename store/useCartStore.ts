@@ -163,17 +163,28 @@ export const useCartStore = create<CartState>((set, get) => ({
     },
 
     getShippingCost: () => {
-        const { cartItems } = get();
-        // Rule: $0.99 per sample.
+        const { cartItems, getSubtotal } = get();
+        const subtotal = getSubtotal();
+
+        // High priority: Free Shipping Threshold
+        if (subtotal >= 249) {
+            return 0;
+        }
+
+        // Below threshold logic
         const samplesCount = cartItems
             .filter(item => item.purchaseType === 'sample')
             .reduce((count, item) => count + item.quantity, 0);
 
         const hasRolls = cartItems.some(item => item.purchaseType !== 'sample');
-        // Standard delivery $15 for rolls
-        const standardDelivery = hasRolls ? 15.00 : 0;
 
-        return (samplesCount * 0.99) + standardDelivery;
+        if (hasRolls) {
+            // Flat rate for orders with rolls (under $249)
+            return 15.00;
+        } else {
+            // Samples only -> keep cheap shipping ($0.99 per sample)
+            return samplesCount * 0.99;
+        }
     },
 
     getGrandTotal: () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, StatusBar, Platform, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, ActivityIndicator, StatusBar, Platform, useWindowDimensions, TextInput } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
@@ -26,12 +26,130 @@ export default function WallpaperDetailScreen() {
     const [quantity, setQuantity] = useState(1);
     const [addedToCart, setAddedToCart] = useState(false);
 
+    // Calculator State
+    const [showCalculator, setShowCalculator] = useState(false);
+    const [wallWidth, setWallWidth] = useState('');
+    const [wallHeight, setWallHeight] = useState('');
+    const [unit, setUnit] = useState<'ft' | 'm'>('ft'); // Unit Toggle
+    const [calculatedRolls, setCalculatedRolls] = useState<number | null>(null);
+
+    // Calculator Logic
+    useEffect(() => {
+        if (!wallpaper || !wallWidth || !wallHeight) {
+            setCalculatedRolls(null);
+            return;
+        }
+
+        const w = parseFloat(wallWidth);
+        const h = parseFloat(wallHeight);
+
+        if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) {
+            setCalculatedRolls(null);
+            return;
+        }
+
+        // Convert wall dimensions to meters based on selected unit
+        let wallWidthM = w;
+        let wallHeightM = h;
+
+        if (unit === 'ft') {
+            wallWidthM = w * 0.3048;
+            wallHeightM = h * 0.3048;
+        }
+        // if unit === 'm', values are already in meters (input assumes meters for metric)
+
+        // Parse Dimensions (Handle Object or String)
+        let rollWidthM = 0.53; // default
+        let rollLengthM = 10.05; // default
+
+        // CASE 1: Object format (York)
+        if (wallpaper.dimensions && typeof wallpaper.dimensions === 'object' && wallpaper.dimensions.width) {
+            rollWidthM = Number(wallpaper.dimensions.width) || 0.53;
+            rollLengthM = Number(wallpaper.dimensions.height) || 10.05;
+        }
+        // CASE 2: String format (Gimmersta - e.g. "50cm x 10.05m" or "2.7m x 2m")
+        else if (wallpaper.dimensions && typeof wallpaper.dimensions === 'string') {
+            const dimString = wallpaper.dimensions.toLowerCase();
+            // Regex to find numbers followed by units
+            // matches: ["53cm", "53", "cm"], ["10.05m", "10.05", "m"]
+            const parts = dimString.match(/(\d+(\.\d+)?)\s*(cm|m|in|ft)?/g);
+
+            if (parts && parts.length >= 2) {
+                // Helper to convert any unit string to meters
+                const parseUnitToM = (valStr: string) => {
+                    const num = parseFloat(valStr.replace(/[^\d.]/g, ''));
+                    if (valStr.includes('cm')) return num / 100;
+                    if (valStr.includes('in') || valStr.includes('"')) return num * 0.0254;
+                    if (valStr.includes('ft') || valStr.includes("'")) return num * 0.3048;
+                    // Default to meters if no unit or 'm'
+                    return num;
+                };
+
+                // Assume first number is width, second is height (standard)
+                rollWidthM = parseUnitToM(parts[0]);
+                rollLengthM = parseUnitToM(parts[1]);
+            }
+        }
+
+        // Parse Repeat
+        // Gimmersta strings "53cm" need parsing too if patternRepeat is not numeric
+        let repeatM = 0;
+        if (typeof wallpaper.patternRepeat === 'number') {
+            repeatM = wallpaper.patternRepeat / 100; // cm to m
+        } else if (typeof wallpaper.patternRepeat === 'string') {
+            // Handle "53 cm" or "64cm"
+            const repStr = String(wallpaper.patternRepeat).toLowerCase();
+            const num = parseFloat(repStr.replace(/[^\d.]/g, ''));
+            if (repStr.includes('cm')) repeatM = num / 100;
+            else if (repStr.includes('in')) repeatM = num * 0.0254;
+            else repeatM = num / 100; // default assumption cm
+        } else if (typeof wallpaper.repeat === 'string') {
+            // Sometimes mapped as 'repeat'
+            const repStr = String(wallpaper.repeat).toLowerCase();
+            const num = parseFloat(repStr.replace(/[^\d.]/g, ''));
+            if (num > 0) {
+                if (repStr.includes('cm')) repeatM = num / 100;
+                else if (repStr.includes('m')) repeatM = num;
+            }
+        }
+
+        console.log('Calc Debug:', { wallWidthM, wallHeightM, rollWidthM, rollLengthM, repeatM });
+
+        // Formula:
+        // 1. Drops needed
+        const drops = Math.ceil(wallWidthM / rollWidthM);
+
+        // 2. Length per drop (Height + Trim + Repeat for matching)
+        // We add 10cm trim (0.1m) + 1 repeat just to be safe for matching
+        const trim = 0.1;
+        const lengthPerDrop = wallHeightM + trim + repeatM;
+
+        // 3. Drops per roll
+        const dropsPerRoll = Math.floor(rollLengthM / lengthPerDrop);
+
+        // 4. Total rolls
+        if (dropsPerRoll > 0) {
+            const rolls = Math.ceil(drops / dropsPerRoll);
+            setCalculatedRolls(rolls);
+        } else {
+            // If height > roll length (unlikely for standard walls but possible for murals or stairs)
+            // Fallback: Total area / Roll area * 1.2 safety factor
+            const areaWall = wallWidthM * wallHeightM;
+            const areaRoll = rollWidthM * rollLengthM;
+            const approximate = Math.ceil((areaWall / areaRoll) * 1.2);
+            setCalculatedRolls(approximate);
+        }
+
+    }, [wallWidth, wallHeight, wallpaper, unit]);
+
     // 1. Auto-load data if missing (e.g. reload on detail page)
     useEffect(() => {
         if (wallpapers.length === 0) {
             loadWallpapers();
         }
     }, [wallpapers.length, loadWallpapers]);
+
+    // ... (rest of code)
 
     // 2. React to data changes (once loaded)
     useEffect(() => {
@@ -215,6 +333,85 @@ export default function WallpaperDetailScreen() {
 
                         {/* Actions */}
                         <View style={styles.actionContainer}>
+                            {/* Wall Calculator */}
+                            <View style={styles.calculatorValues}>
+                                <TouchableOpacity
+                                    style={styles.calcToggle}
+                                    onPress={() => setShowCalculator(!showCalculator)}
+                                >
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                                        <Ionicons name="calculator-outline" size={20} color="#000" />
+                                        <Text style={styles.calcToggleText}>HOW MANY ROLLS DO I NEED?</Text>
+                                    </View>
+                                    <Ionicons name={showCalculator ? "chevron-up" : "chevron-down"} size={20} color="#000" />
+                                </TouchableOpacity>
+
+                                {showCalculator && (
+                                    <View style={styles.calculatorContainer}>
+                                        <Text style={styles.calcInstruction}>
+                                            Enter your wall dimensions to calculate required rolls.
+                                            We account for pattern repeat ({wallpaper.patternRepeat ? cmToInches(wallpaper.patternRepeat) : '0"'}) automatically.
+                                        </Text>
+
+                                        <View style={styles.unitToggleContainer}>
+                                            <TouchableOpacity
+                                                style={[styles.unitButton, unit === 'ft' && styles.unitButtonActive]}
+                                                onPress={() => setUnit('ft')}
+                                            >
+                                                <Text style={[styles.unitText, unit === 'ft' && styles.unitTextActive]}>FEET (ft)</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                style={[styles.unitButton, unit === 'm' && styles.unitButtonActive]}
+                                                onPress={() => setUnit('m')}
+                                            >
+                                                <Text style={[styles.unitText, unit === 'm' && styles.unitTextActive]}>METERS (m)</Text>
+                                            </TouchableOpacity>
+                                        </View>
+
+                                        <View style={styles.calcInputs}>
+                                            <View style={styles.calcInputGroup}>
+                                                <Text style={styles.calcLabel}>WIDTH ({unit})</Text>
+                                                <TextInput
+                                                    style={styles.calcInput}
+                                                    keyboardType="numeric"
+                                                    value={wallWidth}
+                                                    onChangeText={setWallWidth}
+                                                    placeholder={unit === 'ft' ? "10" : "3.00"}
+                                                />
+                                            </View>
+                                            <View style={styles.calcInputGroup}>
+                                                <Text style={styles.calcLabel}>HEIGHT ({unit})</Text>
+                                                <TextInput
+                                                    style={styles.calcInput}
+                                                    keyboardType="numeric"
+                                                    value={wallHeight}
+                                                    onChangeText={setWallHeight}
+                                                    placeholder={unit === 'ft' ? "8" : "2.40"}
+                                                />
+                                            </View>
+                                        </View>
+
+                                        {calculatedRolls !== null && (
+                                            <View style={styles.calcResult}>
+                                                <Text style={styles.resultText}>YOU NEED:</Text>
+                                                <Text style={styles.resultNumber}>{calculatedRolls} ROLLS</Text>
+                                                <TouchableOpacity
+                                                    style={styles.applyButton}
+                                                    onPress={() => {
+                                                        setQuantity(calculatedRolls);
+                                                        setShowCalculator(false);
+                                                    }}
+                                                >
+                                                    <Text style={styles.applyButtonText}>UPDATE QUANTITY</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        )}
+                                    </View>
+                                )}
+                            </View>
+
+                            <View style={styles.divider} />
+
                             {/* Quantity Selector */}
                             <View style={styles.quantityContainer}>
                                 <Text style={styles.quantityLabel}>QUANTITY:</Text>
@@ -311,6 +508,120 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+    // ... [existing styles kept implicitly by location, just ensuring TextInput is imported above and these new styles are added] ...
+
+    // Calculator Styles
+    calculatorValues: {
+        marginBottom: 20,
+    },
+    calcToggle: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 12,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        paddingHorizontal: 16,
+        backgroundColor: '#fafafa',
+    },
+    calcToggleText: {
+        fontSize: 12,
+        fontWeight: '700',
+        letterSpacing: 1,
+        color: '#000',
+    },
+    calculatorContainer: {
+        borderWidth: 1,
+        borderTopWidth: 0,
+        borderColor: '#ddd',
+        padding: 20,
+        backgroundColor: '#fff',
+    },
+    // New Unit Toggle Styles
+    unitToggleContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#ddd',
+    },
+    unitButton: {
+        flex: 1,
+        paddingVertical: 10,
+        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
+    },
+    unitButtonActive: {
+        backgroundColor: '#000',
+    },
+    unitText: {
+        fontSize: 11,
+        fontWeight: '700',
+        color: '#666',
+        letterSpacing: 1,
+    },
+    unitTextActive: {
+        color: '#fff',
+    },
+    // End Unit Toggle
+    calcInstruction: {
+        fontSize: 12,
+        color: '#666',
+        marginBottom: 20,
+        lineHeight: 18,
+    },
+    calcInputs: {
+        flexDirection: 'row',
+        gap: 20,
+        marginBottom: 20,
+    },
+    calcInputGroup: {
+        flex: 1,
+    },
+    calcLabel: {
+        fontSize: 11,
+        fontWeight: '700',
+        marginBottom: 8,
+        color: '#333',
+    },
+    calcInput: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        height: 44,
+        paddingHorizontal: 12,
+        fontSize: 16,
+    },
+    calcResult: {
+        alignItems: 'center',
+        paddingTop: 20,
+        borderTopWidth: 1,
+        borderTopColor: '#f0f0f0',
+    },
+    resultText: {
+        fontSize: 11,
+        fontWeight: '700',
+        letterSpacing: 1,
+        color: '#666',
+        marginBottom: 4,
+    },
+    resultNumber: {
+        fontSize: 24,
+        fontWeight: '700',
+        color: '#000',
+        marginBottom: 16,
+    },
+    applyButton: {
+        backgroundColor: '#000',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 0,
+    },
+    applyButtonText: {
+        color: '#fff',
+        fontSize: 11,
+        fontWeight: '700',
+        letterSpacing: 1,
+    },
+
     loadingContainer: {
         flex: 1,
         justifyContent: 'center',
