@@ -40,7 +40,7 @@ export default function FavoritesScreen() {
         <View style={{ width: ITEM_WIDTH, padding: 10, marginBottom: 10 }}>
             <WallpaperCard
                 item={item}
-                onPress={() => router.push(`/product/${item.id}` as any)}
+                onPress={() => router.push(`/(tabs)/product/${encodeURIComponent(item.id)}` as any)}
                 width={'100%'}
             />
         </View>

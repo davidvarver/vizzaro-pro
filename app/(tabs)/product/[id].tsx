@@ -155,7 +155,23 @@ export default function WallpaperDetailScreen() {
     // 2. React to data changes (once loaded)
     useEffect(() => {
         if (typeof id === 'string') {
-            const wp = wallpapers.find(w => w.id === id);
+            const decodedId = decodeURIComponent(id);
+
+            // Priority 1: Main Store
+            let wp = wallpapers.find(w => w.id === decodedId);
+
+            // Priority 2: Favorites Store (Fallback if not in main list)
+            if (!wp) {
+                const { favoriteProjects } = useFavoritesStore.getState();
+                for (const proj of favoriteProjects) {
+                    const found = proj.wallpapers.find(w => w.id === decodedId);
+                    if (found) {
+                        wp = found;
+                        break;
+                    }
+                }
+            }
+
             if (wp) {
                 setWallpaper(wp);
             }
