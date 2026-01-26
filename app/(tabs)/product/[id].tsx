@@ -19,12 +19,15 @@ export default function WallpaperDetailScreen() {
     const router = useRouter();
     const { wallpapers, loadWallpapers, loadWallpaperDetails, isLoading } = useWallpapersStore();
     const { addToCart } = useCartStore();
-    const { addToFavorites } = useFavoritesStore();
+    const { toggleFavorite, isFavorite } = useFavoritesStore();
 
     const [wallpaper, setWallpaper] = useState<any>(null);
     const [activeImage, setActiveImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [addedToCart, setAddedToCart] = useState(false);
+
+    // Reactive Favorite State
+    const isFav = wallpaper ? isFavorite(wallpaper.id) : false;
 
     // Calculator State
     const [showCalculator, setShowCalculator] = useState(false);
@@ -149,8 +152,6 @@ export default function WallpaperDetailScreen() {
         }
     }, [wallpapers.length, loadWallpapers]);
 
-    // ... (rest of code)
-
     // 2. React to data changes (once loaded)
     useEffect(() => {
         if (typeof id === 'string') {
@@ -186,10 +187,9 @@ export default function WallpaperDetailScreen() {
         }
     };
 
-    const handleAddToFavorites = () => {
+    const handleToggleFavorite = () => {
         if (wallpaper) {
-            addToFavorites(wallpaper.name, 'General', wallpaper); // Default room type
-            alert('Added to favorites');
+            toggleFavorite(wallpaper);
         }
     };
 
@@ -249,8 +249,12 @@ export default function WallpaperDetailScreen() {
                     <TouchableOpacity onPress={() => router.back()} style={styles.navButton}>
                         <Ionicons name="arrow-back" size={24} color="black" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleAddToFavorites} style={styles.navButton}>
-                        <Ionicons name="heart-outline" size={24} color="black" />
+                    <TouchableOpacity onPress={handleToggleFavorite} style={styles.navButton}>
+                        <Ionicons
+                            name={isFav ? "heart" : "heart-outline"}
+                            size={24}
+                            color={isFav ? "#E63946" : "black"}
+                        />
                     </TouchableOpacity>
                 </View>
 
@@ -508,8 +512,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    // ... [existing styles kept implicitly by location, just ensuring TextInput is imported above and these new styles are added] ...
-
     // Calculator Styles
     calculatorValues: {
         marginBottom: 20,
@@ -798,160 +800,133 @@ const styles = StyleSheet.create({
     variantImage: {
         width: '100%',
         height: '100%',
-        borderRadius: 0, // Square image
     },
     variantName: {
-        fontSize: 12,
-        color: '#555',
-        marginTop: 4,
-        letterSpacing: 0.5,
-        fontStyle: 'italic',
+        fontSize: 10,
+        color: '#666',
+        marginTop: 5,
+        textAlign: 'left',
     },
-
-    // Actions
     actionContainer: {
-        width: '100%',
-        marginBottom: 40,
-        gap: 12,
+        gap: 15,
+        marginBottom: 30,
     },
-    visualizeButton: {
-        flexDirection: 'row',
-        backgroundColor: '#000',
-        height: 54, // Taller touch target
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 0,
-    },
-    visualizeText: {
-        color: '#fff',
-        fontSize: 13,
-        fontWeight: '700',
-        letterSpacing: 2,
-    },
-    cartButton: {
-        backgroundColor: '#fff',
-        height: 54,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 0,
-    },
-    cartText: {
-        color: '#000',
-        fontSize: 13,
-        fontWeight: '700',
-        letterSpacing: 2,
-    },
-
-    // Sections
-    section: {
-        marginBottom: 35,
-    },
-    sectionTitle: {
-        fontSize: 12,
-        fontWeight: '700',
-        letterSpacing: 1.5,
-        marginBottom: 15,
-        color: '#000',
-        textAlign: 'left',
-        textTransform: 'uppercase',
-    },
-    description: {
-        fontSize: 15,
-        lineHeight: 26,
-        color: '#444',
-        textAlign: 'left',
-    },
-
-    // Specs
-    specRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 14,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f5f5f5',
-    },
-    specLabel: {
-        fontSize: 11,
-        fontWeight: '600',
-        color: '#777',
-        letterSpacing: 1,
-        textTransform: 'uppercase',
-    },
-    specValue: {
-        fontSize: 13,
-        color: '#222',
-        fontWeight: '400',
-    },
-
-    // Quantity Selector
+    // Quantity Check
     quantityContainer: {
-        marginBottom: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 20,
     },
     quantityLabel: {
-        fontSize: 11,
-        fontWeight: '600',
-        color: '#333',
+        fontSize: 12,
+        fontWeight: '700',
+        color: '#000',
         letterSpacing: 1,
-        marginBottom: 8,
-        textTransform: 'uppercase',
     },
     quantityControls: {
         flexDirection: 'row',
         alignItems: 'center',
         borderWidth: 1,
         borderColor: '#ddd',
-        alignSelf: 'flex-start',
-        height: 44,
     },
     qtyButton: {
-        width: 44,
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f9f9f9',
+        padding: 12,
+        backgroundColor: '#fafafa',
     },
     qtyInput: {
-        width: 60,
-        height: '100%',
-        justifyContent: 'center',
+        width: 50,
         alignItems: 'center',
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderColor: '#ddd',
-        backgroundColor: '#fff',
+        justifyContent: 'center',
     },
     qtyText: {
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '600',
     },
-
-    // Sample Button
-    sampleButton: {
-        marginTop: 10,
+    // End Quantity
+    visualizeButton: {
+        backgroundColor: Colors.light.tint,
+        paddingVertical: 18,
+        borderRadius: 0, // Square
         alignItems: 'center',
-        paddingVertical: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 10,
+    },
+    visualizeText: {
+        color: 'white',
+        fontSize: 13,
+        fontWeight: '700',
+        letterSpacing: 2,
+    },
+    cartButton: {
+        backgroundColor: '#000',
+        paddingVertical: 18,
+        borderRadius: 0, // Square
+        alignItems: 'center',
+    },
+    cartButtonSuccess: {
+        backgroundColor: '#4CAF50',
+    },
+    cartText: {
+        color: 'white',
+        fontSize: 13,
+        fontWeight: '700',
+        letterSpacing: 2,
+    },
+    cartTextSuccess: {
+        color: 'white',
+    },
+    sampleButton: {
+        paddingVertical: 15,
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#000',
+        marginTop: 5,
     },
     sampleText: {
-        fontSize: 13,
-        fontWeight: '600',
         color: '#000',
-        textDecorationLine: 'underline',
+        fontSize: 12,
+        fontWeight: '700',
         letterSpacing: 1,
     },
     sampleSubtext: {
-        fontSize: 11,
+        fontSize: 10,
         color: '#666',
         marginTop: 4,
     },
-
-    // Success State
-    cartButtonSuccess: {
-        backgroundColor: '#4CAF50',
-        borderColor: '#4CAF50',
+    section: {
+        marginBottom: 30,
     },
-    cartTextSuccess: {
-        color: '#fff',
+    sectionTitle: {
+        fontSize: 14,
+        fontWeight: '700',
+        letterSpacing: 1,
+        color: '#000',
+        marginBottom: 15,
+        textTransform: 'uppercase',
+    },
+    description: {
+        fontSize: 15,
+        lineHeight: 24,
+        color: '#444',
+    },
+    specRow: {
+        flexDirection: 'row',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f5f5f5',
+    },
+    specLabel: {
+        width: 120,
+        fontSize: 11,
+        fontWeight: '600',
+        color: '#888',
+        letterSpacing: 1,
+    },
+    specValue: {
+        flex: 1,
+        fontSize: 14,
+        color: '#333',
     },
 });
