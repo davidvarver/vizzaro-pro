@@ -192,11 +192,6 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
             const updatedProjects = get().favoriteProjects.map(project => {
                 if (project.id === projectId) {
                     const updatedWallpapers = project.wallpapers.filter(w => w.id !== wallpaperId);
-                    if (updatedWallpapers.length === 0) {
-                        console.log('Cannot remove last wallpaper from project');
-                        cannotRemove = true;
-                        return project;
-                    }
                     return {
                         ...project,
                         wallpapers: updatedWallpapers,
@@ -204,9 +199,7 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
                     };
                 }
                 return project;
-            });
-
-            if (cannotRemove) return false;
+            }).filter(project => project.wallpapers.length > 0); // Auto-delete empty projects for cleanliness
 
             set({ favoriteProjects: updatedProjects });
             await saveFavoritesToStorageAndApi(updatedProjects, user?.id);
