@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, DimensionValue, Animated, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, DimensionValue, Platform } from 'react-native';
 import { Wallpaper } from '@/constants/wallpapers';
 import Colors from '@/constants/colors';
+import { Ionicons } from '@expo/vector-icons';
+import { useFavoritesStore } from '@/store/useFavoritesStore';
 
 interface WallpaperCardProps {
     item: Wallpaper;
@@ -11,54 +13,43 @@ interface WallpaperCardProps {
 }
 
 export const WallpaperCard = ({ item, onPress, onVisualize, width }: WallpaperCardProps) => {
-    const scaleAnim = useRef(new Animated.Value(1)).current;
-
-    // Web-specific hover handling
-    const handleMouseEnter = () => {
-        if (Platform.OS === 'web') {
-            Animated.spring(scaleAnim, {
-                toValue: 1.1,
-                useNativeDriver: true,
-                friction: 7,
-                tension: 40
-            }).start();
-        }
-    };
-
-    const handleMouseLeave = () => {
-        if (Platform.OS === 'web') {
-            Animated.spring(scaleAnim, {
-                toValue: 1,
-                useNativeDriver: true,
-                friction: 7,
-                tension: 40
-            }).start();
-        }
-    };
+    const { isFavorite, toggleFavorite } = useFavoritesStore();
+    const favored = isFavorite(item.id);
 
     return (
         <TouchableOpacity
             style={[styles.container, { width }]}
             onPress={() => onPress(item)}
             activeOpacity={0.9}
-            //@ts-ignore - Web props
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
         >
             <View style={styles.imageContainer}>
-                <Animated.Image
+                <Image
                     source={{ uri: item.imageUrls?.[0] || item.imageUrl }}
-                    style={[
-                        styles.image,
-                        { transform: [{ scale: scaleAnim }] }
-                    ]}
+                    style={styles.image}
                     resizeMode="cover"
                 />
+
+                {/* Favorite Button */}
+                <TouchableOpacity
+                    style={styles.favoriteButton}
+                    onPress={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(item);
+                    }}
+                >
+                    <Ionicons
+                        name={favored ? "heart" : "heart-outline"}
+                        size={20}
+                        color={favored ? "#E63946" : "#000"}
+                    />
+                </TouchableOpacity>
+
                 {!item.inStock && (
                     <View style={styles.outOfStockBadge}>
                         <Text style={styles.outOfStockText}>Out of Stock</Text>
                     </View>
                 )}
+
                 {onVisualize && (
                     <TouchableOpacity
                         style={styles.visualizerIconFromCard}
@@ -67,12 +58,7 @@ export const WallpaperCard = ({ item, onPress, onVisualize, width }: WallpaperCa
                             onVisualize(item);
                         }}
                     >
-                        {/* Using text or simple icon because we need an import if we use Lucide here */}
-                        {/* But wait, I need to import Camera/Eye. Let's assume Lucide is available or use text/image */}
-                        {/* Since this is a component file, I need to check imports. */}
-                        {/* Actually, let's just make it a simple circle for now or check imports in next step if broken */}
-                        {/* Checking imports... I need to import Camera from lucide-react-native */}
-                        <Text style={{ fontSize: 12 }}>👁️</Text>
+                        <Ionicons name="eye-outline" size={18} color="#333" />
                     </TouchableOpacity>
                 )}
             </View>
@@ -89,12 +75,12 @@ export const WallpaperCard = ({ item, onPress, onVisualize, width }: WallpaperCa
 const styles = StyleSheet.create({
     container: {
         marginBottom: 24,
-        backgroundColor: 'transparent', // Cleaner look, no card background
+        backgroundColor: 'transparent',
     },
     imageContainer: {
         width: '100%',
-        aspectRatio: 0.85, // Taller, more elegant ratio
-        borderRadius: 4, // Sharper corners for modern look
+        aspectRatio: 0.85,
+        borderRadius: 4,
         overflow: 'hidden',
         backgroundColor: Colors.light.backgroundSecondary,
         shadowColor: "#000",
@@ -103,6 +89,7 @@ const styles = StyleSheet.create({
         shadowRadius: 12,
         elevation: 5,
         marginBottom: 12,
+        position: 'relative', // for absolute children
     },
     image: {
         width: '100%',
@@ -113,21 +100,21 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 15,
-        fontFamily: 'PlayfairDisplay_600SemiBold', // Elegant Serif
+        fontFamily: 'PlayfairDisplay_600SemiBold',
         color: Colors.light.text,
         marginBottom: 4,
         letterSpacing: 0.2,
     },
     price: {
         fontSize: 14,
-        fontFamily: 'Lato_400Regular', // Clean Sans
+        fontFamily: 'Lato_400Regular',
         color: Colors.light.textSecondary,
         fontWeight: '500',
     },
     outOfStockBadge: {
         position: 'absolute',
         top: 10,
-        right: 10,
+        left: 10, // Moved to left to avoid clash with heart
         backgroundColor: 'rgba(0,0,0,0.7)',
         paddingHorizontal: 8,
         paddingVertical: 4,
@@ -138,6 +125,22 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontWeight: 'bold',
         textTransform: 'uppercase',
+    },
+    favoriteButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: 'rgba(255,255,255,0.85)',
+        width: 32, height: 32,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+        zIndex: 10,
     },
     visualizerIconFromCard: {
         position: 'absolute',

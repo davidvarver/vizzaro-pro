@@ -34,6 +34,10 @@ interface FavoritesState {
     // Selectors (as functions since Zustand state is accessible)
     getProjectById: (projectId: string) => FavoriteProject | undefined;
     getProjectsByRoom: (roomType: string) => FavoriteProject[];
+
+    // Quick Actions for UI
+    isFavorite: (wallpaperId: string) => boolean;
+    toggleFavorite: (wallpaper: Wallpaper) => Promise<boolean>;
 }
 
 export const useFavoritesStore = create<FavoritesState>((set, get) => ({
@@ -238,6 +242,35 @@ export const useFavoritesStore = create<FavoritesState>((set, get) => ({
             project.roomType.toLowerCase() === roomType.toLowerCase()
         );
     },
+
+    isFavorite: (wallpaperId: string) => {
+        return get().favoriteProjects.some(p => p.wallpapers.some(w => w.id === wallpaperId));
+    },
+
+    toggleFavorite: async (wallpaper: Wallpaper) => {
+        const { isFavorite, favoriteProjects, addToFavorites, removeWallpaperFromProject } = get();
+
+        if (isFavorite(wallpaper.id)) {
+            // Remove from ALL projects
+            // Note: This might be aggressive if user organized it, but for a simple toggle it's expected behavior
+            // "Unhearting" usually means "I don't want this anymore".
+            const projectsWithItem = favoriteProjects.filter(p => p.wallpapers.some(w => w.id === wallpaper.id));
+            for (const p of projectsWithItem) {
+                await get().removeWallpaperFromProject(p.id, wallpaper.id);
+            }
+            return false; // Now not favorite
+        } else {
+            // Add to "My Favorites" (Default)
+            let defaultProject = favoriteProjects.find(p => p.name === 'My Favorites');
+
+            if (defaultProject) {
+                await get().addWallpaperToProject(defaultProject.id, wallpaper);
+            } else {
+                await get().addToFavorites('My Favorites', 'General', wallpaper);
+            }
+            return true; // Now favorite
+        }
+    }
 }));
 
 // Helper function outside the hook

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator, Dimensions, ScrollView, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator, useWindowDimensions, ScrollView, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWallpapersStore } from '@/store/useWallpapersStore';
@@ -7,16 +7,21 @@ import Colors from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const { width } = Dimensions.get('window');
-const ITEM_WIDTH = width / 2;
-
 export default function HomeScreen() {
     const router = useRouter();
+    const { width } = useWindowDimensions();
     const { collections, isLoading, loadCollections } = useWallpapersStore();
-    // We map internal category names to display names if needed, but for now we update state init
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [selectedColor, setSelectedColor] = useState('all');
-    const [selectedCollection, setSelectedCollection] = useState('all');
+
+    // Grid Calculation Logic
+    // Mobile: 2 cols | Tablet: 3 cols | Desktop: 5 cols
+    let numColumns = 2;
+    if (width >= 768 && width < 1024) {
+        numColumns = 3;
+    } else if (width >= 1024) {
+        numColumns = 5;
+    }
+
+    const ITEM_WIDTH = width / numColumns;
 
     useEffect(() => {
         loadCollections();
@@ -25,7 +30,7 @@ export default function HomeScreen() {
     const renderHeader = () => (
         <View style={styles.headerContainer}>
             <Image
-                source={{ uri: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=800' }} // Fallback/Generic Hero
+                source={{ uri: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?w=800' }}
                 style={styles.heroImage}
             />
             <LinearGradient
@@ -43,8 +48,9 @@ export default function HomeScreen() {
             style={[
                 styles.card,
                 {
-                    paddingLeft: index % 2 === 0 ? 20 : 10,
-                    paddingRight: index % 2 === 0 ? 10 : 20,
+                    width: ITEM_WIDTH,
+                    paddingLeft: 10,
+                    paddingRight: 10,
                     marginBottom: 20
                 }
             ]}
@@ -97,11 +103,12 @@ export default function HomeScreen() {
             </SafeAreaView>
 
             <FlatList
+                key={numColumns} // Forces re-render on resize
                 ListHeaderComponent={renderHeader}
                 data={collections}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id}
-                numColumns={2}
+                numColumns={numColumns}
                 contentContainerStyle={styles.list}
                 showsVerticalScrollIndicator={false}
                 refreshing={isLoading}
@@ -127,7 +134,7 @@ const styles = StyleSheet.create({
     navBar: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center', // Center logo
+        justifyContent: 'center',
         paddingHorizontal: 20,
         paddingVertical: 15,
         borderBottomWidth: 1,
@@ -135,14 +142,8 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     logoImage: {
-        width: 180, // Increased size
+        width: 180,
         height: 50,
-    },
-    logoText: {
-        fontSize: 20,
-        fontWeight: '700',
-        letterSpacing: 2,
-        color: 'black',
     },
     navIcons: {
         flexDirection: 'row',
@@ -157,8 +158,6 @@ const styles = StyleSheet.create({
     list: {
         paddingBottom: 40,
     },
-
-    // Simplified Header Styles
     headerContainer: {
         width: '100%',
         height: 250,
@@ -188,14 +187,12 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         fontStyle: 'italic'
     },
-
-    // Card Styles reuse (simplified)
     card: {
-        width: ITEM_WIDTH,
+        // Width is handled dynamically in renderItem
     },
     imageContainer: {
         width: '100%',
-        height: 200, // Slightly shorter for Books
+        height: 200,
         marginBottom: 10,
         backgroundColor: '#fff',
         shadowColor: '#000',
@@ -209,7 +206,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     cardContent: {
-        alignItems: 'center', // Center text
+        alignItems: 'center',
         marginTop: 5,
     },
     name: {
