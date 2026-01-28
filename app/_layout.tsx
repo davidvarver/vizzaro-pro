@@ -25,7 +25,7 @@ function RootLayoutNav() {
       <Stack.Screen name="admin/orders" options={{ headerShown: false }} />
       <Stack.Screen name="admin/catalog" options={{ headerShown: false }} />
       <Stack.Screen name="admin/collections" options={{ headerShown: false }} />
-      <Stack.Screen name="favorites" options={{ headerShown: false }} />
+
       <Stack.Screen name="project-comparison/[projectId]" options={{ headerShown: false }} />
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
       <Stack.Screen name="auth/register" options={{ headerShown: false }} />
