@@ -14,8 +14,10 @@ export default function HomeScreen() {
 
     // Grid Calculation Logic
     // Mobile: 2 cols | Tablet: 3 cols | Desktop: 5 cols
+    // Grid Calculation Logic
+    // Mobile: 2 cols | Foldable/Tablet: 3 cols | Desktop: 5 cols
     let numColumns = 2;
-    if (width >= 768 && width < 1024) {
+    if (width >= 600 && width < 1024) { // Lowered from 768 to 600 to catch Foldable inner screens
         numColumns = 3;
     } else if (width >= 1024) {
         numColumns = 5;

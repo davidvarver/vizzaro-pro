@@ -487,8 +487,10 @@ async function processCollection(collectionName, rootPath) {
                     .filter(r => r.Pattern && String(r.Pattern).trim())
                     .map(r => ({
                         id: String(r.Pattern).trim(),
-                        name: r.Name || r.Description || r['Product Name'] || `${collectionName} - ${r.Pattern}`,
-                        price: cleanPrice(r.MSRP || r.Price || r['List Price'] || r['Retail Price']),
+                        // Prioritize "Product Name" or "Design Name" over "Description"
+                        name: r['Product Name'] || r['Design Name'] || r.Name || r.Description || `${collectionName} - ${r.Pattern}`,
+                        // Include BLT MSRP (Bolt MSRP) for York products
+                        price: cleanPrice(r.MSRP || r.Price || r['BLT MSRP'] || r['List Price'] || r['Retail Price']),
                         collection: collectionName,
                         sku: r.SKU || r.Pattern,
                         dimensions: cleanDimensions(

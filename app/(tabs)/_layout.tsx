@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import { Grid3X3, Camera, User, ShoppingCart } from "lucide-react-native";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Platform } from "react-native";
 import { useCartStore } from "@/store/useCartStore";
 
 import Colors from "@/constants/colors";
@@ -16,11 +16,22 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: Colors.light.background,
           borderTopColor: Colors.light.border,
+          height: Platform.OS === 'ios' ? 90 : 70, // Explicit height
+          paddingBottom: Platform.OS === 'ios' ? 25 : 10,
+          paddingTop: 10,
+          position: 'relative', // Restore to relative flow
+          // bottom, left, right removed to let it stack naturally
+          elevation: 8, // Android shadow
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
+          zIndex: 100, // Ensure on top
         },
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 10,
           fontWeight: '600',
-          marginTop: 4,
+          marginTop: 2,
         },
       }}
     >
